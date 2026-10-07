@@ -1,122 +1,57 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { onAuthStateChanged, signOut, sendEmailVerification } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "./firebase";
+import Login from "./pages/Login";
+import ChooseLang from "./pages/ChooseLang";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [lang, setLang] = useState(null);
+  const [ready, setReady] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, async (u) => {
+      setUser(u);
+      setLang(null);
+      if (u && u.emailVerified) {
+        const snap = await getDoc(doc(db, "users", u.uid));
+        if (snap.exists()) setLang(snap.data().language ?? null);
+      }
+      setReady(true);
+    });
+  }, []);
+
+  if (!ready) return <div className="box">Đang tải...</div>;
+  if (!user) return <Login />;
+
+  if (!user.emailVerified) {
+    return (
+      <div className="box">
+        <h2>Hãy xác minh email</h2>
+        <p>Chúng tôi đã gửi thư xác minh tới <b>{user.email}</b>. Bấm vào link trong thư (xem cả mục Spam), rồi bấm nút bên dưới.</p>
+        <button onClick={async () => { await auth.currentUser.reload(); window.location.reload(); }}>
+          Tôi đã xác minh
+        </button>
+        <button onClick={async () => {
+          try { await sendEmailVerification(auth.currentUser); setMsg("Đã gửi lại thư."); }
+          catch { setMsg("Gửi quá nhiều lần, hãy chờ vài phút."); }
+        }}>Gửi lại thư</button>
+        <button onClick={() => signOut(auth)}>Đăng xuất</button>
+        {msg && <p>{msg}</p>}
+      </div>
+    );
+  }
+
+  if (!lang) return <ChooseLang uid={user.uid} onPick={setLang} />;
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div className="box">
+      <h2>Xin chào {user.email}</h2>
+      <p>Bạn đang học: <b>{lang === "cpp" ? "C++" : "Python"}</b></p>
+      <button onClick={() => setLang(null)}>Đổi ngôn ngữ</button>
+      <button onClick={() => signOut(auth)}>Đăng xuất</button>
+    </div>
+  );
 }
-
-export default App
