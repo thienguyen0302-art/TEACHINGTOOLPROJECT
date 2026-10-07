@@ -1,0 +1,1174 @@
+{
+  "id": "ch01",
+  "title": "Nhập xuất, biến và kiểu dữ liệu",
+  "order": 1,
+  "description": "Nền tảng Python cho lập trình thi đấu: nhập xuất, biến, kiểu dữ liệu, ép kiểu, toán tử số học, chia nguyên, modulo, số nguyên lớn, số thực, xử lý ký tự cơ bản và fast I/O.",
+  "objectives": [
+    "Hiểu cách Python tạo và sử dụng biến mà không cần khai báo kiểu tường minh.",
+    "Sử dụng thành thạo input() và print().",
+    "Biết input() luôn trả về dữ liệu kiểu str.",
+    "Đọc được một hoặc nhiều số nguyên trên cùng một dòng.",
+    "Phân biệt int, float, str và bool.",
+    "Hiểu sự khác nhau giữa / và //.",
+    "Sử dụng % trong các bài toán số học cơ bản.",
+    "Hiểu Python int không bị giới hạn ở 32 bit hoặc 64 bit như C++.",
+    "Biết ** là phép lũy thừa và ^ không phải lũy thừa.",
+    "Biết cách format số thực.",
+    "Biết sử dụng sys.stdin.readline khi input lớn.",
+    "Biết một số khác biệt quan trọng giữa Python và C++ trong lập trình thi đấu."
+  ],
+  "prerequisites": [
+    "Biết khái niệm biến và biểu thức cơ bản.",
+    "Biết cách chạy một chương trình Python."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Chương trình Python cơ bản",
+      "content": "Python không yêu cầu hàm main() cho chương trình đơn giản. Các câu lệnh được thực thi từ trên xuống dưới.",
+      "keywords": [
+        "python",
+        "script",
+        "execution"
+      ],
+      "code": "print(\"Hello, World!\")",
+      "output": "Hello, World!",
+      "hsgNote": "Trong lập trình thi đấu, chương trình Python thường ngắn hơn C++ do không cần khai báo kiểu dữ liệu và không cần include thư viện cho các thao tác cơ bản."
+    },
+    {
+      "id": "theory02",
+      "title": "2. Biến trong Python",
+      "content": "Biến trong Python được tạo khi ta gán giá trị cho một tên. Không cần viết kiểu dữ liệu trước tên biến như C++.",
+      "keywords": [
+        "variable",
+        "assignment",
+        "dynamic-typing"
+      ],
+      "code": "a = 10\nname = \"An\"\nx = 3.14",
+      "cppComparison": "C++: int a = 10; | Python: a = 10",
+      "commonMistakes": [
+        "Viết int a = 10 theo cú pháp C++.",
+        "Cho rằng một biến Python luôn cố định kiểu dữ liệu.",
+        "Dùng một biến với nhiều kiểu khác nhau khiến code khó đọc."
+      ]
+    },
+    {
+      "id": "theory03",
+      "title": "3. Dynamic Typing",
+      "content": "Python là ngôn ngữ dynamically typed. Kiểu của đối tượng được xác định trong lúc chạy và tên biến có thể được gán sang một giá trị thuộc kiểu khác.",
+      "keywords": [
+        "dynamic-typing",
+        "type"
+      ],
+      "code": "x = 10\nprint(type(x))\n\nx = \"hello\"\nprint(type(x))",
+      "output": "<class 'int'>\n<class 'str'>",
+      "hsgNote": "Khả năng đổi kiểu không có nghĩa là nên tùy tiện dùng cùng một tên cho nhiều ý nghĩa khác nhau trong bài thi."
+    },
+    {
+      "id": "theory04",
+      "title": "4. Các kiểu dữ liệu cơ bản",
+      "content": "Những kiểu thường gặp nhất ở giai đoạn đầu gồm int, float, str và bool.",
+      "keywords": [
+        "int",
+        "float",
+        "str",
+        "bool"
+      ],
+      "table": [
+        {
+          "type": "int",
+          "purpose": "Số nguyên",
+          "example": "1000000000000000000"
+        },
+        {
+          "type": "float",
+          "purpose": "Số thực",
+          "example": "3.14"
+        },
+        {
+          "type": "str",
+          "purpose": "Chuỗi ký tự",
+          "example": "\"hello\""
+        },
+        {
+          "type": "bool",
+          "purpose": "Giá trị logic",
+          "example": "True / False"
+        }
+      ],
+      "hsgNote": "List, tuple, set và dict sẽ được học ở các chương phù hợp sau. Chương này chỉ cần nắm chắc các kiểu nền tảng."
+    },
+    {
+      "id": "theory05",
+      "title": "5. Nhập dữ liệu bằng input()",
+      "content": "input() đọc một dòng từ standard input và trả về một chuỗi str.",
+      "keywords": [
+        "input",
+        "stdin",
+        "str"
+      ],
+      "code": "s = input()\nprint(type(s))",
+      "hsgNote": "Đây là khác biệt rất quan trọng so với cin của C++. Nếu nhập 123 bằng input(), dữ liệu ban đầu vẫn là chuỗi \"123\".",
+      "commonMistakes": [
+        "Viết n = input() rồi sử dụng n như số nguyên.",
+        "Quên chuyển kiểu trước khi làm phép toán số học."
+      ]
+    },
+    {
+      "id": "theory06",
+      "title": "6. Đọc một số nguyên",
+      "content": "Để đọc một số nguyên, chuyển chuỗi input thành int bằng hàm int().",
+      "keywords": [
+        "input",
+        "int",
+        "casting"
+      ],
+      "code": "n = int(input())",
+      "exampleInput": "25",
+      "hsgNote": "Đây là mẫu nhập cơ bản nhất cần thuộc."
+    },
+    {
+      "id": "theory07",
+      "title": "7. Đọc nhiều số trên một dòng",
+      "content": "Có thể tách dòng input thành các phần bằng split(), chuyển từng phần sang int bằng map(), sau đó unpack vào các biến.",
+      "keywords": [
+        "split",
+        "map",
+        "unpacking",
+        "input"
+      ],
+      "code": "a, b = map(int, input().split())",
+      "exampleInput": "10 25",
+      "explanation": "input() tạo chuỗi '10 25'. split() tạo các chuỗi '10' và '25'. map(int, ...) chuyển chúng thành số nguyên, sau đó gán lần lượt cho a và b.",
+      "hsgNote": "Mẫu map(int, input().split()) xuất hiện rất thường xuyên trong competitive programming."
+    },
+    {
+      "id": "theory08",
+      "title": "8. Đọc một dãy số",
+      "content": "Khi cần lưu nhiều số trên một dòng, thường chuyển kết quả map thành list.",
+      "keywords": [
+        "list",
+        "map",
+        "split"
+      ],
+      "code": "a = list(map(int, input().split()))",
+      "exampleInput": "1 5 2 8 3",
+      "result": "[1, 5, 2, 8, 3]",
+      "hsgNote": "List sẽ được học kỹ hơn ở chương mảng và xâu. Hiện tại chỉ cần thuộc mẫu nhập."
+    },
+    {
+      "id": "theory09",
+      "title": "9. Xuất dữ liệu bằng print()",
+      "content": "print() ghi dữ liệu ra standard output. Có thể truyền nhiều đối tượng vào cùng một lệnh print.",
+      "keywords": [
+        "print",
+        "stdout"
+      ],
+      "code": "a = 5\nb = 7\nprint(a, b)\nprint(a + b)",
+      "output": "5 7\n12",
+      "hsgNote": "Trong hệ thống chấm tự động, không in các lời nhắc như 'Nhap n:' hoặc 'Ket qua:' nếu đề không yêu cầu."
+    },
+    {
+      "id": "theory10",
+      "title": "10. sep và end trong print",
+      "content": "Tham số sep quy định chuỗi ngăn cách giữa các giá trị. Tham số end quy định chuỗi được thêm sau khi print kết thúc.",
+      "keywords": [
+        "print",
+        "sep",
+        "end"
+      ],
+      "code": "print(1, 2, 3, sep='-')\nprint('A', end=' ')\nprint('B')",
+      "output": "1-2-3\nA B"
+    },
+    {
+      "id": "theory11",
+      "title": "11. Các toán tử số học",
+      "content": "Python hỗ trợ +, -, *, /, //, %, ** cho cộng, trừ, nhân, chia thực, chia lấy floor, chia lấy dư và lũy thừa.",
+      "keywords": [
+        "arithmetic",
+        "division",
+        "modulo",
+        "power"
+      ],
+      "table": [
+        {
+          "operator": "+",
+          "meaning": "Cộng",
+          "example": "5 + 2 = 7"
+        },
+        {
+          "operator": "-",
+          "meaning": "Trừ",
+          "example": "5 - 2 = 3"
+        },
+        {
+          "operator": "*",
+          "meaning": "Nhân",
+          "example": "5 * 2 = 10"
+        },
+        {
+          "operator": "/",
+          "meaning": "Chia thực",
+          "example": "5 / 2 = 2.5"
+        },
+        {
+          "operator": "//",
+          "meaning": "Floor division",
+          "example": "5 // 2 = 2"
+        },
+        {
+          "operator": "%",
+          "meaning": "Chia lấy dư",
+          "example": "5 % 2 = 1"
+        },
+        {
+          "operator": "**",
+          "meaning": "Lũy thừa",
+          "example": "5 ** 2 = 25"
+        }
+      ]
+    },
+    {
+      "id": "theory12",
+      "title": "12. Phép chia /",
+      "content": "Trong Python 3, toán tử / thực hiện true division và trả về float, kể cả khi cả hai toán hạng đều là int.",
+      "keywords": [
+        "division",
+        "float"
+      ],
+      "code": "print(5 / 2)\nprint(6 / 3)",
+      "output": "2.5\n2.0",
+      "cppComparison": "Trong C++, 5 / 2 với hai int cho 2. Trong Python, 5 / 2 cho 2.5.",
+      "hsgNote": "Đây là một trong những khác biệt cần nhớ nhất khi chuyển từ C++ sang Python."
+    },
+    {
+      "id": "theory13",
+      "title": "13. Phép chia //",
+      "content": "// thực hiện floor division, tức lấy số nguyên lớn nhất không vượt quá kết quả toán học.",
+      "keywords": [
+        "floor-division"
+      ],
+      "code": "print(7 // 2)\nprint(-7 // 2)",
+      "output": "3\n-4",
+      "hsgNote": "Với số âm, // không đơn giản là bỏ phần thập phân. -7 / 2 = -3.5 nên floor là -4.",
+      "cppComparison": "Đây có thể khác phép chia số nguyên C++, vốn hướng kết quả về 0."
+    },
+    {
+      "id": "theory14",
+      "title": "14. Phép chia lấy dư %",
+      "content": "% trả về phần dư của phép chia. Với các bài cơ bản sử dụng số không âm, nó được dùng giống như trong C++.",
+      "keywords": [
+        "modulo",
+        "remainder"
+      ],
+      "code": "print(17 % 5)",
+      "output": "2",
+      "applications": [
+        "Kiểm tra chẵn lẻ.",
+        "Kiểm tra chia hết.",
+        "Lấy chữ số cuối.",
+        "Xử lý chu kỳ.",
+        "Các bài toán modulo ở mức nâng cao hơn."
+      ],
+      "hsgNote": "Với số âm, Python có quy tắc modulo liên quan tới floor division. Khi bắt đầu học nên ưu tiên hiểu chắc trường hợp số không âm trước."
+    },
+    {
+      "id": "theory15",
+      "title": "15. Lũy thừa bằng **",
+      "content": "Python sử dụng ** để tính lũy thừa.",
+      "keywords": [
+        "power",
+        "exponent"
+      ],
+      "code": "print(2 ** 10)\nprint(10 ** 6)",
+      "output": "1024\n1000000",
+      "warning": "Dấu ^ KHÔNG phải phép lũy thừa trong Python.",
+      "hsgNote": "Đây là bẫy cực kỳ phổ biến. 10^9 không phải 10 mũ 9."
+    },
+    {
+      "id": "theory16",
+      "title": "16. Python int và số nguyên lớn",
+      "content": "Trong Python 3, kiểu int hỗ trợ số nguyên có độ chính xác tùy ý trong giới hạn bộ nhớ khả dụng. Không cần chọn giữa int và long long như C++.",
+      "keywords": [
+        "int",
+        "big-integer",
+        "arbitrary-precision"
+      ],
+      "code": "x = 10 ** 100\nprint(x)",
+      "hsgNote": "Python tránh được nhiều lỗi overflow số nguyên phổ biến của C++. Tuy nhiên phép toán trên số có hàng nghìn hoặc hàng triệu chữ số vẫn tốn thêm thời gian và bộ nhớ.",
+      "cppComparison": "C++ thường phải quan tâm int hay long long. Python int tự mở rộng để chứa số nguyên lớn."
+    },
+    {
+      "id": "theory17",
+      "title": "17. float vẫn có giới hạn và sai số",
+      "content": "Khả năng lưu số nguyên lớn của int không áp dụng cho float. Số thực được biểu diễn gần đúng và có giới hạn precision.",
+      "keywords": [
+        "float",
+        "precision"
+      ],
+      "code": "print(0.1 + 0.2)",
+      "typicalOutput": "0.30000000000000004",
+      "hsgNote": "Không chuyển số nguyên lớn sang float nếu bài cần kết quả nguyên chính xác."
+    },
+    {
+      "id": "theory18",
+      "title": "18. Ép kiểu",
+      "content": "Các hàm int(), float() và str() được dùng để chuyển dữ liệu giữa những kiểu cơ bản.",
+      "keywords": [
+        "casting",
+        "int",
+        "float",
+        "str"
+      ],
+      "code": "s = \"123\"\nn = int(s)\nx = float(\"3.14\")\nt = str(100)",
+      "commonMistakes": [
+        "Gọi int() với chuỗi không biểu diễn số nguyên hợp lệ.",
+        "Dùng float cho bài toán cần số nguyên chính xác rất lớn."
+      ]
+    },
+    {
+      "id": "theory19",
+      "title": "19. Python không có kiểu char riêng",
+      "content": "Một ký tự trong Python đơn giản là một chuỗi str có độ dài 1.",
+      "keywords": [
+        "str",
+        "character"
+      ],
+      "code": "c = '7'\nprint(type(c))\nprint(len(c))",
+      "output": "<class 'str'>\n1",
+      "cppComparison": "C++ có char. Python dùng str cho cả chuỗi và một ký tự."
+    },
+    {
+      "id": "theory20",
+      "title": "20. Chuyển ký tự chữ số thành số",
+      "content": "Nếu c là chuỗi một ký tự biểu diễn chữ số, có thể dùng int(c) để chuyển thành số nguyên.",
+      "keywords": [
+        "digit",
+        "str",
+        "int"
+      ],
+      "code": "c = '7'\nx = int(c)\nprint(x)",
+      "output": "7",
+      "cppComparison": "Trong C++ thường dùng c - '0'. Trong Python cách trực tiếp là int(c)."
+    },
+    {
+      "id": "theory21",
+      "title": "21. Gán nhiều biến và swap",
+      "content": "Python cho phép gán nhiều biến trong một câu lệnh. Điều này đặc biệt tiện khi hoán đổi hai giá trị.",
+      "keywords": [
+        "unpacking",
+        "swap"
+      ],
+      "code": "a = 5\nb = 10\n\na, b = b, a\n\nprint(a, b)",
+      "output": "10 5",
+      "cppComparison": "Không cần biến tạm hoặc std::swap."
+    },
+    {
+      "id": "theory22",
+      "title": "22. bool và biểu thức so sánh",
+      "content": "Kiểu bool có hai giá trị True và False. Các phép so sánh trả về bool.",
+      "keywords": [
+        "bool",
+        "comparison"
+      ],
+      "code": "x = 5\nprint(x > 3)\nprint(x == 5)",
+      "output": "True\nTrue",
+      "hsgNote": "Python viết True và False với chữ cái đầu viết hoa."
+    },
+    {
+      "id": "theory23",
+      "title": "23. Format số thực",
+      "content": "F-string có thể được dùng để in số thực với số chữ số sau dấu thập phân xác định.",
+      "keywords": [
+        "f-string",
+        "format",
+        "precision"
+      ],
+      "code": "x = 10 / 3\nprint(f\"{x:.2f}\")",
+      "output": "3.33",
+      "hsgNote": "Nếu đề yêu cầu chính xác k chữ số sau dấu thập phân, cần format output đúng yêu cầu."
+    },
+    {
+      "id": "theory24",
+      "title": "24. Fast Input với sys.stdin.readline",
+      "content": "input() đủ dùng trong nhiều bài. Khi số lượng dữ liệu đầu vào lớn, sys.stdin.readline có thể giảm overhead nhập dữ liệu.",
+      "keywords": [
+        "sys.stdin.readline",
+        "fast-io"
+      ],
+      "code": "import sys\ninput = sys.stdin.readline\n\nn = int(input())",
+      "template": "import sys\ninput = sys.stdin.readline\n\n# code here",
+      "hsgNote": "Có thể dùng template này cho bài có input lớn. Không cần hiểu sâu buffer ngay ở giai đoạn đầu."
+    },
+    {
+      "id": "theory25",
+      "title": "25. strip() khi đọc chuỗi",
+      "content": "sys.stdin.readline thường giữ ký tự xuống dòng ở cuối chuỗi. strip() có thể loại bỏ whitespace ở đầu và cuối.",
+      "keywords": [
+        "strip",
+        "string",
+        "input"
+      ],
+      "code": "import sys\n\ns = sys.stdin.readline().strip()",
+      "hsgNote": "Khi đọc số rồi dùng int(), newline thường không gây vấn đề. Nhưng khi xử lý chuỗi trực tiếp, cần chú ý ký tự xuống dòng."
+    },
+    {
+      "id": "theory26",
+      "title": "26. Template Python cho lập trình thi đấu",
+      "content": "Một template đơn giản nên càng ít phần không cần thiết càng tốt.",
+      "keywords": [
+        "competitive-programming",
+        "template"
+      ],
+      "code": "import sys\ninput = sys.stdin.readline\n\n\ndef solve():\n    pass\n\n\nif __name__ == \"__main__\":\n    solve()",
+      "hsgNote": "Không bắt buộc phải dùng solve() ở giai đoạn đầu. Mục tiêu là giúp code có cấu trúc rõ ràng khi chương trình lớn hơn."
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Nhập hai số và tính tổng",
+      "description": "Đọc hai số nguyên trên một dòng và in tổng.",
+      "difficulty": "basic",
+      "code": "a, b = map(int, input().split())\nprint(a + b)",
+      "input": "15 27",
+      "output": "42",
+      "explanation": "split() tách hai chuỗi, map(int, ...) chuyển chúng thành số nguyên.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example02",
+      "title": "Thương và số dư",
+      "description": "Tìm thương floor và phần dư.",
+      "difficulty": "basic",
+      "code": "a, b = map(int, input().split())\nprint(a // b, a % b)",
+      "input": "17 5",
+      "output": "3 2",
+      "explanation": "17 // 5 bằng 3 và 17 % 5 bằng 2.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example03",
+      "title": "Khác biệt giữa / và //",
+      "description": "So sánh true division và floor division.",
+      "difficulty": "basic",
+      "code": "print(7 / 2)\nprint(7 // 2)",
+      "input": null,
+      "output": "3.5\n3",
+      "explanation": "/ trả về phép chia thực. // lấy floor.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example04",
+      "title": "Bẫy floor division với số âm",
+      "description": "Hiểu hành vi của // khi số âm xuất hiện.",
+      "difficulty": "intermediate",
+      "code": "print(-7 / 2)\nprint(-7 // 2)",
+      "input": null,
+      "output": "-3.5\n-4",
+      "explanation": "// lấy floor, tức số nguyên lớn nhất nhỏ hơn hoặc bằng kết quả.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Không được mặc định coi // là phép cắt phần thập phân về phía 0."
+    },
+    {
+      "id": "example05",
+      "title": "Python xử lý số nguyên rất lớn",
+      "description": "Tính giá trị vượt xa miền long long của C++.",
+      "difficulty": "intermediate",
+      "code": "x = 10 ** 50\nprint(x)",
+      "input": null,
+      "output": "100000000000000000000000000000000000000000000000000",
+      "explanation": "Python int hỗ trợ số nguyên có độ chính xác tùy ý trong giới hạn tài nguyên.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Không cần BigInteger riêng cho các bài số nguyên lớn cơ bản."
+    },
+    {
+      "id": "example06",
+      "title": "Bẫy toán tử ^",
+      "description": "Phân biệt XOR và lũy thừa.",
+      "difficulty": "intermediate",
+      "code": "print(2 ** 3)\nprint(2 ^ 3)",
+      "input": null,
+      "output": "8\n1",
+      "explanation": "** là lũy thừa. ^ là phép XOR bit.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Viết 10**9 thay vì 10^9."
+    },
+    {
+      "id": "example07",
+      "title": "Đổi giây thành giờ phút giây",
+      "description": "Ứng dụng // và %.",
+      "difficulty": "basic",
+      "code": "s = int(input())\n\nh = s // 3600\ns %= 3600\nm = s // 60\ns %= 60\n\nprint(h, m, s)",
+      "input": "3665",
+      "output": "1 1 5",
+      "explanation": "// lấy số đơn vị hoàn chỉnh, % giữ lại phần dư.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example08",
+      "title": "Đọc dãy số và tính tổng",
+      "description": "Nhập một dòng chứa nhiều số nguyên.",
+      "difficulty": "basic",
+      "code": "a = list(map(int, input().split()))\nprint(sum(a))",
+      "input": "1 2 3 4 5",
+      "output": "15",
+      "explanation": "Dòng input được chuyển thành một list số nguyên.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example09",
+      "title": "Swap hai biến",
+      "description": "Hoán đổi hai giá trị mà không cần biến tạm.",
+      "difficulty": "basic",
+      "code": "a = 3\nb = 8\n\na, b = b, a\nprint(a, b)",
+      "input": null,
+      "output": "8 3",
+      "explanation": "Python hỗ trợ unpacking nên có thể swap trực tiếp.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example10",
+      "title": "In số thực đúng định dạng",
+      "description": "In hai chữ số sau dấu thập phân.",
+      "difficulty": "basic",
+      "code": "x = float(input())\nprint(f\"{x:.2f}\")",
+      "input": "3.1415926",
+      "output": "3.14",
+      "explanation": ".2f yêu cầu hai chữ số sau dấu thập phân.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example11",
+      "title": "Fast Input",
+      "description": "Mẫu nhập thường dùng khi dữ liệu lớn.",
+      "difficulty": "intermediate",
+      "code": "import sys\ninput = sys.stdin.readline\n\nn = int(input())\na = list(map(int, input().split()))\nprint(sum(a))",
+      "input": "5\n1 2 3 4 5",
+      "output": "15",
+      "explanation": "Gán input = sys.stdin.readline cho phép giữ cú pháp input() ngắn gọn trong phần còn lại của chương trình.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    }
+  ],
+  "quiz": [
+    {
+      "id": "quiz01",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "input",
+        "str"
+      ],
+      "question": "Giá trị trả về trực tiếp từ input() có kiểu gì?",
+      "choices": [
+        "int",
+        "float",
+        "str",
+        "bool"
+      ],
+      "answer": "str",
+      "explanation": "input() đọc dữ liệu dưới dạng chuỗi.",
+      "betterApproach": "Nếu cần số nguyên, sử dụng int(input())."
+    },
+    {
+      "id": "quiz02",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "input",
+        "map",
+        "split"
+      ],
+      "question": "Cách nào phù hợp để đọc hai số nguyên a và b trên cùng một dòng?",
+      "choices": [
+        "a, b = input()",
+        "a, b = map(int, input().split())",
+        "int a, b = input()",
+        "a = b = input(int)"
+      ],
+      "answer": "a, b = map(int, input().split())",
+      "explanation": "split() tách input và map(int, ...) chuyển từng phần sang int.",
+      "betterApproach": "Thuộc mẫu này vì xuất hiện rất thường xuyên trong bài thi."
+    },
+    {
+      "id": "quiz03",
+      "type": "output_prediction",
+      "difficulty": "basic",
+      "tags": [
+        "division"
+      ],
+      "question": "print(7 / 2) in ra gì?",
+      "choices": [
+        "3",
+        "3.0",
+        "3.5",
+        "4"
+      ],
+      "answer": "3.5",
+      "explanation": "/ là true division trong Python 3.",
+      "betterApproach": "Dùng // nếu cần floor division."
+    },
+    {
+      "id": "quiz04",
+      "type": "output_prediction",
+      "difficulty": "basic",
+      "tags": [
+        "floor-division"
+      ],
+      "question": "print(7 // 2) in ra gì?",
+      "choices": [
+        "3",
+        "3.5",
+        "4",
+        "2"
+      ],
+      "answer": "3",
+      "explanation": "7 / 2 = 3.5 và floor của 3.5 là 3.",
+      "betterApproach": "Phân biệt / với //."
+    },
+    {
+      "id": "quiz05",
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "floor-division",
+        "negative"
+      ],
+      "question": "print(-7 // 2) in ra gì?",
+      "choices": [
+        "-3",
+        "-3.5",
+        "-4",
+        "3"
+      ],
+      "answer": "-4",
+      "explanation": "// lấy floor. Floor của -3.5 là -4.",
+      "betterApproach": "Đừng hiểu // là đơn giản xóa phần thập phân."
+    },
+    {
+      "id": "quiz06",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "power"
+      ],
+      "question": "Toán tử lũy thừa trong Python là gì?",
+      "choices": [
+        "^",
+        "**",
+        "^^",
+        "pow^"
+      ],
+      "answer": "**",
+      "explanation": "** là phép lũy thừa.",
+      "betterApproach": "Nhớ rằng ^ là XOR bit."
+    },
+    {
+      "id": "quiz07",
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "xor",
+        "power"
+      ],
+      "question": "print(2 ^ 3) in ra gì?",
+      "choices": [
+        "8",
+        "6",
+        "1",
+        "9"
+      ],
+      "answer": "1",
+      "explanation": "^ thực hiện XOR bit: 10 XOR 11 = 01.",
+      "betterApproach": "Muốn 2 mũ 3 phải viết 2 ** 3."
+    },
+    {
+      "id": "quiz08",
+      "type": "multiple_choice",
+      "difficulty": "intermediate",
+      "tags": [
+        "big-integer"
+      ],
+      "question": "Điều nào đúng về int trong Python 3?",
+      "choices": [
+        "Luôn giới hạn ở 32 bit",
+        "Luôn giới hạn ở 64 bit",
+        "Có độ chính xác tùy ý trong giới hạn tài nguyên",
+        "Không thể lớn hơn 10^18"
+      ],
+      "answer": "Có độ chính xác tùy ý trong giới hạn tài nguyên",
+      "explanation": "Python int không có giới hạn cố định 32/64 bit như kiểu số nguyên C++.",
+      "betterApproach": "Tuy không overflow kiểu 64 bit, số càng lớn thì tính toán càng tốn tài nguyên."
+    },
+    {
+      "id": "quiz09",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "str",
+        "character"
+      ],
+      "question": "Kiểu của biến c trong c = 'A' là gì?",
+      "choices": [
+        "char",
+        "str",
+        "int",
+        "byte"
+      ],
+      "answer": "str",
+      "explanation": "Python không có kiểu char riêng. Một ký tự là một chuỗi độ dài 1.",
+      "betterApproach": "Có thể kiểm tra bằng type(c)."
+    },
+    {
+      "id": "quiz10",
+      "type": "output_prediction",
+      "difficulty": "basic",
+      "tags": [
+        "swap"
+      ],
+      "question": "Sau đoạn code a = 3; b = 5; a, b = b, a thì giá trị a và b là gì?",
+      "choices": [
+        "3 5",
+        "5 3",
+        "5 5",
+        "3 3"
+      ],
+      "answer": "5 3",
+      "explanation": "Tuple unpacking cho phép hoán đổi trực tiếp.",
+      "betterApproach": "Không cần biến tạm để swap trong Python."
+    },
+    {
+      "id": "quiz11",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "float",
+        "format"
+      ],
+      "question": "Cách nào in x với đúng hai chữ số sau dấu thập phân?",
+      "choices": [
+        "print(x)",
+        "print(int(x))",
+        "print(f\"{x:.2f}\")",
+        "print(x // 2)"
+      ],
+      "answer": "print(f\"{x:.2f}\")",
+      "explanation": ".2f định dạng hai chữ số sau dấu thập phân.",
+      "betterApproach": "Đọc kỹ yêu cầu format output của đề."
+    },
+    {
+      "id": "quiz12",
+      "type": "multiple_choice",
+      "difficulty": "intermediate",
+      "tags": [
+        "fast-io"
+      ],
+      "question": "Khi input rất lớn, phương án nào thường được sử dụng thay cho input()?",
+      "choices": [
+        "sys.stdin.readline",
+        "cout",
+        "scanf",
+        "System.in"
+      ],
+      "answer": "sys.stdin.readline",
+      "explanation": "sys.stdin.readline thường được dùng để giảm overhead input trong Python.",
+      "betterApproach": "Có thể viết input = sys.stdin.readline ở đầu chương trình."
+    }
+  ],
+  "practice": [
+    {
+      "id": "practice01",
+      "title": "Tổng và tích hai số",
+      "difficulty": "basic",
+      "tags": [
+        "input",
+        "output",
+        "arithmetic"
+      ],
+      "problem": "Cho hai số nguyên a và b. In tổng và tích của chúng.",
+      "inputDescription": "Một dòng gồm hai số nguyên a và b.",
+      "outputDescription": "Dòng đầu là a + b. Dòng thứ hai là a * b.",
+      "constraints": [
+        "0 <= a, b <= 10^50"
+      ],
+      "sampleInput": "100000000000000000000 3",
+      "sampleOutput": "100000000000000000003\n300000000000000000000",
+      "hint": "Python int có thể xử lý số nguyên lớn trực tiếp.",
+      "answer": null,
+      "explanation": "Không cần long long hoặc thư viện BigInteger riêng.",
+      "betterApproach": "Đây là điểm khác đáng chú ý so với C++.",
+      "complexity": {
+        "time": "Phụ thuộc số chữ số của a và b",
+        "space": "Phụ thuộc số chữ số của kết quả"
+      }
+    },
+    {
+      "id": "practice02",
+      "title": "Đổi giây thành giờ phút giây",
+      "difficulty": "basic",
+      "tags": [
+        "division",
+        "modulo"
+      ],
+      "problem": "Cho số nguyên S là số giây. Chuyển S thành giờ, phút và giây.",
+      "inputDescription": "Một số nguyên S.",
+      "outputDescription": "In ba số h m s.",
+      "constraints": [
+        "0 <= S <= 10^18"
+      ],
+      "sampleInput": "3665",
+      "sampleOutput": "1 1 5",
+      "hint": "Sử dụng // và %.",
+      "answer": null,
+      "explanation": "h = S // 3600. Sau đó dùng phần dư để tìm phút và giây.",
+      "betterApproach": "Đây là mẫu phân rã đơn vị thường gặp.",
+      "complexity": {
+        "time": "O(1) đối với miền dữ liệu thông thường",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "practice03",
+      "title": "Tách ba chữ số",
+      "difficulty": "basic",
+      "tags": [
+        "division",
+        "modulo",
+        "digits"
+      ],
+      "problem": "Cho số nguyên n có đúng ba chữ số. In chữ số hàng trăm, hàng chục và hàng đơn vị.",
+      "inputDescription": "Một số nguyên n.",
+      "outputDescription": "Ba chữ số theo thứ tự hàng trăm, hàng chục và hàng đơn vị.",
+      "constraints": [
+        "100 <= n <= 999"
+      ],
+      "sampleInput": "572",
+      "sampleOutput": "5 7 2",
+      "hint": "Kết hợp // và %.",
+      "answer": null,
+      "explanation": "Hàng trăm là n // 100, hàng chục là n // 10 % 10, hàng đơn vị là n % 10.",
+      "betterApproach": "",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "practice04",
+      "title": "Trung bình cộng",
+      "difficulty": "basic",
+      "tags": [
+        "division",
+        "float",
+        "format"
+      ],
+      "problem": "Cho ba số nguyên a, b, c. Tính trung bình cộng và in với đúng hai chữ số sau dấu thập phân.",
+      "inputDescription": "Ba số nguyên a, b, c.",
+      "outputDescription": "Trung bình cộng với đúng hai chữ số sau dấu thập phân.",
+      "constraints": [
+        "-10^9 <= a, b, c <= 10^9"
+      ],
+      "sampleInput": "1 2 4",
+      "sampleOutput": "2.33",
+      "hint": "Trong Python, / đã là phép chia thực.",
+      "answer": null,
+      "explanation": "Tính avg = (a + b + c) / 3 rồi dùng f-string để format.",
+      "betterApproach": "Không cần ép kiểu như trong C++.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "practice05",
+      "title": "Tổng từ 1 đến n",
+      "difficulty": "intermediate",
+      "tags": [
+        "formula",
+        "big-integer"
+      ],
+      "problem": "Cho số nguyên dương n. Không sử dụng vòng lặp, tính 1 + 2 + ... + n.",
+      "inputDescription": "Một số nguyên n.",
+      "outputDescription": "Tổng từ 1 đến n.",
+      "constraints": [
+        "1 <= n <= 10^100"
+      ],
+      "sampleInput": "1000000000",
+      "sampleOutput": "500000000500000000",
+      "hint": "Sử dụng n * (n + 1) // 2.",
+      "answer": null,
+      "explanation": "Python int xử lý kết quả lớn mà không cần long long.",
+      "betterApproach": "Dùng // vì kết quả cần là số nguyên.",
+      "complexity": {
+        "time": "Phụ thuộc số chữ số của n",
+        "space": "Phụ thuộc số chữ số của kết quả"
+      }
+    },
+    {
+      "id": "practice06",
+      "title": "Đọc N số và tính tổng",
+      "difficulty": "basic",
+      "tags": [
+        "input",
+        "list",
+        "sum"
+      ],
+      "problem": "Cho n số nguyên trên một dòng. Hãy tính tổng của chúng.",
+      "inputDescription": "Dòng đầu là n. Dòng thứ hai gồm n số nguyên.",
+      "outputDescription": "Tổng của n số.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "-10^9 <= a[i] <= 10^9"
+      ],
+      "sampleInput": "5\n1 2 3 4 5",
+      "sampleOutput": "15",
+      "hint": "Dùng list(map(int, input().split())) và sum().",
+      "answer": null,
+      "explanation": "Python cung cấp hàm sum cho iterable số.",
+      "betterApproach": "Nếu không cần lưu toàn bộ dãy ở những bài đặc biệt, về sau có thể nghĩ đến việc xử lý trực tiếp iterator.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      }
+    }
+  ],
+  "advanced": [
+    {
+      "id": "advanced01",
+      "title": "Lũy thừa lớn",
+      "difficulty": "advanced",
+      "tags": [
+        "power",
+        "big-integer"
+      ],
+      "problem": "Cho hai số nguyên a và b. Tính a^b.",
+      "inputDescription": "Hai số nguyên a và b.",
+      "outputDescription": "Giá trị a mũ b.",
+      "constraints": [
+        "0 <= a <= 10^9",
+        "0 <= b <= 10000"
+      ],
+      "sampleInput": "2 100",
+      "sampleOutput": "1267650600228229401496703205376",
+      "hint": "Python sử dụng ** cho phép lũy thừa.",
+      "answer": null,
+      "explanation": "Python int có thể lưu kết quả rất lớn.",
+      "betterApproach": "Đừng dùng ^ vì đó là XOR.",
+      "complexity": {
+        "time": "Phụ thuộc thuật toán lũy thừa và kích thước số",
+        "space": "Phụ thuộc số chữ số của kết quả"
+      }
+    },
+    {
+      "id": "advanced02",
+      "title": "Bẫy chia nguyên với số âm",
+      "difficulty": "advanced",
+      "tags": [
+        "floor-division",
+        "negative",
+        "debugging"
+      ],
+      "problem": "Cho hai số nguyên a và b với b khác 0. Hãy in a // b và a % b theo quy tắc của Python.",
+      "inputDescription": "Hai số nguyên a và b.",
+      "outputDescription": "Hai giá trị a // b và a % b.",
+      "constraints": [
+        "-10^9 <= a <= 10^9",
+        "-10^9 <= b <= 10^9",
+        "b != 0"
+      ],
+      "sampleInput": "-7 2",
+      "sampleOutput": "-4 1",
+      "hint": "// dùng floor, không phải truncation về 0.",
+      "answer": null,
+      "explanation": "-7 = (-4) * 2 + 1.",
+      "betterApproach": "Luôn nhớ đẳng thức a = (a // b) * b + (a % b).",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "advanced03",
+      "title": "Số nguyên rất lớn từ input",
+      "difficulty": "advanced",
+      "tags": [
+        "big-integer",
+        "input"
+      ],
+      "problem": "Cho hai số nguyên có thể chứa tới 200 chữ số. Hãy tính tổng và tích của chúng.",
+      "inputDescription": "Hai dòng, mỗi dòng chứa một số nguyên không âm.",
+      "outputDescription": "Dòng đầu là tổng. Dòng thứ hai là tích.",
+      "constraints": [
+        "Mỗi số có từ 1 đến 200 chữ số."
+      ],
+      "sampleInput": "99999999999999999999\n1",
+      "sampleOutput": "100000000000000000000\n99999999999999999999",
+      "hint": "int() của Python có thể chuyển chuỗi rất lớn thành số nguyên.",
+      "answer": null,
+      "explanation": "Không cần tự xây BigInteger cho quy mô này.",
+      "betterApproach": "Đây là một lợi thế rất lớn của Python trong các bài số lớn.",
+      "complexity": {
+        "time": "Phụ thuộc số chữ số của toán hạng",
+        "space": "Phụ thuộc số chữ số của toán hạng và kết quả"
+      }
+    },
+    {
+      "id": "advanced04",
+      "title": "Phát hiện lỗi 10^9",
+      "difficulty": "advanced",
+      "tags": [
+        "xor",
+        "debugging"
+      ],
+      "problem": "Một học sinh muốn đặt LIMIT = 10 mũ 9 và viết LIMIT = 10 ^ 9. Hãy xác định giá trị thực tế của biểu thức và sửa chương trình.",
+      "inputDescription": "Không có input.",
+      "outputDescription": "Giải thích lỗi.",
+      "constraints": [],
+      "sampleInput": "",
+      "sampleOutput": "",
+      "hint": "^ là XOR bit.",
+      "answer": null,
+      "explanation": "10 ^ 9 bằng 3, không phải 1000000000. Cần viết 10 ** 9 hoặc 1_000_000_000.",
+      "betterApproach": "Trong code competitive programming, cách viết 10**9 hoặc 1_000_000_000 đều rõ nghĩa.",
+      "complexity": null
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "n = input() rồi dùng n như số nguyên.",
+      "fix": "Dùng n = int(input())."
+    },
+    {
+      "mistake": "Viết a, b = input().split() rồi cộng a + b và mong nhận tổng số học.",
+      "fix": "Dùng a, b = map(int, input().split())."
+    },
+    {
+      "mistake": "Dùng / khi cần thương nguyên.",
+      "fix": "Dùng //."
+    },
+    {
+      "mistake": "Cho rằng // với số âm giống phép chia nguyên C++.",
+      "fix": "Nhớ rằng Python // thực hiện floor division."
+    },
+    {
+      "mistake": "Viết 10^9 để biểu diễn 10 mũ 9.",
+      "fix": "Dùng 10**9."
+    },
+    {
+      "mistake": "Tìm kiểu long long trong Python.",
+      "fix": "Python 3 dùng int cho số nguyên và tự hỗ trợ số lớn."
+    },
+    {
+      "mistake": "Cho rằng Python int không giới hạn nên mọi phép tính số lớn đều O(1).",
+      "fix": "Số càng nhiều chữ số thì phép toán càng tốn thời gian và bộ nhớ."
+    },
+    {
+      "mistake": "Cho rằng Python có kiểu char riêng.",
+      "fix": "Một ký tự là str có độ dài 1."
+    },
+    {
+      "mistake": "Dùng float cho các số nguyên cực lớn cần kết quả chính xác.",
+      "fix": "Giữ dữ liệu ở int nếu bài toán là số nguyên."
+    },
+    {
+      "mistake": "Dùng input() cho dữ liệu cực lớn rồi bị chậm.",
+      "fix": "Thử sys.stdin.readline khi I/O là nút thắt."
+    },
+    {
+      "mistake": "In thêm lời nhắc hoặc mô tả.",
+      "fix": "Chỉ in đúng output mà đề yêu cầu."
+    }
+  ],
+  "cppVsPython": [
+    {
+      "concept": "Khai báo biến",
+      "cpp": "int x = 10;",
+      "python": "x = 10"
+    },
+    {
+      "concept": "Số nguyên lớn",
+      "cpp": "Thường phải chọn long long hoặc BigInteger tự xây/thư viện",
+      "python": "int hỗ trợ số nguyên tùy ý trong giới hạn tài nguyên"
+    },
+    {
+      "concept": "Chia hai số nguyên",
+      "cpp": "5 / 2 = 2",
+      "python": "5 / 2 = 2.5"
+    },
+    {
+      "concept": "Chia lấy floor",
+      "cpp": "Không có toán tử //",
+      "python": "5 // 2 = 2"
+    },
+    {
+      "concept": "Lũy thừa",
+      "cpp": "Thường dùng pow hoặc tự tính",
+      "python": "a ** b"
+    },
+    {
+      "concept": "Ký tự",
+      "cpp": "char",
+      "python": "str độ dài 1"
+    },
+    {
+      "concept": "Swap",
+      "cpp": "swap(a, b)",
+      "python": "a, b = b, a"
+    },
+    {
+      "concept": "Đọc hai số nguyên",
+      "cpp": "cin >> a >> b;",
+      "python": "a, b = map(int, input().split())"
+    }
+  ],
+  "chapterSummary": [
+    "input() luôn trả về str; muốn nhập số phải chuyển kiểu.",
+    "map(int, input().split()) là mẫu nhập rất quan trọng trong lập trình thi đấu Python.",
+    "/ thực hiện true division còn // thực hiện floor division.",
+    "% được dùng cho phần dư, chia hết, chữ số và bài toán chu kỳ.",
+    "** mới là phép lũy thừa; ^ là XOR.",
+    "Python 3 int không có giới hạn cố định 32 hoặc 64 bit như C++.",
+    "float vẫn có sai số và không nên thay int cho bài toán số nguyên chính xác.",
+    "Python không có kiểu char riêng; một ký tự là str độ dài 1.",
+    "Có thể swap bằng a, b = b, a.",
+    "Khi input lớn có thể sử dụng sys.stdin.readline.",
+    "Trong bài HSG, cú pháp Python ngắn hơn nhưng vẫn phải chú ý complexity vì Python thường có overhead thực thi cao hơn C++."
+  ],
+  "language": "python"
+}
