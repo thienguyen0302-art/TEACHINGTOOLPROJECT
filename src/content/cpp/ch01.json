@@ -1,0 +1,875 @@
+{
+  "id": "ch01",
+  "title": "Nhập xuất, biến và kiểu dữ liệu",
+  "order": 1,
+  "description": "Nền tảng C++ cho lập trình thi đấu: nhập xuất, biến, kiểu dữ liệu, phép toán số học, chia nguyên, modulo, tràn số, ép kiểu, định dạng số thực và lựa chọn kiểu dữ liệu dựa trên ràng buộc bài toán.",
+  "objectives": [
+    "Sử dụng thành thạo cin và cout.",
+    "Khai báo và khởi tạo biến đúng kiểu dữ liệu.",
+    "Phân biệt int, long long, double, char và bool.",
+    "Hiểu phép chia nguyên và phép chia lấy dư.",
+    "Nhận biết và tránh lỗi tràn số nguyên.",
+    "Biết dùng 1LL để nâng biểu thức lên long long.",
+    "Biết ép kiểu khi cần phép chia số thực.",
+    "Biết định dạng output số thực.",
+    "Biết đọc constraint để lựa chọn kiểu dữ liệu.",
+    "Biết sử dụng fast I/O trong bài thi."
+  ],
+  "prerequisites": [
+    "Biết cấu trúc cơ bản của một chương trình C++.",
+    "Biết cách biên dịch và chạy chương trình."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Cấu trúc chương trình C++ cơ bản",
+      "content": "Một chương trình C++ thường gồm các thư viện cần sử dụng, namespace và hàm main(). Chương trình bắt đầu thực thi từ main(). Trong lập trình thi đấu, có thể dùng <bits/stdc++.h> với GCC để tiện truy cập phần lớn thư viện chuẩn.",
+      "keywords": [
+        "main",
+        "include",
+        "namespace"
+      ],
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    return 0;\n}",
+      "hsgNote": "Không dành nhiều thời gian ghi nhớ thư viện riêng lẻ ở giai đoạn đầu. Điều quan trọng là hiểu code nằm trong main() được thực hiện theo thứ tự."
+    },
+    {
+      "id": "theory02",
+      "title": "2. Biến và phép gán",
+      "content": "Biến là một vùng lưu trữ dữ liệu có tên. Khi khai báo biến cần xác định kiểu dữ liệu. Có thể khai báo trước rồi gán giá trị sau hoặc khởi tạo ngay khi khai báo.",
+      "keywords": [
+        "variable",
+        "declaration",
+        "assignment",
+        "initialization"
+      ],
+      "code": "int a;\na = 10;\n\nint b = 20;\n\nlong long total = 0;",
+      "commonMistakes": [
+        "Sử dụng biến chưa được khởi tạo.",
+        "Nhầm dấu = là phép so sánh.",
+        "Chọn kiểu dữ liệu quá nhỏ so với dữ liệu thực tế."
+      ]
+    },
+    {
+      "id": "theory03",
+      "title": "3. Nhập dữ liệu bằng cin",
+      "content": "cin đọc dữ liệu từ standard input. Toán tử >> có thể đọc nhiều biến liên tiếp. Các giá trị đầu vào thường được tách bởi khoảng trắng hoặc xuống dòng.",
+      "keywords": [
+        "cin",
+        "stdin",
+        "input"
+      ],
+      "code": "int a, b;\ncin >> a >> b;",
+      "exampleInput": "10 25",
+      "hsgNote": "Trong đề thi, không cần quan tâm hai số nằm cùng một dòng hay hai dòng nếu dùng cin >> a >> b, vì toán tử >> bỏ qua whitespace phù hợp.",
+      "commonMistakes": [
+        "In lời nhắc như 'Nhap n:' trong bài chấm tự động.",
+        "Đọc sai thứ tự dữ liệu đề cho.",
+        "Dùng cin >> s khi muốn đọc cả một dòng có dấu cách."
+      ]
+    },
+    {
+      "id": "theory04",
+      "title": "4. Xuất dữ liệu bằng cout",
+      "content": "cout ghi dữ liệu ra standard output bằng toán tử <<. Trong hệ thống chấm tự động, output phải đúng định dạng đề yêu cầu.",
+      "keywords": [
+        "cout",
+        "stdout",
+        "output"
+      ],
+      "code": "int a = 5, b = 7;\ncout << a + b << '\\n';",
+      "hsgNote": "Không in thêm chữ, dấu cách hoặc dòng thừa nếu đề không yêu cầu."
+    },
+    {
+      "id": "theory05",
+      "title": "5. Các kiểu dữ liệu quan trọng",
+      "content": "Trong lập trình HSG THCS, những kiểu thường xuyên sử dụng nhất là int, long long, double, char và bool.",
+      "keywords": [
+        "int",
+        "long long",
+        "double",
+        "char",
+        "bool"
+      ],
+      "table": [
+        {
+          "type": "int",
+          "purpose": "Số nguyên thông thường",
+          "typicalRange": "khoảng -2.1e9 đến 2.1e9"
+        },
+        {
+          "type": "long long",
+          "purpose": "Số nguyên rất lớn",
+          "typicalRange": "khoảng -9e18 đến 9e18"
+        },
+        {
+          "type": "double",
+          "purpose": "Số thực",
+          "typicalRange": "rất lớn, nhưng biểu diễn gần đúng"
+        },
+        {
+          "type": "char",
+          "purpose": "Một ký tự",
+          "typicalRange": "phụ thuộc implementation"
+        },
+        {
+          "type": "bool",
+          "purpose": "Đúng hoặc sai",
+          "typicalRange": "true hoặc false"
+        }
+      ],
+      "hsgNote": "Không cần ghi nhớ tuyệt đối số byte của mọi kiểu. Khi cần có thể dùng sizeof. Khi giải bài, quan trọng hơn là ước lượng giá trị lớn nhất mà biến có thể nhận."
+    },
+    {
+      "id": "theory06",
+      "title": "6. Cách chọn int hay long long từ constraint",
+      "content": "Không chọn kiểu dữ liệu chỉ dựa vào giá trị input. Phải ước lượng cả giá trị trung gian và kết quả lớn nhất có thể xuất hiện.",
+      "keywords": [
+        "constraint",
+        "overflow",
+        "long long"
+      ],
+      "example": "Nếu n <= 200000 và mỗi a[i] <= 1000000000 thì từng a[i] có thể lưu bằng int, nhưng tổng có thể đạt 2 * 10^14 nên biến sum phải dùng long long.",
+      "strategy": [
+        "Đọc giới hạn từng biến.",
+        "Xác định phép toán sẽ thực hiện.",
+        "Ước lượng kết quả lớn nhất.",
+        "Chọn kiểu dữ liệu chịu được kết quả đó."
+      ]
+    },
+    {
+      "id": "theory07",
+      "title": "7. Các phép toán số học",
+      "content": "Các toán tử số học thường dùng gồm +, -, *, / và %. Khi hai toán hạng của phép / đều là số nguyên, kết quả là phép chia nguyên.",
+      "keywords": [
+        "arithmetic",
+        "division",
+        "modulo"
+      ],
+      "code": "cout << 7 / 2 << '\\n';\ncout << 7 % 2 << '\\n';",
+      "output": "3\n1",
+      "hsgNote": "Phép % rất quan trọng trong HSG: kiểm tra chẵn lẻ, lấy chữ số, bài toán đồng dư và xử lý số lớn."
+    },
+    {
+      "id": "theory08",
+      "title": "8. Chia nguyên",
+      "content": "Nếu a và b đều là kiểu nguyên thì a / b cho thương nguyên, phần thập phân bị loại bỏ.",
+      "keywords": [
+        "integer-division"
+      ],
+      "code": "int a = 5;\nint b = 2;\ncout << a / b;",
+      "output": "2",
+      "commonMistakes": [
+        "Cho rằng 5 / 2 bằng 2.5.",
+        "Gán kết quả vào double nhưng vẫn chia nguyên trước."
+      ],
+      "trapExample": "double x = 5 / 2;",
+      "trapResult": "x nhận giá trị 2.0 chứ không phải 2.5.",
+      "correctCode": "double x = 5.0 / 2;"
+    },
+    {
+      "id": "theory09",
+      "title": "9. Phép chia lấy dư %",
+      "content": "Với số nguyên, a % b là phần dư khi chia a cho b. Trong những bài cơ bản với a >= 0 và b > 0, kết quả nằm từ 0 đến b - 1.",
+      "keywords": [
+        "modulo",
+        "remainder"
+      ],
+      "code": "cout << 17 / 5 << '\\n';\ncout << 17 % 5;",
+      "output": "3\n2",
+      "applications": [
+        "Kiểm tra chẵn lẻ: n % 2.",
+        "Lấy chữ số cuối: n % 10.",
+        "Bỏ chữ số cuối: n / 10.",
+        "Kiểm tra chia hết: a % b == 0.",
+        "Các bài toán đồng dư ở chương sau."
+      ]
+    },
+    {
+      "id": "theory10",
+      "title": "10. Tràn số nguyên",
+      "content": "Mỗi kiểu số nguyên chỉ biểu diễn được một miền hữu hạn. Nếu kết quả toán học vượt miền biểu diễn của kiểu dữ liệu thì chương trình có thể cho kết quả không đúng mong muốn.",
+      "keywords": [
+        "overflow",
+        "integer"
+      ],
+      "dangerCode": "int a = 1000000000;\nint b = 1000000000;\nlong long result = a * b;",
+      "explanation": "Dù result là long long, biểu thức a * b vẫn được tính bằng int trước khi gán nên đã có thể bị overflow.",
+      "correctCode": "long long result = 1LL * a * b;",
+      "hsgNote": "Đây là lỗi rất phổ biến trong bài thi. Không chỉ biến lưu kết quả mà kiểu của biểu thức trung gian cũng phải đủ lớn."
+    },
+    {
+      "id": "theory11",
+      "title": "11. Tại sao 1LL * a * b lại quan trọng?",
+      "content": "1LL là literal có kiểu long long. Khi một toán hạng trong phép nhân là long long, các toán hạng int còn lại được nâng kiểu trước khi tính tiếp.",
+      "keywords": [
+        "1LL",
+        "promotion",
+        "long long"
+      ],
+      "code": "int a = 1000000000;\nint b = 1000000000;\n\nlong long x = 1LL * a * b;",
+      "output": "1000000000000000000",
+      "hsgNote": "Tạo thói quen kiểm tra tất cả phép nhân của những giá trị cỡ 10^9."
+    },
+    {
+      "id": "theory12",
+      "title": "12. char và mã ký tự",
+      "content": "char lưu một ký tự. Trong nhiều bài thi có thể tận dụng việc ký tự chữ số '0' đến '9' có mã liên tiếp.",
+      "keywords": [
+        "char",
+        "ascii",
+        "digit"
+      ],
+      "code": "char c = '7';\nint digit = c - '0';\ncout << digit;",
+      "output": "7",
+      "hsgNote": "Mẹo c - '0' được sử dụng rất thường xuyên khi xử lý số dưới dạng chuỗi."
+    },
+    {
+      "id": "theory13",
+      "title": "13. bool và biểu thức logic",
+      "content": "bool chỉ có hai trạng thái true và false. Các phép so sánh như <, >, ==, != trả về giá trị logic.",
+      "keywords": [
+        "bool",
+        "comparison"
+      ],
+      "code": "int a = 5;\nbool ok = (a > 3);\ncout << ok;",
+      "output": "1"
+    },
+    {
+      "id": "theory14",
+      "title": "14. Số thực và sai số",
+      "content": "float và double biểu diễn số thực theo dạng gần đúng. Trong bài thi nên ưu tiên double nếu cần tính toán số thực thông thường.",
+      "keywords": [
+        "double",
+        "floating-point",
+        "precision"
+      ],
+      "code": "double x = 1.0 / 3.0;\ncout << x;",
+      "hsgNote": "Không nên mặc định dùng == để so sánh hai số thực được tạo ra qua nhiều phép tính. Phần sai số sẽ được học kỹ hơn khi gặp bài hình học hoặc số thực."
+    },
+    {
+      "id": "theory15",
+      "title": "15. Định dạng số thực",
+      "content": "Có thể dùng fixed và setprecision(k) để yêu cầu in k chữ số sau dấu thập phân.",
+      "keywords": [
+        "fixed",
+        "setprecision",
+        "iomanip"
+      ],
+      "code": "#include <iomanip>\n\ndouble x = 10.0 / 3;\ncout << fixed << setprecision(2) << x;",
+      "output": "3.33",
+      "hsgNote": "Đọc kỹ yêu cầu đề: nếu đề yêu cầu chính xác 2 chữ số sau dấu thập phân thì phải format output đúng."
+    },
+    {
+      "id": "theory16",
+      "title": "16. Ép kiểu",
+      "content": "Ép kiểu được dùng khi cần chuyển một giá trị từ kiểu này sang kiểu khác. Trong các bài cơ bản, static_cast thường rõ ràng hơn C-style cast.",
+      "keywords": [
+        "cast",
+        "static_cast",
+        "conversion"
+      ],
+      "code": "int a = 5, b = 2;\ndouble result = static_cast<double>(a) / b;\ncout << result;",
+      "output": "2.5",
+      "commonMistakes": [
+        "Ép kiểu sau khi phép chia nguyên đã xảy ra.",
+        "Chuyển double sang int và quên rằng phần thập phân bị loại bỏ."
+      ]
+    },
+    {
+      "id": "theory17",
+      "title": "17. sizeof",
+      "content": "sizeof cho biết số byte mà một kiểu dữ liệu hoặc đối tượng chiếm trên hệ thống đang sử dụng.",
+      "keywords": [
+        "sizeof",
+        "memory"
+      ],
+      "code": "cout << sizeof(int) << '\\n';\ncout << sizeof(long long) << '\\n';",
+      "hsgNote": "Không nên giả định mọi compiler có kích thước kiểu dữ liệu giống hệt nhau."
+    },
+    {
+      "id": "theory18",
+      "title": "18. Fast I/O",
+      "content": "Khi input rất lớn, có thể tắt đồng bộ giữa iostream và stdio và bỏ ràng buộc tự động giữa cin với cout để tăng tốc việc nhập xuất.",
+      "keywords": [
+        "fast-io",
+        "sync_with_stdio",
+        "cin.tie"
+      ],
+      "code": "ios::sync_with_stdio(false);\ncin.tie(nullptr);",
+      "template": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    return 0;\n}",
+      "hsgNote": "Có thể dùng template này gần như mặc định trong bài thi C++. Không cần hiểu sâu cơ chế buffer ở giai đoạn hiện tại."
+    },
+    {
+      "id": "theory19",
+      "title": "19. Quy trình đọc constraint trước khi code",
+      "content": "Một học sinh HSG không nên bắt đầu code ngay khi đọc đề. Hãy phân tích miền dữ liệu trước.",
+      "keywords": [
+        "constraint",
+        "problem-solving"
+      ],
+      "steps": [
+        "Xác định n lớn nhất.",
+        "Xác định giá trị lớn nhất của từng phần tử.",
+        "Ước lượng tổng, tích hoặc biểu thức trung gian.",
+        "Chọn int, long long hoặc double.",
+        "Sau đó mới triển khai thuật toán."
+      ],
+      "example": "Nếu n <= 10^5 và a[i] <= 10^9 thì tổng có thể đạt 10^14. Vì vậy sum phải là long long."
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Nhập hai số và tính tổng",
+      "description": "Đọc hai số nguyên và in tổng.",
+      "difficulty": "basic",
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << a + b;\n    return 0;\n}",
+      "input": "15 27",
+      "output": "42",
+      "explanation": "Hai số đều nhỏ nên int đủ dùng.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example02",
+      "title": "Thương và số dư",
+      "description": "Tìm thương nguyên và phần dư khi chia a cho b.",
+      "difficulty": "basic",
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << a / b << ' ' << a % b;\n    return 0;\n}",
+      "input": "17 5",
+      "output": "3 2",
+      "explanation": "17 = 3 * 5 + 2.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example03",
+      "title": "Bẫy overflow khi nhân",
+      "description": "Hai biến int nhưng tích cần long long.",
+      "difficulty": "intermediate",
+      "code": "int a = 1000000000;\nint b = 1000000000;\nlong long result = 1LL * a * b;",
+      "input": null,
+      "output": null,
+      "explanation": "Biểu thức phải được nâng lên long long trước khi phép nhân xảy ra.",
+      "complexity": null,
+      "wrongCode": "int a = 1000000000;\nint b = 1000000000;\nlong long result = a * b;",
+      "correctCode": "int a = 1000000000;\nint b = 1000000000;\nlong long result = 1LL * a * b;",
+      "hsgLesson": null
+    },
+    {
+      "id": "example04",
+      "title": "Tính trung bình đúng kiểu",
+      "description": "Tránh chia nguyên khi cần kết quả số thực.",
+      "difficulty": "intermediate",
+      "code": "int a = 5, b = 2;\ndouble x = static_cast<double>(a) / b;",
+      "input": null,
+      "output": "2.5",
+      "explanation": "Ít nhất một toán hạng phải là số thực trước khi phép chia được thực hiện.",
+      "complexity": null,
+      "wrongCode": "int a = 5, b = 2;\ndouble x = a / b;",
+      "correctCode": "int a = 5, b = 2;\ndouble x = static_cast<double>(a) / b;",
+      "hsgLesson": null
+    },
+    {
+      "id": "example05",
+      "title": "Chọn kiểu dữ liệu từ constraint",
+      "description": "Giả sử n <= 200000 và mỗi giá trị <= 1000000000. Tổng có thể đạt 2 * 10^14.",
+      "difficulty": "intermediate",
+      "code": "int n;\ncin >> n;\n\nlong long sum = 0;\n\nfor (int i = 0; i < n; ++i) {\n    int x;\n    cin >> x;\n    sum += x;\n}\n\ncout << sum;",
+      "input": null,
+      "output": null,
+      "explanation": "Từng x có thể lưu bằng int nhưng biến tổng phải là long long.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Kiểu dữ liệu của biến tổng không nhất thiết giống kiểu dữ liệu của từng phần tử."
+    },
+    {
+      "id": "example06",
+      "title": "Đổi ký tự chữ số thành số",
+      "description": "Chuyển ký tự '8' thành số nguyên 8.",
+      "difficulty": "intermediate",
+      "code": "char c = '8';\nint x = c - '0';\ncout << x;",
+      "input": null,
+      "output": "8",
+      "explanation": "Các ký tự chữ số có mã liên tiếp nên hiệu c - '0' chính là giá trị chữ số.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example07",
+      "title": "In số thực đúng định dạng",
+      "description": "In kết quả với chính xác hai chữ số sau dấu thập phân.",
+      "difficulty": "basic",
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    double x;\n    cin >> x;\n    cout << fixed << setprecision(2) << x;\n}",
+      "input": "3.1415926",
+      "output": "3.14",
+      "explanation": "fixed kết hợp setprecision(2) yêu cầu hai chữ số sau dấu thập phân.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    },
+    {
+      "id": "example08",
+      "title": "Template thi đấu cơ bản",
+      "description": "Template ngắn dùng cho phần lớn bài C++.",
+      "difficulty": "basic",
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    // code here\n\n    return 0;\n}",
+      "input": null,
+      "output": null,
+      "explanation": "Fast I/O được bật ngay đầu main.",
+      "complexity": null,
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null
+    }
+  ],
+  "quiz": [
+    {
+      "id": "quiz01",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "datatype"
+      ],
+      "question": "Kiểu nào phù hợp nhất để lưu số nguyên 1000000000000?",
+      "choices": [
+        "bool",
+        "char",
+        "int",
+        "long long"
+      ],
+      "answer": "long long",
+      "explanation": "10^12 vượt miền int thông dụng nhưng nằm thoải mái trong miền long long.",
+      "betterApproach": "Ước lượng số lớn nhất trước khi chọn kiểu."
+    },
+    {
+      "id": "quiz02",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "division"
+      ],
+      "question": "Kết quả của 7 / 2 khi cả hai toán hạng đều là int là gì?",
+      "choices": [
+        "3",
+        "3.5",
+        "4",
+        "Lỗi biên dịch"
+      ],
+      "answer": "3",
+      "explanation": "Đây là phép chia nguyên.",
+      "betterApproach": "Nếu cần 3.5, hãy đảm bảo ít nhất một toán hạng là số thực."
+    },
+    {
+      "id": "quiz03",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "modulo"
+      ],
+      "question": "17 % 5 bằng bao nhiêu?",
+      "choices": [
+        "2",
+        "3",
+        "5",
+        "12"
+      ],
+      "answer": "2",
+      "explanation": "17 = 3 * 5 + 2.",
+      "betterApproach": "Hiểu % là phép lấy phần dư."
+    },
+    {
+      "id": "quiz04",
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "division",
+        "double"
+      ],
+      "question": "Đoạn code sau in gì?\nint a = 5, b = 2;\ndouble x = a / b;\ncout << x;",
+      "choices": [
+        "2",
+        "2.0",
+        "2.5",
+        "Lỗi"
+      ],
+      "answer": "2",
+      "explanation": "a / b được tính bằng phép chia nguyên trước rồi mới gán sang double.",
+      "betterApproach": "Ép kiểu trước phép chia: static_cast<double>(a) / b."
+    },
+    {
+      "id": "quiz05",
+      "type": "multiple_choice",
+      "difficulty": "intermediate",
+      "tags": [
+        "overflow"
+      ],
+      "question": "Với int a = 1000000000 và int b = 1000000000, cách nào an toàn hơn để tính tích?",
+      "choices": [
+        "long long x = a * b",
+        "int x = a * b",
+        "long long x = 1LL * a * b",
+        "double x = a % b"
+      ],
+      "answer": "long long x = 1LL * a * b",
+      "explanation": "1LL khiến biểu thức được tính bằng long long.",
+      "betterApproach": "Luôn kiểm tra kiểu của biểu thức trung gian."
+    },
+    {
+      "id": "quiz06",
+      "type": "multiple_choice",
+      "difficulty": "intermediate",
+      "tags": [
+        "constraint",
+        "long-long"
+      ],
+      "question": "n <= 100000 và a[i] <= 1000000000. Kiểu phù hợp cho tổng tất cả a[i] là gì?",
+      "choices": [
+        "bool",
+        "char",
+        "int",
+        "long long"
+      ],
+      "answer": "long long",
+      "explanation": "Tổng cực đại khoảng 10^14.",
+      "betterApproach": "Tính upper bound trước khi chọn kiểu."
+    },
+    {
+      "id": "quiz07",
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "char",
+        "ascii"
+      ],
+      "question": "Đoạn code char c = '7'; cout << c - '0'; in ra gì?",
+      "choices": [
+        "55",
+        "48",
+        "7",
+        "'7'"
+      ],
+      "answer": "7",
+      "explanation": "Hiệu mã của '7' và '0' bằng 7.",
+      "betterApproach": "Ghi nhớ c - '0' khi c là ký tự chữ số."
+    },
+    {
+      "id": "quiz08",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "input"
+      ],
+      "question": "Với string s; cin >> s; và input là \"hello world\", s nhận giá trị nào?",
+      "choices": [
+        "hello",
+        "hello world",
+        "world",
+        "Chuỗi rỗng"
+      ],
+      "answer": "hello",
+      "explanation": "cin >> string dừng khi gặp whitespace.",
+      "betterApproach": "Khi cần cả dòng có dấu cách, nghiên cứu getline."
+    },
+    {
+      "id": "quiz09",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "tags": [
+        "output",
+        "precision"
+      ],
+      "question": "Cách phổ biến để in chính xác 3 chữ số sau dấu thập phân là gì?",
+      "choices": [
+        "cout << x",
+        "cout << fixed << setprecision(3) << x",
+        "cout << int(x)",
+        "cout << x % 3"
+      ],
+      "answer": "cout << fixed << setprecision(3) << x",
+      "explanation": "fixed kết hợp setprecision(3) điều khiển số chữ số sau dấu thập phân.",
+      "betterApproach": "Luôn đọc yêu cầu định dạng output."
+    },
+    {
+      "id": "quiz10",
+      "type": "multiple_choice",
+      "difficulty": "advanced",
+      "tags": [
+        "overflow",
+        "expression"
+      ],
+      "question": "Cho int n = 1000000000. Biểu thức nào an toàn hơn khi tính n * (n + 1) / 2?",
+      "choices": [
+        "int ans = n * (n + 1) / 2",
+        "long long ans = n * (n + 1) / 2",
+        "long long ans = 1LL * n * (n + 1) / 2",
+        "int ans = n / 2 * (n + 1)"
+      ],
+      "answer": "long long ans = 1LL * n * (n + 1) / 2",
+      "explanation": "Biểu thức được nâng lên long long ngay từ phép nhân đầu tiên.",
+      "betterApproach": "Đừng chỉ nhìn kiểu biến bên trái dấu =."
+    }
+  ],
+  "practice": [
+    {
+      "id": "practice01",
+      "title": "Tổng và tích hai số",
+      "difficulty": "basic",
+      "tags": [
+        "input",
+        "output",
+        "long-long"
+      ],
+      "problem": "Cho hai số nguyên a và b. In tổng và tích của chúng.",
+      "inputDescription": "Một dòng gồm hai số nguyên a và b.",
+      "outputDescription": "Dòng đầu in a + b. Dòng thứ hai in a * b.",
+      "constraints": [
+        "0 <= a, b <= 10^9"
+      ],
+      "sampleInput": "1000000000 1000000000",
+      "sampleOutput": "2000000000\n1000000000000000000",
+      "hint": "Tích có thể vượt giới hạn int.",
+      "answer": null,
+      "explanation": "Cần sử dụng long long hoặc 1LL khi thực hiện phép nhân.",
+      "betterApproach": "Phân tích constraint trước khi viết biểu thức.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "practice02",
+      "title": "Đổi giây thành giờ phút giây",
+      "difficulty": "basic",
+      "tags": [
+        "division",
+        "modulo"
+      ],
+      "problem": "Cho số nguyên S là số giây. Hãy chuyển S thành giờ, phút và giây.",
+      "inputDescription": "Một số nguyên S.",
+      "outputDescription": "In ba số h m s.",
+      "constraints": [
+        "0 <= S <= 10^9"
+      ],
+      "sampleInput": "3665",
+      "sampleOutput": "1 1 5",
+      "hint": "Dùng / và %.",
+      "answer": null,
+      "explanation": "h = S / 3600. Sau đó xử lý phần dư để tìm phút và giây.",
+      "betterApproach": "Đây là mẫu bài phân rã đơn vị rất phổ biến.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "practice03",
+      "title": "Tách ba chữ số",
+      "difficulty": "basic",
+      "tags": [
+        "division",
+        "modulo",
+        "digits"
+      ],
+      "problem": "Cho số nguyên n có đúng ba chữ số. In chữ số hàng trăm, hàng chục và hàng đơn vị.",
+      "inputDescription": "Một số nguyên n.",
+      "outputDescription": "Ba chữ số theo thứ tự hàng trăm, hàng chục, hàng đơn vị.",
+      "constraints": [
+        "100 <= n <= 999"
+      ],
+      "sampleInput": "572",
+      "sampleOutput": "5 7 2",
+      "hint": "Dùng / 100, / 10 và % 10.",
+      "answer": null,
+      "explanation": "Hàng trăm là n / 100; hàng chục là n / 10 % 10; hàng đơn vị là n % 10.",
+      "betterApproach": "",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "practice04",
+      "title": "Trung bình cộng",
+      "difficulty": "intermediate",
+      "tags": [
+        "double",
+        "casting",
+        "precision"
+      ],
+      "problem": "Cho ba số nguyên a, b, c. Tính trung bình cộng và in với đúng hai chữ số sau dấu thập phân.",
+      "inputDescription": "Ba số nguyên a, b, c.",
+      "outputDescription": "Trung bình cộng với hai chữ số sau dấu thập phân.",
+      "constraints": [
+        "-10^9 <= a, b, c <= 10^9"
+      ],
+      "sampleInput": "1 2 4",
+      "sampleOutput": "2.33",
+      "hint": "Tránh chia nguyên và dùng fixed, setprecision.",
+      "answer": null,
+      "explanation": "Có thể dùng (a + b + c) / 3.0.",
+      "betterApproach": "",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "practice05",
+      "title": "Tổng từ 1 đến n",
+      "difficulty": "intermediate",
+      "tags": [
+        "formula",
+        "overflow",
+        "long-long"
+      ],
+      "problem": "Cho số nguyên dương n. Không dùng vòng lặp, tính 1 + 2 + ... + n.",
+      "inputDescription": "Một số nguyên n.",
+      "outputDescription": "Tổng từ 1 đến n.",
+      "constraints": [
+        "1 <= n <= 10^9"
+      ],
+      "sampleInput": "1000000000",
+      "sampleOutput": "500000000500000000",
+      "hint": "Sử dụng công thức n * (n + 1) / 2 và chú ý overflow.",
+      "answer": null,
+      "explanation": "Sử dụng 1LL * n * (n + 1) / 2.",
+      "betterApproach": "Đây là bài kiểm tra cả công thức toán và khả năng chọn kiểu dữ liệu.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    }
+  ],
+  "advanced": [
+    {
+      "id": "advanced01",
+      "title": "Tổng dãy có phần tử lớn",
+      "difficulty": "advanced",
+      "tags": [
+        "constraint",
+        "overflow",
+        "long-long"
+      ],
+      "problem": "Cho n số nguyên. Hãy tính tổng của chúng.",
+      "inputDescription": "Dòng đầu là n. Dòng tiếp theo gồm n số nguyên.",
+      "outputDescription": "Tổng các phần tử.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "-10^9 <= a[i] <= 10^9"
+      ],
+      "sampleInput": "5\n1000000000 1000000000 1000000000 1000000000 1000000000",
+      "sampleOutput": "5000000000",
+      "hint": "Từng phần tử vừa int nhưng tổng thì không.",
+      "answer": null,
+      "explanation": "Giá trị tuyệt đối của tổng có thể đạt khoảng 2 * 10^14 nên phải dùng long long.",
+      "betterApproach": "Luôn ước lượng miền giá trị của biến tích lũy.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "advanced02",
+      "title": "Số đảo của số có ba chữ số",
+      "difficulty": "advanced",
+      "tags": [
+        "digits",
+        "division",
+        "modulo"
+      ],
+      "problem": "Cho số nguyên n có đúng ba chữ số. Hãy tạo số có các chữ số theo thứ tự ngược lại.",
+      "inputDescription": "Một số nguyên n.",
+      "outputDescription": "Số đảo của n.",
+      "constraints": [
+        "100 <= n <= 999"
+      ],
+      "sampleInput": "120",
+      "sampleOutput": "21",
+      "hint": "Tách từng chữ số bằng / và %, sau đó ghép lại.",
+      "answer": null,
+      "explanation": "Nếu a, b, c lần lượt là hàng trăm, chục, đơn vị thì số đảo bằng c * 100 + b * 10 + a.",
+      "betterApproach": "Đây là tiền đề cho các bài xử lý chữ số bằng vòng lặp ở chương sau.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    },
+    {
+      "id": "advanced03",
+      "title": "Bẫy biểu thức trung gian",
+      "difficulty": "advanced",
+      "tags": [
+        "overflow",
+        "expression",
+        "debugging"
+      ],
+      "problem": "Cho hai số nguyên a và b với 0 <= a, b <= 10^9. Tính a * a + 2 * a * b + b * b.",
+      "inputDescription": "Hai số nguyên a và b.",
+      "outputDescription": "Giá trị biểu thức.",
+      "constraints": [
+        "0 <= a, b <= 10^9"
+      ],
+      "sampleInput": "1000000000 1000000000",
+      "sampleOutput": "4000000000000000000",
+      "hint": "Không chỉ biến kết quả mà mọi phép nhân trung gian đều phải được thực hiện bằng long long.",
+      "answer": null,
+      "explanation": "Có thể sử dụng 1LL * a * a + 2LL * a * b + 1LL * b * b.",
+      "betterApproach": "Có thể nhận ra biểu thức bằng (a + b)^2, nhưng vẫn phải bảo đảm phép tính sử dụng long long.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      }
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Dùng int cho mọi biến.",
+      "fix": "Đọc constraint và ước lượng giá trị lớn nhất."
+    },
+    {
+      "mistake": "long long result = a * b nhưng a và b đều là int.",
+      "fix": "Dùng 1LL * a * b."
+    },
+    {
+      "mistake": "double x = a / b với a, b là int.",
+      "fix": "Dùng static_cast<double>(a) / b hoặc chia cho số thực."
+    },
+    {
+      "mistake": "Dùng cin >> s để đọc cả câu.",
+      "fix": "cin >> s chỉ đọc tới whitespace; khi cần cả dòng dùng getline."
+    },
+    {
+      "mistake": "Không format số thực theo đề.",
+      "fix": "Sử dụng fixed và setprecision(k) khi đề yêu cầu."
+    },
+    {
+      "mistake": "In thêm chữ mô tả output.",
+      "fix": "Hệ thống chấm tự động yêu cầu output đúng chính xác format."
+    }
+  ],
+  "chapterSummary": [
+    "int phù hợp với phần lớn số nguyên nhỏ, nhưng long long cần thiết khi tổng hoặc tích có thể lớn.",
+    "Kiểu của biểu thức trung gian quan trọng không kém kiểu của biến nhận kết quả.",
+    "Phép chia giữa hai số nguyên là chia nguyên.",
+    "% dùng để lấy phần dư và là công cụ rất quan trọng trong bài toán số học.",
+    "Ép kiểu phải thực hiện trước phép toán nếu muốn thay đổi cách phép toán được tính.",
+    "Đọc constraint trước rồi mới chọn kiểu dữ liệu.",
+    "Trong thi đấu nên quen với fast I/O và output chính xác theo đề."
+  ],
+  "language": "cpp"
+}
