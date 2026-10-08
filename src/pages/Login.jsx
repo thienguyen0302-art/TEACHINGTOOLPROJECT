@@ -4,7 +4,7 @@ import {
   signInWithPopup, GoogleAuthProvider,
   sendEmailVerification, sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../services/firebase";
 
 const ERR = {
   "auth/invalid-credential": "Sai email hoặc mật khẩu.",
