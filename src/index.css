@@ -1,5 +1,21 @@
-body { margin: 0; font-family: system-ui, sans-serif; background: #f6f8fb; color: #14213d; }
-.box { max-width: 420px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #d5dcea; }
-input { width: 100%; padding: 10px; margin: 6px 0; box-sizing: border-box; font-size: 16px; }
-button { padding: 10px 14px; margin: 4px 4px 4px 0; font-size: 16px; cursor: pointer; }
-.err { color: #c43b47; } .ok { color: #14855a; }
+.nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 10px 20px; background: #14213d; color: #fff; }
+.nav .brand { color: #ffc933; font-weight: 800; text-decoration: none; font-size: 18px; }
+.nav-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.nav-mail { font-size: 14px; opacity: .8; }
+.tag { background: #ffc933; color: #14213d; border-radius: 6px; padding: 2px 8px; font-weight: 700; }
+.layout { display: grid; grid-template-columns: 260px 1fr; gap: 16px; max-width: 1100px; margin: 16px auto; padding: 0 16px; }
+.side { background: #fff; border: 1px solid #d5dcea; border-radius: 12px; padding: 12px; align-self: start; }
+.side h3 { margin: 4px 0 8px; }
+.side-link { display: block; padding: 8px 10px; border-radius: 8px; color: #14213d; text-decoration: none; margin-bottom: 4px; }
+.side-link.active { background: #ffc933; font-weight: 600; }
+.main { background: #fff; border: 1px solid #d5dcea; border-radius: 12px; padding: 20px; min-width: 0; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+.tabs button.on { background: #ffc933; border-color: #ffc933; font-weight: 600; }
+pre { background: #14213d; color: #e8eefc; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 14px; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #d5dcea; padding: 6px 10px; text-align: left; }
+.callout { border-left: 4px solid #ffc933; background: #fff8e1; padding: 8px 12px; border-radius: 6px; margin: 10px 0; }
+.callout.warn { border-color: #c43b47; background: #fdecee; }
+.card { border: 1px solid #d5dcea; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+.badge { font-size: 12px; background: #e3e9f2; border-radius: 6px; padding: 2px 8px; margin-left: 8px; font-weight: 400; }
+@media (max-width: 720px) { .layout { grid-template-columns: 1fr; } }

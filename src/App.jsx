@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { onAuthStateChanged, signOut, sendEmailVerification } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./services/firebase";
 import Login from "./pages/Login";
 import ChooseLang from "./pages/ChooseLang";
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import Chapters from "./pages/Chapters";
+import Lesson from "./pages/Lesson";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -47,11 +52,23 @@ export default function App() {
   if (!lang) return <ChooseLang uid={user.uid} onPick={setLang} />;
 
   return (
-    <div className="box">
-      <h2>Xin chào {user.email}</h2>
-      <p>Bạn đang học: <b>{lang === "cpp" ? "C++" : "Python"}</b></p>
-      <button onClick={() => setLang(null)}>Đổi ngôn ngữ</button>
-      <button onClick={() => signOut(auth)}>Đăng xuất</button>
-    </div>
+    <>
+      <Navbar
+        email={user.email}
+        lang={lang}
+        onChangeLang={() => setLang(null)}
+        onLogout={() => signOut(auth)}
+      />
+      <div className="layout">
+        <Sidebar lang={lang} />
+        <main className="main">
+          <Routes>
+            <Route path="/" element={<Chapters lang={lang} />} />
+            <Route path="/lesson/:id" element={<Lesson lang={lang} />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      </div>
+    </>
   );
 }
