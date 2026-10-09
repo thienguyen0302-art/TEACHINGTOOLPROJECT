@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run validate:content",
     "build": "vite build",
     "lint": "eslint .",
     "validate:content": "python3 scripts/validate_content.py",

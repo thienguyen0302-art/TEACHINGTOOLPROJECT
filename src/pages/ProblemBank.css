@@ -77,6 +77,8 @@
 .bank-panel__bar button { align-self: stretch; padding: 12px 0; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #848b95; font-size: 12px; }
 .bank-panel__bar button[aria-selected="true"] { color: #303743; border-bottom-color: #d69b2a; font-weight: 600; }
 .bank-panel__bar button span { font-size: 10px; margin-left: 4px; background: #e9edf1; padding: 1px 5px; border-radius: 4px; }
+.bank-panel__bar button .bank-tab-icon { font-size: inherit; margin: 0; background: none; padding: 0; }
+.bank-panel__bar button:focus-visible { outline-offset: -3px; }
 .bank-statement-body { padding: 24px; }
 .bank-ui .problem-statement { line-height: 1.75; }
 .bank-ui .problem-statement h1 { font-size: 24px; letter-spacing: -.5px; margin: 0 0 12px; }
