@@ -47,12 +47,16 @@ sẽ báo lỗi kèm đường dẫn file thay vì ghi đè bài.
 `/practice` hiển thị danh sách, tìm kiếm, bộ lọc chương/chủ đề/độ khó và sắp xếp;
 chương rỗng hoặc không có kết quả có thông báo và nút xóa bộ lọc.
 `/problem/:slug` hiển thị đề,
-ví dụ, gợi ý và textarea code tạm thời với starter C++/Python. Code nháp riêng
-cho từng ngôn ngữ, không lưu sau khi rời bài. `solution` và `aiContext` chỉ là
-dữ liệu chuẩn bị cho các phase sau. Chưa có Monaco, chấm bài, progress hay AI.
+ví dụ, gợi ý và Monaco Editor với starter C++/Python. `CodeEditor.jsx` là component
+reusable nhận `language`, `value`, `onChange`; editor và worker được bundle local,
+không dùng CDN. Mỗi workspace có model riêng cho C++/Python, giữ code, undo/redo
+và view state khi đổi ngôn ngữ; model được dispose khi rời workspace hoặc đổi bài.
+Code nháp không được lưu vào localStorage và không giữ sau khi rời bài.
+`solution` và `aiContext` chỉ là dữ liệu chuẩn bị cho các phase sau.
+Chưa có chấm bài, progress hay AI; nút Chạy code/Nộp bài vẫn hiển thị và disabled.
 Hai route dùng chung yêu cầu đăng nhập/xác minh email/chọn ngôn ngữ hiện có.
 Slug không tồn tại có thông báo và link về danh sách. Tab Đề bài/Gợi ý dùng
-phím trái/phải (xoay vòng), Home/End và Tab để đến nội dung; các select/textarea
+phím trái/phải (xoay vòng), Home/End và Tab để đến nội dung; các select/editor
 có label, vùng bảng có thể focus để cuộn ngang bằng bàn phím trên màn hình nhỏ.
 
 **Giới hạn Phase 1:** `solution.code` hiện nằm trong JSON được bundle vào frontend,
