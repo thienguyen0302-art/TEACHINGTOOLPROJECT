@@ -1,4 +1,4 @@
-"""Validate lesson schema; optionally compile/run authored examples and solutions.
+"""Validate lesson and Problem Bank schemas; optionally run lesson reference code.
 
 Usage: python3 scripts/validate_content.py [--run-code]
 Code execution requires Python 3 and g++ with C++17 support.
@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -23,6 +24,95 @@ def require(condition, message):
 def fields(item, keys, context):
     for key in keys:
         require(key in item, f"{context}: missing {key}")
+
+
+def validate_problem(path, problem, bank_root):
+    """Check authored problems, including nested fields, before Vite bundles them."""
+    context = f"problems/{path.relative_to(bank_root)}"
+
+    def object_fields(value, keys, location):
+        require(isinstance(value, dict), f"{location}: expected object")
+        fields(value, keys, location)
+
+    def string(value, location, allow_empty=False):
+        require(isinstance(value, str) and (allow_empty or bool(value.strip())),
+                f"{location}: expected {'string' if allow_empty else 'non-empty string'}")
+
+    def string_list(value, location, non_empty=False):
+        require(isinstance(value, list) and (not non_empty or bool(value)),
+                f"{location}: expected {'non-empty ' if non_empty else ''}string array")
+        for index, item in enumerate(value):
+            string(item, f"{location}[{index}]")
+
+    object_fields(problem, ["id", "slug", "chapterId", "title", "type", "difficulty",
+                            "level", "tags", "statement", "inputDescription",
+                            "outputDescription", "constraints", "samples", "hints",
+                            "starterCode", "solution", "aiContext"], context)
+    for key in ["id", "slug", "chapterId", "title", "type", "difficulty",
+                "statement", "inputDescription", "outputDescription"]:
+        string(problem[key], f"{context}.{key}")
+    require(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", problem["slug"]),
+            f"{context}.slug: expected lowercase kebab-case")
+    require(problem["chapterId"] in {f"ch{i:02}" for i in range(1, 15)},
+            f"{context}.chapterId: expected ch01..ch14")
+    require(path.parent == bank_root / problem["chapterId"],
+            f"{context}.chapterId: does not match folder {path.parent.name}")
+    require(problem["type"] == "coding", f"{context}.type: expected coding in Phase 1")
+    require(problem["difficulty"] in ["basic", "intermediate", "advanced"],
+            f"{context}.difficulty: invalid difficulty")
+    require(type(problem["level"]) is int and problem["level"] >= 1,
+            f"{context}.level: expected positive integer")
+    for key in ["tags", "constraints", "hints"]:
+        string_list(problem[key], f"{context}.{key}", non_empty=key == "constraints")
+
+    samples = problem["samples"]
+    require(isinstance(samples, list) and samples, f"{context}.samples: expected non-empty array")
+    for index, sample in enumerate(samples):
+        location = f"{context}.samples[{index}]"
+        object_fields(sample, ["input", "output", "explanation"], location)
+        for key in ["input", "output", "explanation"]:
+            string(sample[key], f"{location}.{key}", allow_empty=True)
+
+    object_fields(problem["starterCode"], ["cpp", "python"], f"{context}.starterCode")
+    for language in ["cpp", "python"]:
+        string(problem["starterCode"][language], f"{context}.starterCode.{language}")
+
+    solution = problem["solution"]
+    object_fields(solution, ["explanation", "code", "complexity"], f"{context}.solution")
+    string(solution["explanation"], f"{context}.solution.explanation")
+    object_fields(solution["code"], ["cpp", "python"], f"{context}.solution.code")
+    for language in ["cpp", "python"]:
+        string(solution["code"][language], f"{context}.solution.code.{language}")
+    object_fields(solution["complexity"], ["time", "space"], f"{context}.solution.complexity")
+    for key in ["time", "space"]:
+        string(solution["complexity"][key], f"{context}.solution.complexity.{key}")
+
+    object_fields(problem["aiContext"], ["objectives", "prerequisites", "commonMistakes"],
+                  f"{context}.aiContext")
+    for key in ["objectives", "prerequisites", "commonMistakes"]:
+        string_list(problem["aiContext"][key], f"{context}.aiContext.{key}")
+
+
+def validate_problem_bank(bank_root):
+    """Allow empty chapter folders, exclude templates, enforce global uniqueness."""
+    for index in range(1, 15):
+        folder = bank_root / f"ch{index:02}"
+        require(folder.is_dir(), f"problems: missing chapter folder {folder.name}")
+    ids, slugs = {}, {}
+    paths = sorted(path for path in bank_root.rglob("*.json") if not path.name.startswith("_"))
+    for path in paths:
+        context = f"problems/{path.relative_to(bank_root)}"
+        try:
+            problem = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            raise ValueError(f"{context}: invalid JSON ({error})") from error
+        validate_problem(path, problem, bank_root)
+        for key, seen in [("id", ids), ("slug", slugs)]:
+            value = problem[key]
+            require(value not in seen,
+                    f"{context}: duplicate {key} {value!r} (first in {seen.get(value)})")
+            seen[value] = context
+    return len(paths)
 
 
 def validate(path, chapter):
@@ -158,9 +248,11 @@ def main():
             chapter = json.loads(path.read_text())
             jobs.extend(validate(path, chapter))
             chapters.append(chapter)
+    problem_count = validate_problem_bank(ROOT / "problems")
     print(f'Schema OK: {len(chapters)} chapters, '
           f'{sum(len(c["quiz"]) for c in chapters)} quiz questions, '
           f'{sum(len(c["practice"])+len(c["advanced"]) for c in chapters)} exercises.', flush=True)
+    print(f'Problem Bank OK: {problem_count} problems, 14 chapter folders (ch01..ch14).', flush=True)
     if args.run_code:
         grouped = {}
         for lang, code, stdin, expected, location in jobs:

@@ -8,7 +8,7 @@ Problem Bank độc lập với các bài `practice`/`advanced` trong chapter c�
 src/content/problems/
 ├── _template.json
 ├── ch01/*.json
-└── ch02...ch10/       # Có .gitkeep để giữ các thư mục chưa có bài
+└── ch02...ch14/       # Có .gitkeep để giữ các thư mục chưa có bài
 ```
 
 Để thêm bài, sao chép `_template.json` vào thư mục chương, đổi tên file,
@@ -23,7 +23,7 @@ Vite tự cập nhật khi phát triển; bản production cần build lại sau
 | `id`, `slug`, `chapterId`, `title` | string; định danh, URL, mã chương, tên bài |
 | `type` | string; Phase 1 dùng `coding` |
 | `difficulty` | `basic` / `intermediate` / `advanced`; tương đối trong chương |
-| `level` | number; cấp độ học tập |
+| `level` | số nguyên dương; cấp độ học tập |
 | `tags` | string[] |
 | `statement`, `inputDescription`, `outputDescription` | string; văn bản thuần, hỗ trợ xuống dòng |
 | `constraints`, `hints` | string[] |
@@ -33,6 +33,8 @@ Vite tự cập nhật khi phát triển; bản production cần build lại sau
 | `aiContext` | `{ objectives: string[], prerequisites: string[], commonMistakes: string[] }` |
 
 Tất cả trường trên có mặt trong mỗi file problem. Xem `_template.json` làm mẫu.
+Bank có đủ thư mục `ch01`–`ch14` để đồng bộ curriculum; thư mục chưa có bài
+được giữ bằng `.gitkeep`, không cần thêm bài mẫu giả.
 `listProblems({ difficulty?, chapterId? })` trả danh sách theo chương và ID;
 `getProblemBySlug(slug)` trả bài hoặc `null`. Metadata sai hoặc ID/slug trùng
 sẽ báo lỗi kèm đường dẫn file thay vì ghi đè bài.
@@ -42,6 +44,30 @@ ví dụ, gợi ý và textarea code tạm thời với starter C++/Python. Code
 cho từng ngôn ngữ, không lưu sau khi rời bài. `solution` và `aiContext` chỉ là
 dữ liệu chuẩn bị cho các phase sau. Chưa có Monaco, chấm bài, progress hay AI.
 Hai route dùng chung yêu cầu đăng nhập/xác minh email/chọn ngôn ngữ hiện có.
+
+**Giới hạn Phase 1:** `solution.code` hiện nằm trong JSON được bundle vào frontend,
+chỉ phục vụ Phase 1. Dù UI không hiển thị lời giải, người dùng vẫn có thể đọc code
+trong bundle. Trước khi triển khai Judge0 production, phải chuyển `solution.code`
+sang backend/private storage và loại khỏi dữ liệu trả về frontend; ẩn trên UI
+không bảo vệ được lời giải.
+
+`npm run validate:content` kiểm tra cả curriculum và Problem Bank. Với Bank,
+validator kiểm tra mọi field bắt buộc ở bảng trên, kiểu dữ liệu và các field con
+của `samples`, `starterCode`, `solution` và `aiContext`; phát hiện `id`/`slug` trùng
+trong toàn bộ Bank và `chapterId` không khớp thư mục. `chapterId` chỉ nhận
+`ch01`–`ch14`, `type` chỉ nhận `coding`, slug dùng chữ thường/số và gạch ngang,
+`difficulty` chỉ nhận ba mức đã khai báo, `level` là số nguyên dương.
+
+Với bài thực tế, các chuỗi bắt buộc phải có nội dung, kể cả code C++/Python;
+`constraints` và `samples` có ít nhất một phần tử. Mỗi sample luôn có `input`,
+`output`, `explanation` kiểu string (cho phép chuỗi rỗng). `tags`, `hints` và các
+mảng trong `aiContext` có thể rỗng; phần tử khi có phải là chuỗi có nội dung.
+File JSON bắt đầu bằng `_` được loại khỏi kiểm tra bài thực tế, giống loader;
+template được phép giữ code lời giải rỗng để người viết điền sau.
+
+Kiểm tra hồi quy validator bằng `python3 -m unittest discover -s scripts -p 'test_*.py'`.
+`--run-code` hiện chỉ thực thi code tham khảo của curriculum, không chạy
+`starterCode`/`solution.code` của Bank hoặc code do học sinh nhập.
 
 Nội dung mỗi chương được lưu trong một file JSON theo ngôn ngữ:
 
