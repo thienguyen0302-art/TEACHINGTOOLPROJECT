@@ -91,7 +91,7 @@ function Examples({ items }) {
   ));
 }
 
-export default function Lesson({ lang }) {
+function LessonBody({ lang }) {
   const { id } = useParams();
   const [ch, setCh] = useState(undefined); // undefined = đang tải, null = không có
   const [tab, setTab] = useState("overview");
@@ -153,6 +153,13 @@ export default function Lesson({ lang }) {
       {tab === "summary" && (
         <ul>{ch.chapterSummary.map((x, i) => <li key={i}>{x}</li>)}</ul>
       )}
+    </div>
+  );
+}
+export default function Lesson({ lang }) {
+  return (
+    <div className="content lesson-page">
+      <LessonBody lang={lang} />
     </div>
   );
 }

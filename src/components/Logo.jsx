@@ -1,0 +1,18 @@
+export default function Logo() {
+  return (
+    <svg viewBox="0 0 64 64" role="img" aria-label="PeanutCode">
+      <circle cx="32" cy="32" r="32" fill="#3978ed" />
+      <path
+        d="M32 9c-7 0-12 4.6-12 10.5 0 3.3 1.5 5.5 3.2 7.3-2.8 2-5 4.8-5 9 0 7.5 6 12.7 13.8 12.7S46 43.3 46 35.8c0-4.2-2.2-7-5-9 1.7-1.8 3.2-4 3.2-7.3C44.2 13.6 39 9 32 9Z"
+        fill="#f4d19b" stroke="#c98f4f" strokeWidth="2" strokeLinejoin="round"
+      />
+      <path
+        d="M26.5 33l-5 4.5 5 4.5M37.5 33l5 4.5-5 4.5M34 31.5l-4 12"
+        fill="none" stroke="#102b60" strokeWidth="2.6"
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+      <circle cx="28" cy="18" r="1.3" fill="#c98f4f" />
+      <circle cx="35" cy="21" r="1.3" fill="#c98f4f" />
+    </svg>
+  );
+}
