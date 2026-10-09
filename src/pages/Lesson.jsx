@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { loadChapter } from "../services/contentService";
+import QuestionCard from "../components/QuestionCard";
 
 const COL = {
   type: "Kiểu", purpose: "Công dụng", typicalRange: "Khoảng giá trị",
@@ -93,13 +94,27 @@ function Examples({ items }) {
 
 export default function Lesson({ lang }) {
   const { id } = useParams();
+  return <LessonContent key={`${lang}:${id}`} lang={lang} id={id} />;
+}
+
+function LessonContent({ lang, id }) {
   const [ch, setCh] = useState(undefined); // undefined = đang tải, null = không có
   const [tab, setTab] = useState("overview");
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  function handleSelect(questionId, choice) {
+    if (submitted) return;
+    setAnswers((previous) => ({ ...previous, [questionId]: choice }));
+  }
+
+  function resetQuiz() {
+    setAnswers({});
+    setSubmitted(false);
+  }
 
   useEffect(() => {
     let on = true;
-    setCh(undefined);
-    setTab("overview");
     loadChapter(lang, id).then((c) => on && setCh(c));
     return () => { on = false; };
   }, [lang, id]);
@@ -107,8 +122,16 @@ export default function Lesson({ lang }) {
   if (ch === undefined) return <p>Đang tải bài học...</p>;
   if (ch === null) return <p>Không tìm thấy chương này.</p>;
 
+  const questions = ch.quiz ?? [];
+  const answeredCount = questions.filter((question) =>
+    question.choices.includes(answers[question.id])
+  ).length;
+  const score = questions.filter((question) => answers[question.id] === question.answer).length;
+  const canSubmit = questions.length > 0 && answeredCount === questions.length;
+
   const tabs = [
     ["overview", "Tổng quan"], ["theory", "Lý thuyết"], ["examples", "Ví dụ"],
+    ["quiz", "Quiz"],
     ["mistakes", "Lỗi thường gặp"], ["summary", "Tóm tắt"],
   ];
 
@@ -134,6 +157,42 @@ export default function Lesson({ lang }) {
       )}
       {tab === "theory" && <Theory items={ch.theory} />}
       {tab === "examples" && <Examples items={ch.examples} />}
+      {tab === "quiz" && (
+        <section aria-label="Quiz của chương">
+          {questions.length === 0 ? <p>Chương này chưa có câu hỏi Quiz.</p> : (
+            <>
+              <div className="callout" role="status">
+                {submitted ? (
+                  <><b>Kết quả: {score}/{questions.length} câu đúng ({Math.round(score / questions.length * 100)}%).</b>
+                    <p>Xem đáp án và giải thích bên dưới, hoặc làm lại để ôn tập.</p></>
+                ) : (
+                  <><b>Đã trả lời {answeredCount}/{questions.length} câu.</b>
+                    <p>Chọn một đáp án cho mỗi câu rồi nộp bài để xem kết quả.</p></>
+                )}
+              </div>
+              {questions.map((question, index) => (
+                <QuestionCard
+                  key={question.id}
+                  question={question}
+                  index={index}
+                  selectedAnswer={answers[question.id]}
+                  onSelect={(choice) => handleSelect(question.id, choice)}
+                  submitted={submitted}
+                />
+              ))}
+              <div className="quiz-actions">
+                {!submitted && (
+                  <button type="button" disabled={!canSubmit} onClick={() => { if (canSubmit) setSubmitted(true); }}>
+                    Nộp bài
+                  </button>
+                )}
+                <button type="button" disabled={!submitted && answeredCount === 0} onClick={resetQuiz}>Làm lại</button>
+                {!submitted && !canSubmit && <p>Còn {questions.length - answeredCount} câu chưa trả lời.</p>}
+              </div>
+            </>
+          )}
+        </section>
+      )}
       {tab === "mistakes" && (
         <div>
           {ch.commonMistakes.map((m, i) => (
