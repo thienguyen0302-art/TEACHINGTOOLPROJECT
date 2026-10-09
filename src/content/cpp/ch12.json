@@ -1,0 +1,695 @@
+{
+  "id": "ch12",
+  "language": "cpp",
+  "title": "Số học, số nguyên tố và modulo",
+  "order": 12,
+  "description": "Chương 12 — Dùng gcd/lcm và kiểm tra tràn. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Dùng gcd/lcm và kiểm tra tràn.",
+    "Kiểm tra nguyên tố, phân tích thừa số và sàng.",
+    "Tính lũy thừa nhanh modulo.",
+    "Không nhầm chia thường với chia trong modulo."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 11 và tự chạy được ví dụ bằng C++17."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. GCD và LCM",
+      "content": "Ước chung lớn nhất tính bằng Euclid. Với a,b dương, lcm=a/gcd(a,b)*b. Chia trước khi nhân giảm rủi ro tràn nhưng không bảo đảm kết quả luôn vừa 64 bit; phải xét ràng buộc. Gcd giúp rút gọn phân số và phát hiện hai số nguyên tố cùng nhau.",
+      "keywords": [
+        "number-theory",
+        "modulo"
+      ],
+      "code": "#include <iostream>\n#include <numeric>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a = 12, b = 18;\n    cout << a / gcd(a, b) * b;\n}",
+      "output": "36",
+      "explanation": "gcd=6; lcm=2*18=36.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "GCD tìm nhóm đơn vị lớn nhất chia đều cả hai số. LCM tìm mốc chung dương nhỏ nhất mà cả hai số đều chia hết. Với a,b dương, gcd×lcm=a×b; công thức giúp suy một giá trị từ giá trị còn lại.",
+            "Chia a cho gcd trước khi nhân b giảm tích trung gian nhưng kết quả LCM vẫn có thể quá lớn. Cần kiểm tra a/gcd<=LIMIT/b trước khi nhân nếu bài không bảo đảm kết quả vừa kiểu số."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Tính g=gcd(a,b).",
+            "Tính phần a/g trước, không nhân a*b trước.",
+            "Kiểm tra giới hạn tích cuối theo ràng buộc.",
+            "Chuẩn hóa định nghĩa nếu bài cho 0 hoặc số âm."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mỗi thừa số nguyên tố có số mũ nhỏ hơn trong gcd và lớn hơn trong lcm, nên tổng hai số mũ bằng tổng số mũ trong a,b; từ đó có tích đẳng thức.",
+            "Áp dụng cho chu kỳ gặp nhau, phân nhóm đều và rút gọn phân số."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không tin phép chia trước tự bảo đảm khỏi tràn. Python có số lớn nhưng độ dài bit và thời gian xử lý vẫn tăng."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu a và b nguyên tố cùng nhau, LCM bằng gì?",
+        "answer": "a*b với a,b dương; đây cũng là trường hợp phải chú ý tích có thể rất lớn."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Nguyên tố và thử đến căn",
+      "content": "Số nguyên tố là số >=2 chỉ có hai ước dương. Nếu n hợp số, một cặp ước a*b=n có ít nhất một ước <=sqrt(n). Vì vậy chỉ thử từ 2 đến căn. Trong C++, điều kiện d<=n/d tránh tràn d*d ở giới hạn lớn.",
+      "keywords": [
+        "number-theory",
+        "modulo"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long n = 29;\n    bool ok = n >= 2;\n    for (long long d = 2; d <= n / d; ++d)\n        if (n % d == 0) {\n            ok = false;\n            break;\n        }\n    cout << (ok ? \"YES\" : \"NO\");\n}",
+      "output": "YES",
+      "explanation": "Không có ước từ 2 đến 5.",
+      "hsgNote": "Kiểm tra rất nhiều số nhỏ nên dùng sàng thay vì lặp thử ước riêng từng số.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Thử mọi số từ 2 đến n-1 là đúng nhưng quá chậm. Hợp số n có cặp ước d,n/d. Nếu cả hai đều lớn hơn sqrt(n), tích sẽ lớn hơn n, mâu thuẫn; vì vậy luôn có một ước nhỏ không vượt căn.",
+            "Bài kiểm tra nguyên tố không cần tìm hết ước. Chỉ một ước không tầm thường là đủ kết luận hợp số. Nếu không tìm được ước và n>=2, số nguyên tố. C++ dùng d<=n/d giúp kiểm tra căn mà không tính d*d có thể tràn."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xử lý n<2 trả NO.",
+            "Thử d từ 2 khi d không vượt căn.",
+            "Nếu n%d=0, dừng với NO.",
+            "Nếu hết miền thử mà không có ước, trả YES."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mọi hợp số đều có ước trong miền thử đã chứng minh. Không tìm được ước loại mọi khả năng hợp số, với điều kiện n>=2.",
+            "Áp dụng cho một hoặc ít số ở giới hạn đủ để sqrt(n) phù hợp. Với nhiều số trong miền nhỏ, sàng dùng lại kết quả tốt hơn."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Đừng dùng căn số thực rồi ép xuống mà không xét sai số ở số lớn. Số 1 không nguyên tố dù vòng thử không chạy."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Số chính phương như 49 cần xét ước 7 không?",
+        "answer": "Có. Điều kiện phải lấy bằng tại căn; d<sqrt(n) sẽ bỏ ước duy nhất nhỏ của 49."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Sàng Eratosthenes",
+      "content": "Đánh dấu mọi số 2..N là có thể nguyên tố. Khi i còn nguyên tố, loại các bội từ i*i vì các bội nhỏ hơn đã bị loại bởi ước nhỏ. Đặt 0 và 1 không nguyên tố. Sàng cơ bản O(N log log N), dùng O(N) bộ nhớ.",
+      "keywords": [
+        "number-theory",
+        "modulo"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n = 10;\n    vector<bool> p(n + 1, true);\n    p[0] = p[1] = false;\n    for (int i = 2; i * i <= n; ++i)\n        if (p[i])\n            for (int j = i * i; j <= n; j += i)\n                p[j] = false;\n    for (int i = 2; i <= n; ++i)\n        if (p[i])\n            cout << i << \" \";\n}",
+      "output": "2 3 5 7",
+      "explanation": "Loại 4,6,8,10 bởi 2 và 9 bởi 3.",
+      "visualization": {
+        "title": "Sàng: loại bội của nguyên tố",
+        "description": "Các ô nhạt bị đánh dấu không nguyên tố. Giá trị 0 và 1 bị loại ngay từ đầu.",
+        "steps": [
+          {
+            "title": "Khởi tạo",
+            "explanation": "0 và 1 không nguyên tố; các ô 2..10 là ứng viên.",
+            "cells": [
+              {
+                "label": "N",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "—",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+              ],
+              "activeIndices": [],
+              "pointers": [],
+              "discardedIndices": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "title": "Loại bội của 2",
+            "explanation": "2 chưa bị loại. Đánh dấu các bội 4,6,8,10 bắt đầu từ 2².",
+            "cells": [
+              {
+                "label": "N",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+              ],
+              "activeIndices": [
+                2
+              ],
+              "pointers": [
+                {
+                  "index": 2,
+                  "label": "i"
+                }
+              ],
+              "discardedIndices": [
+                0,
+                1,
+                4,
+                6,
+                8,
+                10
+              ]
+            },
+            "formula": "j = 4,6,8,10"
+          },
+          {
+            "title": "Loại bội của 3",
+            "explanation": "3 chưa bị loại; 3²=9. Bội nhỏ hơn 9 đã được xử lý bởi 2.",
+            "cells": [
+              {
+                "label": "N",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+              ],
+              "activeIndices": [
+                3
+              ],
+              "pointers": [
+                {
+                  "index": 3,
+                  "label": "i"
+                }
+              ],
+              "discardedIndices": [
+                0,
+                1,
+                4,
+                6,
+                8,
+                9,
+                10
+              ]
+            },
+            "formula": "j = 9"
+          },
+          {
+            "title": "Các nguyên tố còn lại",
+            "explanation": "Lượt i=4 vượt căn 10 nên ngừng sàng. Các ô chưa bị loại là 2,3,5,7.",
+            "cells": [
+              {
+                "label": "Output",
+                "value": "2 3 5 7",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+              ],
+              "activeIndices": [
+                2,
+                3,
+                5,
+                7
+              ],
+              "pointers": [],
+              "discardedIndices": [
+                0,
+                1,
+                4,
+                6,
+                8,
+                9,
+                10
+              ]
+            }
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Sàng xử lý chung cả miền 0..N. Khi một i chưa bị loại, nó nguyên tố; các bội của nó lớn hơn chính nó là hợp số. Mọi hợp số có ít nhất một ước nguyên tố, nên cuối cùng đều bị đánh dấu.",
+            "Chỉ cần mở vòng đánh dấu khi i<=sqrt(N), vì mọi hợp số trong miền có ước nguyên tố không vượt căn của nó. Bắt đầu từ i*i tránh đánh dấu lại các bội đã có một thừa số nhỏ hơn i."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Tạo bảng true rồi đặt 0,1=false.",
+            "Duyệt i từ 2 đến căn N.",
+            "Nếu i còn true, đánh dấu i*i,i*i+i,... là false.",
+            "Dùng bảng để trả lời nguyên tố O(1) cho mỗi giá trị trong miền."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Số nguyên tố không là bội của số nhỏ hơn 2..i-1 nên không bị loại. Mọi hợp số được loại bởi một ước nguyên tố nhỏ, nên bảng sau cùng chính xác.",
+            "Áp dụng cho nhiều truy vấn nguyên tố, đếm nguyên tố trong miền và chuẩn bị bảng ước nhỏ nhất với biến thể phù hợp."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Cần cấp phát N+1 và xử lý N<1 trong hàm tổng quát. Đừng sàng đến 10^12 bằng bảng trực tiếp nếu bộ nhớ không cho phép."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Vì sao khi xét 5 có thể bắt đầu ở 25 thay vì 10?",
+        "answer": "10,15,20 đã có thừa số nguyên tố nhỏ hơn 5 và đã được loại trước."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Lũy thừa nhị phân modulo",
+      "content": "Để tính a^b mod m, duyệt các bit của b. Nếu b lẻ, nhân kết quả với a; sau đó bình phương a và chia b cho 2. Sau mỗi phép nhân lấy modulo để giới hạn số. Modulo không cho phép chia bằng phép chia nguyên thông thường. Nghịch đảo modulo chỉ tồn tại khi hai số nguyên tố cùng nhau.",
+      "keywords": [
+        "number-theory",
+        "modulo"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a = 3, b = 5, m = 100, result = 1 % m;\n    a %= m;\n    while (b) {\n        if (b & 1)\n            result = result * a % m;\n        a = a * a % m;\n        b /= 2;\n    }\n    cout << result;\n}",
+      "output": "43",
+      "explanation": "3^5=243, phần dư 43. Số vòng là số bit của b.",
+      "hsgNote": "Code C++ ở chương này giới hạn m<=10^9+7 để tích hai phần dư vừa long long. Modulo lớn hơn cần nhân modulo an toàn.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Lũy thừa nhanh phân rã số mũ theo bit. Nếu b lẻ, a^b=a×a^(b-1); nếu b chẵn, a^b=(a²)^(b/2). Thay vì nhân b lần, ta tách các bit b và bình phương cơ số ở mỗi lượt.",
+            "Modulo tương thích với cộng và nhân: có thể lấy dư sau mỗi phép tính mà vẫn giữ phần dư cuối. Nhưng phép chia không có quy tắc tương tự. Với m=1 mọi kết quả đều dư 0, kể cả kết quả khởi tạo của số mũ 0."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Khởi tạo res=1%m và chuẩn hóa a%=m.",
+            "Nếu bit thấp của b là 1, nhân res với a theo modulo.",
+            "Bình phương a theo modulo rồi chia b cho 2.",
+            "Dừng khi b=0; kiểm tra tích hai phần dư trước khi nhân ở C++."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Bất biến res×a^b bằng giá trị ban đầu theo modulo. Mỗi phép tách bit bảo toàn bất biến; khi b=0, a^b=1 và res là đáp án.",
+            "Áp dụng cho số mũ rất lớn, tổ hợp theo modulo và nhiều phép tính trong thuật toán số học."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Modulo sau khi một tích đã tràn không sửa được lỗi. Nghịch đảo của b theo m chỉ tồn tại khi gcd(b,m)=1; không dùng a//b để thay."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Tại sao b=0 cần khởi tạo 1%m chứ không luôn 1?",
+        "answer": "a^0=1 theo quy ước bài, nhưng khi m=1 thì phần dư của 1 là 0."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "GCD và LCM",
+      "description": "Ước chung lớn nhất tính bằng Euclid. Với a,b dương, lcm=a/gcd(a,b)*b. Chia trước khi nhân giảm rủi ro tràn nhưng không bảo đảm kết quả luôn vừa 64 bit; phải xét ràng buộc. Gcd giúp rút gọn phân số và phát hiện hai số nguyên tố cùng nhau.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <numeric>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a = 12, b = 18;\n    cout << a / gcd(a, b) * b;\n}",
+      "input": null,
+      "output": "36",
+      "explanation": "gcd=6; lcm=2*18=36.",
+      "complexity": {
+        "time": "O(log min(a,b))",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Nguyên tố và thử đến căn",
+      "description": "Số nguyên tố là số >=2 chỉ có hai ước dương. Nếu n hợp số, một cặp ước a*b=n có ít nhất một ước <=sqrt(n). Vì vậy chỉ thử từ 2 đến căn. Trong C++, điều kiện d<=n/d tránh tràn d*d ở giới hạn lớn.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long n = 29;\n    bool ok = n >= 2;\n    for (long long d = 2; d <= n / d; ++d)\n        if (n % d == 0) {\n            ok = false;\n            break;\n        }\n    cout << (ok ? \"YES\" : \"NO\");\n}",
+      "input": null,
+      "output": "YES",
+      "explanation": "Không có ước từ 2 đến 5.",
+      "complexity": {
+        "time": "O(sqrt n)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Kiểm tra rất nhiều số nhỏ nên dùng sàng thay vì lặp thử ước riêng từng số.",
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Sàng Eratosthenes",
+      "description": "Đánh dấu mọi số 2..N là có thể nguyên tố. Khi i còn nguyên tố, loại các bội từ i*i vì các bội nhỏ hơn đã bị loại bởi ước nhỏ. Đặt 0 và 1 không nguyên tố. Sàng cơ bản O(N log log N), dùng O(N) bộ nhớ.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n = 10;\n    vector<bool> p(n + 1, true);\n    p[0] = p[1] = false;\n    for (int i = 2; i * i <= n; ++i)\n        if (p[i])\n            for (int j = i * i; j <= n; j += i)\n                p[j] = false;\n    for (int i = 2; i <= n; ++i)\n        if (p[i])\n            cout << i << \" \";\n}",
+      "input": null,
+      "output": "2 3 5 7",
+      "explanation": "Loại 4,6,8,10 bởi 2 và 9 bởi 3.",
+      "complexity": {
+        "time": "O(N log log N)",
+        "space": "O(N)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Lũy thừa nhị phân modulo",
+      "description": "Để tính a^b mod m, duyệt các bit của b. Nếu b lẻ, nhân kết quả với a; sau đó bình phương a và chia b cho 2. Sau mỗi phép nhân lấy modulo để giới hạn số. Modulo không cho phép chia bằng phép chia nguyên thông thường. Nghịch đảo modulo chỉ tồn tại khi hai số nguyên tố cùng nhau.",
+      "difficulty": "advanced",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a = 3, b = 5, m = 100, result = 1 % m;\n    a %= m;\n    while (b) {\n        if (b & 1)\n            result = result * a % m;\n        a = a * a % m;\n        b /= 2;\n    }\n    cout << result;\n}",
+      "input": null,
+      "output": "43",
+      "explanation": "3^5=243, phần dư 43. Số vòng là số bit của b.",
+      "complexity": {
+        "time": "O(log b)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Code C++ ở chương này giới hạn m<=10^9+7 để tích hai phần dư vừa long long. Modulo lớn hơn cần nhân modulo an toàn.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Số 1 có phải nguyên tố không?",
+      "choices": [
+        "Không",
+        "Có",
+        "Tùy ngôn ngữ",
+        "Chỉ khi modulo 2"
+      ],
+      "answer": "Không",
+      "explanation": "1 chỉ có một ước dương.",
+      "betterApproach": "Xử lý n<2 trước vòng thử ước.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "number-theory",
+        "modulo"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Vì sao sàng bắt đầu loại bội i từ i*i?",
+      "choices": [
+        "Để bỏ luôn i",
+        "Vì i*i luôn nguyên tố",
+        "Do mảng đánh số từ 1",
+        "Bội nhỏ hơn đã có ước nhỏ hơn i"
+      ],
+      "answer": "Bội nhỏ hơn đã có ước nhỏ hơn i",
+      "explanation": "Bội k*i với k<i đã được xử lý ở ước của k.",
+      "betterApproach": "Phân biệt điểm bắt đầu và bước nhảy i.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "number-theory",
+        "modulo"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Chia trong modulo có luôn là chia nguyên không?",
+      "choices": [
+        "Chỉ cần bỏ phần dư",
+        "Chia cho 0 được",
+        "Không, cần điều kiện cho nghịch đảo",
+        "Có"
+      ],
+      "answer": "Không, cần điều kiện cho nghịch đảo",
+      "explanation": "Không thể lấy (a mod m)//b thay cho phép chia modulo.",
+      "betterApproach": "Nghịch đảo tồn tại khi gcd(b,m)=1.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "number-theory",
+        "modulo"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "number-theory",
+        "modulo",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <numeric>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a = 12, b = 18;\n    cout << a / gcd(a, b) * b;\n}",
+      "choices": [
+        "36",
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0"
+      ],
+      "answer": "36",
+      "explanation": "gcd=6; lcm=2*18=36.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "number-theory",
+        "modulo",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long n = 29;\n    bool ok = n >= 2;\n    for (long long d = 2; d <= n / d; ++d)\n        if (n % d == 0) {\n            ok = false;\n            break;\n        }\n    cout << (ok ? \"YES\" : \"NO\");\n}",
+      "choices": [
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0",
+        "YES"
+      ],
+      "answer": "YES",
+      "explanation": "Không có ước từ 2 đến 5.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Kiểm tra nguyên tố",
+      "problem": "Kiểm tra một số n có phải số nguyên tố không.",
+      "inputDescription": "Một số n.",
+      "outputDescription": "YES hoặc NO.",
+      "constraints": [
+        "0 <= n <= 10^12"
+      ],
+      "sampleInput": "29",
+      "sampleOutput": "YES",
+      "hint": "Hợp số có một ước không vượt căn bậc hai.",
+      "explanation": "Nếu không tìm thấy ước và n>=2, n nguyên tố. 0,1 đều NO.",
+      "complexity": {
+        "time": "O(sqrt n)",
+        "space": "O(1)"
+      },
+      "betterApproach": "Bài nhiều truy vấn hoặc số 64 bit rất lớn cần phương pháp khác; không dùng thử ước cho mọi giới hạn.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "number-theory",
+        "modulo"
+      ],
+      "answer": null,
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long n;\n    cin >> n;\n    bool ok = n >= 2;\n    for (long long d = 2; d <= n / d; ++d)\n        if (n % d == 0) {\n            ok = false;\n            break;\n        }\n    cout << (ok ? \"YES\" : \"NO\");\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "0",
+          "output": "NO"
+        },
+        {
+          "input": "1",
+          "output": "NO"
+        },
+        {
+          "input": "4",
+          "output": "NO"
+        },
+        {
+          "input": "2",
+          "output": "YES"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Lũy thừa rất lớn",
+      "problem": "Tính a^b modulo m với b rất lớn.",
+      "inputDescription": "Ba số a b m.",
+      "outputDescription": "Phần dư trong [0,m-1].",
+      "constraints": [
+        "0 <= a <= 10^9",
+        "0 <= b <= 10^18",
+        "1 <= m <= 10^9+7",
+        "Bài quy ước a^0=1, kể cả a=0"
+      ],
+      "sampleInput": "3 5 100",
+      "sampleOutput": "43",
+      "hint": "Chia số mũ làm đôi và bình phương cơ số.",
+      "explanation": "Bất biến res*a^b bằng giá trị ban đầu theo modulo. Khi b lẻ, tách một a vào res; bình phương rồi chia b cho 2 bảo toàn bất biến.",
+      "complexity": {
+        "time": "O(log b)",
+        "space": "O(1)"
+      },
+      "betterApproach": "Thử b=0 và m=1; res ban đầu cần 1%m.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "number-theory",
+        "modulo"
+      ],
+      "answer": null,
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a, b, m;\n    cin >> a >> b >> m;\n    long long res = 1 % m;\n    a %= m;\n    while (b) {\n        if (b & 1)\n            res = res * a % m;\n        a = a * a % m;\n        b /= 2;\n    }\n    cout << res;\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "0 0 1",
+          "output": "0"
+        },
+        {
+          "input": "7 0 11",
+          "output": "1"
+        },
+        {
+          "input": "0 5 100",
+          "output": "0"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Nhầm 1 là nguyên tố",
+      "fix": "Số nguyên tố phải >=2."
+    },
+    {
+      "mistake": "Lấy modulo sau khi tích đã tràn",
+      "fix": "Kiểm tra giới hạn tích hoặc dùng thuật toán nhân an toàn."
+    }
+  ],
+  "chapterSummary": [
+    "Euclid bảo toàn tập ước chung.",
+    "Thử ước đến căn hoặc sàng theo số lượng truy vấn.",
+    "Lũy thừa nhanh theo bit, không lặp b lần."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Số học, số nguyên tố và modulo",
+      "url": "https://www.geeksforgeeks.org/dsa/mathematical-algorithms/"
+    },
+    {
+      "title": "GCC — thư viện C++ và header chuẩn",
+      "url": "https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html"
+    },
+    {
+      "title": "Algorithms for Competitive Programming — đọc thêm thuật toán",
+      "url": "https://cp-algorithms.com/"
+    }
+  ]
+}

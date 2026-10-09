@@ -1,0 +1,686 @@
+{
+  "id": "ch09",
+  "language": "cpp",
+  "title": "Tìm kiếm nhị phân và tìm trên đáp án",
+  "order": 9,
+  "description": "Chương 9 — Tìm vị trí đầu tiên >=x. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Tìm vị trí đầu tiên >=x.",
+    "Giữ bất biến đoạn nửa mở [l,r).",
+    "Phân biệt lower_bound và upper_bound.",
+    "Chuyển bài tối ưu thành kiểm tra đơn điệu."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 8 và tự chạy được ví dụ bằng C++17."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Lower bound và đoạn nửa mở",
+      "content": "Trên dãy tăng dần, lower bound là vị trí đầu có giá trị >=x, hoặc n nếu không có. Giữ [l,r) chứa vị trí có thể cần xét; nếu a[mid]<x thì loại trái bằng l=mid+1, ngược lại r=mid. Khi l=r, đó là vị trí chèn. Dãy có trùng vẫn hoạt động.",
+      "keywords": [
+        "binary-search"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {1, 3, 3, 7};\n    int x = 3, l = 0, r = a.size();\n    while (l < r) {\n        int m = l + (r - l) / 2;\n        if (a[m] < x)\n            l = m + 1;\n        else\n            r = m;\n    }\n    cout << l;\n}",
+      "output": "1",
+      "explanation": "Giá trị 3 đầu tiên ở chỉ số 1.",
+      "visualization": {
+        "title": "Miền chưa biết thu nhỏ từng nửa",
+        "description": "Các ô nhạt nằm ngoài miền [l,r) đang xét; mid là ô màu xanh.",
+        "steps": [
+          {
+            "title": "Xét mid=2",
+            "explanation": "a[2]=3>=3, giữ bên trái và đặt r=2.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "mid",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "3",
+                "3",
+                "7"
+              ],
+              "activeIndices": [
+                2
+              ],
+              "pointers": [
+                {
+                  "index": 0,
+                  "label": "l"
+                },
+                {
+                  "index": 2,
+                  "label": "mid"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "a[2] = 3"
+          },
+          {
+            "title": "Xét mid=1",
+            "explanation": "a[1]=3>=3, đặt r=1.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "mid",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "3",
+                "3",
+                "7"
+              ],
+              "activeIndices": [
+                1
+              ],
+              "pointers": [
+                {
+                  "index": 0,
+                  "label": "l"
+                },
+                {
+                  "index": 1,
+                  "label": "mid"
+                }
+              ],
+              "discardedIndices": [
+                2,
+                3
+              ]
+            },
+            "formula": "a[1] = 3"
+          },
+          {
+            "title": "Xét mid=0",
+            "explanation": "a[0]=1<3, loại vị trí 0 và đặt l=1.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "mid",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "3",
+                "3",
+                "7"
+              ],
+              "activeIndices": [
+                0
+              ],
+              "pointers": [
+                {
+                  "index": 0,
+                  "label": "l"
+                },
+                {
+                  "index": 0,
+                  "label": "mid"
+                }
+              ],
+              "discardedIndices": [
+                1,
+                2,
+                3
+              ]
+            },
+            "formula": "a[0] = 1"
+          },
+          {
+            "title": "Hai biên gặp nhau",
+            "explanation": "l=r=1; giá trị đầu >=3 ở chỉ số 1. Không đọc ô chỉ số 4.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "Output",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "3",
+                "3",
+                "7"
+              ],
+              "activeIndices": [
+                1
+              ],
+              "pointers": [
+                {
+                  "index": 1,
+                  "label": "đáp án"
+                }
+              ],
+              "discardedIndices": [
+                0
+              ]
+            },
+            "formula": "lower_bound(3) = 1"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Lower bound là một vị trí, không phải một giá trị hay khẳng định x có trong dãy. Nó chia dãy tăng thành miền a[i]<x bên trái và a[i]>=x bên phải. Nếu miền phải rỗng, vị trí chia là n; đây vẫn là kết quả hợp lệ.",
+            "Mẫu [l,r) có r không thuộc đoạn phần tử đang đọc. Có thể khởi tạo r=n mà không truy cập a[n]. Vị trí mid khi l<r luôn nhỏ hơn r; cập nhật r=mid giữ mid là ứng viên, còn l=mid+1 loại mid đã chứng minh quá nhỏ."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Đặt l=0,r=n.",
+            "Lấy mid=l+(r-l)/2 trong C++, hoặc (l+r)//2 ở Python.",
+            "Nếu a[mid]<x, đặt l=mid+1; ngược lại đặt r=mid.",
+            "Khi l==r, trả l và chỉ đọc a[l] nếu l<n."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mọi chỉ số nhỏ hơn l đã biết có giá trị <x; mọi chỉ số từ r trở đi đã biết >=x. Miền chưa biết giảm sau mỗi bước. Khi hai biên gặp, vị trí phân chia được xác định.",
+            "Áp dụng cho vị trí chèn, phần tử đầu thỏa ngưỡng và kiểm tra xuất hiện trong dãy có trùng."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không trả -1 khi chỉ đang tìm vị trí chèn. Không cập nhật l=mid trong mẫu này: khi miền chỉ còn một phần tử, mid có thể bằng l và vòng không tiến."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Lower bound x lớn hơn mọi phần tử trả gì, và có được đọc a[kết quả] không?",
+        "answer": "Trả n; không được đọc a[n] vì nằm ngoài dãy."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Thư viện và đếm phần tử bằng x",
+      "content": "Upper bound là vị trí đầu >x. Vì các phần tử bằng x tạo đoạn liên tiếp, số lượng bằng x là upper-lower. Python bisect_left/bisect_right trả chỉ số; C++ lower_bound/upper_bound trả iterator. Không nhầm vị trí chèn với việc x thật sự tồn tại.",
+      "keywords": [
+        "binary-search"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {1, 3, 3, 7};\n    cout << upper_bound(a.begin(), a.end(), 3) - lower_bound(a.begin(), a.end(), 3);\n}",
+      "output": "2",
+      "explanation": "Đoạn [1,3) chứa hai số 3.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Lower bound tìm đầu vùng bằng x hoặc lớn hơn; upper bound tìm đầu vùng lớn hơn hẳn x. Vì các x đứng liên tiếp, chúng nằm đúng trong đoạn nửa mở [lower,upper). Độ dài đoạn là upper-lower, bằng 0 khi không có x.",
+            "Dùng thư viện giảm lỗi biên nhưng không loại yêu cầu dữ liệu đã sắp theo cùng thứ tự. Python trả chỉ số; C++ trả iterator, muốn chỉ số lấy iterator-begin. Với vector, thao tác iterator và truy cập giữa là hiệu quả."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác nhận dãy đã sắp theo đúng quan hệ.",
+            "Lấy biên trái với >=x và biên phải với >x.",
+            "Lấy hiệu để đếm; kiểm tra biên trái trước khi đọc để xác định tồn tại.",
+            "Nếu nhiều truy vấn trên dãy chưa sắp, sort một lần ngoài vòng truy vấn."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Hai biên bao kín đúng nhóm x; các phần tử trước trái nhỏ hơn x, sau phải lớn hơn x. Mỗi x đóng góp một vị trí trong đoạn.",
+            "Áp dụng cho tần suất truy vấn, đếm trong đoạn giá trị [L,R] bằng upper(R)-lower(L)."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không trộn dấu > và >= giữa hai biên. Không sort riêng cho mỗi truy vấn nếu dãy không thay đổi."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với [2,2,2], lower(2) và upper(2) bằng bao nhiêu?",
+        "answer": "0 và 3, nên tần suất là 3. Upper có thể ở vị trí ngay sau phần tử cuối."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Nhị phân trên đáp án",
+      "content": "Nếu P(t) sai với mọi t nhỏ và đúng với mọi t lớn, có thể tìm t đầu đúng. Bài máy sản xuất: máy i cần a[i] thời gian cho một sản phẩm, đến t làm floor(t/a[i]) sản phẩm. Tổng tăng theo t nên kiểm tra đủ k sản phẩm là đơn điệu. Mỗi lần kiểm tra tốn O(n), tổng O(n log U).",
+      "keywords": [
+        "binary-search"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<long long> a = {2, 3};\n    long long k = 5, l = 0, r = 10;\n    while (l < r) {\n        long long m = l + (r - l) / 2, total = 0;\n        for (auto x : a)\n            total += m / x;\n        if (total >= k)\n            r = m;\n        else\n            l = m + 1;\n    }\n    cout << l;\n}",
+      "output": "6",
+      "explanation": "t=5 làm 2+1=3; t=6 làm 3+2=5, đủ sản phẩm.",
+      "hsgNote": "Cận phải phải chắc chắn khả thi; giới hạn bài bên dưới bảo đảm min(a)*k vừa long long.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Nhị phân trên đáp án không yêu cầu có một dãy lưu sẵn các đáp án. Ta có miền số và một hàm P(t) kiểm tra khả thi. Mục tiêu tối ưu nhỏ nhất trở thành tìm ranh giới đầu tiên mà P chuyển từ sai sang đúng.",
+            "Với nhà máy, chờ thêm thời gian không làm mất sản phẩm đã sản xuất. Do đó nếu t đủ thì mọi thời gian lớn hơn cũng đủ. Cận phải min(a)*k là khả thi vì riêng máy nhanh nhất có thể sản xuất k sản phẩm đến lúc đó."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Định nghĩa chính xác P(t) và hướng đơn điệu.",
+            "Tìm cận trái và một cận phải chắc chắn đủ.",
+            "Kiểm tra mid bằng tổng floor(mid/a[i]), dừng cộng khi đã đủ k.",
+            "Nếu đủ, tìm tiếp bên trái; nếu thiếu, loại mid và miền nhỏ hơn."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Sau mỗi bước, đáp án nhỏ nhất vẫn thuộc miền tìm kiếm. Tính đơn điệu cho phép loại nguyên nửa miền, không chỉ một thời điểm đã kiểm tra.",
+            "Áp dụng cho thời gian tối thiểu, công suất tối thiểu, khoảng cách tối đa và các bài có hàm kiểm tra tương ứng. Hướng cập nhật thay đổi nếu tìm lớn nhất khả thi."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Một bài tối ưu không tự có tính đơn điệu. Chi phí hàm kiểm tra phải nhân với số bước nhị phân; tổng sản phẩm cần chặn để tránh tràn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Tại sao t đủ k sản phẩm thì t+1 cũng đủ?",
+        "answer": "Các máy chỉ tạo thêm hoặc giữ số sản phẩm, không mất sản phẩm cũ; floor((t+1)/a[i])>=floor(t/a[i])."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Điều kiện áp dụng quan trọng hơn cú pháp",
+      "content": "Nhị phân chỉ đúng khi tính chất có thứ tự. Một mảng chưa sắp không có vùng a[i]<x nối tiếp vùng a[i]>=x. Với tìm trên đáp án, phải chứng minh P(t) đơn điệu. Cập nhật l=mid thay vì mid+1 trong mẫu lower bound có thể khiến miền không giảm khi r=l+1.",
+      "keywords": [
+        "binary-search"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {1, 3, 3, 7};\n    cout << lower_bound(a.begin(), a.end(), 8) - a.begin();\n}",
+      "output": "4",
+      "explanation": "Không có phần tử >=8, trả n thay vì truy cập a[n].",
+      "hsgNote": "Luôn thử x nhỏ hơn min, lớn hơn max và giá trị xuất hiện nhiều lần.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Các mẫu nhị phân có thể dùng đoạn đóng hoặc nửa mở, nhưng mỗi mẫu có một bộ bất biến và quy tắc cập nhật đồng bộ. Không ghép điều kiện l<=r của mẫu này với r=mid của mẫu khác chỉ vì thấy quen.",
+            "Kiểm tra dữ liệu biên thường phát hiện lỗi: dãy rỗng trong hàm tổng quát, một phần tử, mọi phần tử bằng nhau, x ở ngoài miền. Trong dãy chưa sắp, một so sánh a[mid]<x không cho biết các phần tử phía trái đều nhỏ."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Chọn một mẫu chuẩn và viết bất biến của nó.",
+            "Đảm bảo mỗi cập nhật làm số ứng viên giảm.",
+            "Thử dãy một phần tử với x nhỏ/bằng/lớn.",
+            "Phân biệt tìm vị trí chèn và tìm phần tử tồn tại."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nhị phân đúng nhờ có vùng liên tục theo tính chất, chứ không nhờ riêng thao tác lấy mid. Không có vùng đơn điệu, phép loại nửa có thể bỏ đáp án.",
+            "Áp dụng nguyên tắc này khi tự triển khai hoặc thay đổi một mẫu tìm kiếm."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không sửa thuật toán bằng các +1/-1 ngẫu nhiên đến khi qua mẫu. Nếu gặp vòng không dừng, theo dõi l,r,mid ở mỗi lượt và xác nhận miền giảm."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Trên [5,1,9], a[mid]=1<5 có cho phép loại bên trái để tìm 5 không?",
+        "answer": "Không. 5 nằm ở bên trái dù a[mid] nhỏ, vì dãy chưa sắp."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Lower bound và đoạn nửa mở",
+      "description": "Trên dãy tăng dần, lower bound là vị trí đầu có giá trị >=x, hoặc n nếu không có. Giữ [l,r) chứa vị trí có thể cần xét; nếu a[mid]<x thì loại trái bằng l=mid+1, ngược lại r=mid. Khi l=r, đó là vị trí chèn. Dãy có trùng vẫn hoạt động.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {1, 3, 3, 7};\n    int x = 3, l = 0, r = a.size();\n    while (l < r) {\n        int m = l + (r - l) / 2;\n        if (a[m] < x)\n            l = m + 1;\n        else\n            r = m;\n    }\n    cout << l;\n}",
+      "input": null,
+      "output": "1",
+      "explanation": "Giá trị 3 đầu tiên ở chỉ số 1.",
+      "complexity": {
+        "time": "O(log n)",
+        "space": "O(n) input, O(1) phụ trợ"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Thư viện và đếm phần tử bằng x",
+      "description": "Upper bound là vị trí đầu >x. Vì các phần tử bằng x tạo đoạn liên tiếp, số lượng bằng x là upper-lower. Python bisect_left/bisect_right trả chỉ số; C++ lower_bound/upper_bound trả iterator. Không nhầm vị trí chèn với việc x thật sự tồn tại.",
+      "difficulty": "intermediate",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {1, 3, 3, 7};\n    cout << upper_bound(a.begin(), a.end(), 3) - lower_bound(a.begin(), a.end(), 3);\n}",
+      "input": null,
+      "output": "2",
+      "explanation": "Đoạn [1,3) chứa hai số 3.",
+      "complexity": {
+        "time": "O(log n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Nhị phân trên đáp án",
+      "description": "Nếu P(t) sai với mọi t nhỏ và đúng với mọi t lớn, có thể tìm t đầu đúng. Bài máy sản xuất: máy i cần a[i] thời gian cho một sản phẩm, đến t làm floor(t/a[i]) sản phẩm. Tổng tăng theo t nên kiểm tra đủ k sản phẩm là đơn điệu. Mỗi lần kiểm tra tốn O(n), tổng O(n log U).",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<long long> a = {2, 3};\n    long long k = 5, l = 0, r = 10;\n    while (l < r) {\n        long long m = l + (r - l) / 2, total = 0;\n        for (auto x : a)\n            total += m / x;\n        if (total >= k)\n            r = m;\n        else\n            l = m + 1;\n    }\n    cout << l;\n}",
+      "input": null,
+      "output": "6",
+      "explanation": "t=5 làm 2+1=3; t=6 làm 3+2=5, đủ sản phẩm.",
+      "complexity": {
+        "time": "O(n log U)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Cận phải phải chắc chắn khả thi; giới hạn bài bên dưới bảo đảm min(a)*k vừa long long.",
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Điều kiện áp dụng quan trọng hơn cú pháp",
+      "description": "Nhị phân chỉ đúng khi tính chất có thứ tự. Một mảng chưa sắp không có vùng a[i]<x nối tiếp vùng a[i]>=x. Với tìm trên đáp án, phải chứng minh P(t) đơn điệu. Cập nhật l=mid thay vì mid+1 trong mẫu lower bound có thể khiến miền không giảm khi r=l+1.",
+      "difficulty": "advanced",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {1, 3, 3, 7};\n    cout << lower_bound(a.begin(), a.end(), 8) - a.begin();\n}",
+      "input": null,
+      "output": "4",
+      "explanation": "Không có phần tử >=8, trả n thay vì truy cập a[n].",
+      "complexity": {
+        "time": "O(log n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Luôn thử x nhỏ hơn min, lớn hơn max và giá trị xuất hiện nhiều lần.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Lower bound của 4 trong [1,3,3,7] là chỉ số nào?",
+      "choices": [
+        "2",
+        "4",
+        "-1",
+        "3"
+      ],
+      "answer": "3",
+      "explanation": "7 ở chỉ số 3 là giá trị đầu >=4.",
+      "betterApproach": "Vị trí chèn có thể hợp lệ dù x không xuất hiện.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "binary-search"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Nhị phân trên đáp án cần tính chất gì?",
+      "choices": [
+        "Đáp án luôn số nguyên tố",
+        "Mọi vòng lặp O(1)",
+        "Kiểm tra khả thi đơn điệu",
+        "Dữ liệu đều khác nhau"
+      ],
+      "answer": "Kiểm tra khả thi đơn điệu",
+      "explanation": "Cần một ranh giới giữa vùng sai và vùng đúng.",
+      "betterApproach": "Viết chứng minh đơn điệu trước code.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "binary-search"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Đếm x trong dãy đã sắp bằng công thức nào?",
+      "choices": [
+        "upper_bound(x)",
+        "upper_bound(x)-lower_bound(x)",
+        "lower_bound(x)+upper_bound(x)",
+        "n-lower_bound(x)"
+      ],
+      "answer": "upper_bound(x)-lower_bound(x)",
+      "explanation": "Khoảng từ đầu >=x đến đầu >x chứa đúng các số x.",
+      "betterApproach": "Đoạn là nửa mở.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "binary-search"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "binary-search",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {1, 3, 3, 7};\n    int x = 3, l = 0, r = a.size();\n    while (l < r) {\n        int m = l + (r - l) / 2;\n        if (a[m] < x)\n            l = m + 1;\n        else\n            r = m;\n    }\n    cout << l;\n}",
+      "choices": [
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0",
+        "1"
+      ],
+      "answer": "1",
+      "explanation": "Giá trị 3 đầu tiên ở chỉ số 1.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "binary-search",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {1, 3, 3, 7};\n    cout << upper_bound(a.begin(), a.end(), 3) - lower_bound(a.begin(), a.end(), 3);\n}",
+      "choices": [
+        "Lỗi chạy chương trình",
+        "0",
+        "2",
+        "Không có output"
+      ],
+      "answer": "2",
+      "explanation": "Đoạn [1,3) chứa hai số 3.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Truy vấn tần suất",
+      "problem": "Cho dãy tăng dần và q truy vấn x, in số lần x xuất hiện.",
+      "inputDescription": "n q; dòng n số; sau đó q số truy vấn, mỗi dòng một số.",
+      "outputDescription": "q dòng tần suất.",
+      "constraints": [
+        "1 <= n,q <= 200000",
+        "|a[i]|,|x| <= 10^9"
+      ],
+      "sampleInput": "4 3\n1 3 3 7\n3\n2\n7",
+      "sampleOutput": "2\n0\n1",
+      "hint": "Tìm hai biên của nhóm x.",
+      "explanation": "Dãy đã sắp nên mỗi truy vấn dùng hai tìm kiếm logarit, không cần quét toàn dãy.",
+      "complexity": {
+        "time": "O(n + q log n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "Nếu dãy chưa sắp, phải sort trước và cộng O(n log n) vào thời gian.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "binary-search"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n, q;\n    cin >> n >> q;\n    vector<int> a(n);\n    for (auto &x : a)\n        cin >> x;\n    while (q--) {\n        int x;\n        cin >> x;\n        cout << upper_bound(a.begin(), a.end(), x) - lower_bound(a.begin(), a.end(), x)\n             << \"\\n\";\n    }\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1 3\n5\n4\n5\n6",
+          "output": "0\n1\n0"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Nhà máy sản xuất",
+      "problem": "n máy hoạt động đồng thời từ thời điểm 0. Máy i làm một sản phẩm sau mỗi a[i] đơn vị thời gian. Tìm thời gian nhỏ nhất để tổng sản phẩm >=k.",
+      "inputDescription": "n k rồi n thời gian a[i].",
+      "outputDescription": "Thời gian nhỏ nhất.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "1 <= k <= 10^9",
+        "1 <= a[i] <= 10^9"
+      ],
+      "sampleInput": "2 5\n2 3",
+      "sampleOutput": "6",
+      "hint": "Tại thời gian t, tổng là sum(t/a[i]) lấy phần nguyên.",
+      "explanation": "Số sản phẩm không giảm theo t; máy nhanh nhất tự làm k sản phẩm cho cận phải khả thi. C++ chặn tổng tại k để tránh tràn khi có nhiều máy.",
+      "complexity": {
+        "time": "O(n log(min(a)·k))",
+        "space": "O(n)"
+      },
+      "betterApproach": "Chỉ cần biết đủ hay chưa, không cần cộng một tổng có thể vượt 64 bit.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "binary-search"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    long long k;\n    cin >> n >> k;\n    vector<long long> a(n);\n    for (auto &x : a)\n        cin >> x;\n    long long l = 0, r = *min_element(a.begin(), a.end()) * k;\n    while (l < r) {\n        long long m = l + (r - l) / 2, total = 0;\n        for (auto x : a) {\n            long long made = m / x;\n            if (made >= k - total) {\n                total = k;\n                break;\n            }\n            total += made;\n        }\n        if (total >= k)\n            r = m;\n        else\n            l = m + 1;\n    }\n    cout << l;\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1 1000000000\n1000000000",
+          "output": "1000000000000000000"
+        },
+        {
+          "input": "3 1\n7 2 3",
+          "output": "2"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Áp dụng trên dữ liệu không có thứ tự",
+      "fix": "Sắp xếp hoặc chứng minh tính đơn điệu."
+    },
+    {
+      "mistake": "Dùng a[n] khi trả vị trí chèn n",
+      "fix": "Kiểm tra chỉ số trước khi đọc giá trị."
+    }
+  ],
+  "chapterSummary": [
+    "Lower/upper bound xử lý dữ liệu trùng.",
+    "Giữ bất biến miền nửa mở.",
+    "Nhị phân đáp án cần cận khả thi và tính đơn điệu."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Tìm kiếm nhị phân và tìm trên đáp án",
+      "url": "https://www.geeksforgeeks.org/dsa/binary-search/"
+    },
+    {
+      "title": "GCC — thư viện C++ và header chuẩn",
+      "url": "https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html"
+    },
+    {
+      "title": "Algorithms for Competitive Programming — đọc thêm thuật toán",
+      "url": "https://cp-algorithms.com/"
+    }
+  ]
+}

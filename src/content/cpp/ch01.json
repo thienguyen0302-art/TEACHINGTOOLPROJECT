@@ -30,7 +30,34 @@
         "namespace"
       ],
       "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    return 0;\n}",
-      "hsgNote": "Không dành nhiều thời gian ghi nhớ thư viện riêng lẻ ở giai đoạn đầu. Điều quan trọng là hiểu code nằm trong main() được thực hiện theo thứ tự."
+      "hsgNote": "Không dành nhiều thời gian ghi nhớ thư viện riêng lẻ ở giai đoạn đầu. Điều quan trọng là hiểu code nằm trong main() được thực hiện theo thứ tự.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "C++ chuyển mã nguồn qua biên dịch thành chương trình thực thi. include đưa khai báo thư viện vào chương trình, còn main là nơi bắt đầu thực thi. Các dòng trước main thường khai báo hàm hoặc dữ liệu, không thay thế luồng bắt đầu tại main.",
+            "Một câu lệnh thường kết thúc bằng dấu chấm phẩy. Ngoặc nhọn gom nhiều lệnh thành một khối; dấu ngoặc phải cân bằng. bits/stdc++.h tiện trong môi trường GCC nhưng không phải header chuẩn C++ nên ví dụ mới của lộ trình dùng các header cụ thể."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Chọn chuẩn C++17 trong trình biên dịch.",
+            "Include thư viện đúng với chức năng dùng.",
+            "Đặt các lệnh thực thi trong main và biên dịch trước khi chạy."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không nhầm lỗi biên dịch với lỗi kết quả: chương trình chưa biên dịch thành công thì chưa thể kiểm tra output."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "main có vai trò gì?",
+        "answer": "Là điểm bắt đầu thực thi của chương trình C++ dạng thông thường."
+      }
     },
     {
       "id": "theory02",
@@ -47,7 +74,99 @@
         "Sử dụng biến chưa được khởi tạo.",
         "Nhầm dấu = là phép so sánh.",
         "Chọn kiểu dữ liệu quá nhỏ so với dữ liệu thực tế."
-      ]
+      ],
+      "visualization": {
+        "title": "Theo dõi biến sau từng lệnh",
+        "description": "Các ô là tên biến và giá trị, không phải sơ đồ địa chỉ bộ nhớ.",
+        "steps": [
+          {
+            "cells": [
+              {
+                "label": "a",
+                "value": "chưa gán",
+                "active": true
+              }
+            ],
+            "explanation": "Khai báo int a; không được đọc trước khi gán.",
+            "title": "Khởi tạo"
+          },
+          {
+            "cells": [
+              {
+                "label": "a",
+                "value": "10",
+                "active": true
+              }
+            ],
+            "explanation": "Gán a=10.",
+            "title": "Cập nhật biến"
+          },
+          {
+            "cells": [
+              {
+                "label": "a",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "20",
+                "active": true
+              }
+            ],
+            "explanation": "Khai báo và khởi tạo b=20.",
+            "title": "Cập nhật biến"
+          },
+          {
+            "cells": [
+              {
+                "label": "a",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "20",
+                "active": false
+              },
+              {
+                "label": "total",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "explanation": "Khởi tạo biến tổng 64 bit bằng 0.",
+            "title": "Trạng thái cuối"
+          }
+        ]
+      },
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Biến có tên, kiểu và giá trị. Khai báo thiết lập kiểu dữ liệu được phép chứa; khởi tạo thiết lập giá trị ban đầu. int a; trong một khối không tự bảo đảm a=0; đọc nó trước khi gán là không hợp lệ.",
+            "Phép gán a=b sao chép giá trị b vào a tại thời điểm thực hiện, không tạo quan hệ hai biến luôn cùng đổi. Kiểu của biến không thay đổi khi gán, nên gán dữ liệu khác kiểu có thể gây chuyển đổi hoặc bị từ chối."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Khai báo tên có ý nghĩa.",
+            "Khởi tạo trước lần đọc đầu tiên.",
+            "Theo dõi giá trị sau mỗi phép gán."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Dấu = gán khác dấu == so sánh; không đọc biến cục bộ chưa được khởi tạo."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu a=b rồi b tăng, a có tự tăng theo không?",
+        "answer": "Không với các biến số thông thường; a đã nhận bản sao giá trị tại lúc gán."
+      }
     },
     {
       "id": "theory03",
@@ -65,7 +184,34 @@
         "In lời nhắc như 'Nhap n:' trong bài chấm tự động.",
         "Đọc sai thứ tự dữ liệu đề cho.",
         "Dùng cin >> s khi muốn đọc cả một dòng có dấu cách."
-      ]
+      ],
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "cin>> đọc dữ liệu theo token, thường bỏ qua khoảng trắng đầu. Hai số có thể cách nhau bởi dấu cách hoặc xuống dòng mà cách đọc vẫn giống nhau. Kiểu biến đích quyết định phép chuyển token thành giá trị.",
+            "Nếu token không hợp lệ với kiểu đích hoặc vượt miền của kiểu, stream có thể vào trạng thái lỗi. Trong bài thi đề bảo đảm input hợp lệ, nhưng khi tự thử cần dùng đúng định dạng và số lượng giá trị."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đọc mô tả input trước khi khai báo biến.",
+            "Dùng cin theo đúng thứ tự token.",
+            "Chỉ tính toán sau khi dữ liệu cần thiết đã được đọc."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "cin>>string không đọc nguyên dòng có dấu cách; việc đó cần getline."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "cin>>a>>b có bắt buộc hai số cùng dòng không?",
+        "answer": "Không, dấu cách và xuống dòng đều phân tách token."
+      }
     },
     {
       "id": "theory04",
@@ -77,7 +223,34 @@
         "output"
       ],
       "code": "int a = 5, b = 7;\ncout << a + b << '\\n';",
-      "hsgNote": "Không in thêm chữ, dấu cách hoặc dòng thừa nếu đề không yêu cầu."
+      "hsgNote": "Không in thêm chữ, dấu cách hoặc dòng thừa nếu đề không yêu cầu.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "cout<< nối các giá trị được xuất theo thứ tự câu lệnh. Nó không tự thêm dấu cách giữa hai lần xuất số, nên cout<<5<<7 tạo 57. Dấu xuống dòng hoặc dấu cách cần được viết rõ.",
+            "Newline tách các dòng output. endl vừa xuống dòng vừa flush stream, nên thường không cần cho output lớn của bài thi; ký tự newline đủ khi không cần tương tác tức thời."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đọc yêu cầu số dòng và thứ tự giá trị.",
+            "Xuất dấu phân cách giữa các giá trị.",
+            "Dùng newline khi cần kết thúc dòng."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không in lời nhắc như “Nhap n” trong bài online judge nếu đề không yêu cầu."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Muốn in hai số 5 và 7 trên cùng dòng phải thêm gì?",
+        "answer": "Một dấu cách giữa hai giá trị: cout<<5<<\" \"<<7."
+      }
     },
     {
       "id": "theory05",
@@ -117,7 +290,34 @@
           "typicalRange": "true hoặc false"
         }
       ],
-      "hsgNote": "Không cần ghi nhớ tuyệt đối số byte của mọi kiểu. Khi cần có thể dùng sizeof. Khi giải bài, quan trọng hơn là ước lượng giá trị lớn nhất mà biến có thể nhận."
+      "hsgNote": "Không cần ghi nhớ tuyệt đối số byte của mọi kiểu. Khi cần có thể dùng sizeof. Khi giải bài, quan trọng hơn là ước lượng giá trị lớn nhất mà biến có thể nhận.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Kiểu số xác định miền giá trị và cách biểu diễn. int phù hợp nhiều chỉ số, long long phù hợp tổng/tích lớn, double cho số thực, char cho một đơn vị ký tự và bool cho đúng/sai. Miền thực tế được quy định theo kiểu và môi trường, không dựa riêng vào tên biến.",
+            "C++ bảo đảm long long có ít nhất 64 bit; kiểu int không được chuẩn bảo đảm luôn đúng 32 bit trên mọi nền tảng. Trong môi trường thi phổ biến có thể kiểm tra numeric_limits nếu cần thông tin chính xác."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Phân loại dữ liệu: chỉ số, tổng, số thực, ký tự hoặc logic.",
+            "Ước lượng miền kết quả.",
+            "Chọn kiểu cho cả dữ liệu vào và biểu thức trung gian."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Dùng double không thay long long khi cần số nguyên chính xác lớn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Một tổng 2×10^14 có nên dùng int phổ biến 32 bit không?",
+        "answer": "Không. Cần kiểu chứa đủ miền như long long."
+      }
     },
     {
       "id": "theory06",
@@ -134,7 +334,34 @@
         "Xác định phép toán sẽ thực hiện.",
         "Ước lượng kết quả lớn nhất.",
         "Chọn kiểu dữ liệu chịu được kết quả đó."
-      ]
+      ],
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Constraint mô tả miền input nhưng miền output có thể lớn hơn nhiều. n<=200000 và |a[i]|<=10^9 cho tổng tuyệt đối không vượt 2×10^14. Tích hai số và số lượng cặp cũng cần phân tích riêng.",
+            "Chọn kiểu bằng cận trên, không chỉ bằng input mẫu. Một test nhỏ qua int không chứng minh test lớn an toàn. Hãy tính cận cho từng công thức trước khi viết."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Ghi giới hạn từng biến.",
+            "Suy giới hạn của tổng, tích và số cách.",
+            "Chọn kiểu kết quả và nâng kiểu trước các phép tính cần thiết."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Biến nhận long long không cứu biểu thức đã được tính bằng int rồi mới chuyển."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu từng a[i] vừa int, tổng có luôn vừa int không?",
+        "answer": "Không; tổng có thể tăng theo số lượng phần tử."
+      }
     },
     {
       "id": "theory07",
@@ -147,7 +374,34 @@
       ],
       "code": "cout << 7 / 2 << '\\n';\ncout << 7 % 2 << '\\n';",
       "output": "3\n1",
-      "hsgNote": "Phép % rất quan trọng trong HSG: kiểm tra chẵn lẻ, lấy chữ số, bài toán đồng dư và xử lý số lớn."
+      "hsgNote": "Phép % rất quan trọng trong HSG: kiểm tra chẵn lẻ, lấy chữ số, bài toán đồng dư và xử lý số lớn.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Toán tử thực hiện trên giá trị và kiểu của toán hạng. Cộng/trừ/nhân với số nguyên cho kết quả nguyên; chia hai số nguyên dùng chia nguyên. Thứ tự ưu tiên như toán học không thay việc phải kiểm tra kiểu.",
+            "Ngoặc giúp diễn tả thứ tự mong muốn. a+b*c khác (a+b)*c. Khi bài yêu cầu công thức, trước tiên viết bằng ký hiệu rõ ràng rồi chuyển sang toán tử của ngôn ngữ."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đặt ngoặc cho biểu thức dễ nhầm.",
+            "Xác định kiểu ở mỗi phép toán.",
+            "Kiểm tra tràn và trường hợp mẫu số 0."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Dấu ^ trong C++ là XOR bit, không phải lũy thừa."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "2+3*4 có bằng (2+3)*4 không?",
+        "answer": "Không. Hai kết quả lần lượt 14 và 20."
+      }
     },
     {
       "id": "theory08",
@@ -164,7 +418,34 @@
       ],
       "trapExample": "double x = 5 / 2;",
       "trapResult": "x nhận giá trị 2.0 chứ không phải 2.5.",
-      "correctCode": "double x = 5.0 / 2;"
+      "correctCode": "double x = 5.0 / 2;",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Chia hai số nguyên trong C++ bỏ phần thập phân theo hướng về 0. 7/2=3 và -7/2=-3. Kiểu của biến nhận kết quả không quyết định kiểu của phép chia đã diễn ra.",
+            "Nếu a,b đều int thì double x=a/b nhận bản chuyển đổi của kết quả nguyên; 5/2 đã thành 2 trước khi đổi thành 2.0. Muốn 2.5 phải chuyển ít nhất một toán hạng sang double trước phép chia."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Kiểm tra mẫu số khác 0.",
+            "Xác định cần thương nguyên hay thương thực.",
+            "Ép kiểu toán hạng trước khi chia nếu cần số thực."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không gọi chia nguyên C++ là luôn lấy sàn với số âm; quy tắc của nó khác Python //."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "double x=5/2 có giá trị 2.5 không?",
+        "answer": "Không. Cần 5.0/2 hoặc static_cast<double>(5)/2."
+      }
     },
     {
       "id": "theory09",
@@ -182,7 +463,34 @@
         "Bỏ chữ số cuối: n / 10.",
         "Kiểm tra chia hết: a % b == 0.",
         "Các bài toán đồng dư ở chương sau."
-      ]
+      ],
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Modulo là phần dư trong đẳng thức a=(a/b)*b+a%b với thương nguyên của C++. Khi a không âm và b dương, phần dư nằm từ 0 đến b-1. Với a âm, phần dư C++ có thể âm.",
+            "Phần dư giúp phân loại chẵn/lẻ, vòng tròn và chữ số cuối. Nếu cần phần dư chuẩn hóa vào [0,m-1] với m dương, dùng ((a%m)+m)%m và vẫn xét giới hạn của biểu thức."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Kiểm tra b!=0.",
+            "Viết ý nghĩa phần dư trong bài.",
+            "Chuẩn hóa nếu yêu cầu phần dư không âm."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không dùng a%2==1 để kiểm tra mọi số lẻ âm; a%2!=0 phù hợp hơn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Trong C++, -7%2 bằng gì?",
+        "answer": "-1, vì -7=(-3)×2+(-1)."
+      }
     },
     {
       "id": "theory10",
@@ -195,7 +503,34 @@
       "dangerCode": "int a = 1000000000;\nint b = 1000000000;\nlong long result = a * b;",
       "explanation": "Dù result là long long, biểu thức a * b vẫn được tính bằng int trước khi gán nên đã có thể bị overflow.",
       "correctCode": "long long result = 1LL * a * b;",
-      "hsgNote": "Đây là lỗi rất phổ biến trong bài thi. Không chỉ biến lưu kết quả mà kiểu của biểu thức trung gian cũng phải đủ lớn."
+      "hsgNote": "Đây là lỗi rất phổ biến trong bài thi. Không chỉ biến lưu kết quả mà kiểu của biểu thức trung gian cũng phải đủ lớn.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Tràn số xảy ra khi kết quả không biểu diễn được bằng kiểu đang dùng. Tràn số nguyên có dấu trong C++ là hành vi không xác định, không được coi là tự quay vòng đúng một công thức.",
+            "Không chỉ kết quả cuối, phép nhân hoặc cộng trung gian cũng có thể tràn. Đọc ràng buộc để suy cận, nâng kiểu trước phép tính hoặc biến đổi đại số để tránh trung gian quá lớn."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Tính cận của từng phép cộng/nhân.",
+            "Chọn long long khi đủ.",
+            "Nếu chưa đủ, dùng cách tính khác hoặc kiểu phù hợp môi trường."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Lấy modulo sau khi đã tràn không khôi phục kết quả đúng."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Tại sao code qua input nhỏ nhưng sai ở input lớn?",
+        "answer": "Có thể vì biểu thức vượt miền kiểu số, dù logic công thức không đổi."
+      }
     },
     {
       "id": "theory11",
@@ -208,7 +543,34 @@
       ],
       "code": "int a = 1000000000;\nint b = 1000000000;\n\nlong long x = 1LL * a * b;",
       "output": "1000000000000000000",
-      "hsgNote": "Tạo thói quen kiểm tra tất cả phép nhân của những giá trị cỡ 10^9."
+      "hsgNote": "Tạo thói quen kiểm tra tất cả phép nhân của những giá trị cỡ 10^9.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Kiểu của phép nhân được quyết định từ toán hạng. Với a,b là int, a*b được tính trong int trước khi gán sang long long. Đưa 1LL vào đầu chuỗi nhân làm phép nhân đầu dùng long long và các phép sau tiếp tục ở kiểu rộng.",
+            "1LL không thay đổi giá trị toán học vì nhân với 1, nhưng thay kiểu tính toán. Vị trí có ý nghĩa: a*b*1LL có thể đã tràn tại a*b trước khi gặp 1LL."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định toán hạng có kiểu hẹp.",
+            "Đặt 1LL ở đầu hoặc ép một toán hạng sang long long.",
+            "Kiểm tra kết quả vẫn nằm trong miền long long."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Nâng lên 64 bit không đủ nếu chính kết quả lớn hơn 64 bit."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "a*b*1LL và 1LL*a*b có luôn tương đương khi a,b là int lớn không?",
+        "answer": "Không về an toàn tính toán; biểu thức đầu có thể tràn trước khi nâng kiểu."
+      }
     },
     {
       "id": "theory12",
@@ -221,7 +583,34 @@
       ],
       "code": "char c = '7';\nint digit = c - '0';\ncout << digit;",
       "output": "7",
-      "hsgNote": "Mẹo c - '0' được sử dụng rất thường xuyên khi xử lý số dưới dạng chuỗi."
+      "hsgNote": "Mẹo c - '0' được sử dụng rất thường xuyên khi xử lý số dưới dạng chuỗi.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "char lưu một đơn vị mã ký tự. Với ASCII, các chữ số 0..9 liên tiếp, nên c-'0' cho số tương ứng. Trước khi chuyển cần kiểm tra c nằm trong miền chữ số.",
+            "Chữ tiếng Việt UTF-8 có thể gồm nhiều byte; một char riêng không nhất thiết là một ký tự đầy đủ. Các ví dụ chuyển chữ số dùng ASCII, không bao quát mọi bộ ký tự Unicode."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đọc hoặc lấy một ký tự.",
+            "Kiểm tra thuộc 0..9 khi cần chuyển số.",
+            "Trừ mã 0 để lấy giá trị chữ số."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không cộng char trực tiếp vào tổng chữ số vì khi đó dùng mã ký tự."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu c là ký tự 7, c-'0' là gì?",
+        "answer": "Giá trị nguyên 7."
+      }
     },
     {
       "id": "theory13",
@@ -232,7 +621,34 @@
         "comparison"
       ],
       "code": "int a = 5;\nbool ok = (a > 3);\ncout << ok;",
-      "output": "1"
+      "output": "1",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "bool có hai giá trị true/false và phù hợp lưu kết quả điều kiện. Biểu thức x>3 tạo một giá trị bool; có thể dùng lại trong if thay vì lặp phép kiểm tra ở nhiều nơi.",
+            "cout mặc định xuất bool bằng 0 hoặc 1; boolalpha xuất false hoặc true. Dạng output là yêu cầu trình bày riêng, không làm thay giá trị logic bên trong."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Viết điều kiện đúng.",
+            "Lưu bool nếu cần dùng lại.",
+            "Chọn cách in đúng định dạng đề."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không coi mọi số khác 1 là false khi chuyển sang bool; số khác 0 thường chuyển thành true."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "cout xuất true mặc định thành gì?",
+        "answer": "1, trừ khi bật định dạng boolalpha."
+      }
     },
     {
       "id": "theory14",
@@ -244,7 +660,34 @@
         "precision"
       ],
       "code": "double x = 1.0 / 3.0;\ncout << x;",
-      "hsgNote": "Không nên mặc định dùng == để so sánh hai số thực được tạo ra qua nhiều phép tính. Phần sai số sẽ được học kỹ hơn khi gặp bài hình học hoặc số thực."
+      "hsgNote": "Không nên mặc định dùng == để so sánh hai số thực được tạo ra qua nhiều phép tính. Phần sai số sẽ được học kỹ hơn khi gặp bài hình học hoặc số thực.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Số thực máy lưu một tập hữu hạn các giá trị gần đúng. Nhiều phân số thập phân như 0.1 không có biểu diễn nhị phân hữu hạn, nên phép toán có thể tạo sai số nhỏ.",
+            "Nếu cần so sánh gần bằng, tolerance phải theo độ lớn và yêu cầu bài; không có một epsilon duy nhất đúng mọi tình huống. Bài số nguyên chính xác nên giữ kiểu nguyên thay vì chuyển sang double."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định bài cần chính xác nguyên hay gần đúng thực.",
+            "Tránh so bằng trực tiếp khi kết quả có tính gần đúng.",
+            "Chọn precision và tiêu chí sai số theo đề."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "In ít chữ số không làm giá trị bên trong trở nên chính xác hơn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "0.1+0.2 có luôn đúng bằng 0.3 theo so sánh máy không?",
+        "answer": "Không, sai số biểu diễn có thể khiến so sánh trực tiếp thất bại."
+      }
     },
     {
       "id": "theory15",
@@ -257,7 +700,34 @@
       ],
       "code": "#include <iomanip>\n\ndouble x = 10.0 / 3;\ncout << fixed << setprecision(2) << x;",
       "output": "3.33",
-      "hsgNote": "Đọc kỹ yêu cầu đề: nếu đề yêu cầu chính xác 2 chữ số sau dấu thập phân thì phải format output đúng."
+      "hsgNote": "Đọc kỹ yêu cầu đề: nếu đề yêu cầu chính xác 2 chữ số sau dấu thập phân thì phải format output đúng.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "fixed kết hợp setprecision(k) biểu diễn k chữ số sau dấu thập phân. Nếu không fixed, setprecision thường liên quan số chữ số có nghĩa, nên hai cách có thể tạo output khác.",
+            "Định dạng chỉ đổi cách in, không thay giá trị double đang lưu. Làm tròn output cần đúng số chữ số đề yêu cầu, kể cả số 0 ở cuối như 2.00."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Include iomanip.",
+            "Dùng fixed nếu đề yêu cầu số chữ số sau dấu phẩy.",
+            "Đặt setprecision(k) trước khi xuất."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không thêm hoặc bỏ số 0 cuối nếu online judge yêu cầu đúng định dạng."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Muốn in hai chữ số sau dấu thập phân dùng gì?",
+        "answer": "cout<<fixed<<setprecision(2)<<x."
+      }
     },
     {
       "id": "theory16",
@@ -273,7 +743,34 @@
       "commonMistakes": [
         "Ép kiểu sau khi phép chia nguyên đã xảy ra.",
         "Chuyển double sang int và quên rằng phần thập phân bị loại bỏ."
-      ]
+      ],
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Ép kiểu rõ ràng diễn tả việc chuyển giá trị từ một kiểu sang kiểu khác. Chuyển int sang double trước phép chia giữ phần thập phân; chuyển double sang int bỏ phần thập phân theo hướng về 0 với giá trị trong miền biểu diễn.",
+            "Thời điểm chuyển quan trọng như kiểu đích. static_cast<double>(a/b) chuyển một thương nguyên đã mất phần thập phân, còn static_cast<double>(a)/b thay kiểu trước phép chia."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định phép toán cần kiểu mới.",
+            "Chuyển toán hạng trước phép toán đó.",
+            "Kiểm tra miền giá trị sau chuyển."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Ép kiểu không phục hồi dữ liệu đã mất vì tràn hoặc chia nguyên trước đó."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Ép double sau a/b có cứu phần .5 của 5/2 không?",
+        "answer": "Không. Phần thập phân đã bị bỏ khi chia int."
+      }
     },
     {
       "id": "theory17",
@@ -284,7 +781,34 @@
         "memory"
       ],
       "code": "cout << sizeof(int) << '\\n';\ncout << sizeof(long long) << '\\n';",
-      "hsgNote": "Không nên giả định mọi compiler có kích thước kiểu dữ liệu giống hệt nhau."
+      "hsgNote": "Không nên giả định mọi compiler có kích thước kiểu dữ liệu giống hệt nhau.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "sizeof trả kích thước biểu diễn của một kiểu hoặc đối tượng theo đơn vị byte của C++. Nó hữu ích để kiểm tra môi trường, nhưng không là số phần tử của vector hay chiều dài chuỗi.",
+            "sizeof(vector<int>) đo đối tượng vector quản lý dữ liệu, không đo cả vùng cấp phát phần tử bên ngoài. Muốn số phần tử dùng size(); muốn ước lượng bộ nhớ dữ liệu nhân size với sizeof phần tử rồi cộng chi phí quản lý phù hợp."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Phân biệt kích thước đối tượng và kích thước dữ liệu động.",
+            "Dùng size() để đếm phần tử container.",
+            "Dùng numeric_limits khi cần miền giá trị kiểu."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không dùng sizeof(vector)/sizeof(int) để đếm phần tử."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "sizeof(v) của vector thay đổi tỷ lệ theo v.size() không?",
+        "answer": "Không. Nó chủ yếu đo cấu trúc quản lý, không toàn vùng lưu phần tử."
+      }
     },
     {
       "id": "theory18",
@@ -297,7 +821,34 @@
       ],
       "code": "ios::sync_with_stdio(false);\ncin.tie(nullptr);",
       "template": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    return 0;\n}",
-      "hsgNote": "Có thể dùng template này gần như mặc định trong bài thi C++. Không cần hiểu sâu cơ chế buffer ở giai đoạn hiện tại."
+      "hsgNote": "Có thể dùng template này gần như mặc định trong bài thi C++. Không cần hiểu sâu cơ chế buffer ở giai đoạn hiện tại.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Nhập xuất đồng bộ giữa iostream và thư viện C có thể tạo thêm chi phí. Tắt đồng bộ và tháo liên kết cin với cout thường giúp bài có input lớn trong môi trường thi.",
+            "Sau khi tắt đồng bộ, tránh trộn cin/cout với scanf/printf theo giả định cùng một bộ đệm và thứ tự tự đồng bộ. Với bài tương tác cần xuất kết quả và flush đúng lúc, không áp dụng mẫu nhanh một cách máy móc."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đặt cấu hình trước thao tác nhập/xuất.",
+            "Dùng nhất quán cin/cout.",
+            "Dùng newline thay endl nếu không cần flush."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Fast I/O không sửa thuật toán quá chậm; O(n²) vẫn có thể quá lớn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Tắt sync có làm bài n² thành n không?",
+        "answer": "Không. Nó giảm chi phí nhập xuất, không thay số bước thuật toán."
+      }
     },
     {
       "id": "theory19",
@@ -314,7 +865,34 @@
         "Chọn int, long long hoặc double.",
         "Sau đó mới triển khai thuật toán."
       ],
-      "example": "Nếu n <= 10^5 và a[i] <= 10^9 thì tổng có thể đạt 10^14. Vì vậy sum phải là long long."
+      "example": "Nếu n <= 10^5 và a[i] <= 10^9 thì tổng có thể đạt 10^14. Vì vậy sum phải là long long.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Constraint là công cụ lựa chọn lời giải. Cần đọc đồng thời n, miền từng giá trị, số test và giới hạn thời gian/bộ nhớ. Cùng một ý tưởng có thể phù hợp n=1000 nhưng không phù hợp n=200000.",
+            "Sau khi chọn hướng giải, kiểm tra miền tổng/tích và số trạng thái. Nếu có nhiều test, tổng n trên tất cả test có thể quan trọng hơn n lớn nhất của một test riêng."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Ghi n và miền giá trị.",
+            "Ước lượng thời gian/bộ nhớ của từng hướng.",
+            "Chọn kiểu số và kiểm thử các biên ràng buộc."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không chọn thuật toán chỉ từ ví dụ input có vài phần tử."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Bài n=200000 có nên thử mọi cặp nếu không có lý do đặc biệt không?",
+        "answer": "Thường không; cần tìm cấu trúc giúp giảm từ n² và xét giới hạn thời gian cụ thể."
+      }
     }
   ],
   "examples": [
@@ -500,7 +1078,7 @@
         "division",
         "double"
       ],
-      "question": "Đoạn code sau in gì?\nint a = 5, b = 2;\ndouble x = a / b;\ncout << x;",
+      "question": "Chương trình sau in ra kết quả gì?",
       "choices": [
         "2",
         "2.0",
@@ -509,7 +1087,9 @@
       ],
       "answer": "2",
       "explanation": "a / b được tính bằng phép chia nguyên trước rồi mới gán sang double.",
-      "betterApproach": "Ép kiểu trước phép chia: static_cast<double>(a) / b."
+      "betterApproach": "Ép kiểu trước phép chia: static_cast<double>(a) / b.",
+      "code": "#include <iostream>\nusing namespace std;\nint main() {\n    int a = 5, b = 2;\n    double x = a / b;\n    cout << x;\n}",
+      "runnable": true
     },
     {
       "id": "quiz05",
@@ -556,7 +1136,7 @@
         "char",
         "ascii"
       ],
-      "question": "Đoạn code char c = '7'; cout << c - '0'; in ra gì?",
+      "question": "Chương trình sau in ra kết quả gì?",
       "choices": [
         "55",
         "48",
@@ -565,7 +1145,9 @@
       ],
       "answer": "7",
       "explanation": "Hiệu mã của '7' và '0' bằng 7.",
-      "betterApproach": "Ghi nhớ c - '0' khi c là ký tự chữ số."
+      "betterApproach": "Ghi nhớ c - '0' khi c là ký tự chữ số.",
+      "code": "#include <iostream>\nusing namespace std;\nint main() {\n    char c = '7';\n    cout << c - '0';\n}",
+      "runnable": true
     },
     {
       "id": "quiz08",
@@ -649,7 +1231,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a, b;\n    cin >> a >> b;\n    cout << a + b << \"\\n\" << a * b;\n}",
+      "runnable": true
     },
     {
       "id": "practice02",
@@ -674,7 +1258,19 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long n;\n    cin >> n;\n    cout << n / 3600 << \" \" << n % 3600 / 60 << \" \" << n % 60;\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "0",
+          "output": "0 0 0"
+        },
+        {
+          "input": "86399",
+          "output": "23 59 59"
+        }
+      ]
     },
     {
       "id": "practice03",
@@ -700,7 +1296,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    cin >> n;\n    cout << n / 100 << \" \" << n / 10 % 10 << \" \" << n % 10;\n}",
+      "runnable": true
     },
     {
       "id": "practice04",
@@ -726,7 +1324,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "#include <iomanip>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a, b, c;\n    cin >> a >> b >> c;\n    cout << fixed << setprecision(2) << (a + b + c) / 3.0;\n}",
+      "runnable": true
     },
     {
       "id": "practice05",
@@ -752,7 +1352,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long n;\n    cin >> n;\n    cout << n * (n + 1) / 2;\n}",
+      "runnable": true
     }
   ],
   "advanced": [
@@ -781,7 +1383,9 @@
       "complexity": {
         "time": "O(n)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    cin >> n;\n    long long total = 0;\n    for (int i = 0; i < n; ++i) {\n        long long x;\n        cin >> x;\n        total += x;\n    }\n    cout << total;\n}",
+      "runnable": true
     },
     {
       "id": "advanced02",
@@ -807,7 +1411,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    cin >> n;\n    cout << (n % 10) * 100 + (n / 10 % 10) * 10 + n / 100;\n}",
+      "runnable": true
     },
     {
       "id": "advanced03",
@@ -833,7 +1439,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a, b;\n    cin >> a >> b;\n    cout << (a + b) * (a + b);\n}",
+      "runnable": true
     }
   ],
   "commonMistakes": [
@@ -871,5 +1479,15 @@
     "Đọc constraint trước rồi mới chọn kiểu dữ liệu.",
     "Trong thi đấu nên quen với fast I/O và output chính xác theo đề."
   ],
-  "language": "cpp"
+  "language": "cpp",
+  "references": [
+    {
+      "title": "GeeksforGeeks — C++ Tutorial",
+      "url": "https://www.geeksforgeeks.org/cpp/c-plus-plus/"
+    },
+    {
+      "title": "GCC documentation",
+      "url": "https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html"
+    }
+  ]
 }

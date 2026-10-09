@@ -1,0 +1,729 @@
+{
+  "id": "ch13",
+  "language": "python",
+  "title": "Tham lam và chứng minh lựa chọn",
+  "order": 13,
+  "description": "Chương 13 — Phân biệt tối ưu cục bộ và tối ưu toàn cục. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Phân biệt tối ưu cục bộ và tối ưu toàn cục.",
+    "Chứng minh bằng đổi chỗ hoặc luôn dẫn trước.",
+    "Chọn nhiều khoảng không giao nhau nhất.",
+    "Ghép tối ưu bằng hai phần tử nhỏ nhất."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 12 và tự chạy được ví dụ bằng Python 3."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Tham lam cần chứng minh",
+      "content": "Thuật toán tham lam chọn ngay một quyết định rồi không xét lại. Nó chỉ đúng khi chứng minh có lời giải tối ưu chứa lựa chọn đó. Việc chạy đúng ví dụ không đủ. Đổi tiền bằng đồng lớn nhất thất bại với mệnh giá 1,3,4 và số tiền 6: 4+1+1 dùng 3 đồng, còn 3+3 dùng 2.",
+      "keywords": [
+        "greedy",
+        "heap"
+      ],
+      "code": "coins, amount = [4, 3, 1], 6\nused = 0\nfor coin in coins:\n    used += amount // coin\n    amount %= coin\nprint(used)",
+      "output": "3",
+      "explanation": "Đây là phản ví dụ, không phải lời giải tối ưu đổi tiền. Nó cho thấy tham lam có thể sai.",
+      "hsgNote": "Đổi tiền tổng quát dùng DP ở chương sau. Không suy ra đúng cho mọi hệ tiền từ vài hệ tiền quen thuộc.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Tối ưu cục bộ chỉ nhìn lựa chọn hiện tại, còn tối ưu toàn cục đánh giá cả chuỗi quyết định. Greedy bỏ quyền quay lại lựa chọn trước nên cần một cấu trúc giúp quyết định sớm không làm mất lời giải tốt nhất.",
+            "Một chứng minh thường bắt đầu từ lời giải tối ưu bất kỳ, rồi thay lựa chọn đầu của nó bằng lựa chọn greedy mà không làm xấu kết quả. Nếu làm được, ta có thể giải tiếp phần còn lại với cùng quy tắc. Nếu tìm được phản ví dụ, phải đổi thuật toán chứ không vá vài ngoại lệ tùy ý."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định mục tiêu tối ưu và các quyết định.",
+            "Nêu một quy tắc chọn ứng viên.",
+            "Thử phá quy tắc bằng input nhỏ, đặc biệt dữ liệu lệch.",
+            "Nếu chưa có phản ví dụ, viết phép đổi chỗ hoặc bất biến để chứng minh."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Chứng minh cần cho thấy tồn tại lời giải tối ưu dùng lựa chọn greedy, không chỉ rằng lựa chọn đó có vẻ tốt hoặc qua mẫu.",
+            "Áp dụng khi bài có tính chất trao đổi hoặc cấu trúc đơn điệu đủ mạnh; không mặc định mọi bài tối thiểu/tối đa là greedy."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Greedy đổi tiền với đồng lớn nhất có thể sai trong hệ mệnh giá tổng quát. Mục tiêu tối ưu giống nhau không bảo đảm cấu trúc bài giống nhau."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Phản ví dụ 1,3,4 và số tiền 6 bác bỏ điều gì?",
+        "answer": "Bác bỏ quy tắc luôn lấy đồng lớn nhất cho mọi hệ tiền; không bác bỏ tất cả thuật toán greedy cho mọi bài."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Chọn hoạt động kết thúc sớm nhất",
+      "content": "Với các khoảng [s,e), chọn nhiều hoạt động không chồng lấn nhất bằng cách sắp tăng theo e rồi lấy khoảng đầu có s>=end của lựa chọn trước. Hoạt động kết thúc sớm nhất để lại phần thời gian lớn nhất. Một lời giải tối ưu có thể thay hoạt động đầu bằng nó mà không giảm số lượng.",
+      "keywords": [
+        "greedy",
+        "heap"
+      ],
+      "code": "a = [(1, 3), (2, 5), (3, 4), (4, 6)]\na.sort(key=lambda x: x[1])\nend, count = -1, 0\nfor s, e in a:\n    if s >= end:\n        count += 1\n        end = e\nprint(count)",
+      "output": "3",
+      "explanation": "Chọn [1,3),[3,4),[4,6). Hai khoảng chạm đầu-cuối được phép.",
+      "visualization": {
+        "title": "Kết thúc sớm, để chỗ cho lịch tiếp theo",
+        "description": "Thanh xanh đã chọn; thanh nhạt bị bỏ. Các khoảng chạm đầu-cuối không xung đột.",
+        "steps": [
+          {
+            "title": "Sau khi sort",
+            "explanation": "Các hoạt động đã được xếp theo mốc kết thúc tăng dần.",
+            "cells": [
+              {
+                "label": "end",
+                "value": "-1",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "intervals": {
+              "items": [
+                {
+                  "start": 1,
+                  "end": 3,
+                  "label": "A1"
+                },
+                {
+                  "start": 3,
+                  "end": 4,
+                  "label": "A2"
+                },
+                {
+                  "start": 2,
+                  "end": 5,
+                  "label": "A3"
+                },
+                {
+                  "start": 4,
+                  "end": 6,
+                  "label": "A4"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Chọn A1",
+            "explanation": "Khoảng [1,3) bắt đầu không trước end, nên chọn và cập nhật mốc kết thúc.",
+            "cells": [
+              {
+                "label": "end",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "intervals": {
+              "items": [
+                {
+                  "start": 1,
+                  "end": 3,
+                  "label": "A1"
+                },
+                {
+                  "start": 3,
+                  "end": 4,
+                  "label": "A2"
+                },
+                {
+                  "start": 2,
+                  "end": 5,
+                  "label": "A3"
+                },
+                {
+                  "start": 4,
+                  "end": 6,
+                  "label": "A4"
+                }
+              ],
+              "currentIndex": 0,
+              "selectedIndices": [
+                0
+              ],
+              "rejectedIndices": []
+            }
+          },
+          {
+            "title": "Chọn A2",
+            "explanation": "Khoảng [3,4) bắt đầu không trước end, nên chọn và cập nhật mốc kết thúc.",
+            "cells": [
+              {
+                "label": "end",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "intervals": {
+              "items": [
+                {
+                  "start": 1,
+                  "end": 3,
+                  "label": "A1"
+                },
+                {
+                  "start": 3,
+                  "end": 4,
+                  "label": "A2"
+                },
+                {
+                  "start": 2,
+                  "end": 5,
+                  "label": "A3"
+                },
+                {
+                  "start": 4,
+                  "end": 6,
+                  "label": "A4"
+                }
+              ],
+              "currentIndex": 1,
+              "selectedIndices": [
+                0,
+                1
+              ],
+              "rejectedIndices": []
+            }
+          },
+          {
+            "title": "Bỏ A3",
+            "explanation": "Khoảng [2,5) bắt đầu trước end nên xung đột với lịch đã chọn.",
+            "cells": [
+              {
+                "label": "end",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "intervals": {
+              "items": [
+                {
+                  "start": 1,
+                  "end": 3,
+                  "label": "A1"
+                },
+                {
+                  "start": 3,
+                  "end": 4,
+                  "label": "A2"
+                },
+                {
+                  "start": 2,
+                  "end": 5,
+                  "label": "A3"
+                },
+                {
+                  "start": 4,
+                  "end": 6,
+                  "label": "A4"
+                }
+              ],
+              "currentIndex": 2,
+              "selectedIndices": [
+                0,
+                1
+              ],
+              "rejectedIndices": [
+                2
+              ]
+            }
+          },
+          {
+            "title": "Chọn A4",
+            "explanation": "Khoảng [4,6) bắt đầu không trước end, nên chọn và cập nhật mốc kết thúc.",
+            "cells": [
+              {
+                "label": "end",
+                "value": "6",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "intervals": {
+              "items": [
+                {
+                  "start": 1,
+                  "end": 3,
+                  "label": "A1"
+                },
+                {
+                  "start": 3,
+                  "end": 4,
+                  "label": "A2"
+                },
+                {
+                  "start": 2,
+                  "end": 5,
+                  "label": "A3"
+                },
+                {
+                  "start": 4,
+                  "end": 6,
+                  "label": "A4"
+                }
+              ],
+              "currentIndex": 3,
+              "selectedIndices": [
+                0,
+                1,
+                3
+              ],
+              "rejectedIndices": [
+                2
+              ]
+            }
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Lịch hoạt động theo số lượng không quan tâm thưởng từng hoạt động; mỗi khoảng được chọn đóng góp đúng 1. Kết thúc sớm giải phóng thời gian cho các khoảng phía sau. Chọn bắt đầu sớm nhất hoặc ngắn nhất không có bảo đảm tương tự.",
+            "Các khoảng trong chương là nửa mở [s,e), nên khoảng sau có thể bắt đầu đúng tại e. Nếu bài dùng đoạn đóng và cấm dùng chung thời điểm, điều kiện xung đột khác. Phải đọc quy ước trước khi dùng dấu >=."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Sort theo thời điểm kết thúc.",
+            "Giữ end của hoạt động đã chọn gần nhất.",
+            "Nếu s>=end, chọn và cập nhật end=e.",
+            "Bỏ khoảng xung đột; không đổi hoạt động đã chọn."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Gọi G là khoảng kết thúc sớm nhất và O là hoạt động đầu của lịch tối ưu. Thay O bằng G không đẩy mốc kết thúc về sau, nên các hoạt động còn lại vẫn hợp lệ. Số lượng không giảm.",
+            "Áp dụng cho tối đa số lịch không chồng, một tài nguyên và mỗi lịch có giá trị ngang nhau."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Nếu bài có nhiều phòng hoặc trọng số, thuật toán này không trực tiếp giải mục tiêu mới. Nếu input có thời điểm âm, end khởi tạo phải phù hợp thay vì luôn -1."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Vì sao không chọn khoảng dài nhất trước?",
+        "answer": "Một khoảng dài có thể chặn nhiều khoảng ngắn; nó không để lại miền thời gian tốt nhất cho số lượng tối đa."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Luôn dẫn trước và giới hạn bài toán",
+      "content": "Có thể chứng minh hoạt động thứ k của greedy kết thúc không muộn hơn hoạt động thứ k trong một lịch bất kỳ với k hoạt động. Vì thế greedy không mất khả năng chọn hoạt động tiếp theo. Nhưng nếu mỗi hoạt động có phần thưởng khác nhau, tối đa số lượng không đồng nghĩa tối đa tổng thưởng; đó là bài khác, thường cần DP.",
+      "keywords": [
+        "greedy",
+        "heap"
+      ],
+      "code": "a = [(1, 2, 1), (2, 3, 1), (1, 3, 100)]\nprint(1 + 1)\nprint(100)",
+      "output": "2\n100",
+      "explanation": "Hai hoạt động ngắn có tổng thưởng 2, một hoạt động dài thưởng 100.",
+      "hsgNote": "Xác định chính xác mục tiêu tối ưu trước khi tái sử dụng một mẫu tham lam.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Chứng minh “luôn dẫn trước” so mốc kết thúc của lựa chọn thứ k. Greedy kết thúc hoạt động thứ nhất sớm nhất; nếu đã kết thúc thứ k không muộn hơn một lịch khác thì nó có thể xét ít nhất các ứng viên mà lịch kia dùng tiếp.",
+            "Khi thay mục tiêu sang tổng thưởng, một lịch có ít hoạt động vẫn có thể tốt hơn nhiều hoạt động ngắn. Ta cần mô hình trạng thái theo những hoạt động trước không xung đột, thay vì tối ưu riêng số lượng."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định đại lượng so sánh sau mỗi k quyết định.",
+            "Chứng minh bước đầu greedy không thua.",
+            "Chứng minh một bước tiếp vẫn giữ quan hệ.",
+            "Kiểm tra mục tiêu bài có thật là đại lượng được chứng minh không."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nếu lịch khác chọn được k hoạt động, mốc greedy sau k không muộn hơn nên greedy không bị kẹt sớm hơn chỉ vì dùng thời gian nhiều hơn.",
+            "Áp dụng để chứng minh các bài lịch không trọng số; với trọng số, đây là cơ sở nhận ra cần đổi hướng giải."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Đừng lấy chứng minh cho số lượng và kết luận về phần thưởng. Hai hàm mục tiêu khác nhau có thể tạo lựa chọn trái ngược."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Một khoảng thưởng 100 và hai khoảng thưởng 1 mỗi khoảng: tối đa số lượng có tối đa thưởng không?",
+        "answer": "Không. Hai khoảng tối đa số lượng có thưởng 2, thấp hơn một khoảng thưởng 100."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Ghép tối ưu và hàng đợi ưu tiên",
+      "content": "Khi ghép hai đoạn dài x,y, chi phí là x+y và đoạn mới dài x+y. Để tổng chi phí nhỏ nhất, luôn ghép hai đoạn nhỏ nhất hiện có rồi đưa tổng trở lại min-heap. Heap giữ phần tử nhỏ nhất ở đầu và thêm/lấy trong O(log n). Chứng minh dựa trên cây ghép: tồn tại cây tối ưu có hai lá nhỏ nhất là anh em ở mức sâu nhất, rồi co chúng thành một lá.",
+      "keywords": [
+        "greedy",
+        "heap"
+      ],
+      "code": "import heapq\na = [2, 3, 4]\nheapq.heapify(a)\ncost = 0\nwhile len(a) > 1:\n    x = heapq.heappop(a)\n    y = heapq.heappop(a)\n    cost += x + y\n    heapq.heappush(a, x + y)\nprint(cost)",
+      "output": "14",
+      "explanation": "Ghép 2+3=5, rồi 4+5=9; tổng 5+9=14.",
+      "hsgNote": "C++ priority_queue mặc định là max-heap, cần greater để lấy nhỏ nhất.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Mỗi lần ghép hai dây khiến toàn bộ chiều dài của chúng được tính vào chi phí. Một dây lớn ghép nhiều lần sẽ đóng góp lớn nhiều lần. Greedy đưa các dây nhỏ vào quá trình sớm và trì hoãn ảnh hưởng của dây lớn.",
+            "Có thể mô hình hóa quá trình bằng một cây nhị phân: lá là dây ban đầu, mỗi nút trong là phép ghép. Chi phí tổng bằng tổng mỗi chiều dài lá nhân độ sâu của lá. Hai trọng số nhỏ nhất có thể được đưa xuống hai lá anh em sâu nhất mà không tăng chi phí."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Tạo min-heap từ tất cả độ dài.",
+            "Lấy hai giá trị nhỏ nhất x,y.",
+            "Cộng x+y vào chi phí và đưa x+y lại heap.",
+            "Lặp đến khi heap còn một phần tử."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Đổi vị trí các trọng số đưa hai nhỏ nhất xuống hai lá anh em sâu nhất không làm chi phí tăng. Co hai lá thành trọng số x+y tạo bài cùng dạng; quy nạp chứng minh greedy.",
+            "Áp dụng cho bài ghép có chi phí bằng tổng kích thước và không có ràng buộc vị trí. Nếu chỉ được ghép các đoạn kề nhau, đây là bài khác."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Sort một lần rồi ghép theo thứ tự không đủ vì dây mới phải được so lại với những dây còn lại. C++ priority_queue mặc định lấy lớn nhất."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Vì sao phải đẩy dây mới vào heap thay vì đặt cố định cuối danh sách?",
+        "answer": "Dây mới có thể nhỏ hơn dây còn lại; mọi phép chọn sau cần so theo độ dài hiện tại."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Tham lam cần chứng minh",
+      "description": "Thuật toán tham lam chọn ngay một quyết định rồi không xét lại. Nó chỉ đúng khi chứng minh có lời giải tối ưu chứa lựa chọn đó. Việc chạy đúng ví dụ không đủ. Đổi tiền bằng đồng lớn nhất thất bại với mệnh giá 1,3,4 và số tiền 6: 4+1+1 dùng 3 đồng, còn 3+3 dùng 2.",
+      "difficulty": "intermediate",
+      "code": "coins, amount = [4, 3, 1], 6\nused = 0\nfor coin in coins:\n    used += amount // coin\n    amount %= coin\nprint(used)",
+      "input": null,
+      "output": "3",
+      "explanation": "Đây là phản ví dụ, không phải lời giải tối ưu đổi tiền. Nó cho thấy tham lam có thể sai.",
+      "complexity": {
+        "time": "O(số mệnh giá)",
+        "space": "O(số mệnh giá)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Đổi tiền tổng quát dùng DP ở chương sau. Không suy ra đúng cho mọi hệ tiền từ vài hệ tiền quen thuộc.",
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Chọn hoạt động kết thúc sớm nhất",
+      "description": "Với các khoảng [s,e), chọn nhiều hoạt động không chồng lấn nhất bằng cách sắp tăng theo e rồi lấy khoảng đầu có s>=end của lựa chọn trước. Hoạt động kết thúc sớm nhất để lại phần thời gian lớn nhất. Một lời giải tối ưu có thể thay hoạt động đầu bằng nó mà không giảm số lượng.",
+      "difficulty": "intermediate",
+      "code": "a = [(1, 3), (2, 5), (3, 4), (4, 6)]\na.sort(key=lambda x: x[1])\nend, count = -1, 0\nfor s, e in a:\n    if s >= end:\n        count += 1\n        end = e\nprint(count)",
+      "input": null,
+      "output": "3",
+      "explanation": "Chọn [1,3),[3,4),[4,6). Hai khoảng chạm đầu-cuối được phép.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Luôn dẫn trước và giới hạn bài toán",
+      "description": "Có thể chứng minh hoạt động thứ k của greedy kết thúc không muộn hơn hoạt động thứ k trong một lịch bất kỳ với k hoạt động. Vì thế greedy không mất khả năng chọn hoạt động tiếp theo. Nhưng nếu mỗi hoạt động có phần thưởng khác nhau, tối đa số lượng không đồng nghĩa tối đa tổng thưởng; đó là bài khác, thường cần DP.",
+      "difficulty": "intermediate",
+      "code": "a = [(1, 2, 1), (2, 3, 1), (1, 3, 100)]\nprint(1 + 1)\nprint(100)",
+      "input": null,
+      "output": "2\n100",
+      "explanation": "Hai hoạt động ngắn có tổng thưởng 2, một hoạt động dài thưởng 100.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Xác định chính xác mục tiêu tối ưu trước khi tái sử dụng một mẫu tham lam.",
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Ghép tối ưu và hàng đợi ưu tiên",
+      "description": "Khi ghép hai đoạn dài x,y, chi phí là x+y và đoạn mới dài x+y. Để tổng chi phí nhỏ nhất, luôn ghép hai đoạn nhỏ nhất hiện có rồi đưa tổng trở lại min-heap. Heap giữ phần tử nhỏ nhất ở đầu và thêm/lấy trong O(log n). Chứng minh dựa trên cây ghép: tồn tại cây tối ưu có hai lá nhỏ nhất là anh em ở mức sâu nhất, rồi co chúng thành một lá.",
+      "difficulty": "advanced",
+      "code": "import heapq\na = [2, 3, 4]\nheapq.heapify(a)\ncost = 0\nwhile len(a) > 1:\n    x = heapq.heappop(a)\n    y = heapq.heappop(a)\n    cost += x + y\n    heapq.heappush(a, x + y)\nprint(cost)",
+      "input": null,
+      "output": "14",
+      "explanation": "Ghép 2+3=5, rồi 4+5=9; tổng 5+9=14.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "C++ priority_queue mặc định là max-heap, cần greater để lấy nhỏ nhất.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Greedy đổi tiền cho {1,3,4}, số tiền 6 có tối ưu không?",
+      "choices": [
+        "Có, luôn chọn lớn nhất",
+        "Không có cách đổi",
+        "Chỉ sai ở Python",
+        "Không, 3+3 tốt hơn 4+1+1"
+      ],
+      "answer": "Không, 3+3 tốt hơn 4+1+1",
+      "explanation": "Hai đồng 3 ít hơn ba đồng greedy.",
+      "betterApproach": "Tìm phản ví dụ trước khi chấp nhận lựa chọn cục bộ.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "greedy",
+        "heap"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Chọn nhiều khoảng nhất nên sort theo gì?",
+      "choices": [
+        "Độ dài giảm",
+        "Phần thưởng tăng",
+        "Thời điểm kết thúc tăng",
+        "Bắt đầu tăng"
+      ],
+      "answer": "Thời điểm kết thúc tăng",
+      "explanation": "Kết thúc sớm giữ nhiều chỗ cho tương lai.",
+      "betterApproach": "Chứng minh đổi hoạt động đầu của lịch tối ưu.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "greedy",
+        "heap"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Ghép tối ưu cần lấy hai phần tử nào?",
+      "choices": [
+        "Nhỏ nhất và lớn nhất",
+        "Hai nhỏ nhất hiện tại",
+        "Hai lớn nhất",
+        "Hai xuất hiện đầu input"
+      ],
+      "answer": "Hai nhỏ nhất hiện tại",
+      "explanation": "Greedy ghép nhỏ tránh khiến đoạn lớn phải trả nhiều lần.",
+      "betterApproach": "Cập nhật heap sau mỗi lần ghép.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "greedy",
+        "heap"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "greedy",
+        "heap",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "coins, amount = [4, 3, 1], 6\nused = 0\nfor coin in coins:\n    used += amount // coin\n    amount %= coin\nprint(used)",
+      "choices": [
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0",
+        "3"
+      ],
+      "answer": "3",
+      "explanation": "Đây là phản ví dụ, không phải lời giải tối ưu đổi tiền. Nó cho thấy tham lam có thể sai.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "greedy",
+        "heap",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "a = [(1, 3), (2, 5), (3, 4), (4, 6)]\na.sort(key=lambda x: x[1])\nend, count = -1, 0\nfor s, e in a:\n    if s >= end:\n        count += 1\n        end = e\nprint(count)",
+      "choices": [
+        "Lỗi chạy chương trình",
+        "0",
+        "3",
+        "Không có output"
+      ],
+      "answer": "3",
+      "explanation": "Chọn [1,3),[3,4),[4,6). Hai khoảng chạm đầu-cuối được phép.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Lịch hoạt động",
+      "problem": "Cho n hoạt động [s,e), tìm số hoạt động không chồng lấn lớn nhất. Cho phép hoạt động mới bắt đầu đúng khi hoạt động cũ kết thúc.",
+      "inputDescription": "n; n dòng s e.",
+      "outputDescription": "Số hoạt động.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "0 <= s < e <= 10^9"
+      ],
+      "sampleInput": "4\n1 3\n2 5\n3 4\n4 6",
+      "sampleOutput": "3",
+      "hint": "Ưu tiên kết thúc sớm nhất.",
+      "explanation": "Thay hoạt động đầu của một lịch tối ưu bằng khoảng kết thúc sớm nhất không gây xung đột mới; tiếp tục áp dụng trên phần còn lại.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "Nếu đề dùng đoạn đóng và cấm chạm đầu-cuối, đổi điều kiện sang s>end.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "greedy",
+        "heap"
+      ],
+      "answer": null,
+      "solutionCode": "n = int(input())\na = [tuple(map(int, input().split())) for _ in range(n)]\na.sort(key=lambda x: x[1])\nend, ans = -1, 0\nfor s, e in a:\n    if s >= end:\n        ans += 1\n        end = e\nprint(ans)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "3\n0 2\n0 1\n1 2",
+          "output": "2"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Ghép dây chi phí nhỏ nhất",
+      "problem": "Có n dây, ghép hai dây dài x,y tốn x+y và tạo dây mới dài x+y. Tìm tổng chi phí nhỏ nhất để có một dây.",
+      "inputDescription": "n; dòng n độ dài.",
+      "outputDescription": "Chi phí tối thiểu.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "1 <= a[i] <= 10^9"
+      ],
+      "sampleInput": "3\n2 3 4",
+      "sampleOutput": "14",
+      "hint": "Dùng min-heap để ghép hai dây ngắn nhất.",
+      "explanation": "Mỗi lá trả chiều dài của mình theo số lần nằm trong phép ghép. Đổi chỗ đưa hai trọng số nhỏ nhất xuống hai lá anh em sâu nhất không tăng chi phí. Co chúng thành một dây và lặp.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "n=1 cần 0 chi phí. Không ghép theo thứ tự input.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "greedy",
+        "heap"
+      ],
+      "answer": null,
+      "solutionCode": "import heapq\nn = int(input())\na = list(map(int, input().split()))\nheapq.heapify(a)\ncost = 0\nwhile len(a) > 1:\n    s = heapq.heappop(a) + heapq.heappop(a)\n    cost += s\n    heapq.heappush(a, s)\nprint(cost)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1\n99",
+          "output": "0"
+        },
+        {
+          "input": "4\n1 1 1 1",
+          "output": "8"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Tin lựa chọn cục bộ luôn tối ưu",
+      "fix": "Yêu cầu chứng minh hoặc tìm phản ví dụ."
+    },
+    {
+      "mistake": "Dùng max-heap cho ghép dây",
+      "fix": "C++ dùng greater; Python heapq mặc định min-heap."
+    }
+  ],
+  "chapterSummary": [
+    "Tham lam cần chứng minh lựa chọn.",
+    "Lịch theo số lượng khác lịch theo trọng số.",
+    "Heap hỗ trợ lấy hai phần tử nhỏ nhất."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Tham lam và chứng minh lựa chọn",
+      "url": "https://www.geeksforgeeks.org/dsa/greedy-algorithms/"
+    },
+    {
+      "title": "Tài liệu Python chính thức",
+      "url": "https://docs.python.org/3/tutorial/"
+    },
+    {
+      "title": "Algorithms for Competitive Programming — đọc thêm thuật toán",
+      "url": "https://cp-algorithms.com/"
+    }
+  ]
+}

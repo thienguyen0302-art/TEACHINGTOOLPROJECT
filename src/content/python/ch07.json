@@ -1,0 +1,873 @@
+{
+  "id": "ch07",
+  "language": "python",
+  "title": "Độ phức tạp và chọn thuật toán",
+  "order": 7,
+  "description": "Chương 7 — Phân biệt O(1), O(log n), O(n), O(n log n), O(n²). Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Phân biệt O(1), O(log n), O(n), O(n log n), O(n²).",
+    "Đếm tổng số thao tác thay vì nhìn số vòng lặp.",
+    "Phân tích cả thời gian và bộ nhớ.",
+    "Chọn thuật toán theo ràng buộc và kiểm chứng bằng brute force."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 6 và tự chạy được ví dụ bằng Python 3."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Big-O và kích thước input",
+      "content": "Big-O mô tả tốc độ tăng khi input lớn; không phải thời gian chính xác tính bằng giây. Nếu duyệt n phần tử một lần, thời gian O(n). Hệ số và chi phí kiểu dữ liệu vẫn ảnh hưởng thực tế. Phép toán trên số nguyên Python rất lớn không luôn có chi phí O(1).",
+      "keywords": [
+        "complexity"
+      ],
+      "code": "a = [2, 4, 6, 8]\ns = 0\nfor x in a:\n    s += x\nprint(s)",
+      "output": "20",
+      "explanation": "Có n phép cộng, không phụ thuộc giá trị của phần tử.",
+      "hsgNote": "Các phân tích cơ bản giả sử số nguyên nằm trong kích thước máy hoặc kích thước bit bị chặn.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Phân tích tăng trưởng hỏi thuật toán thay đổi thế nào khi input lớn hơn nhiều lần. Quét n phần tử tăng số bước gần tuyến tính; duyệt mọi cặp tăng gần bình phương. Big-O là cận tăng trưởng, không mô tả chính xác thời gian trên một máy.",
+            "Chi phí phụ thuộc mô hình tính toán. Các phép số nguyên vừa kích thước máy thường coi là hằng số; số nguyên có hàng nghìn bit cần chi phí theo độ dài bit. Đọc input và tạo output cũng là công việc, không được bỏ nếu chúng lớn."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định n đại diện số phần tử, độ dài chuỗi hay một giá trị số.",
+            "Đếm số lượt thao tác chính theo n.",
+            "Giữ các bậc tăng và bỏ hệ số hằng khi mô tả Big-O.",
+            "Tính riêng bộ nhớ input và bộ nhớ phụ trợ."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nếu mỗi phần tử được xử lý số lần bị chặn bởi hằng và mỗi thao tác là O(1), tổng không vượt hằng nhân n, nên O(n).",
+            "Áp dụng trước khi code để lựa chọn hướng giải; sau khi code để tìm thao tác sao chép hoặc vòng lặp ẩn."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "O(n) không luôn nhanh hơn O(n log n) trên n nhỏ, vì hệ số khác nhau. Cũng không được gọi O(1) chỉ vì biểu thức có một dòng."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "sum(a) có O(1) vì chỉ có một lời gọi hàm không?",
+        "answer": "Không. Hàm vẫn phải đọc mọi phần tử, nên O(n) trong mô hình số có kích thước bị chặn."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Vòng lặp lồng nhau không tự động là n²",
+      "content": "Nếu vòng trong chạy n lần cho mỗi lượt vòng ngoài thì tổng n². Nếu vòng trong chạy i lần, tổng 1+...+n vẫn là O(n²). Nhưng với hai con trỏ chỉ tiến và không quay lại, tổng số bước có thể chỉ O(n) dù code có vòng lặp lồng nhau.",
+      "keywords": [
+        "complexity"
+      ],
+      "code": "n = 4\ncount = 0\nfor i in range(n):\n    for j in range(i):\n        count += 1\nprint(count)",
+      "output": "6",
+      "explanation": "Số lượt là 0+1+2+3=6=n(n-1)/2.",
+      "visualization": {
+        "title": "Vòng trong chạy bao nhiêu lần?",
+        "description": "Đếm từng cặp (i,j) với j<i; không đo thời gian bằng số dòng code.",
+        "steps": [
+          {
+            "title": "Khởi tạo",
+            "explanation": "n=4, chưa có lượt vòng trong.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "—",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "—",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  "Số lượt"
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "title": "i=1, j=0",
+            "explanation": "j<i nên thực hiện một lượt, tăng count thành 1.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  "Số lượt"
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ]
+              ]
+            },
+            "formula": "count += 1"
+          },
+          {
+            "title": "i=2, j=0",
+            "explanation": "j<i nên thực hiện một lượt, tăng count thành 2.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  "Số lượt"
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  3,
+                  0
+                ],
+                [
+                  3,
+                  1
+                ]
+              ]
+            },
+            "formula": "count += 1"
+          },
+          {
+            "title": "i=2, j=1",
+            "explanation": "j<i nên thực hiện một lượt, tăng count thành 3.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  "Số lượt"
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  3,
+                  0
+                ],
+                [
+                  3,
+                  1
+                ]
+              ]
+            },
+            "formula": "count += 1"
+          },
+          {
+            "title": "i=3, j=0",
+            "explanation": "j<i nên thực hiện một lượt, tăng count thành 4.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "4",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  "Số lượt"
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  1
+                ]
+              ]
+            },
+            "formula": "count += 1"
+          },
+          {
+            "title": "i=3, j=1",
+            "explanation": "j<i nên thực hiện một lượt, tăng count thành 5.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "5",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  "Số lượt"
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  1
+                ]
+              ]
+            },
+            "formula": "count += 1"
+          },
+          {
+            "title": "i=3, j=2",
+            "explanation": "j<i nên thực hiện một lượt, tăng count thành 6.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  "Số lượt"
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  1
+                ]
+              ]
+            },
+            "formula": "count += 1"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Để phân tích vòng lồng, cần biết vòng trong chạy bao nhiêu lần cho từng giá trị ngoài. n lượt cho mỗi n lượt ngoài tạo n²; i lượt ở lần ngoài i tạo tổng hình tam giác. Hai dạng khác số chính xác nhưng cùng bậc O(n²).",
+            "Các vòng lặp có chỉ số dùng chung và chỉ tiến thường không nhân chi phí. Với con trỏ j không bị đặt lại, mọi lượt vòng trong trên toàn chương trình có thể chỉ tăng j n lần. Đếm “ngân sách tăng chỉ số” rõ hơn nhìn độ sâu thụt lề."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Ghi biểu thức số lượt vòng trong cho mỗi i.",
+            "Cộng các biểu thức trên mọi i.",
+            "Kiểm tra chỉ số vòng trong có bị đặt lại mỗi lượt ngoài hay không.",
+            "Dùng số thao tác với n nhỏ để đối chiếu công thức."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mọi thao tác thuộc đúng một lượt vòng ngoài; cộng số lượt từng nhóm cho tổng đúng. Nếu một chỉ số chỉ tăng từ 0 đến n, tổng lần tăng không vượt n.",
+            "Áp dụng cho tam giác cặp i<j, hai con trỏ, cửa sổ và các vòng lặp có độ dài thay đổi."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Nhìn thấy hai for không đủ kết luận n². Ngược lại, gọi hàm O(n) bên trong một for n lượt vẫn tạo O(n²) dù chỉ thấy một for ngoài."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Hai for nối tiếp mỗi cái n lượt khác hai for lồng ở đâu?",
+        "answer": "Nối tiếp có n+n bước O(n); lồng độc lập có n×n bước O(n²)."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Chia đôi và logarit",
+      "content": "Nếu mỗi bước giảm miền tìm kiếm còn một nửa, sau k bước miền còn khoảng n/2^k. Đến kích thước 1 khi k xấp xỉ log2(n). Phép chia đôi tạo O(log n) bước, miễn mỗi bước chỉ tốn O(1).",
+      "keywords": [
+        "complexity"
+      ],
+      "code": "x, steps = 16, 0\nwhile x > 1:\n    x //= 2\n    steps += 1\nprint(steps)",
+      "output": "4",
+      "explanation": "16→8→4→2→1.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Logarit xuất hiện khi kích thước giảm theo tỷ lệ cố định, thay vì giảm một đơn vị. Sau một bước chia đôi còn n/2, sau hai còn n/4. Sau k bước còn xấp xỉ n/2^k; chạm kích thước 1 sau khoảng log2(n) bước.",
+            "Số bước logarit nhỏ nhưng mỗi bước có thể đắt. Nhị phân trên đáp án với kiểm tra duyệt n máy có O(n log U), không phải chỉ O(log U). Cơ số log thường không làm đổi bậc vì các cơ số hằng chỉ khác hệ số."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định kích thước miền trước và sau một bước.",
+            "Viết công thức sau k bước.",
+            "Giải điều kiện kích thước đạt điểm dừng.",
+            "Nhân số bước với chi phí bên trong mỗi bước."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nghiệm n/2^k≈1 là k≈log2(n). Việc làm tròn số nguyên chỉ thêm bớt số lượt hằng, không đổi bậc tăng.",
+            "Áp dụng cho nhị phân, số mũ nhị phân, chia để trị và heap."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không coi vòng while là logarit chỉ vì có phép chia: nếu chia cho 1 hoặc cập nhật không giảm miền thì không có lập luận chia đôi."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu mỗi bước chia đôi nhưng tính tổng n phần tử, thời gian là gì?",
+        "answer": "O(n log U) nếu có log U bước và mỗi bước quét n phần tử."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Brute force, oracle và lựa chọn",
+      "content": "Bắt đầu bằng lời giải đơn giản cho n nhỏ làm oracle: so sánh kết quả với thuật toán tối ưu trên nhiều dữ liệu nhỏ. Điều này bổ sung chứ không thay thế chứng minh. Với n=200000, một thuật toán n² phải xử lý khoảng 4×10^10 cặp, thường không phù hợp bài thi; không dùng một mốc thao tác cố định cho mọi máy.",
+      "keywords": [
+        "complexity"
+      ],
+      "code": "n = 200000\nprint(n * n)",
+      "output": "40000000000",
+      "explanation": "Số cặp tăng rất nhanh khi n lớn.",
+      "hsgNote": "Đọc giới hạn input, thời gian, bộ nhớ rồi chọn cấu trúc dữ liệu; đo thời gian trên dữ liệu lớn nhất.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Một lời giải brute force cho input nhỏ là tiêu chuẩn so sánh có giá trị vì thường dễ hiểu và ít tối ưu. Ta dùng nó kiểm tra thuật toán mới trên các input ngẫu nhiên nhỏ, bao gồm nhiều hình dạng dữ liệu thay vì chỉ ví dụ đẹp.",
+            "Oracle cũng có thể sai, nên cần xác nhận định nghĩa bài, các mẫu thủ công và dùng cách suy luận độc lập. Kiểm thử so sánh bắt nhiều lỗi triển khai, còn chứng minh đảm bảo đúng cho mọi input theo giả thiết."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Viết cách liệt kê đơn giản cho n nhỏ.",
+            "Sinh dữ liệu có trùng, âm, 0, tăng, giảm và các biên.",
+            "So sánh output, lưu lại input đầu tiên gây khác biệt.",
+            "Sau khi sửa, chạy lại cả input đó và những test trước."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Một phản ví dụ đủ bác bỏ lời giải, nhưng hữu hạn test đúng không đủ chứng minh tổng quát. Chứng minh và kiểm thử đóng hai vai trò bổ sung.",
+            "Áp dụng cho prefix-map, LIS, DP, tham lam và bài có chuyển trạng thái khó kiểm soát."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Đừng dùng chính thuật toán tối ưu như oracle thứ hai với chỉ tên biến khác; cùng lỗi tư duy có thể xuất hiện ở cả hai."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Một thuật toán qua 1000 test ngẫu nhiên có được coi chắc chắn đúng không?",
+        "answer": "Không. Nó tăng độ tin cậy, nhưng vẫn cần chứng minh và kiểm tra ràng buộc chưa được sinh."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Big-O và kích thước input",
+      "description": "Big-O mô tả tốc độ tăng khi input lớn; không phải thời gian chính xác tính bằng giây. Nếu duyệt n phần tử một lần, thời gian O(n). Hệ số và chi phí kiểu dữ liệu vẫn ảnh hưởng thực tế. Phép toán trên số nguyên Python rất lớn không luôn có chi phí O(1).",
+      "difficulty": "intermediate",
+      "code": "a = [2, 4, 6, 8]\ns = 0\nfor x in a:\n    s += x\nprint(s)",
+      "input": null,
+      "output": "20",
+      "explanation": "Có n phép cộng, không phụ thuộc giá trị của phần tử.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Các phân tích cơ bản giả sử số nguyên nằm trong kích thước máy hoặc kích thước bit bị chặn.",
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Vòng lặp lồng nhau không tự động là n²",
+      "description": "Nếu vòng trong chạy n lần cho mỗi lượt vòng ngoài thì tổng n². Nếu vòng trong chạy i lần, tổng 1+...+n vẫn là O(n²). Nhưng với hai con trỏ chỉ tiến và không quay lại, tổng số bước có thể chỉ O(n) dù code có vòng lặp lồng nhau.",
+      "difficulty": "intermediate",
+      "code": "n = 4\ncount = 0\nfor i in range(n):\n    for j in range(i):\n        count += 1\nprint(count)",
+      "input": null,
+      "output": "6",
+      "explanation": "Số lượt là 0+1+2+3=6=n(n-1)/2.",
+      "complexity": {
+        "time": "O(n²)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Chia đôi và logarit",
+      "description": "Nếu mỗi bước giảm miền tìm kiếm còn một nửa, sau k bước miền còn khoảng n/2^k. Đến kích thước 1 khi k xấp xỉ log2(n). Phép chia đôi tạo O(log n) bước, miễn mỗi bước chỉ tốn O(1).",
+      "difficulty": "intermediate",
+      "code": "x, steps = 16, 0\nwhile x > 1:\n    x //= 2\n    steps += 1\nprint(steps)",
+      "input": null,
+      "output": "4",
+      "explanation": "16→8→4→2→1.",
+      "complexity": {
+        "time": "O(log n)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Brute force, oracle và lựa chọn",
+      "description": "Bắt đầu bằng lời giải đơn giản cho n nhỏ làm oracle: so sánh kết quả với thuật toán tối ưu trên nhiều dữ liệu nhỏ. Điều này bổ sung chứ không thay thế chứng minh. Với n=200000, một thuật toán n² phải xử lý khoảng 4×10^10 cặp, thường không phù hợp bài thi; không dùng một mốc thao tác cố định cho mọi máy.",
+      "difficulty": "advanced",
+      "code": "n = 200000\nprint(n * n)",
+      "input": null,
+      "output": "40000000000",
+      "explanation": "Số cặp tăng rất nhanh khi n lớn.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Đọc giới hạn input, thời gian, bộ nhớ rồi chọn cấu trúc dữ liệu; đo thời gian trên dữ liệu lớn nhất.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Hai vòng độc lập, mỗi vòng n lượt, có bậc thời gian nào?",
+      "choices": [
+        "O(1)",
+        "O(n)",
+        "O(n²)",
+        "O(log n)"
+      ],
+      "answer": "O(n)",
+      "explanation": "n+n=2n, bỏ hệ số hằng khi lấy bậc.",
+      "betterApproach": "Phân biệt vòng nối tiếp và lồng nhau.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "complexity"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Mỗi bước chia đôi miền n phần tử có số bước bậc nào?",
+      "choices": [
+        "O(log n)",
+        "O(n)",
+        "O(n²)",
+        "O(2^n)"
+      ],
+      "answer": "O(log n)",
+      "explanation": "n/2^k đạt 1 khi k≈log2 n.",
+      "betterApproach": "Kiểm tra chi phí bên trong mỗi bước.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "complexity"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Kiểm tra tối ưu bằng brute force trên n nhỏ có thay thế chứng minh không?",
+      "choices": [
+        "Có, với 10 test",
+        "Có, nếu chạy nhanh",
+        "Không cần cả kiểm thử",
+        "Không, chỉ bổ sung bằng chứng kiểm thử"
+      ],
+      "answer": "Không, chỉ bổ sung bằng chứng kiểm thử",
+      "explanation": "Test hữu hạn không bao phủ mọi input.",
+      "betterApproach": "Dùng bất biến hoặc quy nạp bên cạnh test.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "complexity"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "complexity",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "a = [2, 4, 6, 8]\ns = 0\nfor x in a:\n    s += x\nprint(s)",
+      "choices": [
+        "0",
+        "20",
+        "Không có output",
+        "Lỗi chạy chương trình"
+      ],
+      "answer": "20",
+      "explanation": "Có n phép cộng, không phụ thuộc giá trị của phần tử.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "complexity",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "n = 4\ncount = 0\nfor i in range(n):\n    for j in range(i):\n        count += 1\nprint(count)",
+      "choices": [
+        "6",
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0"
+      ],
+      "answer": "6",
+      "explanation": "Số lượt là 0+1+2+3=6=n(n-1)/2.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Đếm cặp chỉ số",
+      "problem": "Cho n, đếm các cặp (i,j) có 1<=i<j<=n.",
+      "inputDescription": "Một số n.",
+      "outputDescription": "Số cặp.",
+      "constraints": [
+        "1 <= n <= 10^9"
+      ],
+      "sampleInput": "4",
+      "sampleOutput": "6",
+      "hint": "Mỗi cặp gồm hai vị trí khác nhau, không quan tâm thứ tự.",
+      "explanation": "Tổng n-1+n-2+...+1 = n(n-1)/2. Tích trong giới hạn 64 bit với ràng buộc đã cho.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "betterApproach": "Không duyệt tất cả cặp chỉ để đếm chúng.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "complexity"
+      ],
+      "answer": null,
+      "solutionCode": "n = int(input())\nprint(n * (n - 1) // 2)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1",
+          "output": "0"
+        },
+        {
+          "input": "1000000000",
+          "output": "499999999500000000"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Tổng số lượt nhân đôi",
+      "problem": "Bắt đầu x=1. Mỗi bước nhân x với 2. Tìm số bước nhỏ nhất để x>=n.",
+      "inputDescription": "Một số nguyên n.",
+      "outputDescription": "Số bước.",
+      "constraints": [
+        "1 <= n <= 10^18"
+      ],
+      "sampleInput": "17",
+      "sampleOutput": "5",
+      "hint": "Chỉ cần khoảng 60 bước với giới hạn này.",
+      "explanation": "Sau k bước, x=2^k. Vòng lặp dừng ở k đầu tiên thỏa 2^k>=n; dùng số nguyên tránh sai số log2 ở lũy thừa của 2.",
+      "complexity": {
+        "time": "O(log n)",
+        "space": "O(1)"
+      },
+      "betterApproach": "Xét n=1 và n đúng lũy thừa của 2 để tránh sai một bước.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "complexity"
+      ],
+      "answer": null,
+      "solutionCode": "n = int(input())\nx, k = 1, 0\nwhile x < n:\n    x *= 2\n    k += 1\nprint(k)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1",
+          "output": "0"
+        },
+        {
+          "input": "16",
+          "output": "4"
+        },
+        {
+          "input": "1000000000000000000",
+          "output": "60"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Coi Big-O là số giây",
+      "fix": "Big-O chỉ mô tả bậc tăng; cần đo thực tế."
+    },
+    {
+      "mistake": "Quên bộ nhớ phụ trợ",
+      "fix": "Tính cả mảng tạm, stack và bảng DP."
+    }
+  ],
+  "chapterSummary": [
+    "Đếm tổng bước thực tế của các vòng.",
+    "Phân tích O(time) và O(space) riêng.",
+    "Ràng buộc giúp loại thuật toán không phù hợp."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Độ phức tạp và chọn thuật toán",
+      "url": "https://www.geeksforgeeks.org/dsa/analysis-of-algorithms/"
+    },
+    {
+      "title": "Tài liệu Python chính thức",
+      "url": "https://docs.python.org/3/tutorial/"
+    }
+  ]
+}

@@ -1,0 +1,588 @@
+{
+  "id": "ch04",
+  "language": "python",
+  "title": "Mảng, vector/list và ma trận",
+  "order": 4,
+  "description": "Chương 4 — Truy cập phần tử theo chỉ số từ 0. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Truy cập phần tử theo chỉ số từ 0.",
+    "Duyệt, tìm min/max và đếm tần suất.",
+    "Hiểu sao chép, alias và mảng hai chiều.",
+    "Áp dụng quét tuyến tính cho bài HSG."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 3 và tự chạy được ví dụ bằng Python 3."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Dãy dữ liệu có chỉ số",
+      "content": "Mảng lưu một dãy có thứ tự. Vector của C++ là dãy có thể thay đổi kích thước, còn list của Python chứa tham chiếu đến đối tượng. Với n phần tử, chỉ số hợp lệ từ 0 đến n-1. Truy cập ngoài biên trong C++ có thể gây hành vi không xác định; Python báo IndexError.",
+      "keywords": [
+        "array",
+        "matrix"
+      ],
+      "code": "a = [4, 2, 7]\na[1] = 5\nprint(*a)",
+      "output": "4 5 7",
+      "explanation": "Gán vào vị trí 1 thay giá trị thứ hai, không phải phần tử đầu.",
+      "visualization": {
+        "title": "Sửa một ô, giữ những ô còn lại",
+        "description": "Chỉ số 1 là phần tử thứ hai; phép gán không chèn thêm phần tử.",
+        "steps": [
+          {
+            "title": "Trước phép gán",
+            "explanation": "a[1] đang là 2. Dãy có 3 phần tử.",
+            "cells": [
+              {
+                "label": "chỉ số",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "a[1]",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "4",
+                "2",
+                "7"
+              ],
+              "activeIndices": [
+                1
+              ],
+              "pointers": [
+                {
+                  "index": 1,
+                  "label": "a[1]"
+                }
+              ],
+              "discardedIndices": []
+            }
+          },
+          {
+            "title": "Gán giá trị mới",
+            "explanation": "Ghi 5 vào ô chỉ số 1. Độ dài và các ô khác không đổi.",
+            "cells": [
+              {
+                "label": "chỉ số",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "a[1]",
+                "value": "5",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "4",
+                "5",
+                "7"
+              ],
+              "activeIndices": [
+                1
+              ],
+              "pointers": [
+                {
+                  "index": 1,
+                  "label": "đã sửa"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "a[1] = 5"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Một dãy có thứ tự cho phép nói về phần tử thứ nhất, thứ hai và quan hệ kề nhau. Chỉ số là cách máy gọi tên vị trí: phần tử thứ k theo cách nói thông thường có chỉ số k-1. Độ dài n là số phần tử, không phải chỉ số cuối.",
+            "Truy cập theo chỉ số và tìm theo giá trị là hai việc khác nhau. a[2] lấy ô thứ ba trong O(1), còn tìm vị trí có giá trị 2 có thể phải quét dãy. Trong Python, số âm như a[-1] có nghĩa từ cuối; trong C++ không được dùng chỉ số âm cho vector."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Tạo dãy và xác định n.",
+            "Viết rõ mọi vòng duyệt theo 0<=i<n.",
+            "Trước khi sửa ô, kiểm tra vị trí có nằm trong dãy.",
+            "Nếu thêm hoặc xóa phần tử, kiểm tra lại chỉ số và độ dài sau thao tác."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Dãy n phần tử có đúng n chỉ số 0,1,...,n-1. Bảo đảm bất đẳng thức chỉ số trước mỗi truy cập giúp mọi phép đọc/ghi có đối tượng xác định.",
+            "Áp dụng khi cần giữ toàn bộ input, dùng lại nhiều lần hoặc truy cập ngẫu nhiên."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Thêm/xóa ở đầu vector/list khiến nhiều phần tử dịch chuyển và thường O(n). Đừng suy ra mọi thao tác trên dãy đều O(1) từ việc a[i] là O(1)."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Dãy 5 phần tử có chỉ số 5 hợp lệ không?",
+        "answer": "Không. Chỉ số cuối là 4; số 5 biểu diễn vị trí ngay sau dãy."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Quét một lần và tần suất",
+      "content": "Để tìm lớn nhất, đặt kết quả ban đầu bằng phần tử đầu rồi cập nhật nếu gặp số lớn hơn. Để đếm giá trị trong miền nhỏ [0,M], dùng mảng freq dài M+1. Không tạo mảng theo miền 10^9; dùng map/dict hoặc nén tọa độ ở bài phù hợp.",
+      "keywords": [
+        "array",
+        "matrix"
+      ],
+      "code": "a = [-5, -2, -9]\nbest = a[0]\nfor x in a:\n    best = max(best, x)\nprint(best)",
+      "output": "-2",
+      "explanation": "Khởi tạo bằng -5 giúp xử lý dãy toàn âm; khởi tạo 0 sẽ sai.",
+      "hsgNote": "Với bài chỉ hỏi min/max, có thể đọc lần lượt để giảm bộ nhớ mà không cần lưu cả dãy.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Quét tuyến tính giữ một vài thông tin tóm tắt về phần đã đọc. Với max, best đại diện cho giá trị lớn nhất trong các phần tử đã xét. Với tần suất, freq[v] là số phần tử bằng v đã thấy.",
+            "Mảng tần suất phụ thuộc miền giá trị M, không chỉ số phần tử n. Nếu n=1000 nhưng giá trị đến 10^9, mảng M+1 vẫn quá lớn. Mảng phù hợp miền nhỏ; map/dict phù hợp các giá trị rời rạc mà không cần cấp phát theo cả miền."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Khởi tạo best bằng phần tử đầu khi dãy không rỗng.",
+            "Mỗi lượt cập nhật best=max(best,x).",
+            "Khi đếm, khởi tạo bộ đếm 0 và tăng đúng ô của x.",
+            "Ước lượng số ô bộ nhớ trước khi quyết định dùng freq."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nếu best đúng cho tiền tố đã xét, max(best,x) là max của tiền tố có thêm x. Tần suất đúng vì mỗi input đóng góp đúng một đơn vị vào bộ đếm tương ứng.",
+            "Áp dụng cho thống kê, kiểm tra xuất hiện, số lần lặp và các bài chỉ cần một lần đọc."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không khởi tạo max bằng 0 khi số có thể âm; cũng không dùng min bằng 0 khi dãy toàn dương. Giá trị khởi tạo cần thuộc miền hoặc được chứng minh là sentinel phù hợp."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với dãy [-9,-3,-7], khởi tạo best=0 có sai không?",
+        "answer": "Sai: 0 không thuộc dãy. Bắt đầu best=-9 rồi cập nhật được kết quả -3."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Ma trận và các hàng độc lập",
+      "content": "Ma trận có chỉ số hàng và cột. Khi tạo nhiều hàng trong Python, phải tạo từng list mới; [[0]*m]*n làm các hàng cùng trỏ tới một list. Trong C++, vector<vector<int>>(n,vector<int>(m)) tạo các hàng có dữ liệu độc lập.",
+      "keywords": [
+        "array",
+        "matrix"
+      ],
+      "code": "a = [[0] * 2 for _ in range(2)]\na[0][1] = 7\nprint(a[1][1])",
+      "output": "0",
+      "explanation": "Sửa hàng 0 không làm hàng 1 đổi.",
+      "hsgNote": "Duyệt ma trận theo hàng rồi theo cột để kiểm soát chỉ số. Tổng ma trận lớn nên dùng long long ở C++.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Ma trận là dãy của các hàng; mỗi ô có hai tọa độ (r,c). Ta cần quản lý hai miền chỉ số độc lập: 0<=r<n và 0<=c<m. Khi tính tổng một hàng, c thay đổi còn r cố định; khi tính tổng cột, r thay đổi còn c cố định.",
+            "Khởi tạo các hàng độc lập là quan trọng. Trong Python, nhân list chỉ sao chép tham chiếu tới các phần tử; nếu phần tử là list hàng thì nhiều hàng có thể dùng chung một đối tượng. List comprehension tạo một hàng mới cho mỗi lượt."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Tạo n hàng, mỗi hàng m ô.",
+            "Dùng vòng ngoài cho hàng và vòng trong cho cột.",
+            "Xác định rõ ô láng giềng: trên (r-1,c), trái (r,c-1).",
+            "Kiểm tra biên trước khi đọc láng giềng ở hàng/cột đầu."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Duyệt mỗi cặp (r,c) đúng một lần xét đủ nm ô. Hàng độc lập bảo đảm sửa một ô chỉ ảnh hưởng đúng hàng chứa ô đó.",
+            "Áp dụng cho bảng điểm, bản đồ ô vuông và DP hai chiều."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Đừng dùng [[0]*m]*n nếu cần sửa từng hàng riêng. Đừng coi r-1=-1 là lỗi tự nhiên trong Python: -1 có thể đọc hàng cuối và tạo kết quả sai âm thầm."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Trong ma trận 2×3, ô (1,2) thuộc hàng và cột thứ mấy theo cách đếm từ 1?",
+        "answer": "Hàng 2, cột 3. Ô (2,3) nằm ngoài cả hai miền chỉ số."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Tổng đoạn con lớn nhất: giữ trạng thái đủ dùng",
+      "content": "Gọi ending là tổng lớn nhất của đoạn không rỗng kết thúc tại vị trí hiện tại. Khi đọc x, chọn bắt đầu đoạn mới bằng x hoặc nối đoạn trước: ending=max(x,ending+x). best là giá trị ending lớn nhất đã gặp. Đây là thuật toán Kadane, một ví dụ chuẩn bị cho quy hoạch động.",
+      "keywords": [
+        "array",
+        "matrix"
+      ],
+      "code": "a = [-2, 3, -1, 4, -5]\nending = best = a[0]\nfor x in a[1:]:\n    ending = max(x, ending + x)\n    best = max(best, ending)\nprint(best)",
+      "output": "6",
+      "explanation": "Đoạn [3,-1,4] có tổng 6. Không bỏ qua trường hợp toàn âm.",
+      "hsgNote": "Chứng minh bằng hai lựa chọn: đoạn kết thúc tại i hoặc bắt đầu ở i, hoặc kéo dài đoạn kết thúc ở i-1.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Bài tổng đoạn con lớn nhất giữ tính liên tiếp, nên không thể chỉ cộng mọi số dương. Trạng thái ending buộc đoạn phải kết thúc ngay tại i; best cho phép kết thúc ở bất kỳ vị trí nào đã đọc. Hai ý nghĩa này khác nhau và cần hai biến.",
+            "Tại i, mọi đoạn kết thúc ở i hoặc chỉ chứa a[i], hoặc là một đoạn kết thúc ở i-1 nối thêm a[i]. Không có trường hợp thứ ba. Trong nhóm thứ hai, nối đoạn có ending lớn nhất là tốt nhất vì mọi đoạn đều cộng cùng a[i]."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Khởi tạo ending=best=a[0] cho đoạn không rỗng.",
+            "Với x mới, chọn max(x,ending+x).",
+            "Cập nhật best=max(best,ending).",
+            "Nếu cần truy vết, lưu đầu đoạn mới khi chọn x và lưu cặp biên khi best tăng."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Quy nạp theo vị trí: hai lựa chọn bao phủ mọi đoạn kết thúc tại i; ending tối ưu ở i-1 làm lựa chọn nối tối ưu. Lấy max mọi ending cho kết quả toàn dãy.",
+            "Áp dụng cho đoạn lợi nhuận liên tiếp, tổng tín hiệu và bài chọn một khoảng có trọng số có thể âm."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không đặt ending=0 để “bỏ hết” nếu đề bắt buộc đoạn không rỗng. Khi toàn dãy âm, đáp án là phần tử lớn nhất chứ không phải 0."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Trong [3,-1,4], tại sao vẫn giữ -1 trong đoạn tối ưu?",
+        "answer": "Vì 3-1+4=6 lớn hơn cả 3 và 4; giữ tính liên tiếp cho phép nối hai phần có lợi qua một phần âm nhỏ."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Dãy dữ liệu có chỉ số",
+      "description": "Mảng lưu một dãy có thứ tự. Vector của C++ là dãy có thể thay đổi kích thước, còn list của Python chứa tham chiếu đến đối tượng. Với n phần tử, chỉ số hợp lệ từ 0 đến n-1. Truy cập ngoài biên trong C++ có thể gây hành vi không xác định; Python báo IndexError.",
+      "difficulty": "intermediate",
+      "code": "a = [4, 2, 7]\na[1] = 5\nprint(*a)",
+      "input": null,
+      "output": "4 5 7",
+      "explanation": "Gán vào vị trí 1 thay giá trị thứ hai, không phải phần tử đầu.",
+      "complexity": {
+        "time": "O(n) để in",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Quét một lần và tần suất",
+      "description": "Để tìm lớn nhất, đặt kết quả ban đầu bằng phần tử đầu rồi cập nhật nếu gặp số lớn hơn. Để đếm giá trị trong miền nhỏ [0,M], dùng mảng freq dài M+1. Không tạo mảng theo miền 10^9; dùng map/dict hoặc nén tọa độ ở bài phù hợp.",
+      "difficulty": "intermediate",
+      "code": "a = [-5, -2, -9]\nbest = a[0]\nfor x in a:\n    best = max(best, x)\nprint(best)",
+      "input": null,
+      "output": "-2",
+      "explanation": "Khởi tạo bằng -5 giúp xử lý dãy toàn âm; khởi tạo 0 sẽ sai.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n) cho dãy, O(1) phụ trợ"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Với bài chỉ hỏi min/max, có thể đọc lần lượt để giảm bộ nhớ mà không cần lưu cả dãy.",
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Ma trận và các hàng độc lập",
+      "description": "Ma trận có chỉ số hàng và cột. Khi tạo nhiều hàng trong Python, phải tạo từng list mới; [[0]*m]*n làm các hàng cùng trỏ tới một list. Trong C++, vector<vector<int>>(n,vector<int>(m)) tạo các hàng có dữ liệu độc lập.",
+      "difficulty": "intermediate",
+      "code": "a = [[0] * 2 for _ in range(2)]\na[0][1] = 7\nprint(a[1][1])",
+      "input": null,
+      "output": "0",
+      "explanation": "Sửa hàng 0 không làm hàng 1 đổi.",
+      "complexity": {
+        "time": "O(nm)",
+        "space": "O(nm)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Duyệt ma trận theo hàng rồi theo cột để kiểm soát chỉ số. Tổng ma trận lớn nên dùng long long ở C++.",
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Tổng đoạn con lớn nhất: giữ trạng thái đủ dùng",
+      "description": "Gọi ending là tổng lớn nhất của đoạn không rỗng kết thúc tại vị trí hiện tại. Khi đọc x, chọn bắt đầu đoạn mới bằng x hoặc nối đoạn trước: ending=max(x,ending+x). best là giá trị ending lớn nhất đã gặp. Đây là thuật toán Kadane, một ví dụ chuẩn bị cho quy hoạch động.",
+      "difficulty": "advanced",
+      "code": "a = [-2, 3, -1, 4, -5]\nending = best = a[0]\nfor x in a[1:]:\n    ending = max(x, ending + x)\n    best = max(best, ending)\nprint(best)",
+      "input": null,
+      "output": "6",
+      "explanation": "Đoạn [3,-1,4] có tổng 6. Không bỏ qua trường hợp toàn âm.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n) lưu input, O(1) phụ trợ"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Chứng minh bằng hai lựa chọn: đoạn kết thúc tại i hoặc bắt đầu ở i, hoặc kéo dài đoạn kết thúc ở i-1.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Dãy có n phần tử thì chỉ số cuối là gì?",
+      "choices": [
+        "n-1",
+        "n",
+        "1",
+        "n+1"
+      ],
+      "answer": "n-1",
+      "explanation": "Chỉ số bắt đầu từ 0.",
+      "betterApproach": "Kiểm tra biên trước khi đọc a[i].",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "array",
+        "matrix"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Tìm max của dãy toàn âm, nên khởi tạo bằng gì?",
+      "choices": [
+        "0",
+        "1",
+        "Số âm bất kỳ",
+        "Phần tử đầu"
+      ],
+      "answer": "Phần tử đầu",
+      "explanation": "0 có thể không thuộc dãy và lớn hơn mọi phần tử.",
+      "betterApproach": "Chỉ dùng sentinel khi chắc chắn miền dữ liệu.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "array",
+        "matrix"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Tại sao không dùng mảng tần suất dài 10^9?",
+      "choices": [
+        "Mảng chỉ chứa bool",
+        "Tần suất luôn bằng 1",
+        "Tốn bộ nhớ theo miền giá trị",
+        "Không đếm được số nguyên"
+      ],
+      "answer": "Tốn bộ nhớ theo miền giá trị",
+      "explanation": "Miền lớn làm bộ nhớ không phù hợp dù n nhỏ.",
+      "betterApproach": "Dùng map/dict hoặc sắp xếp để gom nhóm.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "array",
+        "matrix"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "array",
+        "matrix",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "a = [4, 2, 7]\na[1] = 5\nprint(*a)",
+      "choices": [
+        "4 5 7",
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0"
+      ],
+      "answer": "4 5 7",
+      "explanation": "Gán vào vị trí 1 thay giá trị thứ hai, không phải phần tử đầu.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "array",
+        "matrix",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "a = [-5, -2, -9]\nbest = a[0]\nfor x in a:\n    best = max(best, x)\nprint(best)",
+      "choices": [
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0",
+        "-2"
+      ],
+      "answer": "-2",
+      "explanation": "Khởi tạo bằng -5 giúp xử lý dãy toàn âm; khởi tạo 0 sẽ sai.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Đếm tần suất trong miền nhỏ",
+      "problem": "Cho n số trong [0,9], in số lần xuất hiện của từng chữ số 0 đến 9.",
+      "inputDescription": "n rồi n số nguyên.",
+      "outputDescription": "10 số tần suất theo thứ tự.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "0 <= a[i] <= 9"
+      ],
+      "sampleInput": "5\n1 2 1 0 9",
+      "sampleOutput": "1 2 1 0 0 0 0 0 0 1",
+      "hint": "Mỗi giá trị là chỉ số của một bộ đếm.",
+      "explanation": "Khởi tạo 10 bộ đếm bằng 0, cập nhật đúng bộ đếm tương ứng với từng input.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n) ở Python, O(1) ở C++"
+      },
+      "betterApproach": "Python có thể đọc từng dòng input lớn với sys.stdin, nhưng cần tôn trọng định dạng dữ liệu.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "array",
+        "matrix"
+      ],
+      "answer": null,
+      "solutionCode": "n = int(input())\na = list(map(int, input().split()))\nfreq = [0] * 10\nfor x in a:\n    freq[x] += 1\nprint(*freq)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1\n0",
+          "output": "1 0 0 0 0 0 0 0 0 0"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Đoạn con có tổng lớn nhất",
+      "problem": "Tìm tổng lớn nhất của một đoạn liên tiếp không rỗng trong dãy.",
+      "inputDescription": "n rồi n số nguyên.",
+      "outputDescription": "Tổng lớn nhất.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "-10^9 <= a[i] <= 10^9"
+      ],
+      "sampleInput": "5\n-2 3 -1 4 -5",
+      "sampleOutput": "6",
+      "hint": "Chỉ cần biết đoạn tốt nhất kết thúc ở vị trí trước.",
+      "explanation": "Nếu tổng trước âm, bỏ đoạn trước sẽ tốt hơn. Nếu không, nối nó với x. best cập nhật trên toàn bộ các vị trí.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n) ở Python, O(1) ở C++"
+      },
+      "betterApproach": "Muốn in đoạn, lưu vị trí bắt đầu tạm thời và vị trí tốt nhất.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "array",
+        "matrix"
+      ],
+      "answer": null,
+      "solutionCode": "n = int(input())\na = list(map(int, input().split()))\nending = best = a[0]\nfor x in a[1:]:\n    ending = max(x, ending + x)\n    best = max(best, ending)\nprint(best)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1\n-7",
+          "output": "-7"
+        },
+        {
+          "input": "3\n-5 -2 -9",
+          "output": "-2"
+        },
+        {
+          "input": "6\n3 -2 3 0 -2 -1",
+          "output": "4"
+        },
+        {
+          "input": "4\n0 -2 1 1",
+          "output": "2"
+        },
+        {
+          "input": "1\n0",
+          "output": "0"
+        },
+        {
+          "input": "7\n-2 -1 1 3 -3 -3 0",
+          "output": "4"
+        },
+        {
+          "input": "2\n-1 0",
+          "output": "0"
+        },
+        {
+          "input": "1\n-3",
+          "output": "-3"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Duyệt đến i=n",
+      "fix": "Dùng i<n, không phải i<=n."
+    },
+    {
+      "mistake": "Nhầm list copy với alias",
+      "fix": "Python b=a dùng chung đối tượng; b=a.copy() sao chép nông."
+    }
+  ],
+  "chapterSummary": [
+    "Chỉ số từ 0 đến n-1.",
+    "Quét một lần thường đủ cho thống kê.",
+    "Phân biệt bộ nhớ input và bộ nhớ phụ trợ."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Mảng, vector/list và ma trận",
+      "url": "https://www.geeksforgeeks.org/dsa/array-data-structure-guide/"
+    },
+    {
+      "title": "Tài liệu Python chính thức",
+      "url": "https://docs.python.org/3/tutorial/"
+    }
+  ]
+}

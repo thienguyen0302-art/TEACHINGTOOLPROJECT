@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "validate:content": "python3 scripts/validate_content.py",
+    "validate:examples": "python3 scripts/validate_content.py --run-code",
     "preview": "vite preview"
   },
   "dependencies": {
