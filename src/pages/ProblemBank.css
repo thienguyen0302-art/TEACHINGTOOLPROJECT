@@ -77,6 +77,8 @@
 .bank-panel__bar button { align-self: stretch; padding: 12px 0; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #848b95; font-size: 12px; }
 .bank-panel__bar button[aria-selected="true"] { color: #303743; border-bottom-color: #d69b2a; font-weight: 600; }
 .bank-panel__bar button span { font-size: 10px; margin-left: 4px; background: #e9edf1; padding: 1px 5px; border-radius: 4px; }
+.bank-panel__bar button .bank-tab-icon { font-size: inherit; margin: 0; background: none; padding: 0; }
+.bank-panel__bar button:focus-visible { outline-offset: -3px; }
 .bank-statement-body { padding: 24px; }
 .bank-ui .problem-statement { line-height: 1.75; }
 .bank-ui .problem-statement h1 { font-size: 24px; letter-spacing: -.5px; margin: 0 0 12px; }
@@ -102,7 +104,7 @@
 .bank-ui .problem-editor__toolbar select { background: #303640; color: #dce1e9; border: 1px solid #424955; font-size: 12px; padding: 5px 9px; border-radius: 5px; }
 .bank-ui .problem-editor__toolbar > span { font-size: 10px; color: #9198a5; }
 .bank-code-area { display: flex; align-items: stretch; overflow: auto; max-height: 60vh; min-height: 360px; background: #20242b; }
-.bank-line-numbers { padding: 18px 10px 18px 14px; text-align: right; color: #656e7c; background: #20242b; user-select: none; font: 13px/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.bank-line-numbers { flex-shrink: 0; padding: 18px 10px 18px 14px; text-align: right; color: #656e7c; background: #20242b; user-select: none; font: 13px/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; }
 .bank-line-numbers span { display: block; }
 .bank-ui .problem-editor textarea { flex: 1; min-width: 0; min-height: 360px; height: auto; width: 100%; resize: none; border: 0; border-radius: 0; padding: 18px 14px; background: #20242b; color: #dbe3ef; font: 13px/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; tab-size: 4; white-space: pre; overflow-x: auto; }
 .bank-ui .problem-editor textarea:focus-visible { outline-offset: -3px; }
