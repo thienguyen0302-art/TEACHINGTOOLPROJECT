@@ -1,0 +1,65 @@
+{
+  "id": "ch01-p003",
+  "slug": "tong-tu-mot-den-n",
+  "chapterId": "ch01",
+  "title": "Tổng từ 1 đến n",
+  "type": "coding",
+  "difficulty": "advanced",
+  "level": 3,
+  "tags": [
+    "formula",
+    "overflow",
+    "datatype"
+  ],
+  "statement": "Cho số nguyên dương n. Tính tổng 1 + 2 + ... + n mà không dùng vòng lặp.",
+  "inputDescription": "Một dòng chứa số nguyên dương n.",
+  "outputDescription": "In ra tổng các số nguyên từ 1 đến n.",
+  "constraints": [
+    "1 ≤ n ≤ 10^9"
+  ],
+  "samples": [
+    {
+      "input": "5",
+      "output": "15",
+      "explanation": "1 + 2 + 3 + 4 + 5 = 15."
+    },
+    {
+      "input": "1000000000",
+      "output": "500000000500000000",
+      "explanation": "Cần kiểu số nguyên đủ lớn để lưu kết quả."
+    }
+  ],
+  "hints": [
+    "Sử dụng công thức n × (n + 1) / 2.",
+    "Phép nhân phải thực hiện trên kiểu long long trong C++."
+  ],
+  "starterCode": {
+    "cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Viết lời giải tại đây.\n    return 0;\n}\n",
+    "python": "# Đọc dữ liệu và viết lời giải tại đây.\n"
+  },
+  "solution": {
+    "explanation": "Tổng bằng n × (n + 1) / 2. Với n ≤ 10^9, tích trung gian không vượt quá 10^18 + 10^9 nên nằm trong long long. Python hỗ trợ số nguyên lớn và chia nguyên bằng //.",
+    "code": {
+      "cpp": "#include <iostream>\nusing namespace std;\nint main() {\n    long long n;\n    cin >> n;\n    cout << n * (n + 1) / 2 << \"\\n\";\n    return 0;\n}\n",
+      "python": "n = int(input())\nprint(n * (n + 1) // 2)\n"
+    },
+    "complexity": {
+      "time": "O(1)",
+      "space": "O(1)"
+    }
+  },
+  "aiContext": {
+    "objectives": [
+      "Áp dụng công thức tổng cấp số cộng.",
+      "Chọn kiểu dữ liệu để tránh tràn số."
+    ],
+    "prerequisites": [
+      "Biến, kiểu số nguyên và phép nhân chia."
+    ],
+    "commonMistakes": [
+      "Nhân hai giá trị int trước khi gán sang long long.",
+      "Dùng vòng lặp khi n rất lớn.",
+      "Dùng phép chia thực trong Python."
+    ]
+  }
+}

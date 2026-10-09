@@ -13,6 +13,9 @@ export default function Sidebar({ lang }) {
 
   return (
     <aside className="side">
+      <NavLink to="/practice" className={({ isActive }) => isActive ? "side-link active" : "side-link"}>
+        Problem Bank
+      </NavLink>
       <h3>Các chương</h3>
       {chapters.map((c) => (
         <NavLink
