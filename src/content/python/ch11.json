@@ -1,0 +1,602 @@
+{
+  "id": "ch11",
+  "language": "python",
+  "title": "Hai con trỏ và cửa sổ trượt",
+  "order": 11,
+  "description": "Chương 11 — Tìm cặp tổng trên dãy đã sắp. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Tìm cặp tổng trên dãy đã sắp.",
+    "Duy trì cửa sổ và cập nhật khi bỏ/thêm phần tử.",
+    "Chứng minh tính đơn điệu để đếm tổng đoạn.",
+    "Phân biệt trường hợp số dương và số âm."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 10 và tự chạy được ví dụ bằng Python 3."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Hai đầu trên dãy tăng",
+      "content": "Để tìm hai phần tử có tổng k trong dãy tăng, đặt l ở đầu và r ở cuối. Nếu tổng nhỏ, tăng l để có thể tăng tổng; nếu tổng lớn, giảm r. Khi tổng nhỏ, không cặp nào với cùng l và r nhỏ hơn có thể đạt k, nên loại l là an toàn. Hai vị trí phải khác nhau: l<r.",
+      "keywords": [
+        "two-pointers",
+        "sliding-window"
+      ],
+      "code": "a, k = [1, 2, 4, 7], 6\nl, r = 0, len(a) - 1\nok = False\nwhile l < r:\n    s = a[l] + a[r]\n    if s == k:\n        ok = True\n        break\n    if s < k:\n        l += 1\n    else:\n        r -= 1\nprint(\"YES\" if ok else \"NO\")",
+      "output": "YES",
+      "explanation": "1+7=8 lớn, giảm r; 1+4=5 nhỏ, tăng l; 2+4=6.",
+      "visualization": {
+        "title": "Tìm cặp tổng 6",
+        "description": "Hai đầu l,r chỉ tiến vào trong; ô nhạt đã bị loại khỏi miền còn lại.",
+        "steps": [
+          {
+            "title": "Tổng quá lớn",
+            "explanation": "1+7=8>6. Các cặp còn lại dùng 7 không thể giảm đủ với đầu trái >=1, nên bỏ r=3.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "tổng",
+                "value": "8",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "4",
+                "7"
+              ],
+              "activeIndices": [
+                0,
+                3
+              ],
+              "pointers": [
+                {
+                  "index": 0,
+                  "label": "l"
+                },
+                {
+                  "index": 3,
+                  "label": "r"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "8 > 6 → r -= 1"
+          },
+          {
+            "title": "Tổng quá nhỏ",
+            "explanation": "1+4=5<6. Không số nào còn trong miền bên phải giúp 1 đạt 6, nên tăng l.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "tổng",
+                "value": "5",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "4",
+                "7"
+              ],
+              "activeIndices": [
+                0,
+                2
+              ],
+              "pointers": [
+                {
+                  "index": 0,
+                  "label": "l"
+                },
+                {
+                  "index": 2,
+                  "label": "r"
+                }
+              ],
+              "discardedIndices": [
+                3
+              ]
+            },
+            "formula": "5 < 6 → l += 1"
+          },
+          {
+            "title": "Tìm thấy",
+            "explanation": "2+4=6. Hai phần tử ở hai vị trí khác nhau, xuất YES.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "tổng",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "4",
+                "7"
+              ],
+              "activeIndices": [
+                1,
+                2
+              ],
+              "pointers": [
+                {
+                  "index": 1,
+                  "label": "l"
+                },
+                {
+                  "index": 2,
+                  "label": "r"
+                }
+              ],
+              "discardedIndices": [
+                0,
+                3
+              ]
+            },
+            "formula": "a[1] + a[2] = 6"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Trong dãy tăng, một tổng quá nhỏ cho biết chính xác đầu nào có thể bỏ. Với a[l]+a[r]<k, mọi cặp dùng l với một chỉ số không vượt r đều có tổng không lớn hơn tổng hiện tại, nên không thể đạt k. Vì vậy bỏ l là an toàn.",
+            "Tương tự, tổng quá lớn cho phép bỏ r: mọi cặp dùng r với đầu trái không nhỏ hơn l đều không có tổng nhỏ hơn hiện tại. Điều kiện l<r bảo đảm hai phần tử khác vị trí, kể cả khi chúng có cùng giá trị."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Sort nếu đề không cung cấp thứ tự và nếu được phép đổi thứ tự.",
+            "Đặt l=0,r=n-1.",
+            "So tổng với k: bằng thì có cặp, nhỏ thì tăng l, lớn thì giảm r.",
+            "Kết luận không có khi l>=r."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mỗi lần loại một đầu, mọi cặp chứa đầu đó trong miền còn lại đã được chứng minh không phù hợp. Miền giảm đến khi tìm được cặp hoặc không còn cặp.",
+            "Áp dụng cho tồn tại cặp trên dãy đã sắp. Bài đếm tất cả cặp khi có trùng cần xử lý số lượng nhóm, không chỉ tăng hai con trỏ một lần."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Đừng tái sử dụng quy tắc cho dãy chưa sắp. Nếu yêu cầu chỉ số gốc, phải lưu chỉ số trước sort."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Vì sao khi tổng quá nhỏ không giảm r?",
+        "answer": "Giảm r chỉ làm số bên phải không lớn hơn, nên tổng không thể tăng về k."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Cửa sổ cố định",
+      "content": "Để tính tổng mọi đoạn dài k, tính tổng cửa sổ đầu. Khi trượt sang phải một ô, bỏ phần tử ở đầu trái cũ và thêm phần tử mới bên phải. Chỉ O(1) cập nhật mỗi cửa sổ, tổng O(n). Nếu toàn dãy âm, khởi tạo best bằng tổng cửa sổ đầu thay vì 0.",
+      "keywords": [
+        "two-pointers",
+        "sliding-window"
+      ],
+      "code": "a, k = [2, -1, 4, 3], 2\ns = sum(a[:k])\nbest = s\nfor r in range(k, len(a)):\n    s += a[r] - a[r - k]\n    best = max(best, s)\nprint(best)",
+      "output": "7",
+      "explanation": "Các tổng là 1,3,7. Cửa sổ cố định vẫn đúng khi có số âm.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Một cửa sổ cố định có đúng k phần tử. Hai cửa sổ kế nhau dùng chung k-1 phần tử, nên tính lại từ đầu là lặp công việc. Công thức cập nhật trừ phần tử rời cửa sổ rồi thêm phần tử vừa vào.",
+            "Tổng chạy s cần giữ đúng cửa sổ hiện tại. best là giá trị lớn nhất trong các cửa sổ đã xét. Về cấu trúc, s thay đổi mỗi lượt còn best có thể không đổi; đừng nhầm vai trò hai biến."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Tính s bằng tổng k phần tử đầu.",
+            "Khởi tạo best=s.",
+            "Mỗi r>=k, cập nhật s+=a[r]-a[r-k].",
+            "Lấy max cho best sau khi s đã là cửa sổ mới."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Cửa sổ cũ và mới khác đúng hai phần tử: bỏ đầu cũ và thêm đầu phải mới. Đẳng thức đúng với mọi dấu của phần tử.",
+            "Áp dụng cho tổng/trung bình đoạn dài cố định, phân tích tín hiệu và quét theo độ dài cho trước."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Khởi tạo best=0 sai khi mọi cửa sổ âm. Cũng phải kiểm tra 1<=k<=n hoặc xử lý định nghĩa khi k không hợp lệ."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với k=n, vòng trượt có chạy không?",
+        "answer": "Không. Chỉ có một cửa sổ là toàn dãy; kết quả được xác định từ bước khởi tạo."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Cửa sổ độ dài thay đổi với số dương",
+      "content": "Với a[i]>0 và k>=0, mở rộng phải không làm tổng giảm; bỏ trái không làm tổng tăng. Sau khi thu hẹp để tổng<=k, mọi đoạn kết thúc ở r và bắt đầu từ l đến r đều hợp lệ. Có r-l+1 đoạn. Mỗi con trỏ tăng tối đa n lần nên O(n).",
+      "keywords": [
+        "two-pointers",
+        "sliding-window"
+      ],
+      "code": "a, k = [1, 2, 1], 3\nl = s = ans = 0\nfor r, x in enumerate(a):\n    s += x\n    while s > k:\n        s -= a[l]\n        l += 1\n    ans += r - l + 1\nprint(ans)",
+      "output": "5",
+      "explanation": "Ba đoạn đơn và hai đoạn dài 2 hợp lệ; đoạn toàn dãy có tổng 4.",
+      "hsgNote": "Không dùng lập luận này cho số âm: bỏ một số âm có thể làm tổng tăng. Cửa sổ cố định ở mục trước không có hạn chế đó.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Cửa sổ thay đổi độ dài cần một quan hệ đơn điệu. Với số dương, thêm phần tử bên phải tăng tổng, bỏ phần tử bên trái giảm tổng. Khi tổng vượt k, thu trái cho đến khi hợp lệ; không phải bắt đầu tìm lại từ 0.",
+            "Sau thu hẹp, l là đầu sớm nhất hợp lệ với đầu phải r. Mọi đầu l,l+1,...,r tạo tổng không lớn hơn cửa sổ lớn nhất, nên đều hợp lệ. Số đoạn mới là r-l+1; nếu cửa sổ rỗng thì l=r+1 và đóng góp 0."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Giữ s là tổng cửa sổ [l,r].",
+            "Thêm a[r] khi tăng đầu phải.",
+            "Trong khi s>k, trừ a[l] rồi tăng l.",
+            "Cộng r-l+1 vào đáp án với kiểu đủ lớn."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Các đầu bị loại có tổng quá lớn trước khi bỏ; với số dương, việc thêm bên phải về sau không khiến chúng tốt trở lại. Vì vậy con trỏ trái chỉ cần tiến.",
+            "Áp dụng cho đếm đoạn hoặc tìm độ dài theo ngưỡng trên dãy có điều kiện phù hợp. Không phải mọi bài cửa sổ có cùng ràng buộc."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Số âm phá lập luận: bỏ phần tử âm có thể tăng tổng và một đầu từng sai có thể trở lại đúng. Khi ấy cần phương pháp khác như prefix."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với dãy toàn số dương và k=0, kết quả đếm đoạn không rỗng là gì?",
+        "answer": "0. Mỗi lượt thu hẹp hết cửa sổ, số đầu trái hợp lệ bằng 0."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Hai đầu trên dãy tăng",
+      "description": "Để tìm hai phần tử có tổng k trong dãy tăng, đặt l ở đầu và r ở cuối. Nếu tổng nhỏ, tăng l để có thể tăng tổng; nếu tổng lớn, giảm r. Khi tổng nhỏ, không cặp nào với cùng l và r nhỏ hơn có thể đạt k, nên loại l là an toàn. Hai vị trí phải khác nhau: l<r.",
+      "difficulty": "intermediate",
+      "code": "a, k = [1, 2, 4, 7], 6\nl, r = 0, len(a) - 1\nok = False\nwhile l < r:\n    s = a[l] + a[r]\n    if s == k:\n        ok = True\n        break\n    if s < k:\n        l += 1\n    else:\n        r -= 1\nprint(\"YES\" if ok else \"NO\")",
+      "input": null,
+      "output": "YES",
+      "explanation": "1+7=8 lớn, giảm r; 1+4=5 nhỏ, tăng l; 2+4=6.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Cửa sổ cố định",
+      "description": "Để tính tổng mọi đoạn dài k, tính tổng cửa sổ đầu. Khi trượt sang phải một ô, bỏ phần tử ở đầu trái cũ và thêm phần tử mới bên phải. Chỉ O(1) cập nhật mỗi cửa sổ, tổng O(n). Nếu toàn dãy âm, khởi tạo best bằng tổng cửa sổ đầu thay vì 0.",
+      "difficulty": "intermediate",
+      "code": "a, k = [2, -1, 4, 3], 2\ns = sum(a[:k])\nbest = s\nfor r in range(k, len(a)):\n    s += a[r] - a[r - k]\n    best = max(best, s)\nprint(best)",
+      "input": null,
+      "output": "7",
+      "explanation": "Các tổng là 1,3,7. Cửa sổ cố định vẫn đúng khi có số âm.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Cửa sổ độ dài thay đổi với số dương",
+      "description": "Với a[i]>0 và k>=0, mở rộng phải không làm tổng giảm; bỏ trái không làm tổng tăng. Sau khi thu hẹp để tổng<=k, mọi đoạn kết thúc ở r và bắt đầu từ l đến r đều hợp lệ. Có r-l+1 đoạn. Mỗi con trỏ tăng tối đa n lần nên O(n).",
+      "difficulty": "advanced",
+      "code": "a, k = [1, 2, 1], 3\nl = s = ans = 0\nfor r, x in enumerate(a):\n    s += x\n    while s > k:\n        s -= a[l]\n        l += 1\n    ans += r - l + 1\nprint(ans)",
+      "input": null,
+      "output": "5",
+      "explanation": "Ba đoạn đơn và hai đoạn dài 2 hợp lệ; đoạn toàn dãy có tổng 4.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Không dùng lập luận này cho số âm: bỏ một số âm có thể làm tổng tăng. Cửa sổ cố định ở mục trước không có hạn chế đó.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Tìm cặp bằng hai đầu yêu cầu điều gì?",
+      "choices": [
+        "Dãy có đúng 2 phần tử",
+        "Dãy đã sắp",
+        "Mọi số dương",
+        "Không có số trùng"
+      ],
+      "answer": "Dãy đã sắp",
+      "explanation": "Quy tắc loại một đầu dựa trên thứ tự tăng.",
+      "betterApproach": "Nếu sort trước, tính thêm O(n log n).",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "two-pointers",
+        "sliding-window"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Cửa sổ cố định k có dùng được khi dãy có số âm không?",
+      "choices": [
+        "Có",
+        "Không",
+        "Chỉ khi k=1",
+        "Chỉ khi tổng dương"
+      ],
+      "answer": "Có",
+      "explanation": "Thêm/bớt phần tử vẫn là đẳng thức chính xác.",
+      "betterApproach": "Hạn chế dấu áp dụng cho kỹ thuật thu hẹp theo tổng, không phải mọi cửa sổ.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "two-pointers",
+        "sliding-window"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Đếm đoạn tổng<=k bằng cửa sổ với số dương có O(n) vì sao?",
+      "choices": [
+        "Không có while",
+        "k luôn nhỏ",
+        "Mỗi đoạn được in ra",
+        "Mỗi con trỏ chỉ tiến tối đa n lần"
+      ],
+      "answer": "Mỗi con trỏ chỉ tiến tối đa n lần",
+      "explanation": "Tổng số bước của while không vượt n.",
+      "betterApproach": "Phân tích tổng số bước, không chỉ số vòng lồng.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "two-pointers",
+        "sliding-window"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "two-pointers",
+        "sliding-window",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "a, k = [1, 2, 4, 7], 6\nl, r = 0, len(a) - 1\nok = False\nwhile l < r:\n    s = a[l] + a[r]\n    if s == k:\n        ok = True\n        break\n    if s < k:\n        l += 1\n    else:\n        r -= 1\nprint(\"YES\" if ok else \"NO\")",
+      "choices": [
+        "0",
+        "YES",
+        "Không có output",
+        "Lỗi chạy chương trình"
+      ],
+      "answer": "YES",
+      "explanation": "1+7=8 lớn, giảm r; 1+4=5 nhỏ, tăng l; 2+4=6.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "two-pointers",
+        "sliding-window",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "a, k = [2, -1, 4, 3], 2\ns = sum(a[:k])\nbest = s\nfor r in range(k, len(a)):\n    s += a[r] - a[r - k]\n    best = max(best, s)\nprint(best)",
+      "choices": [
+        "7",
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0"
+      ],
+      "answer": "7",
+      "explanation": "Các tổng là 1,3,7. Cửa sổ cố định vẫn đúng khi có số âm.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Tổng cửa sổ dài k lớn nhất",
+      "problem": "Tìm tổng lớn nhất của đoạn liên tiếp có đúng k phần tử.",
+      "inputDescription": "n k; dòng n số.",
+      "outputDescription": "Tổng lớn nhất.",
+      "constraints": [
+        "1 <= k <= n <= 200000",
+        "|a[i]| <= 10^9"
+      ],
+      "sampleInput": "4 2\n2 -1 4 3",
+      "sampleOutput": "7",
+      "hint": "Cửa sổ sau = cửa sổ trước - phần tử cũ + phần tử mới.",
+      "explanation": "Mọi cửa sổ dài k được xét theo đầu phải từ k-1 đến n-1.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "Nếu input là luồng, có thể dùng bộ đệm k phần tử thay vì lưu cả dãy.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "two-pointers",
+        "sliding-window"
+      ],
+      "answer": null,
+      "solutionCode": "n, k = map(int, input().split())\na = list(map(int, input().split()))\ns = sum(a[:k])\nbest = s\nfor r in range(k, n):\n    s += a[r] - a[r - k]\n    best = max(best, s)\nprint(best)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "3 3\n-3 -1 -2",
+          "output": "-6"
+        },
+        {
+          "input": "3 1\n-3 -1 -2",
+          "output": "-1"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Đếm đoạn có tổng không vượt k",
+      "problem": "Dãy gồm số nguyên dương. Đếm đoạn liên tiếp không rỗng có tổng<=k.",
+      "inputDescription": "n k; dòng n số dương.",
+      "outputDescription": "Số đoạn hợp lệ.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "1 <= a[i] <= 10^9",
+        "0 <= k <= 10^14"
+      ],
+      "sampleInput": "3 3\n1 2 1",
+      "sampleOutput": "5",
+      "hint": "Mỗi r đóng góp số đầu trái hợp lệ.",
+      "explanation": "Sau thu hẹp, l là đầu trái sớm nhất hợp lệ. Số dương bảo đảm mọi đầu trái lớn hơn cũng hợp lệ; cộng r-l+1.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "Số đoạn có thể vượt int; k=0 cho kết quả 0 và cửa sổ rỗng an toàn.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "two-pointers",
+        "sliding-window"
+      ],
+      "answer": null,
+      "solutionCode": "n, k = map(int, input().split())\na = list(map(int, input().split()))\nl = s = ans = 0\nfor r, x in enumerate(a):\n    s += x\n    while s > k:\n        s -= a[l]\n        l += 1\n    ans += r - l + 1\nprint(ans)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "3 0\n1 2 3",
+          "output": "0"
+        },
+        {
+          "input": "1 5\n9",
+          "output": "0"
+        },
+        {
+          "input": "2 5\n3 3",
+          "output": "2"
+        },
+        {
+          "input": "3 7\n4 1 2",
+          "output": "6"
+        },
+        {
+          "input": "1 3\n5",
+          "output": "0"
+        },
+        {
+          "input": "3 6\n1 2 5",
+          "output": "4"
+        },
+        {
+          "input": "5 2\n3 5 1 2 5",
+          "output": "2"
+        },
+        {
+          "input": "5 0\n1 4 4 2 5",
+          "output": "0"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Dùng hai đầu trên dãy chưa sắp",
+      "fix": "Sort và lưu chỉ số gốc khi cần."
+    },
+    {
+      "mistake": "Dùng cửa sổ tổng đơn điệu với số âm",
+      "fix": "Chuyển sang prefix hoặc kỹ thuật phù hợp khác."
+    }
+  ],
+  "chapterSummary": [
+    "Hai con trỏ cần chứng minh thao tác loại bỏ.",
+    "Cửa sổ cố định áp dụng được với số âm.",
+    "Cửa sổ biến độ dài theo tổng cần điều kiện dấu."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Hai con trỏ và cửa sổ trượt",
+      "url": "https://www.geeksforgeeks.org/dsa/two-pointers-technique/"
+    },
+    {
+      "title": "Tài liệu Python chính thức",
+      "url": "https://docs.python.org/3/tutorial/"
+    },
+    {
+      "title": "Algorithms for Competitive Programming — đọc thêm thuật toán",
+      "url": "https://cp-algorithms.com/"
+    }
+  ]
+}

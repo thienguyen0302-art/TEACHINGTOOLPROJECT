@@ -1,11 +1,99 @@
 # Content Schema
 
+## Problem Bank (Phase 1)
+
+Problem Bank độc lập với các bài `practice`/`advanced` trong chapter cũ:
+
+```text
+src/content/problems/
+├── _template.json
+├── ch01/*.json
+└── ch02...ch14/       # Có .gitkeep để giữ các thư mục chưa có bài
+```
+
+Để thêm bài, sao chép `_template.json` vào thư mục chương, đổi tên file,
+đặt `id` và `slug` duy nhất trong toàn bộ bank. `chapterId` phải khớp thư mục.
+Slug nên dùng chữ thường không dấu và dấu gạch ngang. Loader trong
+`src/services/problemService.js` dùng `import.meta.glob` để tự phát hiện JSON
+ở mọi chương; file bắt đầu bằng `_` là template và không được đưa vào danh sách.
+Vite tự cập nhật khi phát triển; bản production cần build lại sau khi thêm bài.
+
+| Trường | Kiểu / ý nghĩa |
+|---|---|
+| `id`, `slug`, `chapterId`, `title` | string; định danh, URL, mã chương, tên bài |
+| `type` | string; Phase 1 dùng `coding` |
+| `difficulty` | `basic` / `intermediate` / `advanced`; tương đối trong chương |
+| `level` | số nguyên dương; cấp độ học tập |
+| `tags` | string[] |
+| `statement`, `inputDescription`, `outputDescription` | string; văn bản thuần, hỗ trợ xuống dòng |
+| `constraints`, `hints` | string[] |
+| `samples` | `{ input, output, explanation }[]`; các giá trị là string |
+| `starterCode` | `{ cpp: string, python: string }` |
+| `solution` | `{ explanation, code: { cpp, python }, complexity: { time, space } }` |
+| `aiContext` | `{ objectives: string[], prerequisites: string[], commonMistakes: string[] }` |
+
+Tất cả trường trên có mặt trong mỗi file problem. Xem `_template.json` làm mẫu.
+Bank có đủ thư mục `ch01`–`ch14` để đồng bộ curriculum; thư mục chưa có bài
+được giữ bằng `.gitkeep`, không cần thêm bài mẫu giả.
+`listProblems({ difficulty?, chapterId?, topic?, query?, sort? })` trả danh sách;
+`sort` nhận `default` (chương/ID), `difficulty` (tăng dần) hoặc `title` (A–Z).
+Tìm kiếm hỗ trợ tiếng Việt không dấu qua tên, ID và tag, kết hợp mọi bộ lọc.
+`problemChapterIds` lấy từ tên file curriculum, nên đủ 14 chương kể cả chương
+chưa có bài. Thêm JSON đúng schema vào `problems/ch01`–`ch14` là đủ, không cần
+sửa danh sách import, route hoặc component React.
+`getProblemBySlug(slug)` trả bài hoặc `null`. Metadata sai hoặc ID/slug trùng
+sẽ báo lỗi kèm đường dẫn file thay vì ghi đè bài.
+
+`/practice` hiển thị danh sách, tìm kiếm, bộ lọc chương/chủ đề/độ khó và sắp xếp;
+chương rỗng hoặc không có kết quả có thông báo và nút xóa bộ lọc.
+`/problem/:slug` hiển thị đề,
+ví dụ, gợi ý và textarea code tạm thời với starter C++/Python. Code nháp riêng
+cho từng ngôn ngữ, không lưu sau khi rời bài. `solution` và `aiContext` chỉ là
+dữ liệu chuẩn bị cho các phase sau. Chưa có Monaco, chấm bài, progress hay AI.
+Hai route dùng chung yêu cầu đăng nhập/xác minh email/chọn ngôn ngữ hiện có.
+Slug không tồn tại có thông báo và link về danh sách. Tab Đề bài/Gợi ý dùng
+phím trái/phải (xoay vòng), Home/End và Tab để đến nội dung; các select/textarea
+có label, vùng bảng có thể focus để cuộn ngang bằng bàn phím trên màn hình nhỏ.
+
+**Giới hạn Phase 1:** `solution.code` hiện nằm trong JSON được bundle vào frontend,
+chỉ phục vụ Phase 1. Dù UI không hiển thị lời giải, người dùng vẫn có thể đọc code
+trong bundle. Trước khi triển khai Judge0 production, phải chuyển `solution.code`
+sang backend/private storage và loại khỏi dữ liệu trả về frontend; ẩn trên UI
+không bảo vệ được lời giải.
+Hidden tests cũng phải nằm ở backend/private storage trước Judge0 production;
+**không thêm hidden tests vào JSON frontend**, kể cả trong Phase 1. Loader chỉ
+trả các field công khai cho component, không trả `solution` hoặc `aiContext`;
+UI không sử dụng hoặc hiển thị `solution.code`. Đây không phải bảo vệ bundle:
+JSON gốc vẫn chứa lời giải trong Phase 1.
+
+`npm run validate:content` kiểm tra cả curriculum và Problem Bank. Với Bank,
+validator kiểm tra mọi field bắt buộc ở bảng trên, kiểu dữ liệu và các field con
+của `samples`, `starterCode`, `solution` và `aiContext`; phát hiện `id`/`slug` trùng
+trong toàn bộ Bank và `chapterId` không khớp thư mục. `chapterId` chỉ nhận
+`ch01`–`ch14`, `type` chỉ nhận `coding`, slug dùng chữ thường/số và gạch ngang,
+`difficulty` chỉ nhận ba mức đã khai báo, `level` là số nguyên dương.
+`npm run build` tự chạy lệnh này qua `prebuild`; validation lỗi dừng build trước
+khi Vite đóng gói. Hãy dùng npm script này (gọi trực tiếp `vite build` sẽ bỏ qua
+hook npm). Field ngoài schema bị từ chối ở mọi object, bao gồm các field chứa
+hidden tests; muốn mở rộng schema phải cập nhật validator trước.
+
+Với bài thực tế, các chuỗi bắt buộc phải có nội dung, kể cả code C++/Python;
+`constraints` và `samples` có ít nhất một phần tử. Mỗi sample luôn có `input`,
+`output`, `explanation` kiểu string (cho phép chuỗi rỗng). `tags`, `hints` và các
+mảng trong `aiContext` có thể rỗng; phần tử khi có phải là chuỗi có nội dung.
+File JSON bắt đầu bằng `_` được loại khỏi kiểm tra bài thực tế, giống loader;
+template được phép giữ code lời giải rỗng để người viết điền sau.
+
+Kiểm tra hồi quy validator bằng `npm run test:content` (Python unittest).
+`--run-code` hiện chỉ thực thi code tham khảo của curriculum, không chạy
+`starterCode`/`solution.code` của Bank hoặc code do học sinh nhập.
+
 Nội dung mỗi chương được lưu trong một file JSON theo ngôn ngữ:
 
 ```text
 src/content/
-├── cpp/ch01.json
-└── python/ch01.json
+├── cpp/ch01.json ... ch14.json
+└── python/ch01.json ... ch14.json
 ```
 
 ## Chapter
@@ -45,6 +133,57 @@ Mọi phần tử `theory` có các trường bắt buộc:
 ```
 
 Các trường minh họa như `code`, `output`, `table`, `hsgNote`, `commonMistakes`, `applications` và `template` là tùy chọn.
+
+Các bài hiện có thêm `sections` để triển khai chi tiết theo từng chủ đề, giữ `content` làm đoạn dẫn nhập ngắn:
+
+```json
+{
+  "sections": [
+    { "title": "Hiểu bản chất", "paragraphs": ["Giải thích khái niệm...", "Phân tích ví dụ..."] },
+    { "title": "Cách triển khai", "bullets": ["Bước 1...", "Bước 2..."] },
+    { "title": "Vì sao đúng", "paragraphs": ["Bất biến hoặc chứng minh..."] }
+  ],
+  "selfCheck": {
+    "question": "Câu hỏi kiểm tra cách hiểu...",
+    "answer": "Giải thích để đối chiếu..."
+  }
+}
+```
+
+Mỗi mục lý thuyết có ít nhất ba section có nội dung và câu hỏi tự kiểm tra. Viết nội dung theo chính chủ đề, tránh thêm các đoạn mẫu chung chỉ để tăng độ dài. Mục lục lý thuyết tạo từ các ID; giữ ID ổn định khi sửa bài.
+
+`visualization` là minh họa từng bước được biên soạn cùng bài học, không thực thi code của học sinh:
+
+```json
+{
+  "visualization": {
+    "title": "Tổng tích lũy",
+    "description": "Tính 1 + 2",
+    "steps": [
+      {
+        "cells": [{ "label": "sum", "value": "0", "active": true }],
+        "explanation": "Khởi tạo tổng bằng 0."
+      },
+      {
+        "cells": [{ "label": "sum", "value": "1", "active": true }],
+        "explanation": "Cộng phần tử đầu tiên."
+      }
+    ]
+  }
+}
+```
+
+Giá trị `value` là chuỗi; `active` đánh dấu ô đang được xét. Mỗi minh họa cần ít nhất một bước và giải thích đúng với code hoặc ghi rõ nếu minh họa thuật toán khác.
+
+Mỗi bước có thể thêm `title`, `formula` và một sơ đồ:
+
+- `array`: `{ "values": ["1", "3", "7"], "activeIndices": [1], "discardedIndices": [], "pointers": [{ "index": 1, "label": "mid" }] }`. Giữ toàn dãy trong từng bước để người học không mất vị trí; chỉ số luôn trong miền.
+- `matrix`: `{ "rows": [["i", "0", "1"], ["dp", "1", "1"]], "activeCells": [[1, 2]] }`. Tọa độ bao gồm cả hàng/cột nhãn; dùng `·` cho ô chưa tính.
+- `stack`: mảng `{ "label": "fact(4)", "value": "chờ kết quả con", "active": true }`, theo thứ tự từ frame gốc đến frame mới.
+- `flow`: mảng `{ "label": "x > 0", "value": "Sai", "active": true }` cho luồng rẽ nhánh.
+- `intervals`: `{ "items": [{ "start": 1, "end": 3, "label": "A1" }], "selectedIndices": [0], "rejectedIndices": [], "currentIndex": 0 }`, các mốc không âm, start<end.
+
+Visualizer hỗ trợ chọn trực tiếp từng bước, trước/tiếp, về đầu và tự chạy 2,2 giây mỗi bước. Chuyển bước thủ công dừng chế độ tự chạy; bước cuối dừng tự động. Ô giá trị hiển thị giá trị cũ khi nhãn giữ nguyên và giá trị đổi. Giữ `cells` làm phần theo dõi biến ngay cả khi có sơ đồ.
 
 ## Example
 
@@ -91,6 +230,29 @@ Các trường bắt buộc là `id`, `title`, `description`, `difficulty`, `cod
 ```
 
 `answer` có thể là `null` đối với bài code được chấm bằng test case. `complexity` có thể là `null` nếu bài không yêu cầu phân tích độ phức tạp.
+
+`solutionCode` là chương trình tham khảo hoàn chỉnh cho đúng ngôn ngữ của chương. Website hiển thị trong phần lời giải có thể mở/đóng; bài tập không tự chấm code trên trình duyệt.
+
+## Các trường mở rộng
+
+- Quiz dạng `output_prediction` có thêm `code` để hiển thị riêng chương trình cần đọc. Đáp án phải là một trong `choices`, so khớp chính xác theo giá trị lựa chọn.
+- `references` cấp chương chứa `{ "title": "...", "url": "https://..." }`, hiển thị ở Tổng quan. Ghi nguồn đọc thêm, không sao chép nguyên bài từ nguồn.
+- `runnable: true` đánh dấu code hoàn chỉnh dùng trong kiểm tra offline. Với theory/example, so sánh output; với quiz, so sánh answer; với problem, chạy solutionCode cùng sampleInput.
+- `testCases` tùy chọn trên problem là mảng `{ "input": "...", "output": "..." }` dùng kiểm tra thêm ca biên. Không thay thế sampleInput/sampleOutput.
+
+## Kiểm tra nội dung
+
+```bash
+npm run validate:content
+npm run test:content
+npm run validate:examples
+npm run lint
+npm run build
+```
+
+Hai lệnh validate cần Python 3. Lệnh validate:examples còn cần g++ hỗ trợ C++17. Chương trình kiểm tra chỉ chạy code tham khảo đã lưu trong repository, trong thư mục tạm, với timeout; không chạy code do người học gửi lên.
+
+Các chương 2–14 có ví dụ C++17/Python 3 hoàn chỉnh. Chương 1 giữ cả các snippet để giải thích cú pháp; chỉ code được đánh dấu runnable mới được chạy tự động. Việc kiểm tra output bỏ qua khác biệt whitespace như online judge.
 
 ## Quy ước
 

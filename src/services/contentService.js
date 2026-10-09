@@ -1,4 +1,4 @@
-const modules = import.meta.glob("../content/*/*.json");
+const modules = import.meta.glob("../content/{cpp,python}/*.json");
 
 export async function loadChapter(language, chapterId) {
   const loader = modules[`../content/${language}/${chapterId}.json`];

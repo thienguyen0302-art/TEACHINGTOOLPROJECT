@@ -1,0 +1,805 @@
+{
+  "id": "ch06",
+  "language": "cpp",
+  "title": "Hàm, đệ quy và quay lui",
+  "order": 6,
+  "description": "Chương 6 — Tách công việc thành hàm có hợp đồng rõ ràng. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Tách công việc thành hàm có hợp đồng rõ ràng.",
+    "Hiểu phạm vi biến và truyền tham số.",
+    "Thiết lập điểm dừng và bước giảm cho đệ quy.",
+    "Sinh cấu hình bằng quay lui và hoàn tác trạng thái."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 5 và tự chạy được ví dụ bằng C++17."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Hàm và hợp đồng input/output",
+      "content": "Hàm nhận tham số và trả kết quả để tránh lặp code. Tên hàm nên diễn tả nhiệm vụ; hợp đồng chỉ rõ miền dữ liệu và ý nghĩa kết quả. Biến cục bộ thuộc mỗi lần gọi. Python truyền đối tượng; sửa list bên trong hàm có thể ảnh hưởng bên ngoài, còn gán lại tên tham số thì không đổi tên của bên gọi.",
+      "keywords": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nlong long square(long long x) { return x * x; }\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << square(7);\n}",
+      "output": "49",
+      "explanation": "Hàm bình phương không sửa trạng thái bên ngoài.",
+      "hsgNote": "Trong C++, truyền vector bằng const reference nếu chỉ đọc để tránh sao chép O(n).",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Hàm là một đơn vị công việc có tên, nhận dữ liệu đầu vào và trả kết quả. Thiết kế tốt cho phép kiểm tra hàm độc lập: không phải đọc lại mọi câu lệnh trong chương trình. Tham số nên biểu diễn đúng dữ liệu cần, tránh phụ thuộc biến toàn cục ngầm.",
+            "Return kết thúc hàm và chuyển giá trị về bên gọi; print/cout chỉ xuất ra màn hình, không thay thế giá trị trả về. Hai hàm cùng in 49 nhưng một hàm trả số 49 và một hàm không trả kết quả là hai hợp đồng khác nhau."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Viết một câu mô tả hàm nhận gì và trả gì.",
+            "Xác định miền hợp lệ và trường hợp nhỏ nhất.",
+            "Tách tính toán khỏi nhập/xuất nếu cần tái sử dụng.",
+            "Kiểm tra có trả kết quả trên mọi đường đi cần thiết."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nếu mỗi hàm đáp ứng hợp đồng, bên gọi có thể kết hợp các kết quả dựa vào ý nghĩa mà không phải phụ thuộc chi tiết cài đặt.",
+            "Áp dụng cho tính gcd, kiểm tra nguyên tố, điều kiện khả thi của nhị phân và chuyển trạng thái DP."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Python sửa một list truyền vào có thể đổi dữ liệu của bên gọi; C++ truyền vector bằng giá trị tạo bản sao. Hãy chọn truyền tham số phù hợp mục tiêu."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Hàm chỉ print(x*x) có dùng trực tiếp làm square(3)+1 ở Python được không?",
+        "answer": "Không nếu nó không return số. Kết quả mặc định là None, không cộng được với 1."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Đệ quy và call stack",
+      "content": "Đệ quy giải bài lớn bằng bài nhỏ cùng cấu trúc. Giai thừa có f(0)=1 và f(n)=n*f(n-1). Mỗi lần gọi có một frame giữ n và chờ kết quả con. Để kết thúc, n phải giảm về 0. Đệ quy sâu tiêu tốn stack; không tăng giới hạn tùy tiện để thay thế một thuật toán lặp đơn giản.",
+      "keywords": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nlong long fact(int n) {\n    if (n == 0)\n        return 1;\n    return n * fact(n - 1);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << fact(4);\n}",
+      "output": "24",
+      "explanation": "Các lời gọi 4→3→2→1→0; kết quả quay về 1→1→2→6→24.",
+      "visualization": {
+        "title": "Đi xuống stack, trả kết quả đi lên",
+        "description": "Theo dõi fact(4), từ frame gốc ở trên đến lời gọi mới ở dưới.",
+        "steps": [
+          {
+            "title": "Gọi fact(4)",
+            "explanation": "Frame fact(4) giữ n=4 và gọi fact(3); các frame cha vẫn chờ.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "số frame",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "chờ kết quả con",
+                "active": true
+              }
+            ],
+            "formula": "fact(4) = 4 × fact(3)"
+          },
+          {
+            "title": "Gọi fact(3)",
+            "explanation": "Frame fact(3) giữ n=3 và gọi fact(2); các frame cha vẫn chờ.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "số frame",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(3)",
+                "value": "chờ kết quả con",
+                "active": true
+              }
+            ],
+            "formula": "fact(3) = 3 × fact(2)"
+          },
+          {
+            "title": "Gọi fact(2)",
+            "explanation": "Frame fact(2) giữ n=2 và gọi fact(1); các frame cha vẫn chờ.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "số frame",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(3)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(2)",
+                "value": "chờ kết quả con",
+                "active": true
+              }
+            ],
+            "formula": "fact(2) = 2 × fact(1)"
+          },
+          {
+            "title": "Gọi fact(1)",
+            "explanation": "Frame fact(1) giữ n=1 và gọi fact(0); các frame cha vẫn chờ.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "số frame",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(3)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(2)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(1)",
+                "value": "chờ kết quả con",
+                "active": true
+              }
+            ],
+            "formula": "fact(1) = 1 × fact(0)"
+          },
+          {
+            "title": "Gọi fact(0)",
+            "explanation": "Đã đến cơ sở: trả 1.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "số frame",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(3)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(2)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(1)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(0)",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "formula": "fact(0) = 1"
+          },
+          {
+            "title": "Trả về 1",
+            "explanation": "fact(0) đã trả 1. Nhân với 1; frame con đã được bỏ khỏi stack.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "kết quả",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(3)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(2)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(1)",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "formula": "1 × 1 = 1"
+          },
+          {
+            "title": "Trả về 2",
+            "explanation": "fact(1) đã trả 1. Nhân với 2; frame con đã được bỏ khỏi stack.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "kết quả",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(3)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(2)",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "formula": "2 × 1 = 2"
+          },
+          {
+            "title": "Trả về 6",
+            "explanation": "fact(2) đã trả 2. Nhân với 3; frame con đã được bỏ khỏi stack.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "kết quả",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "chờ kết quả con",
+                "active": false
+              },
+              {
+                "label": "fact(3)",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "formula": "3 × 2 = 6"
+          },
+          {
+            "title": "Trả về 24",
+            "explanation": "fact(3) đã trả 6. Nhân với 4; frame con đã được bỏ khỏi stack.",
+            "cells": [
+              {
+                "label": "n hiện tại",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "kết quả",
+                "value": "24",
+                "active": true
+              }
+            ],
+            "stack": [
+              {
+                "label": "fact(4)",
+                "value": "24",
+                "active": true
+              }
+            ],
+            "formula": "4 × 6 = 24"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Call stack lưu trạng thái của các lần gọi chưa hoàn tất. Khi fact(4) gọi fact(3), lần gọi ngoài vẫn chờ để nhân với 4. Biến n ở mỗi frame riêng, nên giảm n ở lời gọi con không thay n trong frame cha.",
+            "Một lời giải đệ quy cần hai chứng minh: công thức tạo kết quả đúng nếu bài nhỏ đã đúng, và mọi nhánh cuối cùng đến cơ sở. Hai yêu cầu độc lập: công thức có vẻ đúng nhưng gọi n+1 mãi thì không kết thúc."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định trường hợp nhỏ biết đáp án ngay.",
+            "Chọn bài con có tham số nhỏ hơn theo đại lượng rõ ràng.",
+            "Tính kết quả con rồi ghép với phần còn lại.",
+            "Ước lượng độ sâu lớn nhất trước khi chọn đệ quy."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Cơ sở fact(0)=1 đúng. Giả sử fact(n-1) đúng, nhân n tạo n!, nên quy nạp chứng minh kết quả. Tham số giảm 1 bảo đảm đạt 0 với n không âm.",
+            "Áp dụng cho cấu trúc phân nhánh, chia để trị và quay lui; với quy trình thẳng dài, vòng lặp thường đơn giản hơn."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Độ sâu n không có nghĩa thời gian luôn O(n): mỗi frame gọi nhiều nhánh có thể tạo số lời gọi rất lớn. Stack và tràn số cũng cần xét riêng."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Đệ quy F(n)=F(n-1)+F(n-2) có tự động O(n) không?",
+        "answer": "Không với đệ quy thuần, vì các bài con lặp lại. Memoization ở chương DP mới bảo đảm mỗi trạng thái được tính một lần."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Quay lui: chọn, gọi, hoàn tác",
+      "content": "Để sinh chuỗi nhị phân dài n, ở mỗi vị trí thử 0 rồi 1. Khi độ dài đủ n, xuất cấu hình. Nếu dùng một mảng chung, sau lời gọi phải bỏ lựa chọn vừa thêm để nhánh sau bắt đầu từ cùng trạng thái. Nếu tạo chuỗi mới thì mỗi nhánh có dữ liệu riêng.",
+      "keywords": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nvoid generate(string s, int n) {\n    if ((int)s.size() == n) {\n        cout << s << \"\\n\";\n        return;\n    }\n    generate(s + \"0\", n);\n    generate(s + \"1\", n);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    generate(\"\", 2);\n}",
+      "output": "00\n01\n10\n11",
+      "explanation": "Cây lựa chọn có 2^n lá; thứ tự thử 0 trước tạo thứ tự từ điển.",
+      "hsgNote": "Với n lớn không thể sinh toàn bộ. Cắt nhánh chỉ bỏ nhánh chắc chắn không thể dẫn đến lời giải, không bỏ theo cảm tính.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Quay lui duyệt cây các quyết định. Một nút là cấu hình chưa hoàn chỉnh, một cạnh là một lựa chọn tiếp theo, một lá là cấu hình đủ độ dài. Thứ tự thử lựa chọn quyết định thứ tự kết quả được sinh.",
+            "Có hai cách quản lý trạng thái: tạo bản sao cho mỗi nhánh, hoặc sửa cấu trúc chung rồi hoàn tác. Bản sao dễ hiểu nhưng tốn hơn; sửa chung cần bảo đảm trạng thái khi rời nhánh giống trước khi vào, nếu không nhánh khác bị ảnh hưởng."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định điều kiện cấu hình hoàn chỉnh.",
+            "Liệt kê các lựa chọn tại vị trí hiện tại.",
+            "Thử một lựa chọn, gọi cho vị trí kế tiếp.",
+            "Hoàn tác nếu dùng chung trạng thái; chỉ cắt nhánh đã chứng minh không thể hợp lệ."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mỗi cấu hình tương ứng một đường đi từ gốc đến lá. Nếu thử đủ lựa chọn hợp lệ và không sinh trùng đường đi, thuật toán liệt kê đúng toàn bộ cấu hình.",
+            "Áp dụng khi n nhỏ: hoán vị, tập con, chuỗi ràng buộc và các bài tìm kiếm có cắt nhánh."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Tổng kích thước output là cận dưới thời gian. Nếu có 2^n chuỗi dài n thì không thể mong thuật toán in tất cả chỉ mất O(n)."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Cắt nhánh chỉ vì tổng tạm thời lớn hơn mục tiêu có đúng khi vẫn còn số âm không?",
+        "answer": "Chưa chắc. Số âm phía sau có thể làm tổng giảm; cần ràng buộc để chứng minh nhánh không thể cứu được."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Ước chung lớn nhất bằng bài toán nhỏ",
+      "content": "Euclid dùng gcd(a,b)=gcd(b,a%b) vì mọi ước chung của a,b cũng là ước chung của b và phần dư. Khi b=0, kết quả là a. Dạng lặp thường tiết kiệm stack hơn dạng đệ quy; đây là ví dụ phép biến đổi có chứng minh toán học.",
+      "keywords": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "code": "#include <iostream>\n#include <numeric>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << gcd(48, 18);\n}",
+      "output": "6",
+      "explanation": "48,18 → 18,12 → 12,6 → 6,0.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Euclid thay một cặp số bằng một cặp nhỏ hơn mà giữ nguyên đáp án. Với a=qb+r, một số chia hết a và b cũng chia hết r; chiều ngược lại, chia hết b và r thì cũng chia hết a. Vì vậy tập ước chung không đổi.",
+            "Phần dư r nhỏ hơn b khi b dương, nên cặp tiến đến b=0. Thuật toán không cần phân tích thừa số nguyên tố và hoạt động tốt với số lớn. Dạng đệ quy thể hiện trực tiếp gcd(a,b)=gcd(b,a%b), dạng lặp tránh stack."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Nếu b khác 0, tính r=a%b.",
+            "Chuyển a thành b và b thành r bằng giá trị cũ.",
+            "Lặp đến khi b=0.",
+            "Trả a; chuẩn hóa dấu nếu bài cho số âm."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Tập ước chung được bảo toàn ở mọi bước, nên gcd không đổi. Khi b=0, gcd(a,0)=a đối với a không âm.",
+            "Áp dụng cho rút gọn phân số, chia nhóm đều và chuẩn bị công thức LCM."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không cập nhật a=b rồi tính a%b bằng a mới, vì đã mất a cũ. Python gán đồng thời và C++ dùng biến tạm giúp tránh lỗi."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Vì sao gcd(48,18) bằng gcd(18,12)?",
+        "answer": "48=2×18+12; một số là ước chung của 48,18 khi và chỉ khi nó chia hết cả 18,12."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Hàm và hợp đồng input/output",
+      "description": "Hàm nhận tham số và trả kết quả để tránh lặp code. Tên hàm nên diễn tả nhiệm vụ; hợp đồng chỉ rõ miền dữ liệu và ý nghĩa kết quả. Biến cục bộ thuộc mỗi lần gọi. Python truyền đối tượng; sửa list bên trong hàm có thể ảnh hưởng bên ngoài, còn gán lại tên tham số thì không đổi tên của bên gọi.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nlong long square(long long x) { return x * x; }\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << square(7);\n}",
+      "input": null,
+      "output": "49",
+      "explanation": "Hàm bình phương không sửa trạng thái bên ngoài.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Trong C++, truyền vector bằng const reference nếu chỉ đọc để tránh sao chép O(n).",
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Đệ quy và call stack",
+      "description": "Đệ quy giải bài lớn bằng bài nhỏ cùng cấu trúc. Giai thừa có f(0)=1 và f(n)=n*f(n-1). Mỗi lần gọi có một frame giữ n và chờ kết quả con. Để kết thúc, n phải giảm về 0. Đệ quy sâu tiêu tốn stack; không tăng giới hạn tùy tiện để thay thế một thuật toán lặp đơn giản.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nlong long fact(int n) {\n    if (n == 0)\n        return 1;\n    return n * fact(n - 1);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << fact(4);\n}",
+      "input": null,
+      "output": "24",
+      "explanation": "Các lời gọi 4→3→2→1→0; kết quả quay về 1→1→2→6→24.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Quay lui: chọn, gọi, hoàn tác",
+      "description": "Để sinh chuỗi nhị phân dài n, ở mỗi vị trí thử 0 rồi 1. Khi độ dài đủ n, xuất cấu hình. Nếu dùng một mảng chung, sau lời gọi phải bỏ lựa chọn vừa thêm để nhánh sau bắt đầu từ cùng trạng thái. Nếu tạo chuỗi mới thì mỗi nhánh có dữ liệu riêng.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nvoid generate(string s, int n) {\n    if ((int)s.size() == n) {\n        cout << s << \"\\n\";\n        return;\n    }\n    generate(s + \"0\", n);\n    generate(s + \"1\", n);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    generate(\"\", 2);\n}",
+      "input": null,
+      "output": "00\n01\n10\n11",
+      "explanation": "Cây lựa chọn có 2^n lá; thứ tự thử 0 trước tạo thứ tự từ điển.",
+      "complexity": {
+        "time": "O(n·2^n) kể cả xuất",
+        "space": "O(n²) với bản sao chuỗi trên stack"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Với n lớn không thể sinh toàn bộ. Cắt nhánh chỉ bỏ nhánh chắc chắn không thể dẫn đến lời giải, không bỏ theo cảm tính.",
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Ước chung lớn nhất bằng bài toán nhỏ",
+      "description": "Euclid dùng gcd(a,b)=gcd(b,a%b) vì mọi ước chung của a,b cũng là ước chung của b và phần dư. Khi b=0, kết quả là a. Dạng lặp thường tiết kiệm stack hơn dạng đệ quy; đây là ví dụ phép biến đổi có chứng minh toán học.",
+      "difficulty": "advanced",
+      "code": "#include <iostream>\n#include <numeric>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << gcd(48, 18);\n}",
+      "input": null,
+      "output": "6",
+      "explanation": "48,18 → 18,12 → 12,6 → 6,0.",
+      "complexity": {
+        "time": "O(log min(a,b))",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Đệ quy cần điều kiện nào để dừng?",
+      "choices": [
+        "Luôn gọi lại với cùng tham số",
+        "Biến toàn cục",
+        "Điểm dừng và mỗi nhánh tiến đến điểm dừng",
+        "Chỉ có return ở cuối"
+      ],
+      "answer": "Điểm dừng và mỗi nhánh tiến đến điểm dừng",
+      "explanation": "Điểm dừng không giúp nếu không bao giờ đến nó.",
+      "betterApproach": "Xác định đại lượng giảm trong mỗi lời gọi.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Sinh toàn bộ chuỗi nhị phân dài n có bao nhiêu kết quả?",
+      "choices": [
+        "n!",
+        "2^n",
+        "n²",
+        "n"
+      ],
+      "answer": "2^n",
+      "explanation": "Mỗi vị trí có hai lựa chọn độc lập.",
+      "betterApproach": "Tính kích thước output trước khi chọn quay lui.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Khi truyền list vào hàm Python, thao tác append có thể làm gì?",
+      "choices": [
+        "Thay đổi list của bên gọi",
+        "Luôn tạo list mới",
+        "Không thay đổi gì",
+        "Chỉ đổi biến cục bộ dạng số"
+      ],
+      "answer": "Thay đổi list của bên gọi",
+      "explanation": "Tham số tham chiếu cùng đối tượng list.",
+      "betterApproach": "Phân biệt sửa đối tượng và gán lại tên.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "function",
+        "recursion",
+        "backtracking",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nlong long square(long long x) { return x * x; }\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << square(7);\n}",
+      "choices": [
+        "Lỗi chạy chương trình",
+        "0",
+        "49",
+        "Không có output"
+      ],
+      "answer": "49",
+      "explanation": "Hàm bình phương không sửa trạng thái bên ngoài.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "function",
+        "recursion",
+        "backtracking",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nlong long fact(int n) {\n    if (n == 0)\n        return 1;\n    return n * fact(n - 1);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << fact(4);\n}",
+      "choices": [
+        "0",
+        "24",
+        "Không có output",
+        "Lỗi chạy chương trình"
+      ],
+      "answer": "24",
+      "explanation": "Các lời gọi 4→3→2→1→0; kết quả quay về 1→1→2→6→24.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Ước chung lớn nhất",
+      "problem": "Cho hai số nguyên dương, tìm gcd.",
+      "inputDescription": "Hai số a b.",
+      "outputDescription": "Một số gcd(a,b).",
+      "constraints": [
+        "1 <= a,b <= 10^18"
+      ],
+      "sampleInput": "48 18",
+      "sampleOutput": "6",
+      "hint": "Thay (a,b) bằng (b,a%b).",
+      "explanation": "Tập ước chung được bảo toàn sau mỗi phép biến đổi; khi b=0, a là ước lớn nhất.",
+      "complexity": {
+        "time": "O(log min(a,b))",
+        "space": "O(1)"
+      },
+      "betterApproach": "Dùng gcd để kiểm tra phân số tối giản.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "answer": null,
+      "solutionCode": "#include <iostream>\n#include <numeric>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long a, b;\n    cin >> a >> b;\n    cout << gcd(a, b);\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1 1000000000000000000",
+          "output": "1"
+        },
+        {
+          "input": "12 12",
+          "output": "12"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Sinh chuỗi nhị phân không có hai số 1 liên tiếp",
+      "problem": "In tất cả chuỗi nhị phân độ dài n, không chứa 11, theo thứ tự từ điển.",
+      "inputDescription": "Một số n.",
+      "outputDescription": "Mỗi chuỗi hợp lệ trên một dòng.",
+      "constraints": [
+        "1 <= n <= 18"
+      ],
+      "sampleInput": "3",
+      "sampleOutput": "000\n001\n010\n100\n101",
+      "hint": "Chỉ thử 1 khi ký tự trước không phải 1.",
+      "explanation": "Mọi chuỗi hợp lệ có tiền tố hợp lệ. Không mở nhánh 11 giúp tránh cấu hình sai trước khi đến lá; thử 0 trước 1 giữ thứ tự.",
+      "complexity": {
+        "time": "O(n·2^n) chặn trên",
+        "space": "O(n²) với sao chép chuỗi"
+      },
+      "betterApproach": "Nếu chỉ cần đếm, dùng DP theo ký tự cuối ở chương 14, không sinh từng chuỗi.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "function",
+        "recursion",
+        "backtracking"
+      ],
+      "answer": null,
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nvoid gen(string s, int n) {\n    if ((int)s.size() == n) {\n        cout << s << \"\\n\";\n        return;\n    }\n    gen(s + \"0\", n);\n    if (s.empty() || s.back() != '1')\n        gen(s + \"1\", n);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    cin >> n;\n    gen(\"\", n);\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1",
+          "output": "0\n1"
+        },
+        {
+          "input": "2",
+          "output": "00\n01\n10"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Quên điểm dừng",
+      "fix": "Viết trường hợp cơ sở trước các lời gọi."
+    },
+    {
+      "mistake": "Không hoàn tác trạng thái chung",
+      "fix": "Pop hoặc gán trả sau mỗi nhánh quay lui."
+    }
+  ],
+  "chapterSummary": [
+    "Hàm giúp tách nhiệm vụ và kiểm chứng.",
+    "Đệ quy cần điểm dừng và đại lượng tiến triển.",
+    "Quay lui cần cân nhắc số cấu hình."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Hàm, đệ quy và quay lui",
+      "url": "https://www.geeksforgeeks.org/dsa/introduction-to-backtracking-2/"
+    },
+    {
+      "title": "GCC — thư viện C++ và header chuẩn",
+      "url": "https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html"
+    }
+  ]
+}

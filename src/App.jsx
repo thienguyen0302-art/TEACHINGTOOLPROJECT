@@ -9,6 +9,8 @@ import Overview from "./pages/Overview";
 import Curriculum from "./pages/Curriculum";
 import Lesson from "./pages/Lesson";
 import Dashboard from "./pages/Dashboard";
+import Practice from "./pages/Practice";
+import Problem from "./pages/Problem";
 import AppShell from "./components/AppShell";
 import useStudyTimer from "./hooks/useStudyTimer";
 import useLearningData from "./hooks/useLearningData";
@@ -26,6 +28,8 @@ function Learning({ user, lang, onChangeLang }) {
         <Route path="/" element={<Overview user={user} lang={lang} data={data} onChangeLang={onChangeLang} />} />
         <Route path="/curriculum" element={<Curriculum lang={lang} data={data} onChangeLang={onChangeLang} />} />
         <Route path="/lesson/:id" element={<Lesson lang={lang} />} />
+        <Route path="/practice" element={<Practice />} />
+        <Route path="/problem/:slug" element={<Problem lang={lang} />} />
         <Route path="/progress" element={<Dashboard user={user} lang={lang} data={data} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

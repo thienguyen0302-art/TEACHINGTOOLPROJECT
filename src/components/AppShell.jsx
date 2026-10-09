@@ -11,7 +11,7 @@ export const useNotice = () => useContext(NoticeContext);
 const NAV = [
   { label: "Tổng quan", icon: "grid", path: "/" },
   { label: "Chương trình học", icon: "book", path: "/curriculum" },
-  { label: "Kho bài tập", icon: "code", path: null },
+  { label: "Kho bài tập", icon: "code", path: "/practice" },
   { label: "Tiến độ của tôi", icon: "chart", path: "/progress" },
   { label: "Bảng xếp hạng", icon: "trophy", path: null },
 ];

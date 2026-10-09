@@ -1,0 +1,55 @@
+{
+  "id": "ch01-p001",
+  "slug": "ten-bai-tap",
+  "chapterId": "ch01",
+  "title": "Tên bài tập",
+  "type": "coding",
+  "difficulty": "basic",
+  "level": 1,
+  "tags": [
+    "input",
+    "output"
+  ],
+  "statement": "Mô tả đề bài.",
+  "inputDescription": "Mô tả dữ liệu vào.",
+  "outputDescription": "Mô tả dữ liệu ra.",
+  "constraints": [
+    "Ràng buộc dữ liệu."
+  ],
+  "samples": [
+    {
+      "input": "1 2",
+      "output": "3",
+      "explanation": "Giải thích ví dụ."
+    }
+  ],
+  "hints": [
+    "Gợi ý giải bài."
+  ],
+  "starterCode": {
+    "cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Viết lời giải tại đây.\n    return 0;\n}\n",
+    "python": "# Đọc dữ liệu và viết lời giải tại đây.\n"
+  },
+  "solution": {
+    "explanation": "Giải thích thuật toán.",
+    "code": {
+      "cpp": "",
+      "python": ""
+    },
+    "complexity": {
+      "time": "O(1)",
+      "space": "O(1)"
+    }
+  },
+  "aiContext": {
+    "objectives": [
+      "Mục tiêu kiến thức."
+    ],
+    "prerequisites": [
+      "Kiến thức cần có."
+    ],
+    "commonMistakes": [
+      "Lỗi thường gặp."
+    ]
+  }
+}
