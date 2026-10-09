@@ -33,6 +33,10 @@ def validate_problem(path, problem, bank_root):
     def object_fields(value, keys, location):
         require(isinstance(value, dict), f"{location}: expected object")
         fields(value, keys, location)
+        # Only schema fields may be bundled. Judge/private tests belong on a server.
+        unknown = value.keys() - set(keys)
+        require(not unknown, f"{location}: unknown fields {sorted(unknown)}; "
+                "hidden tests must stay in backend/private storage")
 
     def string(value, location, allow_empty=False):
         require(isinstance(value, str) and (allow_empty or bool(value.strip())),
