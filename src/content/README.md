@@ -35,21 +35,36 @@ Vite tự cập nhật khi phát triển; bản production cần build lại sau
 Tất cả trường trên có mặt trong mỗi file problem. Xem `_template.json` làm mẫu.
 Bank có đủ thư mục `ch01`–`ch14` để đồng bộ curriculum; thư mục chưa có bài
 được giữ bằng `.gitkeep`, không cần thêm bài mẫu giả.
-`listProblems({ difficulty?, chapterId? })` trả danh sách theo chương và ID;
+`listProblems({ difficulty?, chapterId?, topic?, query?, sort? })` trả danh sách;
+`sort` nhận `default` (chương/ID), `difficulty` (tăng dần) hoặc `title` (A–Z).
+Tìm kiếm hỗ trợ tiếng Việt không dấu qua tên, ID và tag, kết hợp mọi bộ lọc.
+`problemChapterIds` lấy từ tên file curriculum, nên đủ 14 chương kể cả chương
+chưa có bài. Thêm JSON đúng schema vào `problems/ch01`–`ch14` là đủ, không cần
+sửa danh sách import, route hoặc component React.
 `getProblemBySlug(slug)` trả bài hoặc `null`. Metadata sai hoặc ID/slug trùng
 sẽ báo lỗi kèm đường dẫn file thay vì ghi đè bài.
 
-`/practice` hiển thị danh sách và filter độ khó; `/problem/:slug` hiển thị đề,
+`/practice` hiển thị danh sách, tìm kiếm, bộ lọc chương/chủ đề/độ khó và sắp xếp;
+chương rỗng hoặc không có kết quả có thông báo và nút xóa bộ lọc.
+`/problem/:slug` hiển thị đề,
 ví dụ, gợi ý và textarea code tạm thời với starter C++/Python. Code nháp riêng
 cho từng ngôn ngữ, không lưu sau khi rời bài. `solution` và `aiContext` chỉ là
 dữ liệu chuẩn bị cho các phase sau. Chưa có Monaco, chấm bài, progress hay AI.
 Hai route dùng chung yêu cầu đăng nhập/xác minh email/chọn ngôn ngữ hiện có.
+Slug không tồn tại có thông báo và link về danh sách. Tab Đề bài/Gợi ý dùng
+phím trái/phải (xoay vòng), Home/End và Tab để đến nội dung; các select/textarea
+có label, vùng bảng có thể focus để cuộn ngang bằng bàn phím trên màn hình nhỏ.
 
 **Giới hạn Phase 1:** `solution.code` hiện nằm trong JSON được bundle vào frontend,
 chỉ phục vụ Phase 1. Dù UI không hiển thị lời giải, người dùng vẫn có thể đọc code
 trong bundle. Trước khi triển khai Judge0 production, phải chuyển `solution.code`
 sang backend/private storage và loại khỏi dữ liệu trả về frontend; ẩn trên UI
 không bảo vệ được lời giải.
+Hidden tests cũng phải nằm ở backend/private storage trước Judge0 production;
+**không thêm hidden tests vào JSON frontend**, kể cả trong Phase 1. Loader chỉ
+trả các field công khai cho component, không trả `solution` hoặc `aiContext`;
+UI không sử dụng hoặc hiển thị `solution.code`. Đây không phải bảo vệ bundle:
+JSON gốc vẫn chứa lời giải trong Phase 1.
 
 `npm run validate:content` kiểm tra cả curriculum và Problem Bank. Với Bank,
 validator kiểm tra mọi field bắt buộc ở bảng trên, kiểu dữ liệu và các field con
@@ -57,6 +72,10 @@ của `samples`, `starterCode`, `solution` và `aiContext`; phát hiện `id`/`s
 trong toàn bộ Bank và `chapterId` không khớp thư mục. `chapterId` chỉ nhận
 `ch01`–`ch14`, `type` chỉ nhận `coding`, slug dùng chữ thường/số và gạch ngang,
 `difficulty` chỉ nhận ba mức đã khai báo, `level` là số nguyên dương.
+`npm run build` tự chạy lệnh này qua `prebuild`; validation lỗi dừng build trước
+khi Vite đóng gói. Hãy dùng npm script này (gọi trực tiếp `vite build` sẽ bỏ qua
+hook npm). Field ngoài schema bị từ chối ở mọi object, bao gồm các field chứa
+hidden tests; muốn mở rộng schema phải cập nhật validator trước.
 
 Với bài thực tế, các chuỗi bắt buộc phải có nội dung, kể cả code C++/Python;
 `constraints` và `samples` có ít nhất một phần tử. Mỗi sample luôn có `input`,
@@ -65,7 +84,7 @@ mảng trong `aiContext` có thể rỗng; phần tử khi có phải là chuỗ
 File JSON bắt đầu bằng `_` được loại khỏi kiểm tra bài thực tế, giống loader;
 template được phép giữ code lời giải rỗng để người viết điền sau.
 
-Kiểm tra hồi quy validator bằng `python3 -m unittest discover -s scripts -p 'test_*.py'`.
+Kiểm tra hồi quy validator bằng `npm run test:content` (Python unittest).
 `--run-code` hiện chỉ thực thi code tham khảo của curriculum, không chạy
 `starterCode`/`solution.code` của Bank hoặc code do học sinh nhập.
 
@@ -225,6 +244,7 @@ Các trường bắt buộc là `id`, `title`, `description`, `difficulty`, `cod
 
 ```bash
 npm run validate:content
+npm run test:content
 npm run validate:examples
 npm run lint
 npm run build

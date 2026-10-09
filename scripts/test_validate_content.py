@@ -139,6 +139,37 @@ class ProblemBankValidationTests(unittest.TestCase):
         self.problem["samples"] = [dict(input="", output="", explanation="")]
         validate_problem(self.path, self.problem, self.bank)
 
+    def test_new_problem_in_every_chapter(self):
+        for index in range(1, 15):
+            chapter_id = f"ch{index:02}"
+            problem = copy.deepcopy(self.problem)
+            problem.update(id=f"{chapter_id}-new", slug=f"new-problem-{index}", chapterId=chapter_id)
+            self.write(self.bank / chapter_id / "new.json", problem)
+        self.assertEqual(validate_problem_bank(self.bank), 14)
+
+    def test_unknown_fields_and_private_tests_are_rejected(self):
+        for parent in [None, "solution", "solution.code", "solution.complexity",
+                       "starterCode", "aiContext", "samples"]:
+            for field in ["hiddenTests", "hidden_tests", "testCases", "unexpected"]:
+                with self.subTest(parent=parent, field=field):
+                    problem = copy.deepcopy(self.problem)
+                    target = problem
+                    if parent == "samples":
+                        target = problem["samples"][0]
+                    elif parent:
+                        for part in parent.split("."):
+                            target = target[part]
+                    target[field] = []
+                    with self.assertRaisesRegex(ValueError, "unknown fields"):
+                        validate_problem(self.path, problem, self.bank)
+
+    def test_npm_build_runs_validation_first(self):
+        scripts = json.loads((ROOT.parents[1] / "package.json").read_text())["scripts"]
+        self.assertEqual(scripts["prebuild"], "npm run validate:content")
+        self.assertEqual(scripts["validate:content"], "python3 scripts/validate_content.py")
+        self.assertEqual(scripts["test:content"],
+                         "python3 -m unittest discover -s scripts -p 'test_*.py'")
+
 
 if __name__ == "__main__":
     unittest.main()
