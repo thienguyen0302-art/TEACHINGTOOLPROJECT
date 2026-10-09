@@ -1,7 +1,9 @@
-import { useId, useRef, useState } from "react";
+import { lazy, Suspense, useId, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { difficultyLabels, getProblemBySlug } from "../services/problemService";
 import "./ProblemBank.css";
+
+const CodeEditor = lazy(() => import("../components/CodeEditor"));
 
 const tabs = [
   { id: "statement", label: "Đề bài", icon: "≡" },
@@ -61,7 +63,6 @@ function ProblemWorkspace({ problem, initialLang }) {
   const prefix = useId();
   const lineCount = (drafts[language] ?? "").split("\n").length;
   const languageId = `${prefix}-language`;
-  const codeId = `${prefix}-code`;
   const noteId = `${prefix}-note`;
 
   function handleTabKeyDown(event, index) {
@@ -76,11 +77,6 @@ function ProblemWorkspace({ problem, initialLang }) {
     event.preventDefault();
     setActiveTab(tabs[nextIndex].id);
     tabRefs.current[nextIndex]?.focus();
-  }
-
-  function updateDraft(event) {
-    const code = event.target.value;
-    setDrafts((current) => ({ ...current, [language]: code }));
   }
 
   return (
@@ -153,22 +149,19 @@ function ProblemWorkspace({ problem, initialLang }) {
             </select>
             <span>UTF-8</span>
           </div>
-          <div className="bank-code-area">
-            <div className="bank-line-numbers" aria-hidden="true">
-              {Array.from({ length: lineCount }, (_, index) => <span key={index}>{index + 1}</span>)}
-            </div>
-            <label className="bank-sr-only" htmlFor={codeId}>Code nháp</label>
-            <textarea
-              id={codeId}
-              aria-describedby={noteId}
-              spellCheck={false}
-              autoCapitalize="off"
-              autoCorrect="off"
-              wrap="off"
-              style={{ height: Math.max(360, lineCount * 23.4 + 36) }}
-              value={drafts[language] ?? ""}
-              onChange={updateDraft}
-            />
+          <div className="bank-code-area" role="region" aria-label="Code nháp" aria-describedby={noteId}>
+            <Suspense fallback={<div className="bank-editor-loading" role="status">Đang tải trình soạn thảo code…</div>}>
+              <CodeEditor
+                language={language}
+                value={drafts[language] ?? ""}
+                onChange={(value) =>
+                  setDrafts((previous) => ({
+                    ...previous,
+                    [language]: value,
+                  }))
+                }
+              />
+            </Suspense>
           </div>
           <div className="bank-editor-footer">
             <span>{language === "cpp" ? "C++" : "Python"}</span><span>{lineCount} dòng</span>
