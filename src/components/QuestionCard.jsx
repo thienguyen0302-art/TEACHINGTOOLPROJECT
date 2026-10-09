@@ -14,7 +14,7 @@ export default function QuestionCard({
   onSelect,
   submitted = false,
 }) {
-  const isCorrect = submitted && selectedAnswer === question.answer;
+  const isCorrect = submitted && checkAnswer(question, selectedAnswer);
 
   return (
     <div className="question-card">
@@ -41,6 +41,13 @@ export default function QuestionCard({
         </div>
       )}
 
+      {question.code && (
+        <div className="question-card__code">
+          <p><strong>Đoạn code:</strong></p>
+          <pre aria-label="Đoạn code của câu hỏi"><code>{question.code}</code></pre>
+        </div>
+      )}
+
       <div className="question-options" role="radiogroup" aria-label={`Câu ${index + 1}: ${question.question}`}>
         {question.choices.map((choice, i) => {
           const letter = optionLetters[i] || `${i + 1}`;
@@ -50,9 +57,9 @@ export default function QuestionCard({
           if (isSelected) optionClass += " question-option--selected";
 
           if (submitted) {
-            if (choice === question.answer) {
+            if (checkAnswer(question, choice)) {
               optionClass += " question-option--correct";
-            } else if (isSelected && choice !== question.answer) {
+            } else if (isSelected && !isCorrect) {
               optionClass += " question-option--wrong";
             }
           }
@@ -117,3 +124,4 @@ export default function QuestionCard({
     </div>
   );
 }
+import { checkAnswer } from "../utils/grading";

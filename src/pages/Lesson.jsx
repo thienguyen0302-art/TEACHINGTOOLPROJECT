@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { loadChapter } from "../services/contentService";
 import QuestionCard from "../components/QuestionCard";
+import { calculateScore, countAnswered } from "../utils/grading";
 
 const COL = {
   type: "Kiểu", purpose: "Công dụng", typicalRange: "Khoảng giá trị",
@@ -123,11 +124,9 @@ function LessonContent({ lang, id }) {
   if (ch === null) return <p>Không tìm thấy chương này.</p>;
 
   const questions = ch.quiz ?? [];
-  const answeredCount = questions.filter((question) =>
-    question.choices.includes(answers[question.id])
-  ).length;
-  const score = questions.filter((question) => answers[question.id] === question.answer).length;
-  const canSubmit = questions.length > 0 && answeredCount === questions.length;
+  const answeredCount = countAnswered(questions, answers);
+  const score = calculateScore(questions, answers);
+  const canSubmit = score.total > 0 && answeredCount === score.total;
 
   const tabs = [
     ["overview", "Tổng quan"], ["theory", "Lý thuyết"], ["examples", "Ví dụ"],
@@ -163,7 +162,7 @@ function LessonContent({ lang, id }) {
             <>
               <div className="callout" role="status">
                 {submitted ? (
-                  <><b>Kết quả: {score}/{questions.length} câu đúng ({Math.round(score / questions.length * 100)}%).</b>
+                  <><b>Kết quả: {score.correct}/{score.total} câu đúng ({score.percentage}%).</b>
                     <p>Xem đáp án và giải thích bên dưới, hoặc làm lại để ôn tập.</p></>
                 ) : (
                   <><b>Đã trả lời {answeredCount}/{questions.length} câu.</b>
