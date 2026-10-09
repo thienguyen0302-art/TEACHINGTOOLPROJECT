@@ -1,0 +1,1879 @@
+{
+  "id": "ch14",
+  "language": "cpp",
+  "title": "Quy hoạch động: từ cơ bản đến HSG",
+  "order": 14,
+  "description": "Chương 14 — Xác định trạng thái, chuyển trạng thái, cơ sở và thứ tự tính. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Xác định trạng thái, chuyển trạng thái, cơ sở và thứ tự tính.",
+    "Phân biệt memoization và tabulation.",
+    "Giải đếm cách, đổi tiền, ba lô 0/1, LIS, LCS và đường đi trên lưới.",
+    "Hiểu hướng duyệt khi nén bộ nhớ và cách truy vết."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 13 và tự chạy được ví dụ bằng C++17."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Từ đệ quy lặp lại đến memoization",
+      "content": "DP tái sử dụng kết quả trạng thái thay vì giải lại. Fibonacci có F(0)=0,F(1)=1,F(n)=F(n-1)+F(n-2); đệ quy thuần tính lại nhiều lần. Memoization lưu kết quả theo n, mỗi trạng thái tính một lần. Số trạng thái nhân chi phí chuyển quyết định độ phức tạp, không phải số dòng code.",
+      "keywords": [
+        "dynamic-programming"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nvector<long long> memo(91, -1);\nlong long fib(int n) {\n    if (n < 2)\n        return n;\n    if (memo[n] != -1)\n        return memo[n];\n    return memo[n] = fib(n - 1) + fib(n - 2);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << fib(8);\n}",
+      "output": "21",
+      "explanation": "Các trạng thái 0..8 được lưu; F(8)=21.",
+      "hsgNote": "Memoization vẫn có stack đệ quy. Với n lớn dùng tabulation, và xét số có thể tăng quá 64 bit.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Đệ quy thuần mô tả quan hệ bài lớn–bài nhỏ nhưng có thể tính lại cùng tham số. Trong Fibonacci, F(6) xuất hiện qua nhiều đường của cây gọi. Đặt một bảng theo n làm các đường đó dùng chung một kết quả thay vì tính lại.",
+            "Memoization chỉ đúng khi khóa biểu diễn đầy đủ trạng thái. Nếu kết quả còn phụ thuộc chỉ số, sức chứa hoặc dữ liệu đã chọn mà khóa chỉ chứa n, những tình huống khác nhau có thể bị coi là một và dùng sai kết quả."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Định nghĩa tất cả biến quyết định đáp án trạng thái.",
+            "Kiểm tra cơ sở trước hoặc sau cache theo cài đặt nhất quán.",
+            "Nếu chưa tính, giải các trạng thái con rồi lưu.",
+            "Ước lượng số trạng thái, số chuyển và độ sâu stack."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Giả sử quan hệ đệ quy đúng và đồ thị phụ thuộc không có vòng chưa xử lý, cache chỉ tái dùng kết quả đã tính đúng của cùng trạng thái. Nó không thay công thức nên giữ tính đúng.",
+            "Áp dụng cho DP top-down khi chỉ một phần trạng thái có thể đạt hoặc công thức đệ quy dễ biểu diễn."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "DP không tự biến mọi đệ quy thành nhanh. Số trạng thái có thể rất lớn và cache còn tốn bộ nhớ; stack sâu vẫn có thể lỗi."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu hàm phụ thuộc (i,capacity), cache chỉ theo i có đúng không?",
+        "answer": "Không. Cùng i với sức chứa khác có thể có đáp án khác, nên khóa phải bao gồm capacity."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Tabulation và bốn câu hỏi bắt buộc",
+      "content": "Trước khi viết DP, trả lời: trạng thái nghĩa là gì; trạng thái cơ sở nào đã biết; chuyển từ trạng thái nào; thứ tự tính có bảo đảm trạng thái trước đã sẵn chưa? Bài leo n bậc, bước 1 hoặc 2: dp[i] là số cách đến i, dp[0]=1, dp[i]=dp[i-1]+dp[i-2]. Với i=1 chỉ dùng dp[0].",
+      "keywords": [
+        "dynamic-programming"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n = 5;\n    vector<long long> dp(n + 1);\n    dp[0] = 1;\n    for (int i = 1; i <= n; ++i) {\n        dp[i] = dp[i - 1];\n        if (i >= 2)\n            dp[i] += dp[i - 2];\n    }\n    cout << dp[n];\n}",
+      "output": "8",
+      "explanation": "dp lần lượt 1,1,2,3,5,8. dp[0]=1 biểu diễn một cách không bước nào.",
+      "visualization": {
+        "title": "DP leo bậc: cộng hai tiền nhiệm",
+        "description": "Tính từ trái sang phải; mỗi ô là số cách tới chính xác bậc đó.",
+        "steps": [
+          {
+            "title": "Cơ sở dp[0]=1",
+            "explanation": "Một cách ở bậc 0 mà không bước nào. Các trạng thái khác chưa được tính.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "số cách",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "·",
+                "·",
+                "·",
+                "·",
+                "·"
+              ],
+              "activeIndices": [
+                0
+              ],
+              "pointers": [
+                {
+                  "index": 0,
+                  "label": "cơ sở"
+                }
+              ],
+              "discardedIndices": []
+            }
+          },
+          {
+            "title": "Tính dp[1]",
+            "explanation": "Nhóm bước cuối dài 1 có 1 cách, nhóm bước cuối dài 2 có 0 cách; hai nhóm không trùng.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "từ i-1",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "từ i-2",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "số cách",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "1",
+                "·",
+                "·",
+                "·",
+                "·"
+              ],
+              "activeIndices": [
+                1
+              ],
+              "pointers": [
+                {
+                  "index": 1,
+                  "label": "đang tính"
+                },
+                {
+                  "index": 0,
+                  "label": "tiền nhiệm"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "dp[1] = 1 + 0 = 1"
+          },
+          {
+            "title": "Tính dp[2]",
+            "explanation": "Nhóm bước cuối dài 1 có 1 cách, nhóm bước cuối dài 2 có 1 cách; hai nhóm không trùng.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "từ i-1",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "từ i-2",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "số cách",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "1",
+                "2",
+                "·",
+                "·",
+                "·"
+              ],
+              "activeIndices": [
+                2
+              ],
+              "pointers": [
+                {
+                  "index": 2,
+                  "label": "đang tính"
+                },
+                {
+                  "index": 1,
+                  "label": "tiền nhiệm"
+                },
+                {
+                  "index": 0,
+                  "label": "tiền nhiệm"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "dp[2] = 1 + 1 = 2"
+          },
+          {
+            "title": "Tính dp[3]",
+            "explanation": "Nhóm bước cuối dài 1 có 2 cách, nhóm bước cuối dài 2 có 1 cách; hai nhóm không trùng.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "từ i-1",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "từ i-2",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "số cách",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "1",
+                "2",
+                "3",
+                "·",
+                "·"
+              ],
+              "activeIndices": [
+                3
+              ],
+              "pointers": [
+                {
+                  "index": 3,
+                  "label": "đang tính"
+                },
+                {
+                  "index": 2,
+                  "label": "tiền nhiệm"
+                },
+                {
+                  "index": 1,
+                  "label": "tiền nhiệm"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "dp[3] = 2 + 1 = 3"
+          },
+          {
+            "title": "Tính dp[4]",
+            "explanation": "Nhóm bước cuối dài 1 có 3 cách, nhóm bước cuối dài 2 có 2 cách; hai nhóm không trùng.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "từ i-1",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "từ i-2",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "số cách",
+                "value": "5",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "1",
+                "2",
+                "3",
+                "5",
+                "·"
+              ],
+              "activeIndices": [
+                4
+              ],
+              "pointers": [
+                {
+                  "index": 4,
+                  "label": "đang tính"
+                },
+                {
+                  "index": 3,
+                  "label": "tiền nhiệm"
+                },
+                {
+                  "index": 2,
+                  "label": "tiền nhiệm"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "dp[4] = 3 + 2 = 5"
+          },
+          {
+            "title": "Tính dp[5]",
+            "explanation": "Nhóm bước cuối dài 1 có 5 cách, nhóm bước cuối dài 2 có 3 cách; hai nhóm không trùng.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "5",
+                "active": true
+              },
+              {
+                "label": "từ i-1",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "từ i-2",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "số cách",
+                "value": "8",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "1",
+                "2",
+                "3",
+                "5",
+                "8"
+              ],
+              "activeIndices": [
+                5
+              ],
+              "pointers": [
+                {
+                  "index": 5,
+                  "label": "đang tính"
+                },
+                {
+                  "index": 4,
+                  "label": "tiền nhiệm"
+                },
+                {
+                  "index": 3,
+                  "label": "tiền nhiệm"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "dp[5] = 5 + 3 = 8"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Tabulation tính các trạng thái theo thứ tự phụ thuộc đã sẵn. Với leo bậc, số cách đến i phụ thuộc i-1,i-2, nên duyệt i tăng. Không cần gọi lại hàm nhưng phải khởi tạo đúng trường hợp chưa có bước nào.",
+            "dp[0]=1 không nói có một bước đến 0; nó nói có một chuỗi bước rỗng. Trạng thái cơ sở này làm công thức nối thêm bước hoạt động thống nhất. Đếm cách khác tối thiểu hoặc tối đa: phép ghép hai nhóm dùng cộng, không dùng min/max."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Viết dp[i] là số cách đến chính xác bậc i.",
+            "Khởi tạo dp[0]=1 và xử lý i=1.",
+            "Cộng số cách từ các tiền nhiệm hợp lệ.",
+            "Tính tăng theo i và lấy modulo nếu bài yêu cầu."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Bước cuối của một đường đến i hoặc dài 1 hoặc dài 2; hai nhóm không giao nhau và bao phủ mọi đường. Cộng số đường của hai tiền nhiệm vì thế không đếm trùng.",
+            "Áp dụng cho đếm chuỗi lựa chọn, leo bậc và quá trình có các bước cuối phân biệt."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Tối thiểu thường cần INF cho trạng thái chưa đến; đếm cách thường cần 0. Không dùng chung một cách khởi tạo cho mọi loại DP."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Tại sao leo bậc cộng hai trạng thái mà không lấy max?",
+        "answer": "Vì cần số lượng đường thuộc hai nhóm bước cuối khác nhau; max chỉ giữ một nhóm và bỏ những cách còn lại."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Đổi tiền ít đồng nhất và trạng thái không thể tới",
+      "content": "dp[s] là số đồng ít nhất tạo tổng s; dp[0]=0, các ô khác INF. Với mỗi s, thử đồng c<=s và cập nhật từ dp[s-c]+1. Đây là sử dụng đồng không giới hạn. Nếu dp[amount] vẫn INF, không có cách đổi. Duyệt tổng tăng để cho phép dùng một đồng nhiều lần.",
+      "keywords": [
+        "dynamic-programming"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> coins = {1, 3, 4};\n    int amount = 6, inf = amount + 1;\n    vector<int> dp(amount + 1, inf);\n    dp[0] = 0;\n    for (int s = 1; s <= amount; ++s)\n        for (int c : coins)\n            if (c <= s)\n                dp[s] = min(dp[s], dp[s - c] + 1);\n    cout << (dp[amount] < inf ? dp[amount] : -1);\n}",
+      "output": "2",
+      "explanation": "Tối ưu 3+3, sửa thất bại của greedy ở chương trước.",
+      "hsgNote": "Đếm số cách đổi tiền là mục tiêu khác: thứ tự vòng lặp quyết định đếm tổ hợp hay các dãy có thứ tự.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Trạng thái tối thiểu cần phân biệt chưa tới được với đã tới bằng ít thao tác. Với dp[s] là số đồng ít nhất cho đúng tổng s, 0 ở s>0 không thể làm giá trị ban đầu vì nó sẽ giả vờ đã có cách tạo tổng mà không dùng đồng nào.",
+            "Mỗi lời giải tạo s có một đồng cuối c. Bỏ đồng đó còn tổng s-c; nếu phần trước chưa tối ưu, thay bằng phần tối ưu làm toàn bộ lời giải tốt hơn, mâu thuẫn. Đây là nguyên lý tối ưu dùng để suy công thức."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Đặt dp[0]=0, dp[s>0]=INF.",
+            "Duyệt s tăng, thử mọi c<=s.",
+            "Nếu tiền nhiệm có thể đạt, thử dp[s-c]+1.",
+            "Kết luận -1 nếu tổng đích vẫn không thể đạt."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mọi lời giải được xếp vào nhóm theo đồng cuối. Lấy min trên mọi c hợp lệ tìm nhóm tốt nhất và phần trước tối ưu trong nhóm.",
+            "Áp dụng khi mỗi đồng dùng không giới hạn, tổng S đủ nhỏ cho O(mS). Muốn đếm tổ hợp hoặc hoán vị của đồng phải đổi mục tiêu và xem thứ tự vòng."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Duyệt đồng theo thứ tự giảm không tạo thuật toán tối ưu nếu chỉ luôn lấy đồng lớn nhất. DP xét mọi lựa chọn đồng cuối, khác greedy."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với đồng 2 và 4, tổng 7 có dp hữu hạn không?",
+        "answer": "Không, mọi tổng tạo được đều chẵn. dp[7] giữ INF và output -1."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Ba lô 0/1 và hướng duyệt ngược",
+      "content": "Có n vật, mỗi vật chọn tối đa một lần. dp[c] là tổng giá trị tốt nhất với sức chứa tối đa c. Với vật (w,v), cập nhật dp[c]=max(dp[c],dp[c-w]+v) khi c>=w. Duyệt c giảm để dp[c-w] vẫn thuộc lớp trước khi thêm vật; duyệt tăng sẽ cho phép chọn cùng vật nhiều lần.",
+      "keywords": [
+        "dynamic-programming"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<pair<int, int>> items = {{2, 3}, {3, 4}};\n    int capacity = 5;\n    vector<long long> dp(capacity + 1);\n    for (auto [w, v] : items)\n        for (int c = capacity; c >= w; --c)\n            dp[c] = max(dp[c], dp[c - w] + v);\n    cout << dp[capacity];\n}",
+      "output": "7",
+      "explanation": "Chọn cả hai vật, cân nặng 5, giá trị 7.",
+      "hsgNote": "O(nW) là giả đa thức theo giá trị số W. W=10^9 không phù hợp dù n nhỏ; cần đổi trạng thái theo giá trị hoặc phương pháp khác.",
+      "runnable": true,
+      "visualization": {
+        "title": "Vì sao ba lô 0/1 phải duyệt giảm?",
+        "description": "Chỉ xét vật đầu (2,3) của code mẫu. Sức chứa 4 vẫn chỉ nhận giá trị 3, không phải 6.",
+        "steps": [
+          {
+            "title": "Trước vật đầu",
+            "explanation": "Một vật w=2,v=3. Không có vật thì giá trị tốt nhất bằng 0 với mọi sức chứa.",
+            "cells": [
+              {
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "c",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "dp[c]",
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "title": "Cập nhật c=4",
+            "explanation": "Đọc dp[2]=0 của lớp trước. Duyệt giảm bảo đảm chưa dùng vật hiện tại trong tiền nhiệm.",
+            "cells": [
+              {
+                "label": "c",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "dp[c-w]",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "dp[c]",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "c",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "dp[c]",
+                  0,
+                  0,
+                  0,
+                  0,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  5
+                ]
+              ]
+            },
+            "formula": "dp[4] = max(0, 0 + 3) = 3"
+          },
+          {
+            "title": "Cập nhật c=3",
+            "explanation": "Đọc dp[1]=0 của lớp trước. Duyệt giảm bảo đảm chưa dùng vật hiện tại trong tiền nhiệm.",
+            "cells": [
+              {
+                "label": "c",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "dp[c-w]",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "dp[c]",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "c",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "dp[c]",
+                  0,
+                  0,
+                  0,
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  4
+                ]
+              ]
+            },
+            "formula": "dp[3] = max(0, 0 + 3) = 3"
+          },
+          {
+            "title": "Cập nhật c=2",
+            "explanation": "Đọc dp[0]=0 của lớp trước. Duyệt giảm bảo đảm chưa dùng vật hiện tại trong tiền nhiệm.",
+            "cells": [
+              {
+                "label": "c",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "dp[c-w]",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "dp[c]",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "c",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "dp[c]",
+                  0,
+                  0,
+                  3,
+                  3,
+                  3
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  3
+                ]
+              ]
+            },
+            "formula": "dp[2] = max(0, 0 + 3) = 3"
+          }
+        ]
+      },
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Bảng hai chiều theo số vật giúp thấy rõ 0/1: dp[i][c] tối ưu từ i vật đầu với sức chứa c. Không lấy vật i dùng dp[i-1][c]; lấy nó dùng dp[i-1][c-w]+v. Cả hai đều phải đọc lớp trước.",
+            "Khi nén một chiều, chỉ số i biến mất nhưng yêu cầu lớp cũ vẫn còn. Duyệt c giảm làm ô c-w chưa được cập nhật bằng vật hiện tại. Nếu duyệt c tăng, ô c-w có thể chứa vật hiện tại và thêm v lần nữa, đổi bài thành ba lô không giới hạn."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Bắt đầu từ bảng hai chiều để suy ý nghĩa và công thức.",
+            "Nhận ra chỉ cần lớp trước rồi nén bộ nhớ.",
+            "Với mỗi vật, duyệt c từ W xuống w.",
+            "Phân biệt sức chứa tối đa với tổng trọng lượng phải đúng bằng W."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Hai trường hợp lấy/không lấy vật bao phủ mọi tập con và không dùng vật nhiều lần. Hướng duyệt giữ tiền nhiệm thuộc lớp trước, bảo toàn công thức hai chiều.",
+            "Áp dụng khi nW đủ nhỏ và mỗi vật chỉ dùng một lần. Với bài bắt buộc đúng trọng lượng, khởi tạo các trạng thái không thể đạt bằng -INF thay vì 0."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "DP O(nW) phụ thuộc giá trị số W, gọi là giả đa thức. Nếu W rất lớn, cần xét DP theo tổng giá trị, meet-in-the-middle hoặc cấu trúc khác theo ràng buộc."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Một vật w=2,v=3,W=4: vì sao duyệt tăng có thể ra 6?",
+        "answer": "Sau c=2, dp[2]=3 chứa vật đó; đến c=4 lấy dp[2]+3 thành 6, đã dùng cùng vật hai lần."
+      }
+    },
+    {
+      "id": "theory05",
+      "title": "5. LIS: dãy con tăng nghiêm ngặt",
+      "content": "Dãy con không cần liên tiếp nhưng giữ thứ tự. DP cơ bản: dp[i]=1+max(dp[j]) với j<i và a[j]<a[i], cho O(n²). Tối ưu bằng tails: tails[k] là giá trị cuối nhỏ nhất của một dãy tăng độ dài k+1. Dùng lower_bound để thay hoặc nối. Tails không nhất thiết là một dãy con thực tế; độ dài của nó là đáp án.",
+      "keywords": [
+        "dynamic-programming"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {3, 1, 2, 2, 4}, tails;\n    for (int x : a) {\n        auto it = lower_bound(tails.begin(), tails.end(), x);\n        if (it == tails.end())\n            tails.push_back(x);\n        else\n            *it = x;\n    }\n    cout << tails.size();\n}",
+      "output": "3",
+      "explanation": "Một LIS là 1,2,4. Hai số 2 không được nối khi tăng nghiêm ngặt.",
+      "hsgNote": "Dãy không giảm dùng upper_bound/bisect_right. Muốn in dãy cần lưu predecessor, không in tails trực tiếp.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "LIS giữ thứ tự vị trí và tăng nghiêm ngặt về giá trị; không bắt buộc các vị trí liền nhau. Công thức O(n²) xem tất cả vị trí trước nhỏ hơn a[i] để nối. Nó hữu ích để học và làm oracle dù n lớn cần tối ưu.",
+            "Tails không lưu mọi dãy tăng. Nó chỉ giữ đuôi nhỏ nhất cho mỗi độ dài: một dãy cùng độ dài có đuôi nhỏ hơn luôn dễ nối hơn. Các ô tails có thể đến từ các dãy khác nhau nên không được coi toàn tails là một dãy con thật."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Với mỗi x, tìm vị trí đầu tails[i]>=x.",
+            "Nếu không có vị trí đó, nối x để tăng độ dài.",
+            "Nếu có, thay đuôi bằng x để giữ lựa chọn tốt nhất.",
+            "Muốn truy vết, lưu chỉ số đuôi và predecessor theo phần tử input."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Tails tăng theo độ dài; một x chỉ có thể nối sau các đuôi nhỏ hơn x. Lower bound tìm đúng độ dài có thể đạt, thay đuôi không làm giảm các khả năng tương lai.",
+            "Áp dụng cho độ dài LIS n lớn. Dãy không giảm dùng upper bound để cho phép giá trị bằng nhau kéo dài."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không sort input trước LIS vì sẽ phá thứ tự vị trí. Không dùng upper bound cho tăng nghiêm ngặt nếu đề có trùng."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với [2,2,2], LIS tăng nghiêm ngặt và dãy con không giảm dài bao nhiêu?",
+        "answer": "Lần lượt 1 và 3. Khác biệt nằm ở việc có cho phép nối giá trị bằng nhau."
+      }
+    },
+    {
+      "id": "theory06",
+      "title": "6. LCS: trạng thái hai chiều",
+      "content": "LCS là dãy con chung dài nhất, không cần liên tiếp. dp[i][j] là LCS giữa i ký tự đầu của a và j ký tự đầu của b. Nếu ký tự cuối giống nhau, cộng 1 vào dp[i-1][j-1]; nếu khác, lấy max(dp[i-1][j],dp[i][j-1]). Hàng/cột 0 bằng 0. Nén hai hàng giảm bộ nhớ nhưng muốn truy vết đơn giản nên giữ bảng.",
+      "keywords": [
+        "dynamic-programming"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string a = \"abc\", b = \"ac\";\n    vector<vector<int>> dp(a.size() + 1, vector<int>(b.size() + 1));\n    for (int i = 1; i <= (int)a.size(); ++i)\n        for (int j = 1; j <= (int)b.size(); ++j)\n            if (a[i - 1] == b[j - 1])\n                dp[i][j] = dp[i - 1][j - 1] + 1;\n            else\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);\n    cout << dp[a.size()][b.size()];\n}",
+      "output": "2",
+      "explanation": "Dãy con chung ac có độ dài 2.",
+      "hsgNote": "Substring phải liên tiếp, subsequence không cần. Hai bài có công thức DP khác nhau.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "LCS phải tôn trọng thứ tự của cả hai chuỗi nhưng có thể bỏ ký tự ở mỗi bên. Trạng thái dùng hai độ dài tiền tố để biết phần nào của hai input đã được xét. Chỉ dùng một chỉ số không đủ thể hiện hai mức tiến triển.",
+            "Khi ký tự cuối giống nhau, có thể dùng cặp khớp đó nối với LCS của hai tiền tố ngắn hơn. Khi khác nhau, một dãy con chung không thể dùng đồng thời cả hai ký tự cuối như một cặp; bỏ ít nhất một bên, nên xét hai trạng thái bỏ trái hoặc bỏ phải."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Tạo hàng và cột cơ sở 0 cho chuỗi rỗng.",
+            "Duyệt i,j tăng để các tiền nhiệm đã có.",
+            "Nếu a[i-1]==b[j-1], dùng đường chéo+1; nếu khác, lấy max của trên/trái.",
+            "Muốn in dãy con, đi ngược bảng theo quyết định đã tạo giá trị."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Phân tích ký tự cuối tạo đầy đủ các trường hợp. Mỗi tiền nhiệm là bài cùng dạng trên tiền tố ngắn hơn; quy nạp theo i+j chứng minh toàn bảng.",
+            "Áp dụng cho so khớp dãy có thể bỏ phần tử. Bài substring chung dài nhất có tính liên tiếp nên công thức khi khác ký tự phải đổi."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Nén hai hàng đủ để lấy độ dài nhưng không lưu đủ quyết định cho truy vết đơn giản. Đừng gọi LCS là một đoạn liên tiếp."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "LCS của abc và ac là ac dù trong abc hai ký tự không kề nhau có hợp lệ không?",
+        "answer": "Có, vì LCS là subsequence, cho phép bỏ b nhưng vẫn giữ thứ tự a trước c."
+      },
+      "visualization": {
+        "title": "Điền bảng LCS của abc và ac",
+        "description": "Hàng là tiền tố abc, cột là tiền tố ac. Dấu · là ô chưa tính.",
+        "steps": [
+          {
+            "title": "Hai tiền tố rỗng",
+            "explanation": "Hàng/cột cơ sở đều 0; chưa xét ký tự.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "a / b",
+                  "∅",
+                  "a",
+                  "c"
+                ],
+                [
+                  "∅",
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  "a",
+                  0,
+                  "·",
+                  "·"
+                ],
+                [
+                  "b",
+                  0,
+                  "·",
+                  "·"
+                ],
+                [
+                  "c",
+                  0,
+                  "·",
+                  "·"
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "title": "Ô (1,1)",
+            "explanation": "So a với a: khớp, lấy đường chéo + 1.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "dp[i][j]",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "a / b",
+                  "∅",
+                  "a",
+                  "c"
+                ],
+                [
+                  "∅",
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  "a",
+                  0,
+                  1,
+                  "·"
+                ],
+                [
+                  "b",
+                  0,
+                  "·",
+                  "·"
+                ],
+                [
+                  "c",
+                  0,
+                  "·",
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            "formula": "dp[1][1] = 1"
+          },
+          {
+            "title": "Ô (1,2)",
+            "explanation": "So a với c: khác, lấy max ô trên và ô trái.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "dp[i][j]",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "a / b",
+                  "∅",
+                  "a",
+                  "c"
+                ],
+                [
+                  "∅",
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  "a",
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  "b",
+                  0,
+                  "·",
+                  "·"
+                ],
+                [
+                  "c",
+                  0,
+                  "·",
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  2,
+                  3
+                ]
+              ]
+            },
+            "formula": "dp[1][2] = 1"
+          },
+          {
+            "title": "Ô (2,1)",
+            "explanation": "So b với a: khác, lấy max ô trên và ô trái.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "dp[i][j]",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "a / b",
+                  "∅",
+                  "a",
+                  "c"
+                ],
+                [
+                  "∅",
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  "a",
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  "b",
+                  0,
+                  1,
+                  "·"
+                ],
+                [
+                  "c",
+                  0,
+                  "·",
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  3,
+                  2
+                ]
+              ]
+            },
+            "formula": "dp[2][1] = 1"
+          },
+          {
+            "title": "Ô (2,2)",
+            "explanation": "So b với c: khác, lấy max ô trên và ô trái.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "dp[i][j]",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "a / b",
+                  "∅",
+                  "a",
+                  "c"
+                ],
+                [
+                  "∅",
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  "a",
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  "b",
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  "c",
+                  0,
+                  "·",
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  3,
+                  3
+                ]
+              ]
+            },
+            "formula": "dp[2][2] = 1"
+          },
+          {
+            "title": "Ô (3,1)",
+            "explanation": "So c với a: khác, lấy max ô trên và ô trái.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "dp[i][j]",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "a / b",
+                  "∅",
+                  "a",
+                  "c"
+                ],
+                [
+                  "∅",
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  "a",
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  "b",
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  "c",
+                  0,
+                  1,
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  4,
+                  2
+                ]
+              ]
+            },
+            "formula": "dp[3][1] = 1"
+          },
+          {
+            "title": "Ô (3,2)",
+            "explanation": "So c với c: khớp, lấy đường chéo + 1.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "dp[i][j]",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "a / b",
+                  "∅",
+                  "a",
+                  "c"
+                ],
+                [
+                  "∅",
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  "a",
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  "b",
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  "c",
+                  0,
+                  1,
+                  2
+                ]
+              ],
+              "activeCells": [
+                [
+                  4,
+                  3
+                ]
+              ]
+            },
+            "formula": "dp[3][2] = 2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "theory07",
+      "title": "7. Đếm đường đi trên lưới",
+      "content": "Chỉ đi sang phải hoặc xuống, nên mỗi ô nhận số cách từ ô trên và ô trái. Ô bị chặn có 0 cách. Đặt ô đầu là 1 nếu không bị chặn. Thứ tự duyệt theo hàng rồi cột là thứ tự topo của phụ thuộc; không cộng vào ô đầu thêm lần nữa.",
+      "keywords": [
+        "dynamic-programming"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n = 2, m = 3;\n    vector<vector<long long>> dp(n, vector<long long>(m));\n    dp[0][0] = 1;\n    for (int i = 0; i < n; ++i)\n        for (int j = 0; j < m; ++j) {\n            if (i == 0 && j == 0)\n                continue;\n            dp[i][j] = (i ? dp[i - 1][j] : 0) + (j ? dp[i][j - 1] : 0);\n        }\n    cout << dp[n - 1][m - 1];\n}",
+      "output": "3",
+      "explanation": "Các đường là RRD, RDR, DRR.",
+      "hsgNote": "Số cách tăng rất nhanh, bài thực tế thường lấy modulo. Có thể nén một hàng khi chỉ cần số cách.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Lưới chỉ đi phải hoặc xuống tạo phụ thuộc một chiều: mỗi đường vào ô (i,j) phải đến từ ô trên hoặc ô trái. Không có đường quay lại ô đã đi nên thứ tự theo hàng/cột tính được mà không có vòng phụ thuộc.",
+            "Trạng thái dp[i][j] là số đường đến ô đó, không phải số đường bắt đầu ở đó. Hai nghĩa có thứ tự tính khác nhau. Với ô chặn, đặt số đường 0 trước mọi phép cộng; ô đầu có một đường rỗng chỉ nếu không bị chặn."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định hướng đi và ý nghĩa số đường.",
+            "Khởi tạo ô đầu 1 nếu hợp lệ, các ô chưa có đường 0.",
+            "Duyệt đúng thứ tự phụ thuộc, cộng trên và trái trong biên.",
+            "Lấy modulo theo đề và không cộng thêm vào ô đầu đã khởi tạo."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mọi đường vào ô kết thúc bằng xuống từ trên hoặc phải từ trái, hai nhóm không giao nhau. Tổng số đường vì thế bằng tổng hai tiền nhiệm, trừ khi ô bị chặn.",
+            "Áp dụng cho đếm đường, chi phí đường tối thiểu với biến thể min và các DP lưới có hướng không tạo chu trình."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Cho phép đi lên/trái có thể tạo chu trình, khi đó công thức đơn giản này không đủ. Python chỉ số âm không tự báo lỗi nên phải kiểm tra hàng/cột đầu."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Lưới một ô không chặn có bao nhiêu đường từ đầu tới cuối?",
+        "answer": "1 theo quy ước đường rỗng. Nếu ô đó bị chặn thì 0."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Từ đệ quy lặp lại đến memoization",
+      "description": "DP tái sử dụng kết quả trạng thái thay vì giải lại. Fibonacci có F(0)=0,F(1)=1,F(n)=F(n-1)+F(n-2); đệ quy thuần tính lại nhiều lần. Memoization lưu kết quả theo n, mỗi trạng thái tính một lần. Số trạng thái nhân chi phí chuyển quyết định độ phức tạp, không phải số dòng code.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nvector<long long> memo(91, -1);\nlong long fib(int n) {\n    if (n < 2)\n        return n;\n    if (memo[n] != -1)\n        return memo[n];\n    return memo[n] = fib(n - 1) + fib(n - 2);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << fib(8);\n}",
+      "input": null,
+      "output": "21",
+      "explanation": "Các trạng thái 0..8 được lưu; F(8)=21.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Memoization vẫn có stack đệ quy. Với n lớn dùng tabulation, và xét số có thể tăng quá 64 bit.",
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Tabulation và bốn câu hỏi bắt buộc",
+      "description": "Trước khi viết DP, trả lời: trạng thái nghĩa là gì; trạng thái cơ sở nào đã biết; chuyển từ trạng thái nào; thứ tự tính có bảo đảm trạng thái trước đã sẵn chưa? Bài leo n bậc, bước 1 hoặc 2: dp[i] là số cách đến i, dp[0]=1, dp[i]=dp[i-1]+dp[i-2]. Với i=1 chỉ dùng dp[0].",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n = 5;\n    vector<long long> dp(n + 1);\n    dp[0] = 1;\n    for (int i = 1; i <= n; ++i) {\n        dp[i] = dp[i - 1];\n        if (i >= 2)\n            dp[i] += dp[i - 2];\n    }\n    cout << dp[n];\n}",
+      "input": null,
+      "output": "8",
+      "explanation": "dp lần lượt 1,1,2,3,5,8. dp[0]=1 biểu diễn một cách không bước nào.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Đổi tiền ít đồng nhất và trạng thái không thể tới",
+      "description": "dp[s] là số đồng ít nhất tạo tổng s; dp[0]=0, các ô khác INF. Với mỗi s, thử đồng c<=s và cập nhật từ dp[s-c]+1. Đây là sử dụng đồng không giới hạn. Nếu dp[amount] vẫn INF, không có cách đổi. Duyệt tổng tăng để cho phép dùng một đồng nhiều lần.",
+      "difficulty": "intermediate",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> coins = {1, 3, 4};\n    int amount = 6, inf = amount + 1;\n    vector<int> dp(amount + 1, inf);\n    dp[0] = 0;\n    for (int s = 1; s <= amount; ++s)\n        for (int c : coins)\n            if (c <= s)\n                dp[s] = min(dp[s], dp[s - c] + 1);\n    cout << (dp[amount] < inf ? dp[amount] : -1);\n}",
+      "input": null,
+      "output": "2",
+      "explanation": "Tối ưu 3+3, sửa thất bại của greedy ở chương trước.",
+      "complexity": {
+        "time": "O(m·amount)",
+        "space": "O(amount)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Đếm số cách đổi tiền là mục tiêu khác: thứ tự vòng lặp quyết định đếm tổ hợp hay các dãy có thứ tự.",
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Ba lô 0/1 và hướng duyệt ngược",
+      "description": "Có n vật, mỗi vật chọn tối đa một lần. dp[c] là tổng giá trị tốt nhất với sức chứa tối đa c. Với vật (w,v), cập nhật dp[c]=max(dp[c],dp[c-w]+v) khi c>=w. Duyệt c giảm để dp[c-w] vẫn thuộc lớp trước khi thêm vật; duyệt tăng sẽ cho phép chọn cùng vật nhiều lần.",
+      "difficulty": "intermediate",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<pair<int, int>> items = {{2, 3}, {3, 4}};\n    int capacity = 5;\n    vector<long long> dp(capacity + 1);\n    for (auto [w, v] : items)\n        for (int c = capacity; c >= w; --c)\n            dp[c] = max(dp[c], dp[c - w] + v);\n    cout << dp[capacity];\n}",
+      "input": null,
+      "output": "7",
+      "explanation": "Chọn cả hai vật, cân nặng 5, giá trị 7.",
+      "complexity": {
+        "time": "O(nW)",
+        "space": "O(W)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "O(nW) là giả đa thức theo giá trị số W. W=10^9 không phù hợp dù n nhỏ; cần đổi trạng thái theo giá trị hoặc phương pháp khác.",
+      "runnable": true
+    },
+    {
+      "id": "example05",
+      "title": "LIS: dãy con tăng nghiêm ngặt",
+      "description": "Dãy con không cần liên tiếp nhưng giữ thứ tự. DP cơ bản: dp[i]=1+max(dp[j]) với j<i và a[j]<a[i], cho O(n²). Tối ưu bằng tails: tails[k] là giá trị cuối nhỏ nhất của một dãy tăng độ dài k+1. Dùng lower_bound để thay hoặc nối. Tails không nhất thiết là một dãy con thực tế; độ dài của nó là đáp án.",
+      "difficulty": "intermediate",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {3, 1, 2, 2, 4}, tails;\n    for (int x : a) {\n        auto it = lower_bound(tails.begin(), tails.end(), x);\n        if (it == tails.end())\n            tails.push_back(x);\n        else\n            *it = x;\n    }\n    cout << tails.size();\n}",
+      "input": null,
+      "output": "3",
+      "explanation": "Một LIS là 1,2,4. Hai số 2 không được nối khi tăng nghiêm ngặt.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Dãy không giảm dùng upper_bound/bisect_right. Muốn in dãy cần lưu predecessor, không in tails trực tiếp.",
+      "runnable": true
+    },
+    {
+      "id": "example06",
+      "title": "LCS: trạng thái hai chiều",
+      "description": "LCS là dãy con chung dài nhất, không cần liên tiếp. dp[i][j] là LCS giữa i ký tự đầu của a và j ký tự đầu của b. Nếu ký tự cuối giống nhau, cộng 1 vào dp[i-1][j-1]; nếu khác, lấy max(dp[i-1][j],dp[i][j-1]). Hàng/cột 0 bằng 0. Nén hai hàng giảm bộ nhớ nhưng muốn truy vết đơn giản nên giữ bảng.",
+      "difficulty": "intermediate",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string a = \"abc\", b = \"ac\";\n    vector<vector<int>> dp(a.size() + 1, vector<int>(b.size() + 1));\n    for (int i = 1; i <= (int)a.size(); ++i)\n        for (int j = 1; j <= (int)b.size(); ++j)\n            if (a[i - 1] == b[j - 1])\n                dp[i][j] = dp[i - 1][j - 1] + 1;\n            else\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);\n    cout << dp[a.size()][b.size()];\n}",
+      "input": null,
+      "output": "2",
+      "explanation": "Dãy con chung ac có độ dài 2.",
+      "complexity": {
+        "time": "O(nm)",
+        "space": "O(nm)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Substring phải liên tiếp, subsequence không cần. Hai bài có công thức DP khác nhau.",
+      "runnable": true
+    },
+    {
+      "id": "example07",
+      "title": "Đếm đường đi trên lưới",
+      "description": "Chỉ đi sang phải hoặc xuống, nên mỗi ô nhận số cách từ ô trên và ô trái. Ô bị chặn có 0 cách. Đặt ô đầu là 1 nếu không bị chặn. Thứ tự duyệt theo hàng rồi cột là thứ tự topo của phụ thuộc; không cộng vào ô đầu thêm lần nữa.",
+      "difficulty": "advanced",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n = 2, m = 3;\n    vector<vector<long long>> dp(n, vector<long long>(m));\n    dp[0][0] = 1;\n    for (int i = 0; i < n; ++i)\n        for (int j = 0; j < m; ++j) {\n            if (i == 0 && j == 0)\n                continue;\n            dp[i][j] = (i ? dp[i - 1][j] : 0) + (j ? dp[i][j - 1] : 0);\n        }\n    cout << dp[n - 1][m - 1];\n}",
+      "input": null,
+      "output": "3",
+      "explanation": "Các đường là RRD, RDR, DRR.",
+      "complexity": {
+        "time": "O(nm)",
+        "space": "O(nm)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Số cách tăng rất nhanh, bài thực tế thường lấy modulo. Có thể nén một hàng khi chỉ cần số cách.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Bước đầu tiên khi thiết kế DP là gì?",
+      "choices": [
+        "Viết hai vòng for",
+        "Cấp phát bảng lớn nhất",
+        "Định nghĩa rõ ý nghĩa trạng thái",
+        "Chọn tên biến ngắn"
+      ],
+      "answer": "Định nghĩa rõ ý nghĩa trạng thái",
+      "explanation": "Không thể kiểm tra chuyển trạng thái nếu chưa biết dp đại diện gì.",
+      "betterApproach": "Viết trạng thái bằng một câu trước code.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Ba lô 0/1 nén một chiều duyệt sức chứa hướng nào?",
+      "choices": [
+        "Luôn chỉ c=0",
+        "Giảm dần",
+        "Tăng dần",
+        "Ngẫu nhiên"
+      ],
+      "answer": "Giảm dần",
+      "explanation": "Giữ dp[c-w] của lớp chưa lấy vật hiện tại.",
+      "betterApproach": "Một vật w=2,v=3,W=4 là test bắt lỗi dùng vật hai lần.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "DP leo bậc đặt dp[0] bằng gì?",
+      "choices": [
+        "1",
+        "0",
+        "-1",
+        "INF"
+      ],
+      "answer": "1",
+      "explanation": "Có một cách tạo tổng 0: không làm bước nào.",
+      "betterApproach": "Khởi tạo cơ sở phải phù hợp ý nghĩa trạng thái.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "question": "LIS tăng nghiêm ngặt với phần tử trùng dùng tìm kiếm nào?",
+      "choices": [
+        "upper_bound / bisect_right",
+        "Luôn append",
+        "Tìm max toàn dãy",
+        "lower_bound / bisect_left"
+      ],
+      "answer": "lower_bound / bisect_left",
+      "explanation": "Phần tử bằng x thay thế vị trí hiện có, không kéo dài.",
+      "betterApproach": "Phân biệt tăng nghiêm ngặt và không giảm.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "id": "quiz04"
+    },
+    {
+      "question": "DP O(nW) cho ba lô có phù hợp W=10^9 không?",
+      "choices": [
+        "Chỉ cần long long",
+        "Cần sort giảm",
+        "Thường không, phụ thuộc giá trị W",
+        "Luôn phù hợp vì n nhỏ"
+      ],
+      "answer": "Thường không, phụ thuộc giá trị W",
+      "explanation": "Bộ nhớ và số thao tác theo W quá lớn.",
+      "betterApproach": "Xét ràng buộc để đổi chiều trạng thái.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "id": "quiz05"
+    },
+    {
+      "question": "LCS khác substring dài nhất ở điểm nào?",
+      "choices": [
+        "LCS chỉ áp dụng số",
+        "LCS không cần ký tự liên tiếp",
+        "LCS luôn dài bằng chuỗi ngắn",
+        "LCS không giữ thứ tự"
+      ],
+      "answer": "LCS không cần ký tự liên tiếp",
+      "explanation": "Dãy con giữ thứ tự nhưng có thể bỏ ký tự.",
+      "betterApproach": "Ghi rõ liên tiếp hay không trước suy công thức.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "id": "quiz06"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "dynamic-programming",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nvector<long long> memo(91, -1);\nlong long fib(int n) {\n    if (n < 2)\n        return n;\n    if (memo[n] != -1)\n        return memo[n];\n    return memo[n] = fib(n - 1) + fib(n - 2);\n}\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cout << fib(8);\n}",
+      "choices": [
+        "Lỗi chạy chương trình",
+        "0",
+        "21",
+        "Không có output"
+      ],
+      "answer": "21",
+      "explanation": "Các trạng thái 0..8 được lưu; F(8)=21.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz07",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "dynamic-programming",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n = 5;\n    vector<long long> dp(n + 1);\n    dp[0] = 1;\n    for (int i = 1; i <= n; ++i) {\n        dp[i] = dp[i - 1];\n        if (i >= 2)\n            dp[i] += dp[i - 2];\n    }\n    cout << dp[n];\n}",
+      "choices": [
+        "0",
+        "8",
+        "Không có output",
+        "Lỗi chạy chương trình"
+      ],
+      "answer": "8",
+      "explanation": "dp lần lượt 1,1,2,3,5,8. dp[0]=1 biểu diễn một cách không bước nào.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz08",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Leo bậc modulo",
+      "problem": "Có n bậc, mỗi bước đi 1 hoặc 2 bậc. Đếm số cách đến bậc n modulo 1000000007.",
+      "inputDescription": "Một số nguyên n.",
+      "outputDescription": "Số cách theo modulo.",
+      "constraints": [
+        "0 <= n <= 1000000"
+      ],
+      "sampleInput": "5",
+      "sampleOutput": "8",
+      "hint": "Bước cuối đến n là đi từ n-1 hoặc n-2.",
+      "explanation": "Hai trường hợp cuối không giao nhau và bao phủ mọi cách. Nén bộ nhớ chỉ giữ hai số trước; n=0 có một cách rỗng.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(1)"
+      },
+      "betterApproach": "Nếu cần truy vết một đường đi, số cách không đủ thông tin để chọn đường theo yêu cầu.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "answer": null,
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    cin >> n;\n    long long a = 1, b = 1, mod = 1000000007;\n    for (int i = 2; i <= n; ++i) {\n        long long next = (a + b) % mod;\n        a = b;\n        b = next;\n    }\n    cout << (n == 0 ? a : b);\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "0",
+          "output": "1"
+        },
+        {
+          "input": "1",
+          "output": "1"
+        },
+        {
+          "input": "2",
+          "output": "2"
+        }
+      ]
+    },
+    {
+      "title": "Đổi tiền ít đồng nhất",
+      "problem": "Cho m mệnh giá nguyên dương, mỗi loại dùng không giới hạn. Tìm ít đồng nhất tạo tổng S, hoặc -1 nếu không thể.",
+      "inputDescription": "m S; dòng m mệnh giá.",
+      "outputDescription": "Số đồng ít nhất hoặc -1.",
+      "constraints": [
+        "1 <= m <= 100",
+        "0 <= S <= 10000",
+        "1 <= coin[i] <= 10000"
+      ],
+      "sampleInput": "3 6\n1 3 4",
+      "sampleOutput": "2",
+      "hint": "Chọn loại đồng cuối cùng rồi dùng lời giải của tổng còn lại.",
+      "explanation": "Một lời giải tối ưu kết thúc bằng một đồng c, phần trước phải tối ưu cho S-c; nếu không có thể thay để giảm tổng số đồng.",
+      "complexity": {
+        "time": "O(mS)",
+        "space": "O(S)"
+      },
+      "betterApproach": "S=0 cho 0 đồng; không dùng tham lam cho mệnh giá tổng quát.",
+      "id": "practice02",
+      "difficulty": "intermediate",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int m, S;\n    cin >> m >> S;\n    vector<int> coins(m);\n    for (auto &x : coins)\n        cin >> x;\n    int inf = S + 1;\n    vector<int> dp(S + 1, inf);\n    dp[0] = 0;\n    for (int s = 1; s <= S; ++s)\n        for (int c : coins)\n            if (c <= s)\n                dp[s] = min(dp[s], dp[s - c] + 1);\n    cout << (dp[S] < inf ? dp[S] : -1);\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "2 0\n3 4",
+          "output": "0"
+        },
+        {
+          "input": "2 7\n2 4",
+          "output": "-1"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Ba lô 0/1",
+      "problem": "Chọn tập con các vật, mỗi vật tối đa một lần, tổng trọng lượng không vượt W, tổng giá trị lớn nhất.",
+      "inputDescription": "n W; n dòng w v.",
+      "outputDescription": "Tổng giá trị lớn nhất.",
+      "constraints": [
+        "1 <= n <= 100",
+        "0 <= W <= 10000",
+        "1 <= w[i] <= 10000",
+        "0 <= v[i] <= 10^9"
+      ],
+      "sampleInput": "2 5\n2 3\n3 4",
+      "sampleOutput": "7",
+      "hint": "Đối với từng vật, chọn không lấy hoặc lấy nó từ trạng thái trước.",
+      "explanation": "Định nghĩa dp theo sức chứa tối đa nên mọi cơ sở ban đầu 0 hợp lệ. Duyệt c giảm bảo đảm mỗi vật chỉ được sử dụng một lần; v lớn cần long long.",
+      "complexity": {
+        "time": "O(nW)",
+        "space": "O(W)"
+      },
+      "betterApproach": "Để truy vết đơn giản giữ bảng theo số vật, hoặc lưu quyết định theo từng lớp. Không dùng con trỏ truy vết một chiều bị ghi đè.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n, W;\n    cin >> n >> W;\n    vector<long long> dp(W + 1);\n    for (int i = 0; i < n; ++i) {\n        int w;\n        long long v;\n        cin >> w >> v;\n        for (int c = W; c >= w; --c)\n            dp[c] = max(dp[c], dp[c - w] + v);\n    }\n    cout << dp[W];\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1 4\n2 3",
+          "output": "3"
+        },
+        {
+          "input": "2 0\n1 5\n2 9",
+          "output": "0"
+        },
+        {
+          "input": "2 8\n4 3\n1 7",
+          "output": "10"
+        },
+        {
+          "input": "3 5\n5 7\n3 5\n2 7",
+          "output": "12"
+        },
+        {
+          "input": "1 6\n4 8",
+          "output": "8"
+        },
+        {
+          "input": "3 8\n1 3\n3 9\n5 1",
+          "output": "12"
+        },
+        {
+          "input": "5 8\n2 7\n4 1\n2 0\n3 9\n4 2",
+          "output": "16"
+        },
+        {
+          "input": "5 1\n3 2\n2 7\n4 7\n5 7\n1 6",
+          "output": "6"
+        }
+      ]
+    },
+    {
+      "title": "LCS và nén bộ nhớ",
+      "problem": "Cho hai chuỗi chữ cái thường, tìm độ dài dãy con chung dài nhất.",
+      "inputDescription": "Hai dòng, mỗi dòng một chuỗi.",
+      "outputDescription": "Độ dài LCS.",
+      "constraints": [
+        "1 <= |a|,|b| <= 1000"
+      ],
+      "sampleInput": "abc\nac",
+      "sampleOutput": "2",
+      "hint": "Giữ hàng trước và hàng hiện tại.",
+      "explanation": "Nếu hai ký tự cuối giống, ghép vào LCS của hai tiền tố ngắn hơn. Nếu khác, ít nhất một ký tự cuối bị bỏ; lấy tốt hơn trong hai lựa chọn. Mỗi ô chỉ cần hàng trước và ô trái.",
+      "complexity": {
+        "time": "O(nm)",
+        "space": "O(m)"
+      },
+      "betterApproach": "Đổi vai hai chuỗi để nén theo chuỗi ngắn hơn. Để in LCS bằng truy vết đơn giản, giữ bảng đầy đủ.",
+      "id": "advanced02",
+      "difficulty": "advanced",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string a, b;\n    cin >> a >> b;\n    vector<int> prev(b.size() + 1);\n    for (char x : a) {\n        vector<int> cur(b.size() + 1);\n        for (int j = 1; j <= (int)b.size(); ++j)\n            if (x == b[j - 1])\n                cur[j] = prev[j - 1] + 1;\n            else\n                cur[j] = max(prev[j], cur[j - 1]);\n        prev.swap(cur);\n    }\n    cout << prev.back();\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "a\na",
+          "output": "1"
+        },
+        {
+          "input": "abc\nxyz",
+          "output": "0"
+        },
+        {
+          "input": "bcbbbc\nacbba",
+          "output": "3"
+        },
+        {
+          "input": "cccbbc\nbcaba",
+          "output": "2"
+        },
+        {
+          "input": "acbccc\nbabcc",
+          "output": "4"
+        },
+        {
+          "input": "abaabc\nbbaba",
+          "output": "3"
+        },
+        {
+          "input": "bcbcba\ncccbc",
+          "output": "3"
+        },
+        {
+          "input": "abcbcc\nabcba",
+          "output": "4"
+        }
+      ]
+    },
+    {
+      "title": "Dãy con tăng dài nhất",
+      "problem": "Tìm độ dài dãy con tăng nghiêm ngặt; các phần tử được chọn không bắt buộc liên tiếp.",
+      "inputDescription": "n; dòng n số.",
+      "outputDescription": "Độ dài LIS.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "|a[i]| <= 10^9"
+      ],
+      "sampleInput": "5\n3 1 2 2 4",
+      "sampleOutput": "3",
+      "hint": "Giữ đuôi nhỏ nhất cho từng độ dài.",
+      "explanation": "Đuôi nhỏ hơn không làm mất khả năng nối phần tử tương lai. Vị trí đầu >=x xác định độ dài có thể kết thúc bằng x. Thay đuôi hoặc thêm một độ dài mới.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "Dùng DP O(n²) làm oracle cho dãy nhỏ; đừng in tails như một LIS thực tế.",
+      "id": "advanced03",
+      "difficulty": "advanced",
+      "tags": [
+        "dynamic-programming"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    cin >> n;\n    vector<int> tails;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        auto it = lower_bound(tails.begin(), tails.end(), x);\n        if (it == tails.end())\n            tails.push_back(x);\n        else\n            *it = x;\n    }\n    cout << tails.size();\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "4\n2 2 2 2",
+          "output": "1"
+        },
+        {
+          "input": "4\n4 3 2 1",
+          "output": "1"
+        },
+        {
+          "input": "6\n3 -2 3 0 -2 -1",
+          "output": "2"
+        },
+        {
+          "input": "4\n0 -2 1 1",
+          "output": "2"
+        },
+        {
+          "input": "1\n0",
+          "output": "1"
+        },
+        {
+          "input": "7\n-2 -1 1 3 -3 -3 0",
+          "output": "4"
+        },
+        {
+          "input": "2\n-1 0",
+          "output": "2"
+        },
+        {
+          "input": "1\n-3",
+          "output": "1"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Không định nghĩa trạng thái",
+      "fix": "Viết ý nghĩa dp và cơ sở trước code."
+    },
+    {
+      "mistake": "Duyệt tăng trong ba lô 0/1",
+      "fix": "Duyệt giảm để không tái sử dụng vật."
+    },
+    {
+      "mistake": "Khởi tạo mọi trạng thái tối thiểu bằng 0",
+      "fix": "Dùng INF cho trạng thái không thể tới."
+    },
+    {
+      "mistake": "Nén bộ nhớ trước khi hiểu phụ thuộc",
+      "fix": "Viết bảng đầy đủ và thứ tự tính trước, sau đó mới nén."
+    }
+  ],
+  "chapterSummary": [
+    "DP = trạng thái + cơ sở + chuyển + thứ tự.",
+    "Số trạng thái × chi phí chuyển quyết định thời gian.",
+    "Nén bộ nhớ phải bảo toàn lớp dữ liệu cũ.",
+    "Đếm, tối thiểu và tối đa có cơ sở khác nhau.",
+    "LIS/LCS là dãy con, không nhất thiết liên tiếp."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Quy hoạch động: từ cơ bản đến HSG",
+      "url": "https://www.geeksforgeeks.org/dsa/dynamic-programming/"
+    },
+    {
+      "title": "GCC — thư viện C++ và header chuẩn",
+      "url": "https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html"
+    },
+    {
+      "title": "Algorithms for Competitive Programming — đọc thêm thuật toán",
+      "url": "https://cp-algorithms.com/"
+    }
+  ]
+}

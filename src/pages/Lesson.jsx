@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { loadChapter } from "../services/contentService";
 import QuestionCard from "../components/QuestionCard";
 import { calculateScore, countAnswered } from "../utils/grading";
+import StepVisualizer from "../components/StepVisualizer";
+import ProblemCard from "../components/ProblemCard";
 
 const COL = {
   type: "Kiểu", purpose: "Công dụng", typicalRange: "Khoảng giá trị",
@@ -63,15 +65,20 @@ function Field({ label, kind, value }) {
 }
 
 function Theory({ items }) {
-  return items.map((t) => (
-    <div className="card" key={t.id}>
-      <h3>{t.title}</h3>
-      <p>{t.content}</p>
+  return <div className="theory-reader">
+    <nav className="theory-reader__contents" aria-label="Mục lục lý thuyết"><b>Trong bài này</b><ol>{items.map((t) => <li key={t.id}><a href={`#${t.id}`}>{t.title.replace(/^\d+\.\s*/, "")}</a></li>)}</ol></nav>
+    {items.map((t) => (
+    <article className="card theory-article" id={t.id} key={t.id}>
+      <div className="theory-article__heading"><span>LÝ THUYẾT</span><h3>{t.title}</h3></div>
+      <p className="theory-article__intro">{t.content}</p>
+      {t.sections?.map((section, i) => <section className="theory-section" key={i}><h4>{section.title}</h4>{section.paragraphs?.map((paragraph, j) => <p key={j}>{paragraph}</p>)}{section.bullets?.length > 0 && <ul>{section.bullets.map((text, j) => <li key={j}>{text}</li>)}</ul>}</section>)}
       {FIELDS.map(([k, label, kind]) =>
         t[k] ? <Field key={k} label={label} kind={kind} value={t[k]} /> : null
       )}
-    </div>
-  ));
+      {t.visualization && <StepVisualizer key={t.id} visualization={t.visualization} />}
+      {t.selfCheck && <div className="theory-self-check"><span>TỰ KIỂM TRA</span><p>{t.selfCheck.question}</p><details><summary>Đối chiếu cách hiểu</summary><p>{t.selfCheck.answer}</p></details></div>}
+    </article>
+  ))}</div>;
 }
 
 function Examples({ items }) {
@@ -131,6 +138,7 @@ function LessonContent({ lang, id }) {
   const tabs = [
     ["overview", "Tổng quan"], ["theory", "Lý thuyết"], ["examples", "Ví dụ"],
     ["quiz", "Quiz"],
+    ["practice", "Luyện tập"], ["advanced", "Nâng cao HSG"],
     ["mistakes", "Lỗi thường gặp"], ["summary", "Tóm tắt"],
   ];
 
@@ -152,10 +160,23 @@ function LessonContent({ lang, id }) {
           <ul>{ch.objectives.map((x, i) => <li key={i}>{x}</li>)}</ul>
           <h4>Kiến thức cần có trước</h4>
           <ul>{ch.prerequisites.map((x, i) => <li key={i}>{x}</li>)}</ul>
+          {ch.references?.length > 0 && (
+            <><h4>Nguồn tham khảo và đọc thêm</h4>
+              <p>Nội dung tiếng Việt, bài tập và minh họa được biên soạn cho lộ trình này.</p>
+              <ul>{ch.references.map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul>
+            </>
+          )}
         </div>
       )}
       {tab === "theory" && <Theory items={ch.theory} />}
       {tab === "examples" && <Examples items={ch.examples} />}
+      {(tab === "practice" || tab === "advanced") && (
+        <section aria-label={tab === "advanced" ? "Bài tập nâng cao HSG" : "Bài luyện tập"}>
+          <p>Viết và chạy chương trình trên máy của em. Mở gợi ý khi cần, rồi đối chiếu lời giải sau khi tự làm.</p>
+          {(ch[tab] ?? []).map((problem) => <ProblemCard key={problem.id} problem={problem} />)}
+          {!ch[tab]?.length && <p>Chưa có bài tập trong phần này.</p>}
+        </section>
+      )}
       {tab === "quiz" && (
         <section aria-label="Quiz của chương">
           {questions.length === 0 ? <p>Chương này chưa có câu hỏi Quiz.</p> : (

@@ -33,7 +33,34 @@
       ],
       "code": "print(\"Hello, World!\")",
       "output": "Hello, World!",
-      "hsgNote": "Trong lập trình thi đấu, chương trình Python thường ngắn hơn C++ do không cần khai báo kiểu dữ liệu và không cần include thư viện cho các thao tác cơ bản."
+      "hsgNote": "Trong lập trình thi đấu, chương trình Python thường ngắn hơn C++ do không cần khai báo kiểu dữ liệu và không cần include thư viện cho các thao tác cơ bản.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Một script Python được thực thi theo thứ tự câu lệnh từ trên xuống. Khác C++ dạng thông thường, chương trình đơn giản không cần hàm main. Nhưng khi dự án lớn hơn, gom công việc vào solve giúp tách nhiệm vụ và tránh dùng quá nhiều biến toàn cục.",
+            "Thụt lề tạo khối lệnh trong Python, không chỉ để nhìn đẹp. Các câu sau if,for,def phải có thụt lề nhất quán. Lỗi cú pháp phải được sửa trước khi kiểm tra kết quả."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Tạo file .py và chọn Python 3.",
+            "Viết lệnh theo đúng thứ tự dữ liệu cần.",
+            "Chạy file và kiểm tra output."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không sao chép ngoặc nhọn hoặc dấu chấm phẩy như cấu trúc khối C++."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Python có bắt buộc main cho print đơn giản không?",
+        "answer": "Không. Câu lệnh ở cấp script được chạy trực tiếp."
+      }
     },
     {
       "id": "theory02",
@@ -50,7 +77,88 @@
         "Viết int a = 10 theo cú pháp C++.",
         "Cho rằng một biến Python luôn cố định kiểu dữ liệu.",
         "Dùng một biến với nhiều kiểu khác nhau khiến code khó đọc."
-      ]
+      ],
+      "visualization": {
+        "title": "Theo dõi biến sau từng lệnh",
+        "description": "Các ô là tên biến và giá trị, không phải sơ đồ địa chỉ bộ nhớ.",
+        "steps": [
+          {
+            "cells": [
+              {
+                "label": "a",
+                "value": "10",
+                "active": true
+              }
+            ],
+            "explanation": "Gán a=10.",
+            "title": "Khởi tạo"
+          },
+          {
+            "cells": [
+              {
+                "label": "a",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "name",
+                "value": "An",
+                "active": true
+              }
+            ],
+            "explanation": "Gán name=\"An\".",
+            "title": "Cập nhật biến"
+          },
+          {
+            "cells": [
+              {
+                "label": "a",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "name",
+                "value": "An",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3.14",
+                "active": true
+              }
+            ],
+            "explanation": "Gán x=3.14. Mỗi tên trỏ tới một đối tượng.",
+            "title": "Trạng thái cuối"
+          }
+        ]
+      },
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Tên biến là một liên kết tới đối tượng. a=10 tạo hoặc đổi liên kết a tới số 10. Không cần ghi kiểu trước tên, nhưng vẫn phải biết giá trị đang đại diện điều gì để dùng đúng phép toán.",
+            "Gán một số vào b từ a không khiến b tự đổi khi a được gán lại. Với list, hai tên có thể cùng trỏ một đối tượng, nên sửa đối tượng ảnh hưởng cả hai; điều này được học sâu ở chương mảng."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đặt tên theo ý nghĩa dữ liệu.",
+            "Gán trước lần đọc đầu tiên.",
+            "Theo dõi liên kết sau các phép gán."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Một tên chưa được gán mà đem đọc có thể gây NameError."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "a=10;b=a;a=20 thì b bằng bao nhiêu?",
+        "answer": "10, vì việc gán lại a không gán lại b."
+      }
     },
     {
       "id": "theory03",
@@ -62,7 +170,34 @@
       ],
       "code": "x = 10\nprint(type(x))\n\nx = \"hello\"\nprint(type(x))",
       "output": "<class 'int'>\n<class 'str'>",
-      "hsgNote": "Khả năng đổi kiểu không có nghĩa là nên tùy tiện dùng cùng một tên cho nhiều ý nghĩa khác nhau trong bài thi."
+      "hsgNote": "Khả năng đổi kiểu không có nghĩa là nên tùy tiện dùng cùng một tên cho nhiều ý nghĩa khác nhau trong bài thi.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Dynamic typing nghĩa là kiểu gắn với đối tượng lúc chạy, không bị cố định cho tên biến theo khai báo. type(x) trả kiểu của đối tượng đang được x tham chiếu. Đổi x từ int sang str hợp lệ nhưng các phép toán dùng được sẽ thay đổi.",
+            "Khả năng đổi kiểu giúp linh hoạt, song trong thuật toán nên giữ mỗi biến một vai trò rõ ràng. Nếu ban đầu n là số rồi đổi thành chuỗi, những chỗ cộng hoặc so sánh về sau có thể lỗi."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định kiểu dữ liệu sau nhập.",
+            "Dùng type khi cần kiểm tra trong quá trình học.",
+            "Tránh đổi cùng một tên sang kiểu khác nếu không có ý nghĩa rõ."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Python không tự coi \"3\"+2 là phép cộng số; kết hợp str với int theo cách đó gây lỗi."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "x=\"10\" có dùng x+1 để ra 11 không?",
+        "answer": "Không. Cần int(x)+1."
+      }
     },
     {
       "id": "theory04",
@@ -96,7 +231,34 @@
           "example": "True / False"
         }
       ],
-      "hsgNote": "List, tuple, set và dict sẽ được học ở các chương phù hợp sau. Chương này chỉ cần nắm chắc các kiểu nền tảng."
+      "hsgNote": "List, tuple, set và dict sẽ được học ở các chương phù hợp sau. Chương này chỉ cần nắm chắc các kiểu nền tảng.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "int biểu diễn số nguyên, float biểu diễn số thực gần đúng, str biểu diễn văn bản, bool biểu diễn đúng/sai. Chọn kiểu theo ý nghĩa dữ liệu, không theo hình thức chữ vừa đọc từ input.",
+            "Hai giá trị in trông giống nhau có thể khác kiểu: số 12 và chuỗi \"12\" có phép toán khác nhau. Cộng hai chuỗi là nối văn bản, còn cộng hai int là số học."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đọc ý nghĩa dữ liệu.",
+            "Chuyển input sang kiểu cần.",
+            "Kiểm tra phép toán phù hợp kiểu đó."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không dùng float cho số nguyên lớn cần chính xác chỉ vì viết được nhiều chữ số."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "\"12\"+\"3\" bằng gì?",
+        "answer": "Chuỗi \"123\", không phải số 15."
+      }
     },
     {
       "id": "theory05",
@@ -112,7 +274,34 @@
       "commonMistakes": [
         "Viết n = input() rồi sử dụng n như số nguyên.",
         "Quên chuyển kiểu trước khi làm phép toán số học."
-      ]
+      ],
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "input() đọc một dòng và trả str sau khi bỏ dấu xuống dòng kết thúc. Nó không tự biết một dòng chứa số hay văn bản. Nội dung có khoảng trắng bên trong vẫn được giữ.",
+            "Phải quyết định cách tách và chuyển kiểu ở bước tiếp. Một dòng \"3 5\" là một chuỗi; int(\"3 5\") không hợp lệ, còn split tạo hai token rồi có thể chuyển riêng."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định một dòng chứa những trường nào.",
+            "Đọc bằng input.",
+            "Giữ dạng str hoặc split/chuyển kiểu theo đề."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Nếu dòng trống có ý nghĩa, không bỏ qua tùy tiện."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "input đọc dòng 42 trả số 42 hay chuỗi?",
+        "answer": "Chuỗi; dùng int nếu cần số nguyên."
+      }
     },
     {
       "id": "theory06",
@@ -125,7 +314,34 @@
       ],
       "code": "n = int(input())",
       "exampleInput": "25",
-      "hsgNote": "Đây là mẫu nhập cơ bản nhất cần thuộc."
+      "hsgNote": "Đây là mẫu nhập cơ bản nhất cần thuộc.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "int(token) chuyển biểu diễn số nguyên thập phân hợp lệ sang int. Khoảng trắng quanh token có thể được xử lý, nhưng token số thực như \"3.5\" không phải biểu diễn số nguyên để int chuyển trực tiếp.",
+            "Chuyển input về int trước khi tính tránh nhầm nối chuỗi. Nếu bài đưa số nguyên thì không chuyển qua float trước, vì số lớn có thể mất chính xác ở bước trung gian."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đọc một dòng theo định dạng.",
+            "Dùng int cho token số nguyên.",
+            "Thử số âm,0 và giới hạn lớn."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "int(float(token)) không là cách an toàn cho mọi số nguyên dài."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Vì sao nên dùng int(input()) thay vì float rồi int khi đề là số nguyên lớn?",
+        "answer": "Bước float có thể làm tròn và mất chữ số trước khi chuyển lại."
+      }
     },
     {
       "id": "theory07",
@@ -140,7 +356,34 @@
       "code": "a, b = map(int, input().split())",
       "exampleInput": "10 25",
       "explanation": "input() tạo chuỗi '10 25'. split() tạo các chuỗi '10' và '25'. map(int, ...) chuyển chúng thành số nguyên, sau đó gán lần lượt cho a và b.",
-      "hsgNote": "Mẫu map(int, input().split()) xuất hiện rất thường xuyên trong competitive programming."
+      "hsgNote": "Mẫu map(int, input().split()) xuất hiện rất thường xuyên trong competitive programming.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "split() không tham số tách theo các khoảng trắng và bỏ các đoạn trống do nhiều dấu cách. map(int,tokens) tạo phép chuyển từng token sang số; unpack gán các kết quả theo thứ tự.",
+            "a,b=map(...) yêu cầu đúng hai giá trị. Nếu dòng chứa nhiều hoặc ít hơn, unpack báo lỗi. Đây là lời nhắc phải tuân thủ mô tả input, không phải lỗi ngẫu nhiên."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đọc dòng.",
+            "Tách token bằng split.",
+            "Chuyển từng token và gán đúng số trường."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không dùng split(\" \") nếu muốn bỏ qua nhiều khoảng trắng như split() mặc định."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Dòng có ba số có unpack vào a,b được không?",
+        "answer": "Không; cần ba biến hoặc lưu list tùy định dạng."
+      }
     },
     {
       "id": "theory08",
@@ -154,7 +397,34 @@
       "code": "a = list(map(int, input().split()))",
       "exampleInput": "1 5 2 8 3",
       "result": "[1, 5, 2, 8, 3]",
-      "hsgNote": "List sẽ được học kỹ hơn ở chương mảng và xâu. Hiện tại chỉ cần thuộc mẫu nhập."
+      "hsgNote": "List sẽ được học kỹ hơn ở chương mảng và xâu. Hiện tại chỉ cần thuộc mẫu nhập.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "list(map(int,input().split())) lưu toàn bộ các số trên một dòng. Dữ liệu có thể được duyệt nhiều lần, truy cập bằng chỉ số và sửa phần tử. Độ dài list là số token thật đọc được.",
+            "Nếu đề cho n số có thể nằm trên nhiều dòng, chỉ một input() không bảo đảm đủ n. Các ví dụ bài tập quy định n số trên một dòng; với định dạng linh hoạt cần bộ đọc token từ toàn input hoặc theo luồng."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đọc n nếu đề có.",
+            "Đọc đúng dòng chứa dãy và chuyển từng token.",
+            "Trong lúc tự kiểm tra, đối chiếu len(a) với n."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không suy ra list chắc chắn dài n chỉ vì đã đọc biến n trước đó."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "n=5 nhưng dòng chỉ có 3 số thì list dài bao nhiêu?",
+        "answer": "3. Cần đọc đủ input theo định dạng, không có hai số tự sinh thêm."
+      }
     },
     {
       "id": "theory09",
@@ -166,7 +436,34 @@
       ],
       "code": "a = 5\nb = 7\nprint(a, b)\nprint(a + b)",
       "output": "5 7\n12",
-      "hsgNote": "Trong hệ thống chấm tự động, không in các lời nhắc như 'Nhap n:' hoặc 'Ket qua:' nếu đề không yêu cầu."
+      "hsgNote": "Trong hệ thống chấm tự động, không in các lời nhắc như 'Nhap n:' hoặc 'Ket qua:' nếu đề không yêu cầu.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "print có thể nhận nhiều đối số và tự thêm dấu phân cách. print(a,b) khác print(a+b): một cách xuất hai trường, cách kia tính một kết quả rồi xuất. Mặc định cuối lệnh có newline.",
+            "Xuất đúng format là một phần lời giải. Đề yêu cầu mỗi kết quả trên một dòng thì đặt print trong vòng hoặc tạo các dòng; không in thêm lời nhắc trong online judge."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định output có mấy giá trị và mấy dòng.",
+            "Truyền các đối số theo thứ tự.",
+            "Chọn separator/end nếu khác mặc định."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Dấu + giữa chuỗi và int có thể lỗi; print có thể nhận riêng từng đối số."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "print(3,5) khác print(3+5) thế nào?",
+        "answer": "Một lệnh in \"3 5\", lệnh kia in \"8\"."
+      }
     },
     {
       "id": "theory10",
@@ -178,7 +475,34 @@
         "end"
       ],
       "code": "print(1, 2, 3, sep='-')\nprint('A', end=' ')\nprint('B')",
-      "output": "1-2-3\nA B"
+      "output": "1-2-3\nA B",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "sep điều khiển chuỗi ngăn giữa các đối số, end điều khiển phần được thêm sau lệnh print. print(1,2,sep=\",\") tạo \"1,2\"; end=\"\" bỏ newline nhưng không làm thay sep.",
+            "Cần phân biệt dấu ngăn giữa phần tử và ký tự kết thúc dòng. Khi xuất một dãy lớn, join các chuỗi rồi in một lần có thể giảm số lời gọi print nếu ràng buộc yêu cầu."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Chọn sep đúng định dạng.",
+            "Chọn end khi cần nối nhiều lần xuất.",
+            "Kiểm tra dấu phân cách cuối nếu đề yêu cầu chặt."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Bỏ newline bằng end không tự thêm dấu cách giữa hai lệnh print."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Hai lệnh print(1,end=\"\") rồi print(2) tạo gì?",
+        "answer": "\"12\" và newline ở cuối."
+      }
     },
     {
       "id": "theory11",
@@ -226,7 +550,34 @@
           "meaning": "Lũy thừa",
           "example": "5 ** 2 = 25"
         }
-      ]
+      ],
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Python có các toán tử +,-,*,/,//,%,**. Kiểu toán hạng và toán tử quyết định ý nghĩa, như + nối chuỗi nhưng cộng số. Dấu ngoặc giúp diễn tả thứ tự tính rõ ràng.",
+            "Phép gán s+=x cộng rồi gán lại; nó không tự tạo s nếu s chưa có. Bài công thức cần biết có muốn thương nguyên, thương thực hay lũy thừa trước khi chuyển ký hiệu sang code."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Viết công thức bằng toán học.",
+            "Chọn toán tử Python tương ứng.",
+            "Thử một giá trị có thể phân biệt các toán tử dễ nhầm."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "^ là XOR, không phải lũy thừa."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Muốn tính 2 mũ 3 dùng 2^3 hay 2**3?",
+        "answer": "2**3; 2^3 cho XOR bằng 1."
+      }
     },
     {
       "id": "theory12",
@@ -239,7 +590,34 @@
       "code": "print(5 / 2)\nprint(6 / 3)",
       "output": "2.5\n2.0",
       "cppComparison": "Trong C++, 5 / 2 với hai int cho 2. Trong Python, 5 / 2 cho 2.5.",
-      "hsgNote": "Đây là một trong những khác biệt cần nhớ nhất khi chuyển từ C++ sang Python."
+      "hsgNote": "Đây là một trong những khác biệt cần nhớ nhất khi chuyển từ C++ sang Python.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Phép / trả thương thực, kể cả khi hai toán hạng là int. 7/2 cho 3.5, khác // trả phần sàn. Chuyển phép toán sang số thực có thể mất độ chính xác nếu số nguyên rất lớn.",
+            "Nếu kết quả cần thương nguyên hoặc phần dư, dùng //,% thay vì / rồi int. int(a/b) còn có quy tắc bỏ phần thập phân về 0, khác // khi a/b âm."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định kết quả có cần phần thập phân.",
+            "Kiểm tra mẫu số khác 0.",
+            "Chỉ dùng / khi chấp nhận số thực gần đúng."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không dùng / trong công thức đếm nguyên lớn rồi ép lại int."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "7/2 và 7//2 khác nhau ra sao?",
+        "answer": "3.5 và 3."
+      }
     },
     {
       "id": "theory13",
@@ -251,7 +629,34 @@
       "code": "print(7 // 2)\nprint(-7 // 2)",
       "output": "3\n-4",
       "hsgNote": "Với số âm, // không đơn giản là bỏ phần thập phân. -7 / 2 = -3.5 nên floor là -4.",
-      "cppComparison": "Đây có thể khác phép chia số nguyên C++, vốn hướng kết quả về 0."
+      "cppComparison": "Đây có thể khác phép chia số nguyên C++, vốn hướng kết quả về 0.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Phép // lấy sàn của thương, tức số nguyên lớn nhất không vượt thương. Vì vậy -7//2=-4, không phải -3. Quy tắc này làm cách chia nguyên khác C++ khi thương âm.",
+            "Với số không âm, //10 loại chữ số cuối. Với số âm, không áp dụng máy móc quy trình tách chữ số vì số có thể không tiến về 0 như dự đoán. Chuẩn hóa dấu hoặc dùng chuỗi theo yêu cầu."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định dấu của toán hạng.",
+            "Áp dụng quy tắc lấy sàn.",
+            "Đối chiếu với modulo qua đẳng thức a=q*b+r."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "int(a/b) không luôn bằng a//b và còn có thể mất chính xác vì bước float."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Tại sao -7//2 không bằng -3?",
+        "answer": "Thương thật là -3.5; sàn là -4, còn -3 lớn hơn thương thật."
+      }
     },
     {
       "id": "theory14",
@@ -270,7 +675,34 @@
         "Xử lý chu kỳ.",
         "Các bài toán modulo ở mức nâng cao hơn."
       ],
-      "hsgNote": "Với số âm, Python có quy tắc modulo liên quan tới floor division. Khi bắt đầu học nên ưu tiên hiểu chắc trường hợp số không âm trước."
+      "hsgNote": "Với số âm, Python có quy tắc modulo liên quan tới floor division. Khi bắt đầu học nên ưu tiên hiểu chắc trường hợp số không âm trước.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Modulo Python đi cùng thương sàn: a=(a//b)*b+a%b. Khi b dương, phần dư thuộc [0,b-1], kể cả a âm. Ví dụ -7=(-4)*2+1 nên -7%2=1.",
+            "Khi b âm, phần dư có dấu theo b hoặc bằng 0. Các bài vòng tròn và modulo thường yêu cầu m>0 để có miền phần dư không âm thống nhất."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Kiểm tra b khác 0.",
+            "Chọn modulo dương khi cần chuẩn hóa chỉ số.",
+            "Dùng đẳng thức thương–dư để kiểm tra kết quả."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không áp dụng quy tắc dấu phần dư C++ sang Python với số âm."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với -7 và 2, thương sàn và dư là gì?",
+        "answer": "-4 và 1."
+      }
     },
     {
       "id": "theory15",
@@ -283,7 +715,34 @@
       "code": "print(2 ** 10)\nprint(10 ** 6)",
       "output": "1024\n1000000",
       "warning": "Dấu ^ KHÔNG phải phép lũy thừa trong Python.",
-      "hsgNote": "Đây là bẫy cực kỳ phổ biến. 10^9 không phải 10 mũ 9."
+      "hsgNote": "Đây là bẫy cực kỳ phổ biến. 10^9 không phải 10 mũ 9.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Toán tử ** tính lũy thừa. Với cơ số nguyên và số mũ nguyên không âm, kết quả là số nguyên có thể rất lớn. Số mũ âm thay bài toán sang số thực, nên cần đọc miền b trong đề.",
+            "Nếu chỉ cần phần dư, pow(a,b,m) tính lũy thừa theo modulo mà không tạo toàn bộ số a^b. Chương số học trình bày thuật toán nhị phân để hiểu cơ chế."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Phân biệt số mũ không âm hay âm.",
+            "Dùng ** cho kết quả đầy đủ vừa nhu cầu.",
+            "Dùng pow(a,b,m) hoặc thuật toán modulo khi chỉ cần dư."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "^ là XOR và thường cho kết quả nhỏ không liên quan lũy thừa."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "pow(2,10,100) có cần lưu số 1024 rồi mới lấy dư không?",
+        "answer": "Không cần theo cách đó; phép lũy thừa modulo giữ các kết quả trung gian theo modulo."
+      }
     },
     {
       "id": "theory16",
@@ -296,7 +755,34 @@
       ],
       "code": "x = 10 ** 100\nprint(x)",
       "hsgNote": "Python tránh được nhiều lỗi overflow số nguyên phổ biến của C++. Tuy nhiên phép toán trên số có hàng nghìn hoặc hàng triệu chữ số vẫn tốn thêm thời gian và bộ nhớ.",
-      "cppComparison": "C++ thường phải quan tâm int hay long long. Python int tự mở rộng để chứa số nguyên lớn."
+      "cppComparison": "C++ thường phải quan tâm int hay long long. Python int tự mở rộng để chứa số nguyên lớn.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "int Python không bị cố định ở 32 hay 64 bit; khi giá trị lớn hơn, đối tượng dùng nhiều bộ nhớ hơn. Điều này giảm lỗi tràn quen thuộc ở C++, nhưng không làm mọi phép tính có thời gian và bộ nhớ hằng số.",
+            "Độ dài bit ảnh hưởng chi phí cộng,nhân và đổi sang chuỗi. Python 3.11+ có giới hạn mặc định chuyển số nguyên sang chuỗi thập phân cho số rất dài; bài lũy thừa chương này có lời giải điều chỉnh theo giới hạn output đã cho."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Giữ số nguyên bằng int nếu cần chính xác.",
+            "Ước lượng số chữ số của kết quả lớn.",
+            "Kiểm tra yêu cầu xuất kết quả và thời gian chuyển đổi."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không chuyển sang float để “hỗ trợ số lớn”; float có thể mất độ chính xác."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Số lớn hơn 2^63-1 có làm int Python tự quay vòng không?",
+        "answer": "Không theo cách số nguyên cố định; nó dùng thêm bộ nhớ, nhưng vẫn có giới hạn tài nguyên thực tế."
+      }
     },
     {
       "id": "theory17",
@@ -308,7 +794,34 @@
       ],
       "code": "print(0.1 + 0.2)",
       "typicalOutput": "0.30000000000000004",
-      "hsgNote": "Không chuyển số nguyên lớn sang float nếu bài cần kết quả nguyên chính xác."
+      "hsgNote": "Không chuyển số nguyên lớn sang float nếu bài cần kết quả nguyên chính xác.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "float Python là số thực máy gần đúng, thường dùng biểu diễn nhị phân dấu phẩy động. Một phép toán rất nhỏ như 0.1+0.2 có thể không bằng đúng 0.3 theo so sánh máy.",
+            "Sai số có thể tích lũy qua nhiều bước hoặc xuất hiện khi trừ hai số rất gần nhau. Với bài số thực, tiêu chí gần bằng cần phù hợp thang giá trị và sai số cho phép; với bài đếm nguyên, hãy giữ int."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định bài cần số thực.",
+            "Chọn cách so sánh gần bằng phù hợp đề.",
+            "Chọn định dạng output độc lập với giá trị đang lưu."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Làm tròn khi in không sửa các phép so sánh sai trước đó."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Format .2f có làm số đang lưu trở nên chính xác đến 2 chữ số không?",
+        "answer": "Không. Nó chỉ tạo chuỗi trình bày đã làm tròn."
+      }
     },
     {
       "id": "theory18",
@@ -324,7 +837,34 @@
       "commonMistakes": [
         "Gọi int() với chuỗi không biểu diễn số nguyên hợp lệ.",
         "Dùng float cho bài toán cần số nguyên chính xác rất lớn."
-      ]
+      ],
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Ép kiểu gọi int,float,str để chuyển dữ liệu theo ý nghĩa. Không phải mọi đối tượng chuyển được: int(\"abc\") lỗi; int(\"3.5\") cũng không phải cách đọc số thực.",
+            "int từ float bỏ phần lẻ theo hướng về 0 với giá trị hợp lệ; khác // là sàn thương. Khi chuyển số nguyên dài từ input, dùng int trực tiếp để không đi qua float gần đúng."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định kiểu hiện tại và kiểu cần.",
+            "Kiểm tra biểu diễn có hợp lệ.",
+            "Chuyển trước phép tính cần kiểu mới."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không nhầm ép kiểu với format; str(x) tạo văn bản, không còn phép toán số học của x."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "int(-3.7) bằng gì?",
+        "answer": "-3, bỏ phần lẻ theo hướng về 0."
+      }
     },
     {
       "id": "theory19",
@@ -336,7 +876,34 @@
       ],
       "code": "c = '7'\nprint(type(c))\nprint(len(c))",
       "output": "<class 'str'>\n1",
-      "cppComparison": "C++ có char. Python dùng str cho cả chuỗi và một ký tự."
+      "cppComparison": "C++ có char. Python dùng str cho cả chuỗi và một ký tự.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Một ký tự trong Python thường được biểu diễn bằng str có độ dài 1. s[i] trả chuỗi một ký tự, không trả kiểu char riêng. Một số phép xử lý ký tự dùng các hàm str hoặc ord/chr.",
+            "Không phải mọi ký tự Unicode là một byte, và một hình người nhìn thấy có thể được tạo từ nhiều code point. Các ví dụ của chương dùng ASCII để chỉ số và chữ số dễ đối chiếu."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định bộ ký tự của bài.",
+            "Lấy s[i] trong miền chỉ số.",
+            "Dùng phép str hoặc chuyển mã khi thực sự cần."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không khai báo char theo cú pháp C++ trong Python."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "type(\"a\") và type(\"abc\") có khác nhau không?",
+        "answer": "Không. Cả hai đều str, chỉ khác độ dài."
+      }
     },
     {
       "id": "theory20",
@@ -349,7 +916,34 @@
       ],
       "code": "c = '7'\nx = int(c)\nprint(x)",
       "output": "7",
-      "cppComparison": "Trong C++ thường dùng c - '0'. Trong Python cách trực tiếp là int(c)."
+      "cppComparison": "Trong C++ thường dùng c - '0'. Trong Python cách trực tiếp là int(c).",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "int(c) chuyển ký tự chữ số hợp lệ thành số. Với bài chỉ cho ASCII 0..9, điều kiện \"0\"<=c<=\"9\" thể hiện đúng miền. Phép chuyển từ ký tự khác cần xử lý tùy định dạng.",
+            "Có thể dùng ord(c)-ord(\"0\") cho ASCII sau khi kiểm tra, nhưng int(c) dễ đọc. Đếm chữ số trong chuỗi khác tính tổng giá trị các chữ số, nên chọn phép cập nhật đúng."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Kiểm tra c thuộc miền chữ số theo bài.",
+            "Chuyển c sang giá trị nguyên.",
+            "Cộng hoặc xử lý giá trị số vừa có."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "ord(\"7\") là mã ký tự, không phải số 7."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "int(\"7\") và ord(\"7\") có cùng ý nghĩa không?",
+        "answer": "Không. Một hàm trả giá trị số 7, một hàm trả mã ký tự."
+      }
     },
     {
       "id": "theory21",
@@ -361,7 +955,34 @@
       ],
       "code": "a = 5\nb = 10\n\na, b = b, a\n\nprint(a, b)",
       "output": "10 5",
-      "cppComparison": "Không cần biến tạm hoặc std::swap."
+      "cppComparison": "Không cần biến tạm hoặc std::swap.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Gán nhiều biến đánh giá vế phải trước, rồi phân phối các kết quả cho các tên ở vế trái. Vì vậy a,b=b,a dùng hai giá trị cũ để hoán đổi, không cần biến tạm.",
+            "Trong a=b;b=a theo hai câu lệnh, câu đầu đã ghi mất a cũ nên câu sau không thực hiện hoán đổi. Quy tắc vế phải trước cũng giúp cập nhật hai biến DP cùng lúc mà vẫn đọc giá trị trước."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định các giá trị cũ cần dùng.",
+            "Đặt chúng ở vế phải của gán đồng thời.",
+            "Đối chiếu kết quả với bảng trước–sau."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Số phần tử khi unpack phải đúng với số tên nếu không dùng cú pháp mở rộng phù hợp."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "a=3,b=5; a,b=b,a tạo giá trị nào?",
+        "answer": "a=5,b=3."
+      }
     },
     {
       "id": "theory22",
@@ -373,7 +994,34 @@
       ],
       "code": "x = 5\nprint(x > 3)\nprint(x == 5)",
       "output": "True\nTrue",
-      "hsgNote": "Python viết True và False với chữ cái đầu viết hoa."
+      "hsgNote": "Python viết True và False với chữ cái đầu viết hoa.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "bool biểu diễn True hoặc False. So sánh x>3 tạo bool; có thể kết hợp bằng and,or,not. Python còn có truthiness của đối tượng, như list rỗng được coi là false trong điều kiện.",
+            "and/or ở Python có thể trả một toán hạng, không luôn tạo bool mới; trong những điều kiện đang học, dùng các so sánh tạo bool giúp ý nghĩa rõ hơn. Khi cần chuyển rõ giá trị sang đúng/sai, gọi bool(x)."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Viết điều kiện từ những mệnh đề đơn.",
+            "Gom bằng and/or theo yêu cầu.",
+            "Chọn output YES/NO thay vì dựa vào dạng in bool nếu đề quy định."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Dùng chữ thường true/false không là hằng bool Python."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "bool([]) và bool([0]) khác nhau thế nào?",
+        "answer": "False và True; list thứ hai không rỗng dù phần tử của nó là 0."
+      }
     },
     {
       "id": "theory23",
@@ -386,7 +1034,34 @@
       ],
       "code": "x = 10 / 3\nprint(f\"{x:.2f}\")",
       "output": "3.33",
-      "hsgNote": "Nếu đề yêu cầu chính xác k chữ số sau dấu thập phân, cần format output đúng yêu cầu."
+      "hsgNote": "Nếu đề yêu cầu chính xác k chữ số sau dấu thập phân, cần format output đúng yêu cầu.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "f-string chèn giá trị vào văn bản với format cụ thể. {x:.2f} biểu diễn hai chữ số sau dấu thập phân, kể cả số 0 cuối. Đó là bước trình bày cuối sau khi tính toán.",
+            "Không chuyển kết quả đã format về số chỉ để tiếp tục tính, vì chuỗi đã làm tròn. Giữ x gốc cho phép tính, chỉ tạo chuỗi khi xuất."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Tính giá trị x.",
+            "Chọn số chữ số theo yêu cầu đề.",
+            "Xuất bằng f-string, kiểm tra output mẫu."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không dùng round rồi mong luôn có đủ số 0 cuối khi in."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Vì sao .2f có thể in 2.00?",
+        "answer": "Vì format yêu cầu đúng hai chữ số sau dấu thập phân."
+      }
     },
     {
       "id": "theory24",
@@ -398,7 +1073,34 @@
       ],
       "code": "import sys\ninput = sys.stdin.readline\n\nn = int(input())",
       "template": "import sys\ninput = sys.stdin.readline\n\n# code here",
-      "hsgNote": "Có thể dùng template này cho bài có input lớn. Không cần hiểu sâu buffer ngay ở giai đoạn đầu."
+      "hsgNote": "Có thể dùng template này cho bài có input lớn. Không cần hiểu sâu buffer ngay ở giai đoạn đầu.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "sys.stdin.readline đọc một dòng từ stream và thường giữ newline ở cuối. Có thể dùng khi nhiều dòng input, nhưng khác biệt hiệu năng phụ thuộc dữ liệu và môi trường. Nó không thay đổi độ phức tạp thuật toán.",
+            "Khi đọc số, int hoặc split xử lý whitespace cuối. Khi đọc văn bản nguyên dòng, chỉ bỏ newline nếu đó không là dữ liệu; strip có thể xóa thêm dấu cách có ý nghĩa."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Import sys và chọn cách đọc nhất quán.",
+            "Dùng readline cho từng dòng đúng định dạng.",
+            "Chuyển token sang kiểu cần sau khi đọc."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Đọc toàn input bằng read có thể nhanh nhưng giữ toàn dữ liệu trong bộ nhớ; chọn theo giới hạn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "readline có tự trả int khi dòng chứa một số không?",
+        "answer": "Không. Nó vẫn trả chuỗi, cần int để chuyển."
+      }
     },
     {
       "id": "theory25",
@@ -410,7 +1112,34 @@
         "input"
       ],
       "code": "import sys\n\ns = sys.stdin.readline().strip()",
-      "hsgNote": "Khi đọc số rồi dùng int(), newline thường không gây vấn đề. Nhưng khi xử lý chuỗi trực tiếp, cần chú ý ký tự xuống dòng."
+      "hsgNote": "Khi đọc số rồi dùng int(), newline thường không gây vấn đề. Nhưng khi xử lý chuỗi trực tiếp, cần chú ý ký tự xuống dòng.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "strip bỏ ký tự whitespace ở cả hai đầu chuỗi, không chỉ newline. Vì vậy \"  abc  \".strip() thành \"abc\". Khoảng trắng giữa chuỗi được giữ.",
+            "Nếu bài xử lý nguyên văn khoảng trắng đầu/cuối, strip làm mất dữ liệu. Khi chỉ cần bỏ newline, rstrip(\"\n\") cụ thể hơn. Với dãy số, split thường đã xử lý khoảng trắng phù hợp."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Xác định khoảng trắng có thuộc dữ liệu không.",
+            "Chọn strip toàn whitespace hoặc chỉ bỏ newline.",
+            "Thử input có khoảng trắng ở đầu/cuối."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Đừng chuẩn hóa văn bản ngoài yêu cầu bài."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "strip có xóa dấu cách ở giữa \"a b\" không?",
+        "answer": "Không. Chỉ tác động hai đầu."
+      }
     },
     {
       "id": "theory26",
@@ -421,7 +1150,34 @@
         "template"
       ],
       "code": "import sys\ninput = sys.stdin.readline\n\n\ndef solve():\n    pass\n\n\nif __name__ == \"__main__\":\n    solve()",
-      "hsgNote": "Không bắt buộc phải dùng solve() ở giai đoạn đầu. Mục tiêu là giúp code có cấu trúc rõ ràng khi chương trình lớn hơn."
+      "hsgNote": "Không bắt buộc phải dùng solve() ở giai đoạn đầu. Mục tiêu là giúp code có cấu trúc rõ ràng khi chương trình lớn hơn.",
+      "sections": [
+        {
+          "title": "Giải thích chi tiết",
+          "paragraphs": [
+            "Template giúp thống nhất phần nhập và tổ chức solve. Hàm solve nên đọc đúng input, gọi phần tính toán và xuất đúng format. Không thêm một template quá phức tạp trước khi hiểu bài.",
+            "Nếu có nhiều test, cần khởi tạo lại trạng thái cho từng test và xem giới hạn tổng input. Tối ưu I/O có ích nhưng không thay việc chọn thuật toán và giữ đúng miền dữ liệu."
+          ]
+        },
+        {
+          "title": "Thực hành đúng trình tự",
+          "bullets": [
+            "Đọc định dạng: một test hay nhiều test.",
+            "Đặt tính toán vào solve khi thuận tiện.",
+            "Kiểm tra state khởi tạo và output ở mỗi test."
+          ]
+        },
+        {
+          "title": "Lỗi cần tránh",
+          "paragraphs": [
+            "Không giả định luôn có t ở dòng đầu; phải theo đề."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu đề không có số test, có được đọc dòng đầu làm t không?",
+        "answer": "Không. Làm vậy sẽ hiểu sai cấu trúc toàn bộ input."
+      }
     }
   ],
   "examples": [
@@ -633,7 +1389,7 @@
       "tags": [
         "division"
       ],
-      "question": "print(7 / 2) in ra gì?",
+      "question": "Chương trình sau in ra kết quả gì?",
       "choices": [
         "3",
         "3.0",
@@ -642,7 +1398,9 @@
       ],
       "answer": "3.5",
       "explanation": "/ là true division trong Python 3.",
-      "betterApproach": "Dùng // nếu cần floor division."
+      "betterApproach": "Dùng // nếu cần floor division.",
+      "code": "print(7 / 2)",
+      "runnable": true
     },
     {
       "id": "quiz04",
@@ -651,7 +1409,7 @@
       "tags": [
         "floor-division"
       ],
-      "question": "print(7 // 2) in ra gì?",
+      "question": "Chương trình sau in ra kết quả gì?",
       "choices": [
         "3",
         "3.5",
@@ -660,7 +1418,9 @@
       ],
       "answer": "3",
       "explanation": "7 / 2 = 3.5 và floor của 3.5 là 3.",
-      "betterApproach": "Phân biệt / với //."
+      "betterApproach": "Phân biệt / với //.",
+      "code": "print(7 // 2)",
+      "runnable": true
     },
     {
       "id": "quiz05",
@@ -670,7 +1430,7 @@
         "floor-division",
         "negative"
       ],
-      "question": "print(-7 // 2) in ra gì?",
+      "question": "Chương trình sau in ra kết quả gì?",
       "choices": [
         "-3",
         "-3.5",
@@ -679,7 +1439,9 @@
       ],
       "answer": "-4",
       "explanation": "// lấy floor. Floor của -3.5 là -4.",
-      "betterApproach": "Đừng hiểu // là đơn giản xóa phần thập phân."
+      "betterApproach": "Đừng hiểu // là đơn giản xóa phần thập phân.",
+      "code": "print(-7 // 2)",
+      "runnable": true
     },
     {
       "id": "quiz06",
@@ -707,7 +1469,7 @@
         "xor",
         "power"
       ],
-      "question": "print(2 ^ 3) in ra gì?",
+      "question": "Chương trình sau in ra kết quả gì?",
       "choices": [
         "8",
         "6",
@@ -716,7 +1478,9 @@
       ],
       "answer": "1",
       "explanation": "^ thực hiện XOR bit: 10 XOR 11 = 01.",
-      "betterApproach": "Muốn 2 mũ 3 phải viết 2 ** 3."
+      "betterApproach": "Muốn 2 mũ 3 phải viết 2 ** 3.",
+      "code": "print(2 ^ 3)",
+      "runnable": true
     },
     {
       "id": "quiz08",
@@ -762,7 +1526,7 @@
       "tags": [
         "swap"
       ],
-      "question": "Sau đoạn code a = 3; b = 5; a, b = b, a thì giá trị a và b là gì?",
+      "question": "Chương trình sau in ra kết quả gì?",
       "choices": [
         "3 5",
         "5 3",
@@ -771,7 +1535,9 @@
       ],
       "answer": "5 3",
       "explanation": "Tuple unpacking cho phép hoán đổi trực tiếp.",
-      "betterApproach": "Không cần biến tạm để swap trong Python."
+      "betterApproach": "Không cần biến tạm để swap trong Python.",
+      "code": "a = 3\nb = 5\na, b = b, a\nprint(a, b)",
+      "runnable": true
     },
     {
       "id": "quiz11",
@@ -836,7 +1602,9 @@
       "complexity": {
         "time": "Phụ thuộc số chữ số của a và b",
         "space": "Phụ thuộc số chữ số của kết quả"
-      }
+      },
+      "solutionCode": "a, b = map(int, input().split())\nprint(a + b)\nprint(a * b)",
+      "runnable": true
     },
     {
       "id": "practice02",
@@ -861,7 +1629,19 @@
       "complexity": {
         "time": "O(1) đối với miền dữ liệu thông thường",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "n = int(input())\nprint(n // 3600, n % 3600 // 60, n % 60)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "0",
+          "output": "0 0 0"
+        },
+        {
+          "input": "86399",
+          "output": "23 59 59"
+        }
+      ]
     },
     {
       "id": "practice03",
@@ -887,7 +1667,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "n = int(input())\nprint(n // 100, n // 10 % 10, n % 10)",
+      "runnable": true
     },
     {
       "id": "practice04",
@@ -913,7 +1695,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "a, b, c = map(int, input().split())\nprint(f\"{(a + b + c) / 3:.2f}\")",
+      "runnable": true
     },
     {
       "id": "practice05",
@@ -938,7 +1722,9 @@
       "complexity": {
         "time": "Phụ thuộc số chữ số của n",
         "space": "Phụ thuộc số chữ số của kết quả"
-      }
+      },
+      "solutionCode": "n = int(input())\nprint(n * (n + 1) // 2)",
+      "runnable": true
     },
     {
       "id": "practice06",
@@ -965,7 +1751,9 @@
       "complexity": {
         "time": "O(n)",
         "space": "O(n)"
-      }
+      },
+      "solutionCode": "n = int(input())\na = list(map(int, input().split()))\nprint(sum(a))",
+      "runnable": true
     }
   ],
   "advanced": [
@@ -988,12 +1776,14 @@
       "sampleOutput": "1267650600228229401496703205376",
       "hint": "Python sử dụng ** cho phép lũy thừa.",
       "answer": null,
-      "explanation": "Python int có thể lưu kết quả rất lớn.",
+      "explanation": "Python int có thể lưu kết quả rất lớn. Python 3.11+ giới hạn mặc định số chữ số khi đổi int thành chuỗi. Với ràng buộc bài này, tối đa khoảng 90001 chữ số; lời giải tăng giới hạn xuất lên 100000 để in kết quả. Python 3.11+ giới hạn mặc định số chữ số khi đổi int thành chuỗi. Với ràng buộc bài này, tối đa khoảng 90001 chữ số; lời giải tăng giới hạn xuất lên 100000 để in kết quả.",
       "betterApproach": "Đừng dùng ^ vì đó là XOR.",
       "complexity": {
         "time": "Phụ thuộc thuật toán lũy thừa và kích thước số",
         "space": "Phụ thuộc số chữ số của kết quả"
-      }
+      },
+      "solutionCode": "import sys\nif hasattr(sys, \"set_int_max_str_digits\"):\n    sys.set_int_max_str_digits(100000)\na, b = map(int, input().split())\nprint(a ** b)",
+      "runnable": true
     },
     {
       "id": "advanced02",
@@ -1021,7 +1811,9 @@
       "complexity": {
         "time": "O(1)",
         "space": "O(1)"
-      }
+      },
+      "solutionCode": "a, b = map(int, input().split())\nprint(a // b, a % b)",
+      "runnable": true
     },
     {
       "id": "advanced03",
@@ -1046,7 +1838,9 @@
       "complexity": {
         "time": "Phụ thuộc số chữ số của toán hạng",
         "space": "Phụ thuộc số chữ số của toán hạng và kết quả"
-      }
+      },
+      "solutionCode": "a = int(input())\nb = int(input())\nprint(a + b)\nprint(a * b)",
+      "runnable": true
     },
     {
       "id": "advanced04",
@@ -1058,15 +1852,17 @@
       ],
       "problem": "Một học sinh muốn đặt LIMIT = 10 mũ 9 và viết LIMIT = 10 ^ 9. Hãy xác định giá trị thực tế của biểu thức và sửa chương trình.",
       "inputDescription": "Không có input.",
-      "outputDescription": "Giải thích lỗi.",
+      "outputDescription": "Dòng 1: giá trị 10 ^ 9; dòng 2: giá trị đúng 10 ** 9.",
       "constraints": [],
       "sampleInput": "",
-      "sampleOutput": "",
+      "sampleOutput": "3\n1000000000",
       "hint": "^ là XOR bit.",
       "answer": null,
       "explanation": "10 ^ 9 bằng 3, không phải 1000000000. Cần viết 10 ** 9 hoặc 1_000_000_000.",
       "betterApproach": "Trong code competitive programming, cách viết 10**9 hoặc 1_000_000_000 đều rõ nghĩa.",
-      "complexity": null
+      "complexity": null,
+      "solutionCode": "print(10 ^ 9)\nprint(10 ** 9)",
+      "runnable": true
     }
   ],
   "commonMistakes": [
@@ -1170,5 +1966,15 @@
     "Khi input lớn có thể sử dụng sys.stdin.readline.",
     "Trong bài HSG, cú pháp Python ngắn hơn nhưng vẫn phải chú ý complexity vì Python thường có overhead thực thi cao hơn C++."
   ],
-  "language": "python"
+  "language": "python",
+  "references": [
+    {
+      "title": "GeeksforGeeks — Python Tutorial",
+      "url": "https://www.geeksforgeeks.org/python/python-programming-language-tutorial/"
+    },
+    {
+      "title": "Python documentation",
+      "url": "https://docs.python.org/3/tutorial/"
+    }
+  ]
 }

@@ -1,0 +1,665 @@
+{
+  "id": "ch03",
+  "language": "python",
+  "title": "Vòng lặp và mô phỏng",
+  "order": 3,
+  "description": "Chương 3 — Dùng for khi biết số lần lặp, while khi phụ thuộc điều kiện. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Dùng for khi biết số lần lặp, while khi phụ thuộc điều kiện.",
+    "Theo dõi biến tích lũy và bất biến vòng lặp.",
+    "Sử dụng break/continue đúng vị trí.",
+    "Mô phỏng quá trình mà không làm mất trạng thái."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 2 và tự chạy được ví dụ bằng Python 3."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. For và tổng tích lũy",
+      "content": "Vòng lặp tách một công việc thành các bước lặp giống nhau. Để cộng từ 1 đến n, bắt đầu tổng bằng 0 rồi cộng từng số. Sau bước i, bất biến là tổng đã chứa 1+...+i. Python range(1,n+1) không chứa n+1; C++ dùng i<=n để bao gồm n.",
+      "keywords": [
+        "loop",
+        "simulation"
+      ],
+      "code": "s = 0\nfor i in range(1, 5):\n    s += i\nprint(s)",
+      "output": "10",
+      "explanation": "Các tổng lần lượt 1,3,6,10.",
+      "visualization": {
+        "title": "Tổng lớn dần qua mỗi lượt",
+        "description": "Màu xanh đánh dấu số đang được thêm vào tổng s.",
+        "steps": [
+          {
+            "title": "Khởi tạo",
+            "explanation": "Chưa cộng số nào; tổng rỗng bằng 0.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "activeIndices": [],
+              "pointers": [],
+              "discardedIndices": []
+            }
+          },
+          {
+            "title": "Cộng 1",
+            "explanation": "Đã xử lý các số từ 1 đến 1. Tổng hiện tại là 1.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "s",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "activeIndices": [
+                0
+              ],
+              "pointers": [
+                {
+                  "index": 0,
+                  "label": "i"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "s = 0 + 1 = 1"
+          },
+          {
+            "title": "Cộng 2",
+            "explanation": "Đã xử lý các số từ 1 đến 2. Tổng hiện tại là 3.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "s",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "activeIndices": [
+                1
+              ],
+              "pointers": [
+                {
+                  "index": 1,
+                  "label": "i"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "s = 1 + 2 = 3"
+          },
+          {
+            "title": "Cộng 3",
+            "explanation": "Đã xử lý các số từ 1 đến 3. Tổng hiện tại là 6.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "s",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "activeIndices": [
+                2
+              ],
+              "pointers": [
+                {
+                  "index": 2,
+                  "label": "i"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "s = 3 + 3 = 6"
+          },
+          {
+            "title": "Cộng 4",
+            "explanation": "Đã xử lý các số từ 1 đến 4. Tổng hiện tại là 10.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "s",
+                "value": "10",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "activeIndices": [
+                3
+              ],
+              "pointers": [
+                {
+                  "index": 3,
+                  "label": "i"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "s = 6 + 4 = 10"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Biến tích lũy lưu kết quả của phần input đã xử lý. Trước khi cộng gì, tổng của tập rỗng bằng 0. Mỗi vòng chỉ thêm một giá trị mới, nên không được đặt tổng lại bằng 0 bên trong vòng.",
+            "Vòng for có ba phần về ý nghĩa: miền các giá trị, công việc cho mỗi giá trị và cách chuyển sang giá trị kế. Python range có đầu phải không lấy; C++ cho phép biểu diễn điều kiện i<n hoặc i<=n. Hãy viết ra dãy chỉ số thực tế thay vì đoán."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Khởi tạo tổng trước vòng lặp.",
+            "Chọn dãy i từ 1 đến n, xác định có lấy n hay không.",
+            "Cộng i vào tổng đúng một lần.",
+            "Sau vòng lặp, in tổng và thử n=0,1,4."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Bất biến: trước lượt i, s=1+...+(i-1). Sau s+=i, tổng trở thành 1+...+i. Khi hoàn tất n, s đúng bằng tổng cần tìm.",
+            "Áp dụng cho tổng, tích, đếm số phần tử và duyệt một số lượt biết trước."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Tổng khởi tạo 0 nhưng tích khởi tạo 1. Nếu đọc n số, vòng chạy n lần chứ không phải từ 1 đến n rồi thêm một lượt nữa."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu đặt s=0 bên trong for trước s+=i, kết quả cuối sẽ là gì?",
+        "answer": "Chỉ còn giá trị i của lượt cuối, vì mọi tổng trước đã bị xóa."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. While và tách chữ số",
+      "content": "While lặp khi điều kiện còn đúng. Với số nguyên dương n, n%10 lấy chữ số cuối và chia nguyên cho 10 loại chữ số đó. Mỗi bước phải tiến gần điều kiện dừng. Riêng n=0 có một chữ số là 0 dù vòng lặp không chạy.",
+      "keywords": [
+        "loop",
+        "simulation"
+      ],
+      "code": "n, s = 405, 0\nwhile n > 0:\n    s += n % 10\n    n //= 10\nprint(s)",
+      "output": "9",
+      "explanation": "Lấy 5,0,4; số giảm 405→40→4→0.",
+      "hsgNote": "Chỉ dùng quy tắc này trực tiếp cho n không âm. Quy tắc chia số âm khác giữa Python và C++.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Một vòng while không có số lượt cố định trong cú pháp. Ta cần xác định điều kiện còn tiếp tục và đại lượng tiến tới điểm dừng. Với tách chữ số, n là phần số chưa xử lý; nó giảm sau mỗi phép chia nguyên cho 10.",
+            "Việc lấy dư và chia là hai thao tác bổ sung: r=n%10 lấy phần bị bỏ, còn q=n//10 giữ phần chưa xử lý. Với số không âm, n=10q+r và 0<=r<10. Chữ số được lấy theo thứ tự từ phải sang trái, không phải thứ tự khi đọc số."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Lưu n vào biến tạm nếu còn cần giá trị ban đầu.",
+            "Lấy chữ số cuối bằng modulo 10.",
+            "Cập nhật kết quả theo chữ số vừa lấy.",
+            "Chia nguyên cho 10 và lặp đến khi phần còn lại bằng 0."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mỗi vòng xử lý đúng một chữ số và loại đúng chữ số đó. Số chữ số còn lại giảm, nên vòng dừng; tổng kết quả chứa tất cả chữ số đã loại.",
+            "Áp dụng cho tổng chữ số, đếm chữ số, đảo số và kiểm tra tính chất các chữ số."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "n=0 có một chữ số nhưng while n>0 không chạy. Tổng chữ số 0 vẫn đúng; bài đếm chữ số phải xử lý riêng. Số âm cần quy tắc rõ ràng trước khi áp dụng."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Tại sao tổng chữ số của 405 vẫn xét được chữ số 0 ở giữa?",
+        "answer": "Sau lượt lấy 5, n=40; modulo 10 ở lượt kế trả 0 và phép chia đưa n thành 4, nên chữ số 0 không bị bỏ qua."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Break và continue",
+      "content": "Break kết thúc vòng lặp gần nhất; continue bỏ phần còn lại của lượt hiện tại. Trong while, nếu continue xuất hiện trước cập nhật biến thì vòng lặp có thể không tiến lên. Trong vòng lặp lồng nhau, break không tự thoát cả hai vòng.",
+      "keywords": [
+        "loop",
+        "simulation"
+      ],
+      "code": "s = 0\nfor x in range(1, 7):\n    if x % 2 == 0:\n        continue\n    s += x\nprint(s)",
+      "output": "9",
+      "explanation": "Chỉ cộng 1,3,5.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Break và continue là hai lệnh thay đổi luồng điều khiển. Break bỏ cả những lượt còn lại của vòng gần nhất; continue chỉ bỏ phần câu lệnh còn lại của lượt hiện tại. Đừng dùng break khi chỉ muốn loại một phần tử.",
+            "Trong for theo miền hữu hạn, việc chuyển sang phần tử tiếp vẫn diễn ra khi continue. Trong while, chuyển trạng thái thường là lệnh tự viết trong thân; nếu nhảy qua lệnh đó, trạng thái có thể giữ nguyên mãi."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định một input xấu cần bỏ lượt hay cần dừng toàn quá trình.",
+            "Đặt continue trước phần chỉ dành cho input hợp lệ.",
+            "Đặt break khi đã có đủ bằng chứng kết luận hoặc tìm thấy kết quả.",
+            "Với vòng lồng, chỉ rõ break đang thoát vòng nào."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Bài cộng số lẻ đúng vì mỗi số chẵn bị bỏ riêng và mọi số lẻ đi đến lệnh cộng. Break khi gặp số chẵn sẽ làm các số lẻ ở phía sau không được xét.",
+            "Áp dụng cho tìm phần tử đầu thỏa, lọc input và dừng sớm phép kiểm tra."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Trong while, cập nhật chỉ số phải xảy ra cả ở nhánh continue. Break không tự thoát cả hàm; nếu cần thoát hàm có thể dùng return với thiết kế phù hợp."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Muốn cộng số lẻ trong cả dãy, gặp số chẵn nên break hay continue?",
+        "answer": "Continue. Số lẻ vẫn có thể xuất hiện phía sau số chẵn."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Mô phỏng và tối ưu bằng công thức",
+      "content": "Mô phỏng đúng thường là điểm khởi đầu tốt: cập nhật đúng thứ tự và ghi bảng trạng thái. Nhưng tổng 1+...+n có thể tính bằng n(n+1)/2, tránh n lượt lặp. Đánh giá ràng buộc trước khi chọn mô phỏng; một thuật toán đúng vẫn có thể quá chậm.",
+      "keywords": [
+        "loop",
+        "simulation"
+      ],
+      "code": "n = 100\nprint(n * (n + 1) // 2)",
+      "output": "5050",
+      "explanation": "Ghép cặp đầu-cuối có tổng n+1; có n/2 cặp theo nghĩa đại số.",
+      "hsgNote": "Với n<=10^9, tích n(n+1) nằm trong long long. Với giới hạn lớn hơn phải phân tích tràn trước khi nhân.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Mô phỏng mô tả chính xác quá trình bằng trạng thái và các bước chuyển. Trước khi tối ưu, một mô phỏng nhỏ có thể giúp hiểu bài và làm oracle. Nhưng không phải quá trình có n bước thì chương trình bắt buộc chạy n bước.",
+            "Tổng 1..n có cấu trúc đối xứng: viết hai bản tổng ngược nhau, từng cặp có tổng n+1. Cộng hai bản tạo n(n+1), nên một bản bằng n(n+1)/2. Công thức được suy ra từ cấu trúc chứ không phải từ việc thử vài giá trị."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Viết một mô phỏng đúng trên input nhỏ.",
+            "Tìm phép ghép cặp hoặc đại lượng được bảo toàn.",
+            "Suy ra công thức và kiểm tra miền giá trị trung gian.",
+            "So sánh công thức với mô phỏng ở nhiều n nhỏ trước khi chạy n lớn."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mỗi số từ 1 đến n xuất hiện đúng một lần trong mỗi bản tổng; ghép các vị trí tương ứng không làm mất hoặc thêm số.",
+            "Áp dụng cho tổng cấp số cộng, bài đếm có quy luật và chu kỳ đơn giản."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Đừng dùng số thực cho kết quả nguyên lớn. Phép chia phải phù hợp tính chất chia hết và kiểu số; tích trung gian cũng phải nằm trong miền cho phép."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Vì sao n=10^9 làm vòng lặp không phù hợp, nhưng công thức vẫn nhanh?",
+        "answer": "Vòng lặp cần một tỷ lượt; công thức có số phép toán cố định. Vẫn cần kiểu số đủ chứa kết quả và tích trung gian."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "For và tổng tích lũy",
+      "description": "Vòng lặp tách một công việc thành các bước lặp giống nhau. Để cộng từ 1 đến n, bắt đầu tổng bằng 0 rồi cộng từng số. Sau bước i, bất biến là tổng đã chứa 1+...+i. Python range(1,n+1) không chứa n+1; C++ dùng i<=n để bao gồm n.",
+      "difficulty": "intermediate",
+      "code": "s = 0\nfor i in range(1, 5):\n    s += i\nprint(s)",
+      "input": null,
+      "output": "10",
+      "explanation": "Các tổng lần lượt 1,3,6,10.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "While và tách chữ số",
+      "description": "While lặp khi điều kiện còn đúng. Với số nguyên dương n, n%10 lấy chữ số cuối và chia nguyên cho 10 loại chữ số đó. Mỗi bước phải tiến gần điều kiện dừng. Riêng n=0 có một chữ số là 0 dù vòng lặp không chạy.",
+      "difficulty": "intermediate",
+      "code": "n, s = 405, 0\nwhile n > 0:\n    s += n % 10\n    n //= 10\nprint(s)",
+      "input": null,
+      "output": "9",
+      "explanation": "Lấy 5,0,4; số giảm 405→40→4→0.",
+      "complexity": {
+        "time": "O(log n)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Chỉ dùng quy tắc này trực tiếp cho n không âm. Quy tắc chia số âm khác giữa Python và C++.",
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Break và continue",
+      "description": "Break kết thúc vòng lặp gần nhất; continue bỏ phần còn lại của lượt hiện tại. Trong while, nếu continue xuất hiện trước cập nhật biến thì vòng lặp có thể không tiến lên. Trong vòng lặp lồng nhau, break không tự thoát cả hai vòng.",
+      "difficulty": "intermediate",
+      "code": "s = 0\nfor x in range(1, 7):\n    if x % 2 == 0:\n        continue\n    s += x\nprint(s)",
+      "input": null,
+      "output": "9",
+      "explanation": "Chỉ cộng 1,3,5.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Mô phỏng và tối ưu bằng công thức",
+      "description": "Mô phỏng đúng thường là điểm khởi đầu tốt: cập nhật đúng thứ tự và ghi bảng trạng thái. Nhưng tổng 1+...+n có thể tính bằng n(n+1)/2, tránh n lượt lặp. Đánh giá ràng buộc trước khi chọn mô phỏng; một thuật toán đúng vẫn có thể quá chậm.",
+      "difficulty": "advanced",
+      "code": "n = 100\nprint(n * (n + 1) // 2)",
+      "input": null,
+      "output": "5050",
+      "explanation": "Ghép cặp đầu-cuối có tổng n+1; có n/2 cặp theo nghĩa đại số.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Với n<=10^9, tích n(n+1) nằm trong long long. Với giới hạn lớn hơn phải phân tích tràn trước khi nhân.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "range(2,6) trong Python, hoặc i=2; i<6 trong C++, tạo mấy lượt?",
+      "choices": [
+        "6",
+        "4",
+        "5",
+        "3"
+      ],
+      "answer": "4",
+      "explanation": "Các giá trị 2,3,4,5.",
+      "betterApproach": "Ghi rõ biên có được lấy hay không.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "loop",
+        "simulation"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Một vòng lặp while có thể không dừng khi nào?",
+      "choices": [
+        "Biến điều kiện không tiến về trạng thái dừng",
+        "Luôn có break",
+        "Biến giảm và bị chặn dưới",
+        "Có hữu hạn phần tử"
+      ],
+      "answer": "Biến điều kiện không tiến về trạng thái dừng",
+      "explanation": "Điều kiện có thể giữ nguyên mãi.",
+      "betterApproach": "Theo dõi đại lượng giảm hoặc tăng có giới hạn.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "loop",
+        "simulation"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Tổng 1 đến n với n<=10^9 nên tính bằng cách nào?",
+      "choices": [
+        "Lặp n lần",
+        "Dùng float rồi làm tròn",
+        "Đệ quy n tầng",
+        "Công thức với số nguyên đủ lớn"
+      ],
+      "answer": "Công thức với số nguyên đủ lớn",
+      "explanation": "Công thức O(1), giữ kết quả nguyên chính xác.",
+      "betterApproach": "Kiểm tra miền giá trị của cả tích trung gian.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "loop",
+        "simulation"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "loop",
+        "simulation",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "s = 0\nfor i in range(1, 5):\n    s += i\nprint(s)",
+      "choices": [
+        "0",
+        "10",
+        "Không có output",
+        "Lỗi chạy chương trình"
+      ],
+      "answer": "10",
+      "explanation": "Các tổng lần lượt 1,3,6,10.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "loop",
+        "simulation",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "n, s = 405, 0\nwhile n > 0:\n    s += n % 10\n    n //= 10\nprint(s)",
+      "choices": [
+        "9",
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0"
+      ],
+      "answer": "9",
+      "explanation": "Lấy 5,0,4; số giảm 405→40→4→0.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Tổng chữ số",
+      "problem": "Cho số nguyên không âm n, tính tổng các chữ số thập phân.",
+      "inputDescription": "Một số n.",
+      "outputDescription": "Tổng chữ số.",
+      "constraints": [
+        "0 <= n <= 10^18"
+      ],
+      "sampleInput": "405",
+      "sampleOutput": "9",
+      "hint": "Lấy chữ số cuối rồi bỏ nó.",
+      "explanation": "Mỗi chữ số được lấy đúng một lần; n=0 cho tổng 0.",
+      "complexity": {
+        "time": "O(số chữ số)",
+        "space": "O(1)"
+      },
+      "betterApproach": "Nếu input quá dài để chứa trong long long, đọc dạng chuỗi ở chương chuỗi.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "loop",
+        "simulation"
+      ],
+      "answer": null,
+      "solutionCode": "n = int(input())\ns = 0\nwhile n:\n    s += n % 10\n    n //= 10\nprint(s)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "0",
+          "output": "0"
+        },
+        {
+          "input": "1000000000000000000",
+          "output": "1"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Đếm số chữ số của một giai thừa nhỏ",
+      "problem": "Cho n, tính n! rồi đếm số chữ số thập phân. Bài này giới hạn n<=20 để phép tính nguyên 64 bit có dấu còn chứa được kết quả.",
+      "inputDescription": "Một số nguyên n.",
+      "outputDescription": "Số chữ số của n!.",
+      "constraints": [
+        "0 <= n <= 20"
+      ],
+      "sampleInput": "5",
+      "sampleOutput": "3",
+      "hint": "0!=1. Sau khi tính giai thừa, chia cho 10 để đếm chữ số.",
+      "explanation": "Dùng vòng lặp tính tích và vòng lặp đếm. 5!=120 có 3 chữ số; 20! vẫn nhỏ hơn giới hạn long long.",
+      "complexity": {
+        "time": "O(n + số chữ số)",
+        "space": "O(số chữ số) ở Python, O(1) ở C++"
+      },
+      "betterApproach": "Với n rất lớn, không nhân giai thừa trong 64 bit; cần kỹ thuật khác và kiểm soát sai số nếu dùng logarit.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "loop",
+        "simulation"
+      ],
+      "answer": null,
+      "solutionCode": "n = int(input())\nf = 1\nfor i in range(2, n + 1):\n    f *= i\nprint(len(str(f)))",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "0",
+          "output": "1"
+        },
+        {
+          "input": "20",
+          "output": "19"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Sai biên range hoặc dấu <=",
+      "fix": "Thử n=0,1 và n nhỏ nhất."
+    },
+    {
+      "mistake": "Khởi tạo tích bằng 0",
+      "fix": "Khởi tạo tích bằng 1, tổng bằng 0."
+    }
+  ],
+  "chapterSummary": [
+    "Mỗi vòng lặp cần trạng thái đầu, cập nhật và điều kiện dừng.",
+    "Bất biến giải thích vì sao kết quả đúng.",
+    "Thay mô phỏng bằng công thức khi có chứng minh."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Vòng lặp và mô phỏng",
+      "url": "https://www.geeksforgeeks.org/cpp/cpp-loops/"
+    },
+    {
+      "title": "Tài liệu Python chính thức",
+      "url": "https://docs.python.org/3/tutorial/"
+    }
+  ]
+}
