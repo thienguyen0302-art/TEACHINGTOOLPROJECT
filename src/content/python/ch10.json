@@ -1,0 +1,746 @@
+{
+  "id": "ch10",
+  "language": "python",
+  "title": "Tổng tiền tố và mảng hiệu",
+  "order": 10,
+  "description": "Chương 10 — Trả lời tổng đoạn sau tiền xử lý. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Trả lời tổng đoạn sau tiền xử lý.",
+    "Thống nhất chỉ số 1-based cho truy vấn.",
+    "Dùng mảng hiệu cho cập nhật hàng loạt.",
+    "Đếm đoạn có tổng cho trước bằng prefix và map/dict."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 9 và tự chạy được ví dụ bằng Python 3."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Prefix sum biến nhiều lần cộng thành phép trừ",
+      "content": "Đặt p[0]=0 và p[i]=a[0]+...+a[i-1]. Khi truy vấn theo vị trí 1-based [l,r], tổng là p[r]-p[l-1]. Tiền xử lý O(n), mỗi truy vấn O(1). Sentinel p[0] tránh nhánh riêng cho đoạn bắt đầu từ 1.",
+      "keywords": [
+        "prefix-sum",
+        "difference-array"
+      ],
+      "code": "a = [2, -1, 4, 3]\np = [0]\nfor x in a:\n    p.append(p[-1] + x)\nprint(p[4] - p[1])",
+      "output": "6",
+      "explanation": "Đoạn vị trí 2..4 là -1+4+3=6.",
+      "visualization": {
+        "title": "Xây prefix rồi trừ hai mốc",
+        "description": "Hàng p lưu tổng số phần tử đầu; dấu · biểu thị ô chưa tính.",
+        "steps": [
+          {
+            "title": "Prefix rỗng",
+            "explanation": "p[0]=0; các ô còn lại chưa được tính.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "tổng",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "p[i]",
+                  0,
+                  "·",
+                  "·",
+                  "·",
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  1
+                ]
+              ]
+            }
+          },
+          {
+            "title": "Tính p[1]",
+            "explanation": "Cộng phần tử 2 vào prefix trước, được tổng 2.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "tổng",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "p[i]",
+                  0,
+                  2,
+                  "·",
+                  "·",
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  2
+                ]
+              ]
+            },
+            "formula": "p[1] = 0 + (2) = 2"
+          },
+          {
+            "title": "Tính p[2]",
+            "explanation": "Cộng phần tử -1 vào prefix trước, được tổng 1.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "-1",
+                "active": true
+              },
+              {
+                "label": "tổng",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "p[i]",
+                  0,
+                  2,
+                  1,
+                  "·",
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  3
+                ]
+              ]
+            },
+            "formula": "p[2] = 2 + (-1) = 1"
+          },
+          {
+            "title": "Tính p[3]",
+            "explanation": "Cộng phần tử 4 vào prefix trước, được tổng 5.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "tổng",
+                "value": "5",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "p[i]",
+                  0,
+                  2,
+                  1,
+                  5,
+                  "·"
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  4
+                ]
+              ]
+            },
+            "formula": "p[3] = 1 + (4) = 5"
+          },
+          {
+            "title": "Tính p[4]",
+            "explanation": "Cộng phần tử 3 vào prefix trước, được tổng 8.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "tổng",
+                "value": "8",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "p[i]",
+                  0,
+                  2,
+                  1,
+                  5,
+                  8
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  5
+                ]
+              ]
+            },
+            "formula": "p[4] = 5 + (3) = 8"
+          },
+          {
+            "title": "Trả lời đoạn 2..4",
+            "explanation": "Tổng 4 phần tử đầu là 8; bỏ phần trước vị trí 2 là 2, còn 6.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "Output",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  "i",
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  "p[i]",
+                  0,
+                  2,
+                  1,
+                  5,
+                  8
+                ]
+              ],
+              "activeCells": [
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  5
+                ]
+              ]
+            },
+            "formula": "p[4] - p[1] = 8 - 2 = 6"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Prefix chuyển nhiều tổng đoạn thành tái sử dụng các tổng đã tính. Hãy hiểu p[i] là tổng i phần tử đầu, nên p[0] biểu diễn dãy rỗng. Định nghĩa theo số lượng phần tử làm chỉ số p không trùng hoàn toàn với chỉ số a.",
+            "Để lấy một đoạn, lấy tổng đến đầu phải rồi bỏ phần nằm trước đầu trái. Khi vị trí truy vấn dùng 1-based, công thức p[r]-p[l-1]; nếu chỉ số a dùng 0-based và đoạn đóng [l,r], công thức p[r+1]-p[l]. Cần chọn một quy ước trước khi code."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Tạo p dài n+1 và đặt p[0]=0.",
+            "Cập nhật p[i+1]=p[i]+a[i].",
+            "Chuyển truy vấn sang quy ước đã chọn.",
+            "Trừ đúng hai prefix, thử đoạn một phần tử và cả dãy."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mọi phần tử trước đoạn xuất hiện một lần dương và một lần âm trong hiệu, nên triệt tiêu. Mỗi phần tử trong đoạn chỉ xuất hiện ở prefix đầu phải.",
+            "Áp dụng cho tổng đoạn trên dữ liệu không thay đổi hoặc tổng sau một lần tiền xử lý."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Nếu cập nhật một a[i], các prefix phía sau có thể đổi hết; công thức O(1) truy vấn không biến prefix thành cấu trúc cập nhật O(1)."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với chỉ số a từ 0, tổng a[0..0] dùng hai ô p nào?",
+        "answer": "p[1]-p[0], không phải p[0]-p[-1]."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Mảng hiệu ghi thay đổi ở biên",
+      "content": "Muốn cộng v cho [l,r] nhiều lần rồi lấy kết quả cuối, đánh dấu d[l]+=v và d[r+1]-=v. Quét tổng tiền tố trên d để khôi phục giá trị. Đây là cách dời công việc từ mọi ô trong đoạn sang hai biên; không dùng được trực tiếp khi cần trả lời trạng thái đầy đủ sau từng cập nhật.",
+      "keywords": [
+        "prefix-sum",
+        "difference-array"
+      ],
+      "code": "n = 5\nd = [0] * (n + 2)\nl, r, v = 2, 4, 3\nd[l] += v\nd[r + 1] -= v\ncur = 0\na = []\nfor i in range(1, n + 1):\n    cur += d[i]\n    a.append(cur)\nprint(*a)",
+      "output": "0 3 3 3 0",
+      "explanation": "Tăng ở 2, triệt tiêu sau 4 tại 5.",
+      "hsgNote": "Nếu đề cập nhật và hỏi online xen kẽ, cần cấu trúc khác; chương này chỉ xử lý offline.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Mảng hiệu lưu nơi mức cộng thay đổi, không lưu trực tiếp giá trị ở mọi vị trí. Cộng v từ l làm ảnh hưởng bắt đầu, trừ v tại r+1 làm ảnh hưởng kết thúc. Hai mốc thay thế việc viết v vào mọi ô của đoạn.",
+            "Nhiều cập nhật có thể chồng nhau vì các mức thay đổi được cộng tuyến tính. Khi quét trái sang phải, tổng các mốc đã đi qua bằng tổng ảnh hưởng của những cập nhật đang phủ vị trí hiện tại."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Khởi tạo d có chỗ cho chỉ số n+1.",
+            "Mỗi cập nhật d[l]+=v,d[r+1]-=v.",
+            "Sau mọi cập nhật, quét cur+=d[i].",
+            "Lấy cur làm mức tăng ở i, hoặc cộng vào giá trị gốc nếu d chỉ lưu phần tăng."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Với một cập nhật, tổng mốc bằng 0 trước l, bằng v từ l đến r, rồi về 0 sau r. Cộng các cập nhật giữ tính đúng vì phép cộng có thể tách từng cập nhật.",
+            "Áp dụng cho cập nhật hàng loạt rồi xuất kết quả cuối: lượng phủ, cộng điểm theo khoảng và phân bổ số lượng."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Nếu cần hỏi kết quả sau từng cập nhật, việc khôi phục cả dãy mỗi lần lại tốn O(n). Đừng ghi d[r]-=v vì sẽ kết thúc ảnh hưởng quá sớm."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Cập nhật [1,n] cần ô d[n+1] để làm gì?",
+        "answer": "Đánh dấu ảnh hưởng kết thúc ngay sau dãy; ô này không được xuất nhưng cần cấp phát để cập nhật hợp lệ."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Đếm đoạn có tổng k, kể cả số âm",
+      "content": "Với prefix p[j], đoạn kết thúc ở j có tổng k khi prefix trước bằng p[j]-k. Lưu số lần xuất hiện của prefix đã thấy trong dict/map. Bắt đầu freq[0]=1 để đếm đoạn từ đầu. Phải cộng vào đáp án trước khi thêm prefix hiện tại, nếu không sẽ đếm đoạn rỗng khi k=0.",
+      "keywords": [
+        "prefix-sum",
+        "difference-array"
+      ],
+      "code": "a, k = [1, -1, 1], 1\nfreq = {0: 1}\np = ans = 0\nfor x in a:\n    p += x\n    ans += freq.get(p - k, 0)\n    freq[p] = freq.get(p, 0) + 1\nprint(ans)",
+      "output": "3",
+      "explanation": "Hai đoạn đơn [1] và đoạn toàn dãy có tổng 1.",
+      "hsgNote": "Số đoạn có thể là n(n+1)/2, nên ans dùng long long. Số âm không phá phương pháp prefix-map.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Mọi tổng đoạn có thể biểu diễn bằng hiệu hai prefix. Gọi p là tổng đến vị trí hiện tại; muốn tổng đoạn bằng k thì prefix trước đầu đoạn phải bằng p-k. Vì có thể nhiều prefix bằng nhau, cần đếm tần suất chứ không chỉ ghi có/không.",
+            "freq[0]=1 đại diện prefix rỗng trước phần tử đầu. Khi đọc x, tăng p, cộng freq[p-k] vào đáp án, sau đó mới thêm p vào bảng. Thứ tự này giữ mọi prefix trong bảng có vị trí thật sự trước đầu phải hiện tại."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Khởi tạo p=0,ans=0,freq[0]=1.",
+            "Đọc x và cập nhật p+=x.",
+            "Cộng số prefix cũ bằng p-k.",
+            "Tăng freq[p] và tiếp tục."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mỗi prefix cũ phù hợp tương ứng một đầu trái duy nhất của đoạn kết thúc hiện tại. Mỗi đoạn được đếm đúng một lần tại đầu phải, nên không trùng và không thiếu.",
+            "Áp dụng được với số âm, số 0 và số dương; không cần tính đơn điệu của tổng."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Dùng set thay cho bảng tần suất sẽ thiếu đoạn khi các prefix trùng. Thêm p trước truy vấn sẽ đếm đoạn rỗng khi k=0."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Với [0,0] và k=0, vì sao đáp án là 3 thay vì 2?",
+        "answer": "Có hai đoạn dài 1 và một đoạn dài 2. Prefix 0 xuất hiện nhiều lần, mỗi vị trí cũ tạo một đầu trái khác."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Prefix sum biến nhiều lần cộng thành phép trừ",
+      "description": "Đặt p[0]=0 và p[i]=a[0]+...+a[i-1]. Khi truy vấn theo vị trí 1-based [l,r], tổng là p[r]-p[l-1]. Tiền xử lý O(n), mỗi truy vấn O(1). Sentinel p[0] tránh nhánh riêng cho đoạn bắt đầu từ 1.",
+      "difficulty": "intermediate",
+      "code": "a = [2, -1, 4, 3]\np = [0]\nfor x in a:\n    p.append(p[-1] + x)\nprint(p[4] - p[1])",
+      "input": null,
+      "output": "6",
+      "explanation": "Đoạn vị trí 2..4 là -1+4+3=6.",
+      "complexity": {
+        "time": "O(n) tạo prefix; O(1) truy vấn",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Mảng hiệu ghi thay đổi ở biên",
+      "description": "Muốn cộng v cho [l,r] nhiều lần rồi lấy kết quả cuối, đánh dấu d[l]+=v và d[r+1]-=v. Quét tổng tiền tố trên d để khôi phục giá trị. Đây là cách dời công việc từ mọi ô trong đoạn sang hai biên; không dùng được trực tiếp khi cần trả lời trạng thái đầy đủ sau từng cập nhật.",
+      "difficulty": "intermediate",
+      "code": "n = 5\nd = [0] * (n + 2)\nl, r, v = 2, 4, 3\nd[l] += v\nd[r + 1] -= v\ncur = 0\na = []\nfor i in range(1, n + 1):\n    cur += d[i]\n    a.append(cur)\nprint(*a)",
+      "input": null,
+      "output": "0 3 3 3 0",
+      "explanation": "Tăng ở 2, triệt tiêu sau 4 tại 5.",
+      "complexity": {
+        "time": "O(n+q)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Nếu đề cập nhật và hỏi online xen kẽ, cần cấu trúc khác; chương này chỉ xử lý offline.",
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Đếm đoạn có tổng k, kể cả số âm",
+      "description": "Với prefix p[j], đoạn kết thúc ở j có tổng k khi prefix trước bằng p[j]-k. Lưu số lần xuất hiện của prefix đã thấy trong dict/map. Bắt đầu freq[0]=1 để đếm đoạn từ đầu. Phải cộng vào đáp án trước khi thêm prefix hiện tại, nếu không sẽ đếm đoạn rỗng khi k=0.",
+      "difficulty": "advanced",
+      "code": "a, k = [1, -1, 1], 1\nfreq = {0: 1}\np = ans = 0\nfor x in a:\n    p += x\n    ans += freq.get(p - k, 0)\n    freq[p] = freq.get(p, 0) + 1\nprint(ans)",
+      "input": null,
+      "output": "3",
+      "explanation": "Hai đoạn đơn [1] và đoạn toàn dãy có tổng 1.",
+      "complexity": {
+        "time": "O(n) kỳ vọng Python dict; O(n log n) C++ map",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Số đoạn có thể là n(n+1)/2, nên ans dùng long long. Số âm không phá phương pháp prefix-map.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Với p[i] là tổng i phần tử đầu, tổng vị trí 1-based [l,r] là gì?",
+      "choices": [
+        "p[r]+p[l]",
+        "p[l-1]-p[r]",
+        "p[r]-p[l-1]",
+        "p[r]-p[l]"
+      ],
+      "answer": "p[r]-p[l-1]",
+      "explanation": "Loại tổng trước l khỏi tổng đến r.",
+      "betterApproach": "Viết định nghĩa prefix trước khi suy công thức.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "prefix-sum",
+        "difference-array"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Cộng v vào [l,r] bằng mảng hiệu cần trừ v ở đâu?",
+      "choices": [
+        "n",
+        "r+1",
+        "r",
+        "l"
+      ],
+      "answer": "r+1",
+      "explanation": "Mọi ô đến r vẫn phải nhận v.",
+      "betterApproach": "Cấp phát thêm ô n+1 để cập nhật biên cuối.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "prefix-sum",
+        "difference-array"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Đếm đoạn tổng k với số âm nên chọn gì?",
+      "choices": [
+        "Prefix và map tần suất",
+        "Cửa sổ chỉ tăng giảm theo tổng như số dương",
+        "Luôn lấy cả dãy",
+        "Sort dãy trước"
+      ],
+      "answer": "Prefix và map tần suất",
+      "explanation": "Thứ tự cần giữ nguyên; prefix làm việc được với số âm.",
+      "betterApproach": "Không sort khi đề hỏi đoạn liên tiếp của dãy gốc.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "prefix-sum",
+        "difference-array"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "prefix-sum",
+        "difference-array",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "a = [2, -1, 4, 3]\np = [0]\nfor x in a:\n    p.append(p[-1] + x)\nprint(p[4] - p[1])",
+      "choices": [
+        "Lỗi chạy chương trình",
+        "0",
+        "6",
+        "Không có output"
+      ],
+      "answer": "6",
+      "explanation": "Đoạn vị trí 2..4 là -1+4+3=6.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "prefix-sum",
+        "difference-array",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "n = 5\nd = [0] * (n + 2)\nl, r, v = 2, 4, 3\nd[l] += v\nd[r + 1] -= v\ncur = 0\na = []\nfor i in range(1, n + 1):\n    cur += d[i]\n    a.append(cur)\nprint(*a)",
+      "choices": [
+        "0",
+        "0 3 3 3 0",
+        "Không có output",
+        "Lỗi chạy chương trình"
+      ],
+      "answer": "0 3 3 3 0",
+      "explanation": "Tăng ở 2, triệt tiêu sau 4 tại 5.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Tổng đoạn nhiều truy vấn",
+      "problem": "Cho dãy và q truy vấn [l,r], in tổng mỗi đoạn.",
+      "inputDescription": "n q; dòng n số; q dòng l r theo vị trí 1-based.",
+      "outputDescription": "q dòng tổng.",
+      "constraints": [
+        "1 <= n,q <= 200000",
+        "|a[i]| <= 10^9",
+        "1 <= l <= r <= n"
+      ],
+      "sampleInput": "4 2\n2 -1 4 3\n2 4\n1 1",
+      "sampleOutput": "6\n2",
+      "hint": "Tiền xử lý một bảng prefix.",
+      "explanation": "Mỗi phần tử ngoài đoạn l..r xuất hiện trong cả hai tổng và bị triệt tiêu.",
+      "complexity": {
+        "time": "O(n+q)",
+        "space": "O(n)"
+      },
+      "betterApproach": "C++ cần long long cho tổng, dù từng a[i] vừa int.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "prefix-sum",
+        "difference-array"
+      ],
+      "answer": null,
+      "solutionCode": "n, q = map(int, input().split())\na = list(map(int, input().split()))\np = [0]\nfor x in a:\n    p.append(p[-1] + x)\nfor _ in range(q):\n    l, r = map(int, input().split())\n    print(p[r] - p[l - 1])",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "3 2\n-1 -2 -3\n1 3\n2 2",
+          "output": "-6\n-2"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Đếm đoạn tổng k",
+      "problem": "Đếm số đoạn liên tiếp không rỗng có tổng đúng k.",
+      "inputDescription": "n k; dòng n số nguyên.",
+      "outputDescription": "Số đoạn.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "|a[i]| <= 10^9",
+        "|k| <= 10^14"
+      ],
+      "sampleInput": "3 1\n1 -1 1",
+      "sampleOutput": "3",
+      "hint": "Cần biết đã có bao nhiêu prefix bằng p-k.",
+      "explanation": "Mỗi đoạn được đếm đúng một lần tại đầu phải. freq chỉ chứa các prefix trước đầu phải nên không có đoạn rỗng.",
+      "complexity": {
+        "time": "O(n) kỳ vọng Python; O(n log n) C++",
+        "space": "O(n)"
+      },
+      "betterApproach": "Không dùng hai con trỏ theo tổng nếu dãy có số âm.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "prefix-sum",
+        "difference-array"
+      ],
+      "answer": null,
+      "solutionCode": "n, k = map(int, input().split())\na = list(map(int, input().split()))\nfreq = {0: 1}\np = ans = 0\nfor x in a:\n    p += x\n    ans += freq.get(p - k, 0)\n    freq[p] = freq.get(p, 0) + 1\nprint(ans)",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "3 0\n0 0 0",
+          "output": "6"
+        },
+        {
+          "input": "1 1\n1",
+          "output": "1"
+        },
+        {
+          "input": "6 -3\n3 -2 3 0 -2 -1",
+          "output": "2"
+        },
+        {
+          "input": "4 3\n0 -2 1 1",
+          "output": "0"
+        },
+        {
+          "input": "1 1\n0",
+          "output": "0"
+        },
+        {
+          "input": "7 3\n-2 -1 1 3 -3 -3 0",
+          "output": "2"
+        },
+        {
+          "input": "2 2\n-1 0",
+          "output": "0"
+        },
+        {
+          "input": "1 3\n-3",
+          "output": "0"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Quên p[0]=0",
+      "fix": "Khởi tạo sentinel và freq[0]=1 khi đếm đoạn."
+    },
+    {
+      "mistake": "Thêm prefix hiện tại quá sớm",
+      "fix": "Truy vấn freq trước rồi mới tăng tần suất."
+    }
+  ],
+  "chapterSummary": [
+    "Prefix phù hợp dữ liệu tĩnh.",
+    "Mảng hiệu tối ưu cập nhật offline.",
+    "Map prefix đếm đoạn tổng k cả khi có số âm."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Tổng tiền tố và mảng hiệu",
+      "url": "https://www.geeksforgeeks.org/dsa/prefix-sum-array-implementation-applications-competitive-programming/"
+    },
+    {
+      "title": "Tài liệu Python chính thức",
+      "url": "https://docs.python.org/3/tutorial/"
+    },
+    {
+      "title": "Algorithms for Competitive Programming — đọc thêm thuật toán",
+      "url": "https://cp-algorithms.com/"
+    }
+  ]
+}

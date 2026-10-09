@@ -1,0 +1,619 @@
+{
+  "id": "ch02",
+  "language": "cpp",
+  "title": "Điều kiện và biểu thức logic",
+  "order": 2,
+  "description": "Chương 2 — Viết nhánh if/else để phân loại dữ liệu. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Viết nhánh if/else để phân loại dữ liệu.",
+    "Phối hợp điều kiện bằng AND, OR và NOT.",
+    "Hiểu short-circuit và tránh phép chia cho 0.",
+    "Kiểm tra biên và phân chia các trường hợp không chồng lấn."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 1 và tự chạy được ví dụ bằng C++17."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Rẽ nhánh là chọn đường đi",
+      "content": "Một điều kiện được đánh giá thành đúng hoặc sai. Với chuỗi if–else if–else, chương trình chỉ chạy nhánh đầu tiên đúng. Sắp xếp điều kiện từ cụ thể đến tổng quát và dùng dấu ngoặc hoặc thụt lề để thể hiện phạm vi của nhánh.",
+      "keywords": [
+        "condition",
+        "logic"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int x = -3;\n    if (x > 0)\n        cout << \"DUONG\";\n    else if (x == 0)\n        cout << \"KHONG\";\n    else\n        cout << \"AM\";\n}",
+      "output": "AM",
+      "explanation": "x > 0 sai, x == 0 sai, nên chương trình đi vào else.",
+      "visualization": {
+        "title": "Một giá trị, một đường đi",
+        "description": "Theo dõi x=-3; một chuỗi if chỉ chạy nhánh đầu tiên đúng.",
+        "steps": [
+          {
+            "title": "Đọc dữ liệu",
+            "explanation": "Giá trị ban đầu x=-3; chưa đánh giá điều kiện.",
+            "cells": [
+              {
+                "label": "x",
+                "value": "-3",
+                "active": true
+              }
+            ],
+            "flow": [
+              {
+                "label": "x > 0",
+                "value": "Chưa xét"
+              },
+              {
+                "label": "x == 0",
+                "value": "Chưa xét"
+              },
+              {
+                "label": "else",
+                "value": "Chưa xét"
+              }
+            ]
+          },
+          {
+            "title": "Kiểm tra dương",
+            "explanation": "-3 không lớn hơn 0. Bỏ nhánh số dương và chuyển sang điều kiện kế.",
+            "cells": [
+              {
+                "label": "x",
+                "value": "-3",
+                "active": false
+              },
+              {
+                "label": "x > 0",
+                "value": "Sai",
+                "active": true
+              }
+            ],
+            "flow": [
+              {
+                "label": "x > 0",
+                "value": "Sai",
+                "active": true
+              },
+              {
+                "label": "x == 0",
+                "value": "Chưa xét"
+              },
+              {
+                "label": "else",
+                "value": "Chưa xét"
+              }
+            ],
+            "formula": "-3 > 0 → false"
+          },
+          {
+            "title": "Kiểm tra bằng 0",
+            "explanation": "-3 khác 0, nên điều kiện thứ hai cũng sai. Không có điều kiện riêng cho else.",
+            "cells": [
+              {
+                "label": "x",
+                "value": "-3",
+                "active": false
+              },
+              {
+                "label": "x == 0",
+                "value": "Sai",
+                "active": true
+              }
+            ],
+            "flow": [
+              {
+                "label": "x > 0",
+                "value": "Sai"
+              },
+              {
+                "label": "x == 0",
+                "value": "Sai",
+                "active": true
+              },
+              {
+                "label": "else",
+                "value": "Chưa xét"
+              }
+            ],
+            "formula": "-3 == 0 → false"
+          },
+          {
+            "title": "Chọn nhánh else",
+            "explanation": "Hai nhánh trước đều không phù hợp; xuất AM.",
+            "cells": [
+              {
+                "label": "x",
+                "value": "-3",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "AM",
+                "active": true
+              }
+            ],
+            "flow": [
+              {
+                "label": "x > 0",
+                "value": "Sai"
+              },
+              {
+                "label": "x == 0",
+                "value": "Sai"
+              },
+              {
+                "label": "else",
+                "value": "AM",
+                "active": true
+              }
+            ]
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Hãy hình dung chương trình đang đứng trước các cửa. Mỗi cửa có một câu hỏi trả lời đúng hoặc sai; kết quả quyết định câu lệnh nào được chạy. Điều kiện không tự thay đổi dữ liệu, trừ khi trong biểu thức có một thao tác cập nhật được viết rõ.",
+            "Chuỗi if–else if khác với nhiều if độc lập. Một chuỗi chỉ chọn nhánh đầu tiên đúng, trong khi nhiều if có thể chạy nhiều khối. Vì vậy phân loại điểm giỏi/khá/trung bình nên dùng một chuỗi theo ngưỡng giảm dần; thực hiện nhiều yêu cầu độc lập thì có thể dùng nhiều if."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định các nhóm kết quả cần phân biệt và thứ tự kiểm tra.",
+            "Viết điều kiện cụ thể hơn trước, rồi mới tới điều kiện bao quát.",
+            "Gom các lệnh của cùng một nhánh bằng ngoặc nhọn hoặc thụt lề.",
+            "Thử ít nhất một input cho mỗi nhánh và input đúng tại ngưỡng."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Một phép phân loại đúng khi mọi input hợp lệ đi vào một nhóm đúng. Với dấu của x, ba điều kiện x>0, x=0 và x<0 không giao nhau và bao phủ toàn bộ số nguyên.",
+            "Áp dụng cho tính phí theo ngưỡng, xếp loại, kiểm tra hợp lệ và xử lý trường hợp đặc biệt trước thuật toán chính."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Nếu kiểm tra x>=0 trước x==0 trong cùng chuỗi, nhánh riêng cho 0 không bao giờ chạy. Trong C++, đặt dấu chấm phẩy ngay sau if kết thúc câu lệnh điều kiện trước khối mong muốn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Hai if liên tiếp kiểm tra x>0 rồi x>3 có thể cùng chạy khi x=5 không?",
+        "answer": "Có. Hai if độc lập được đánh giá riêng; nếu muốn chỉ chọn một nhánh thì dùng if/else if."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Ghép điều kiện và khoảng giá trị",
+      "content": "AND yêu cầu cả hai mệnh đề đúng; OR chỉ cần một mệnh đề đúng; NOT đảo giá trị logic. Kiểm tra x thuộc [l,r] bằng l <= x AND x <= r. Trong C++ không viết l <= x <= r vì kết quả so sánh đầu là bool; Python hỗ trợ so sánh nối tiếp nhưng dạng AND giúp đối chiếu hai ngôn ngữ.",
+      "keywords": [
+        "condition",
+        "logic"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int x = 8;\n    cout << ((3 <= x && x <= 10) ? \"TRONG\" : \"NGOAI\");\n}",
+      "output": "TRONG",
+      "explanation": "8 không nhỏ hơn 3 và không lớn hơn 10.",
+      "hsgNote": "Khi kiểm tra hình chữ nhật, mỗi tọa độ có hai biên. Viết đủ bốn điều kiện và thử điểm nằm đúng trên cạnh.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Một biểu thức logic là sự kết hợp của những mệnh đề nhỏ. Có thể lập bảng bốn trường hợp cho hai mệnh đề A,B: AND chỉ đúng ở trường hợp cả hai đúng; OR sai chỉ khi cả hai sai. NOT đổi đúng thành sai và ngược lại.",
+            "Điều kiện thuộc đoạn là giao của hai miền: x>=l và x<=r. Điều kiện ở ngoài đoạn là hợp của x<l hoặc x>r. Đây cũng là ví dụ định luật De Morgan: phủ định của A AND B bằng NOT A OR NOT B."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Chia điều kiện dài thành các mệnh đề có tên hoặc có ngoặc.",
+            "Xác định đang cần giao các yêu cầu hay chỉ cần một yêu cầu.",
+            "Viết rõ lấy biên hay không: < khác <=.",
+            "Đối chiếu điều kiện bên trong và bên ngoài bằng vài giá trị cụ thể."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nếu x ở trong đoạn thì cả hai biên đều đúng. Nếu một biên sai, x chắc chắn ở ngoài; điều này chứng minh hai cách kiểm tra là bù nhau.",
+            "Áp dụng cho giới hạn tọa độ, dữ liệu hợp lệ, miền chỉ số và bài chia trường hợp nhiều ràng buộc."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không chuyển câu văn có chữ “và” thành OR theo thói quen. Đừng dựa vào thứ tự ưu tiên toán tử khi biểu thức dài: dùng ngoặc để thể hiện ý định."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Phủ định của 2<=x AND x<=9 là điều kiện nào?",
+        "answer": "x<2 OR x>9. Hai đầu 2 và 9 vẫn thuộc miền bên trong nên không dùng <= hoặc >= ở miền ngoài."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Short-circuit bảo vệ phép tính",
+      "content": "Với AND, nếu vế trái sai thì vế phải không được đánh giá. Với OR, nếu vế trái đúng thì vế phải không được đánh giá. Hãy đặt điều kiện an toàn trước phép tính có thể lỗi; đây là cách ngăn chia cho 0 hoặc truy cập ngoài mảng.",
+      "keywords": [
+        "condition",
+        "logic"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int a = 12, b = 0;\n    if (b != 0 && a % b == 0)\n        cout << \"CHIA HET\";\n    else\n        cout << \"KHONG HOP LE\";\n}",
+      "output": "KHONG HOP LE",
+      "explanation": "b != 0 sai nên a % b không được thực hiện.",
+      "hsgNote": "Không thay AND logic bằng toán tử bit: dấu & có ý nghĩa khác và không bảo đảm short-circuit.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Short-circuit là quy tắc đánh giá biểu thức, không chỉ là mẹo viết code ngắn. Vế trái của AND có thể quyết định toàn bộ kết quả mà không cần vế phải; OR có quy tắc đối xứng. Đặt phép kiểm tra an toàn trước phép sử dụng dữ liệu.",
+            "Với truy cập mảng, hãy kiểm tra i<n trước a[i]. Với phép chia hoặc modulo, hãy kiểm tra mẫu khác 0 trước. Khi nhiều thao tác có phụ thuộc, sắp chúng theo thứ tự mà mỗi điều kiện bảo vệ điều kiện sau."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Liệt kê thao tác có thể không hợp lệ: chia, truy cập hoặc gọi hàm trên giá trị thiếu.",
+            "Đặt điều kiện bảo vệ ở bên trái của AND.",
+            "Dùng các biểu thức không có tác dụng phụ khi học và khi kiểm chứng.",
+            "Thử trường hợp bảo vệ sai để xác nhận thao tác sau được bỏ qua."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nếu mẫu bằng 0, điều kiện đầu sai và biểu thức AND đã được xác định là sai. Phép chia không cần và không được đánh giá, vì vậy lỗi được tránh.",
+            "Áp dụng cho điều kiện dừng vòng lặp, quét chuỗi đến cuối, kiểm tra phần tử tồn tại và các phép tính có miền xác định."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Đảo thứ tự hai vế có thể làm chương trình lỗi trước khi được bảo vệ. AND/OR logic khác các toán tử bit &,|; không thay thế chỉ vì nhìn giống nhau."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Điều kiện a[i]==x AND i<n có an toàn khi i=n không?",
+        "answer": "Không. Truy cập a[i] xảy ra trước. Phải kiểm tra i<n rồi mới đọc a[i]."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Phân tích trường hợp và kiểm tra biên",
+      "content": "Để xác định ba độ dài có tạo tam giác, trước tiên yêu cầu tất cả dương. Sau khi sắp xếp a <= b <= c, chỉ cần a+b>c. Điều kiện bằng nhau tạo đoạn thẳng, không tạo tam giác. Với số nguyên lớn có thể viết a > c-b sau khi xác nhận dương để tránh tràn tổng.",
+      "keywords": [
+        "condition",
+        "logic"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<long long> a = {3, 4, 7};\n    sort(a.begin(), a.end());\n    cout << (a[0] > 0 && a[0] > a[2] - a[1] ? \"YES\" : \"NO\");\n}",
+      "output": "NO",
+      "explanation": "3+4=7 nên không thỏa bất đẳng thức tam giác nghiêm ngặt.",
+      "hsgNote": "Một lời giải HSG cần liệt kê trường hợp biên và chứng minh các trường hợp bao phủ toàn bộ input.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Kiểm tra biên là xem điều gì xảy ra tại điểm chuyển từ hợp lệ sang không hợp lệ. Với tam giác, biên là tổng hai cạnh bằng cạnh còn lại. Hình lúc đó bị ép thành một đoạn thẳng, nên phép so sánh phải nghiêm ngặt.",
+            "Sắp xếp ba cạnh giúp giảm số điều kiện. Nếu a<=b<=c và a>0, thì a+c>b và b+c>a tự động đúng. Chỉ còn a+b>c cần kiểm tra. Khi miền số lớn, biến đổi đẳng thức trước khi tính còn giúp tránh biểu thức trung gian vượt kiểu số."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác nhận độ dài dương nếu đề không bảo đảm.",
+            "Sắp xếp hoặc tìm cạnh lớn nhất.",
+            "Kiểm tra a>c-b thay cho a+b>c với a<=b<=c.",
+            "Thử cạnh bằng nhau, tam giác suy biến và ba cạnh rất lớn."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Với cạnh dương và c lớn nhất, hai bất đẳng thức còn lại không thể sai. So sánh a>c-b tương đương a+b>c trong số học nguyên chính xác và c-b không âm.",
+            "Áp dụng cách phân tích tương tự cho giao đoạn, hình chữ nhật và bài phân loại nghiệm."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không đổi > thành >= để “lấy thêm biên”. Mỗi bài phải xác định biên được chấp nhận hay không; cũng không nên chuyển số nguyên sang float chỉ để tránh tràn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Ba cạnh 1,1,2 khác ba cạnh 1,1,1 ở đâu?",
+        "answer": "Bộ 1,1,2 nằm đúng biên suy biến và không hợp lệ; bộ 1,1,1 thỏa tổng hai cạnh nhỏ lớn hơn cạnh lớn."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Rẽ nhánh là chọn đường đi",
+      "description": "Một điều kiện được đánh giá thành đúng hoặc sai. Với chuỗi if–else if–else, chương trình chỉ chạy nhánh đầu tiên đúng. Sắp xếp điều kiện từ cụ thể đến tổng quát và dùng dấu ngoặc hoặc thụt lề để thể hiện phạm vi của nhánh.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int x = -3;\n    if (x > 0)\n        cout << \"DUONG\";\n    else if (x == 0)\n        cout << \"KHONG\";\n    else\n        cout << \"AM\";\n}",
+      "input": null,
+      "output": "AM",
+      "explanation": "x > 0 sai, x == 0 sai, nên chương trình đi vào else.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Ghép điều kiện và khoảng giá trị",
+      "description": "AND yêu cầu cả hai mệnh đề đúng; OR chỉ cần một mệnh đề đúng; NOT đảo giá trị logic. Kiểm tra x thuộc [l,r] bằng l <= x AND x <= r. Trong C++ không viết l <= x <= r vì kết quả so sánh đầu là bool; Python hỗ trợ so sánh nối tiếp nhưng dạng AND giúp đối chiếu hai ngôn ngữ.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int x = 8;\n    cout << ((3 <= x && x <= 10) ? \"TRONG\" : \"NGOAI\");\n}",
+      "input": null,
+      "output": "TRONG",
+      "explanation": "8 không nhỏ hơn 3 và không lớn hơn 10.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Khi kiểm tra hình chữ nhật, mỗi tọa độ có hai biên. Viết đủ bốn điều kiện và thử điểm nằm đúng trên cạnh.",
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Short-circuit bảo vệ phép tính",
+      "description": "Với AND, nếu vế trái sai thì vế phải không được đánh giá. Với OR, nếu vế trái đúng thì vế phải không được đánh giá. Hãy đặt điều kiện an toàn trước phép tính có thể lỗi; đây là cách ngăn chia cho 0 hoặc truy cập ngoài mảng.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int a = 12, b = 0;\n    if (b != 0 && a % b == 0)\n        cout << \"CHIA HET\";\n    else\n        cout << \"KHONG HOP LE\";\n}",
+      "input": null,
+      "output": "KHONG HOP LE",
+      "explanation": "b != 0 sai nên a % b không được thực hiện.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Không thay AND logic bằng toán tử bit: dấu & có ý nghĩa khác và không bảo đảm short-circuit.",
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Phân tích trường hợp và kiểm tra biên",
+      "description": "Để xác định ba độ dài có tạo tam giác, trước tiên yêu cầu tất cả dương. Sau khi sắp xếp a <= b <= c, chỉ cần a+b>c. Điều kiện bằng nhau tạo đoạn thẳng, không tạo tam giác. Với số nguyên lớn có thể viết a > c-b sau khi xác nhận dương để tránh tràn tổng.",
+      "difficulty": "advanced",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<long long> a = {3, 4, 7};\n    sort(a.begin(), a.end());\n    cout << (a[0] > 0 && a[0] > a[2] - a[1] ? \"YES\" : \"NO\");\n}",
+      "input": null,
+      "output": "NO",
+      "explanation": "3+4=7 nên không thỏa bất đẳng thức tam giác nghiêm ngặt.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Một lời giải HSG cần liệt kê trường hợp biên và chứng minh các trường hợp bao phủ toàn bộ input.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Điều kiện nào kiểm tra x thuộc đoạn [2,9] trong cả hai ngôn ngữ?",
+      "choices": [
+        "x > 2 AND x < 9",
+        "x == 2 AND x == 9",
+        "x >= 2 AND x <= 9",
+        "x >= 2 OR x <= 9"
+      ],
+      "answer": "x >= 2 AND x <= 9",
+      "explanation": "Cả hai biên phải cùng thỏa và được lấy dấu bằng.",
+      "betterApproach": "Thử x=2, x=9 và x=10 trước khi nộp.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "condition",
+        "logic"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Để tránh chia cho 0, thứ tự kiểm tra an toàn là gì?",
+      "choices": [
+        "Dùng OR với b khác 0",
+        "b khác 0 trước khi tính a % b",
+        "Tính a % b trước",
+        "Chỉ kiểm tra a khác 0"
+      ],
+      "answer": "b khác 0 trước khi tính a % b",
+      "explanation": "AND short-circuit bỏ qua phép modulo khi b=0.",
+      "betterApproach": "Kiểm tra điều kiện bảo vệ trước thao tác nguy hiểm.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "condition",
+        "logic"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Ba cạnh 2,3,5 có tạo tam giác không?",
+      "choices": [
+        "Không, vì 2+3=5",
+        "Có, vì các cạnh dương",
+        "Có, vì 2+3>=5",
+        "Không, vì cạnh phải bằng nhau"
+      ],
+      "answer": "Không, vì 2+3=5",
+      "explanation": "Tổng hai cạnh nhỏ phải lớn hơn cạnh lớn.",
+      "betterApproach": "Phân biệt > với >= trong điều kiện hình học.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "condition",
+        "logic"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "condition",
+        "logic",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int x = -3;\n    if (x > 0)\n        cout << \"DUONG\";\n    else if (x == 0)\n        cout << \"KHONG\";\n    else\n        cout << \"AM\";\n}",
+      "choices": [
+        "Lỗi chạy chương trình",
+        "0",
+        "AM",
+        "Không có output"
+      ],
+      "answer": "AM",
+      "explanation": "x > 0 sai, x == 0 sai, nên chương trình đi vào else.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "condition",
+        "logic",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int x = 8;\n    cout << ((3 <= x && x <= 10) ? \"TRONG\" : \"NGOAI\");\n}",
+      "choices": [
+        "0",
+        "TRONG",
+        "Không có output",
+        "Lỗi chạy chương trình"
+      ],
+      "answer": "TRONG",
+      "explanation": "8 không nhỏ hơn 3 và không lớn hơn 10.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Phân loại số nguyên",
+      "problem": "Cho số nguyên x, in DUONG, AM hoặc KHONG theo dấu của x.",
+      "inputDescription": "Một số nguyên x.",
+      "outputDescription": "Một từ DUONG, AM hoặc KHONG.",
+      "constraints": [
+        "-10^9 <= x <= 10^9"
+      ],
+      "sampleInput": "-7",
+      "sampleOutput": "AM",
+      "hint": "Tách ba trường hợp không giao nhau.",
+      "explanation": "So sánh x với 0; mọi số nguyên thuộc đúng một trong ba trường hợp.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "betterApproach": "Không cần dùng số thực để xác định dấu.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "condition",
+        "logic"
+      ],
+      "answer": null,
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    long long x;\n    cin >> x;\n    cout << (x > 0 ? \"DUONG\" : x < 0 ? \"AM\" : \"KHONG\");\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "0",
+          "output": "KHONG"
+        },
+        {
+          "input": "5",
+          "output": "DUONG"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Kiểm tra tam giác an toàn",
+      "problem": "Cho ba độ dài nguyên, xác định có thể tạo một tam giác không suy biến hay không.",
+      "inputDescription": "Ba số nguyên a b c.",
+      "outputDescription": "YES nếu hợp lệ, ngược lại NO.",
+      "constraints": [
+        "1 <= a,b,c <= 10^18"
+      ],
+      "sampleInput": "3 4 7",
+      "sampleOutput": "NO",
+      "hint": "Sắp xếp ba cạnh, so sánh bằng phép trừ.",
+      "explanation": "Sau sắp xếp, a+b>c là điều kiện cần và đủ. Vì b<=c và các cạnh dương, c-b không tràn; so sánh a>c-b tránh cộng hai số lớn.",
+      "complexity": {
+        "time": "O(1)",
+        "space": "O(1)"
+      },
+      "betterApproach": "Thử bộ cạnh sát 10^18 và bộ có a+b=c.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "condition",
+        "logic"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<long long> a(3);\n    for (auto &x : a)\n        cin >> x;\n    sort(a.begin(), a.end());\n    cout << (a[0] > a[2] - a[1] ? \"YES\" : \"NO\");\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "1 1 2",
+          "output": "NO"
+        },
+        {
+          "input": "1000000000000000000 1000000000000000000 1000000000000000000",
+          "output": "YES"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Dùng OR để kiểm tra thuộc đoạn",
+      "fix": "Đổi thành AND và thử hai biên."
+    },
+    {
+      "mistake": "Viết dấu bằng thay so sánh",
+      "fix": "C++ dùng == để so sánh; Python cũng dùng ==."
+    }
+  ],
+  "chapterSummary": [
+    "Các nhánh phải bao phủ và không chồng lấn.",
+    "Short-circuit giúp bảo vệ phép tính.",
+    "Dữ liệu biên là phần bắt buộc của kiểm thử."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Điều kiện và biểu thức logic",
+      "url": "https://www.geeksforgeeks.org/cpp/cpp-decision-making/"
+    },
+    {
+      "title": "GCC — thư viện C++ và header chuẩn",
+      "url": "https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html"
+    }
+  ]
+}

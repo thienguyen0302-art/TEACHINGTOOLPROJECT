@@ -1,0 +1,632 @@
+{
+  "id": "ch05",
+  "language": "cpp",
+  "title": "Chuỗi và xử lý ký tự",
+  "order": 5,
+  "description": "Chương 5 — Duyệt và chuẩn hóa chuỗi. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Duyệt và chuẩn hóa chuỗi.",
+    "Phân biệt ký tự, chuỗi và chữ số.",
+    "Kiểm tra palindrome bằng hai đầu.",
+    "Đếm và nén các đoạn ký tự liên tiếp."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 4 và tự chạy được ví dụ bằng C++17."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Chuỗi là dãy ký tự",
+      "content": "C++ string thường xử lý byte; các ví dụ dùng ASCII. Python str là chuỗi Unicode và không thể sửa trực tiếp một ký tự. Để đổi chuỗi, tạo chuỗi mới hoặc list ký tự rồi ghép lại. Đọc cả dòng để không mất khoảng trắng.",
+      "keywords": [
+        "string",
+        "encoding"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"hoc tin\";\n    cout << s.size() << \"\\n\" << s[0];\n}",
+      "output": "7\nh",
+      "explanation": "Dấu cách cũng là một ký tự. Các ví dụ ASCII giúp hai ngôn ngữ có cùng chỉ số.",
+      "hsgNote": "Không áp dụng phép duyệt byte của string C++ cho chữ tiếng Việt UTF-8 mà không xử lý mã hóa.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Một chuỗi không chỉ là một từ: có thể chứa dấu cách, dấu câu và ký tự đặc biệt. Phải xác định đơn vị đang xử lý trước khi nói về độ dài. Các bài trong chương dùng ASCII để mỗi vị trí tương ứng rõ ràng trong cả C++ và Python.",
+            "Python str bất biến nghĩa là s[0]=\"a\" không hợp lệ; nó không có nghĩa tên s không được gán chuỗi mới. C++ string có thể sửa một byte qua s[i]. Với tiếng Việt UTF-8, một ký tự có thể chiếm nhiều byte trong string C++ nên đảo byte có thể làm hỏng văn bản."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Đọc đúng định dạng: một token hay cả dòng.",
+            "Xác định bộ ký tự và tính phân biệt hoa/thường.",
+            "Duyệt chỉ số hoặc từng ký tự tùy yêu cầu.",
+            "Nếu cần chỉnh sửa nhiều ký tự trong Python, dùng list rồi join."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Mỗi thao tác phải thực hiện trên đơn vị mà đề yêu cầu. Với ASCII, duyệt một vị trí tương ứng một ký tự nên phép so sánh trực tiếp đúng.",
+            "Áp dụng cho mã định danh, chuỗi số, văn bản ASCII và bài so khớp đơn giản."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không dùng strip() vô điều kiện nếu khoảng trắng ở đầu/cuối là dữ liệu. Sau cin>>n, getline có thể đọc newline còn dư thay vì dòng cần đọc."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Tên s có thể đổi sang chuỗi khác nếu str bất biến không?",
+        "answer": "Có. Bất biến áp dụng cho đối tượng chuỗi, không cấm gán lại tên s."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Chữ số trong chuỗi",
+      "content": "Ký tự 7 khác số nguyên 7. Với ASCII, C++ lấy giá trị bằng c-'0'; Python dùng int(c) sau khi đã xác nhận c là chữ số ASCII. Đọc số rất dài thành chuỗi để cộng chữ số mà không cần chuyển toàn bộ số.",
+      "keywords": [
+        "string",
+        "encoding"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"9070\";\n    int total = 0;\n    for (char c : s)\n        total += c - '0';\n    cout << total;\n}",
+      "output": "16",
+      "explanation": "9+0+7+0=16.",
+      "hsgNote": "Nếu đề cho ký tự ngoài 0..9, phải kiểm tra trước khi chuyển.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Một ký tự chữ số biểu diễn một giá trị bằng mã ký tự, không tự động là số để tính toán. Ký tự \"9\" trong chuỗi là dữ liệu văn bản; muốn cộng cần chuyển thành số 9. Với ASCII, các mã 0..9 liên tiếp nên hiệu với mã 0 tạo đúng giá trị.",
+            "Đọc một số có hàng trăm nghìn chữ số dưới dạng chuỗi giữ được mọi chữ số, kể cả các số 0 đầu. Các bài hỏi tổng chữ số, tính chia hết theo một modulo hoặc đếm số chữ số thường không cần tạo số nguyên toàn bộ."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác nhận ký tự trong miền ASCII 0..9.",
+            "Chuyển từng chữ số bằng int(c) hoặc c-'0'.",
+            "Cập nhật tổng hoặc phần dư khi duyệt trái sang phải.",
+            "Giữ input dạng chuỗi nếu vượt miền kiểu số."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Tổng chữ số là tổng các giá trị chuyển đổi. Nếu tính phần dư, cập nhật r=(10*r+digit)%m giữ r bằng phần dư của tiền tố đã đọc.",
+            "Áp dụng cho số rất dài, bài chia hết và dữ liệu có số 0 đầu cần bảo toàn."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không lấy mã ký tự cộng thẳng vào tổng. Không dùng phép chuyển toàn chuỗi vào long long nếu số có thể lớn hơn giới hạn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Đọc \"0012\" thành số nguyên làm mất thông tin gì?",
+        "answer": "Mất hai chữ số 0 đầu và độ dài ban đầu 4; dạng chuỗi vẫn giữ được chúng."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Palindrome và hai đầu",
+      "content": "Chuỗi đối xứng nếu s[l]=s[r] cho mọi cặp vị trí đối xứng. Bắt đầu l=0,r=n-1, so sánh rồi tiến vào giữa. Một cặp khác nhau đủ để kết luận không đối xứng. Cách này dùng O(1) bộ nhớ phụ trợ, thay vì tạo bản đảo.",
+      "keywords": [
+        "string",
+        "encoding"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"level\";\n    int l = 0, r = (int)s.size() - 1;\n    bool ok = true;\n    while (l < r) {\n        if (s[l] != s[r]) {\n            ok = false;\n            break;\n        }\n        ++l;\n        --r;\n    }\n    cout << (ok ? \"YES\" : \"NO\");\n}",
+      "output": "YES",
+      "explanation": "l/l khớp, e/e khớp, đến v ở giữa thì dừng.",
+      "visualization": {
+        "title": "Đối xứng qua tâm chuỗi",
+        "description": "Hai vị trí màu xanh phải chứa cùng ký tự; l và r đi dần vào giữa.",
+        "steps": [
+          {
+            "title": "So hai đầu",
+            "explanation": "s[0] và s[4] cùng là l, nên cặp ngoài cùng khớp.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "0",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "khớp",
+                "value": "Có",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "l",
+                "e",
+                "v",
+                "e",
+                "l"
+              ],
+              "activeIndices": [
+                0,
+                4
+              ],
+              "pointers": [
+                {
+                  "index": 0,
+                  "label": "l"
+                },
+                {
+                  "index": 4,
+                  "label": "r"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "s[0] == s[4]"
+          },
+          {
+            "title": "Tiến vào giữa",
+            "explanation": "Tăng l và giảm r. Hai ký tự e cũng khớp.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "khớp",
+                "value": "Có",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                "l",
+                "e",
+                "v",
+                "e",
+                "l"
+              ],
+              "activeIndices": [
+                1,
+                3
+              ],
+              "pointers": [
+                {
+                  "index": 1,
+                  "label": "l"
+                },
+                {
+                  "index": 3,
+                  "label": "r"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "s[1] == s[3]"
+          },
+          {
+            "title": "Gặp tại tâm",
+            "explanation": "l=r=2; ký tự v không cần so với một ký tự khác. Tất cả các cặp đã khớp, kết luận YES.",
+            "cells": [
+              {
+                "label": "l",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "Output",
+                "value": "YES",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "l",
+                "e",
+                "v",
+                "e",
+                "l"
+              ],
+              "activeIndices": [
+                2
+              ],
+              "pointers": [
+                {
+                  "index": 2,
+                  "label": "l = r"
+                }
+              ],
+              "discardedIndices": []
+            },
+            "formula": "l >= r → kết thúc"
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Một palindrome giữ nguyên khi đọc từ trái qua phải hoặc từ phải qua trái. Ta không cần tạo một chuỗi đảo để kiểm tra: chỉ cần biết mọi cặp đối xứng có giống nhau. Hai con trỏ biểu diễn cặp chưa xét ngoài cùng.",
+            "Sau mỗi cặp khớp, các ký tự ngoài [l,r] đã được chứng minh đúng. Khi l>=r, phần chưa xét rỗng hoặc chỉ còn một ký tự ở giữa; ký tự đó không thể tạo cặp lệch. Dãy chẵn kết thúc bằng con trỏ vượt nhau, dãy lẻ bằng gặp nhau."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Đặt l=0,r=n-1.",
+            "So sánh s[l] và s[r], sai thì kết luận NO ngay.",
+            "Nếu đúng, tăng l và giảm r.",
+            "Kết luận YES khi hết các cặp phải xét."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Nếu có cặp lệch, chuỗi khác bản đảo ở vị trí đó. Nếu mọi cặp khớp, mọi vị trí đều bằng vị trí đối xứng nên chuỗi đối xứng.",
+            "Áp dụng cho kiểm tra chuỗi hoặc dãy đối xứng. Chuẩn hóa hoa/thường hay bỏ dấu câu chỉ khi đề yêu cầu."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không bỏ qua một ký tự không khớp trừ khi bài cho phép xóa ký tự; đó là bài khác. Đừng dùng l<=r rồi cập nhật ngoài biên vì đã xét thừa ký tự giữa."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Chuỗi dài chẵn có cần một ký tự ở giữa không?",
+        "answer": "Không. Hai ký tự giữa tạo cặp cuối; sau đó l>r và việc kiểm tra hoàn thành."
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Nén đoạn ký tự liên tiếp",
+      "content": "Run-length encoding gom mỗi đoạn ký tự giống nhau liên tiếp thành ký tự và độ dài. Cần xử lý đoạn cuối sau vòng lặp. Dạng nén này không luôn ngắn hơn input; bài tập chỉ dùng chữ cái thường nên số đếm không bị nhầm với ký tự.",
+      "keywords": [
+        "string",
+        "encoding"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"aaabbc\";\n    for (int i = 0; i < (int)s.size();) {\n        int j = i + 1;\n        while (j < (int)s.size() && s[j] == s[i])\n            ++j;\n        cout << s[i] << j - i;\n        i = j;\n    }\n}",
+      "output": "a3b2c1",
+      "explanation": "Các đoạn là aaa,bb,c.",
+      "hsgNote": "Dùng list parts rồi join trong Python để tránh nối nhiều chuỗi dài lặp lại.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Run-length encoding lưu độ dài từng đoạn ký tự giống nhau liên tiếp. Nó khác đếm tần suất toàn chuỗi: \"aba\" có ba đoạn a,b,a, không được gom hai a cách nhau. Điểm chuyển đoạn là nơi ký tự thay đổi hoặc chạm cuối chuỗi.",
+            "Dùng đoạn nửa mở [i,j): i là đầu và j là vị trí ngay sau đoạn. Độ dài luôn j-i, giúp tránh cộng trừ 1. Sau khi xuất đoạn, i=j nên không bỏ sót hoặc xử lý lại ký tự."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Bắt đầu i=0 và đặt j=i+1.",
+            "Tăng j khi chưa hết chuỗi và s[j]==s[i].",
+            "Xuất ký tự s[i] cùng số lượng j-i.",
+            "Chuyển i=j và tiếp tục nếu còn dữ liệu."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Các đoạn nửa mở liên tiếp ghép thành toàn chuỗi mà không giao nhau. j chỉ tiến, mỗi ký tự được xét số lần hằng nên tổng thời gian tuyến tính.",
+            "Áp dụng cho dữ liệu có các nhóm liên tiếp và các bài thống kê độ dài đoạn. RLE không bảo đảm mọi input đều ngắn hơn."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Cần quy ước rõ nếu input chứa chữ số, vì ký tự và số lượng có thể gây nhập nhằng. Bài này chỉ chứa chữ cái thường để giải mã không nhầm."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nén \"aba\" có phải a2b1 không?",
+        "answer": "Không. Đúng là a1b1a1 vì ba đoạn tách nhau."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Chuỗi là dãy ký tự",
+      "description": "C++ string thường xử lý byte; các ví dụ dùng ASCII. Python str là chuỗi Unicode và không thể sửa trực tiếp một ký tự. Để đổi chuỗi, tạo chuỗi mới hoặc list ký tự rồi ghép lại. Đọc cả dòng để không mất khoảng trắng.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"hoc tin\";\n    cout << s.size() << \"\\n\" << s[0];\n}",
+      "input": null,
+      "output": "7\nh",
+      "explanation": "Dấu cách cũng là một ký tự. Các ví dụ ASCII giúp hai ngôn ngữ có cùng chỉ số.",
+      "complexity": {
+        "time": "O(1) cho truy cập và độ dài",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Không áp dụng phép duyệt byte của string C++ cho chữ tiếng Việt UTF-8 mà không xử lý mã hóa.",
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Chữ số trong chuỗi",
+      "description": "Ký tự 7 khác số nguyên 7. Với ASCII, C++ lấy giá trị bằng c-'0'; Python dùng int(c) sau khi đã xác nhận c là chữ số ASCII. Đọc số rất dài thành chuỗi để cộng chữ số mà không cần chuyển toàn bộ số.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"9070\";\n    int total = 0;\n    for (char c : s)\n        total += c - '0';\n    cout << total;\n}",
+      "input": null,
+      "output": "16",
+      "explanation": "9+0+7+0=16.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Nếu đề cho ký tự ngoài 0..9, phải kiểm tra trước khi chuyển.",
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Palindrome và hai đầu",
+      "description": "Chuỗi đối xứng nếu s[l]=s[r] cho mọi cặp vị trí đối xứng. Bắt đầu l=0,r=n-1, so sánh rồi tiến vào giữa. Một cặp khác nhau đủ để kết luận không đối xứng. Cách này dùng O(1) bộ nhớ phụ trợ, thay vì tạo bản đảo.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"level\";\n    int l = 0, r = (int)s.size() - 1;\n    bool ok = true;\n    while (l < r) {\n        if (s[l] != s[r]) {\n            ok = false;\n            break;\n        }\n        ++l;\n        --r;\n    }\n    cout << (ok ? \"YES\" : \"NO\");\n}",
+      "input": null,
+      "output": "YES",
+      "explanation": "l/l khớp, e/e khớp, đến v ở giữa thì dừng.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n) input, O(1) phụ trợ"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Nén đoạn ký tự liên tiếp",
+      "description": "Run-length encoding gom mỗi đoạn ký tự giống nhau liên tiếp thành ký tự và độ dài. Cần xử lý đoạn cuối sau vòng lặp. Dạng nén này không luôn ngắn hơn input; bài tập chỉ dùng chữ cái thường nên số đếm không bị nhầm với ký tự.",
+      "difficulty": "advanced",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"aaabbc\";\n    for (int i = 0; i < (int)s.size();) {\n        int j = i + 1;\n        while (j < (int)s.size() && s[j] == s[i])\n            ++j;\n        cout << s[i] << j - i;\n        i = j;\n    }\n}",
+      "input": null,
+      "output": "a3b2c1",
+      "explanation": "Các đoạn là aaa,bb,c.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n) input/output"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Dùng list parts rồi join trong Python để tránh nối nhiều chuỗi dài lặp lại.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Chuỗi ASCII \"a b\" dài bao nhiêu?",
+      "choices": [
+        "2",
+        "1",
+        "4",
+        "3"
+      ],
+      "answer": "3",
+      "explanation": "Dấu cách được tính.",
+      "betterApproach": "Xác định rõ input có giữ dấu cách không.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "string",
+        "encoding"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Tạo bản đảo của chuỗi n ký tự cần bộ nhớ phụ trợ bao nhiêu?",
+      "choices": [
+        "O(log n)",
+        "O(n²)",
+        "O(n)",
+        "O(1)"
+      ],
+      "answer": "O(n)",
+      "explanation": "Bản đảo phải lưu n ký tự.",
+      "betterApproach": "Dùng hai con trỏ nếu chỉ cần kiểm tra đối xứng.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "string",
+        "encoding"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Nén \"aaaa\" theo ký tự+độ dài được gì?",
+      "choices": [
+        "aaaa4",
+        "a4",
+        "4a",
+        "a1a1a1a1"
+      ],
+      "answer": "a4",
+      "explanation": "Có một đoạn a dài 4.",
+      "betterApproach": "Nhớ kết thúc đoạn cuối cùng.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "string",
+        "encoding"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "string",
+        "encoding",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"hoc tin\";\n    cout << s.size() << \"\\n\" << s[0];\n}",
+      "choices": [
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0",
+        "7\nh"
+      ],
+      "answer": "7\nh",
+      "explanation": "Dấu cách cũng là một ký tự. Các ví dụ ASCII giúp hai ngôn ngữ có cùng chỉ số.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "string",
+        "encoding",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s = \"9070\";\n    int total = 0;\n    for (char c : s)\n        total += c - '0';\n    cout << total;\n}",
+      "choices": [
+        "Lỗi chạy chương trình",
+        "0",
+        "16",
+        "Không có output"
+      ],
+      "answer": "16",
+      "explanation": "9+0+7+0=16.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Chuỗi đối xứng",
+      "problem": "Cho một dòng chỉ chứa chữ cái thường, kiểm tra chuỗi có đối xứng hay không.",
+      "inputDescription": "Một dòng s.",
+      "outputDescription": "YES hoặc NO.",
+      "constraints": [
+        "1 <= |s| <= 200000"
+      ],
+      "sampleInput": "level",
+      "sampleOutput": "YES",
+      "hint": "So sánh hai ký tự ở hai đầu rồi đi vào giữa.",
+      "explanation": "Mỗi cặp đối xứng được xét đúng một lần. Cặp lệch làm kết quả NO ngay lập tức.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n) input, O(1) phụ trợ"
+      },
+      "betterApproach": "Chuỗi một ký tự luôn đối xứng.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "string",
+        "encoding"
+      ],
+      "answer": null,
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s;\n    cin >> s;\n    int l = 0, r = (int)s.size() - 1;\n    bool ok = true;\n    while (l < r) {\n        if (s[l] != s[r]) {\n            ok = false;\n            break;\n        }\n        ++l;\n        --r;\n    }\n    cout << (ok ? \"YES\" : \"NO\");\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "a",
+          "output": "YES"
+        },
+        {
+          "input": "ab",
+          "output": "NO"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Nén chuỗi theo đoạn",
+      "problem": "Nén từng đoạn chữ cái giống nhau liên tiếp thành ký tự theo sau bởi số lượng.",
+      "inputDescription": "Một chuỗi chữ cái thường.",
+      "outputDescription": "Chuỗi đã nén.",
+      "constraints": [
+        "1 <= |s| <= 200000"
+      ],
+      "sampleInput": "aaabbc",
+      "sampleOutput": "a3b2c1",
+      "hint": "Dùng hai chỉ số để xác định điểm đầu và điểm sau đoạn.",
+      "explanation": "Vòng trong đi đến ký tự khác; in độ dài j-i rồi đặt i=j. Tổng số lần tăng chỉ số là tuyến tính.",
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "Không nhầm vòng lặp lồng nhau với O(n²): mỗi ký tự chỉ được đi qua số lần hằng.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "string",
+        "encoding"
+      ],
+      "answer": null,
+      "solutionCode": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    string s;\n    cin >> s;\n    for (int i = 0; i < (int)s.size();) {\n        int j = i + 1;\n        while (j < (int)s.size() && s[j] == s[i])\n            ++j;\n        cout << s[i] << j - i;\n        i = j;\n    }\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "aaaa",
+          "output": "a4"
+        },
+        {
+          "input": "abc",
+          "output": "a1b1c1"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Bỏ mất khoảng trắng trong input",
+      "fix": "C++ dùng getline khi đề cho cả dòng; Python input giữ khoảng trắng bên trong."
+    },
+    {
+      "mistake": "Sửa s[i] trực tiếp ở Python",
+      "fix": "Chuyển sang list hoặc tạo chuỗi mới."
+    }
+  ],
+  "chapterSummary": [
+    "Ví dụ của chương dùng ASCII để đối chiếu hai ngôn ngữ.",
+    "Hai con trỏ kiểm tra đối xứng không cần bản đảo.",
+    "Nối kết quả dài bằng bộ đệm."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Chuỗi và xử lý ký tự",
+      "url": "https://www.geeksforgeeks.org/dsa/string-data-structure/"
+    },
+    {
+      "title": "GCC — thư viện C++ và header chuẩn",
+      "url": "https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html"
+    }
+  ]
+}

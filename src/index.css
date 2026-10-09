@@ -1,4 +1,24 @@
 .nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 10px 20px; background: #14213d; color: #fff; }
+.theory-reader { color: #233954; line-height: 1.85; }
+.theory-reader__contents { padding: 20px 24px; margin-bottom: 24px; background: #f5f8fe; border: 1px solid #dde8f8; border-radius: 12px; }
+.theory-reader__contents b { color: #1d4ed8; font-size: 14px; }
+.theory-reader__contents ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 6px 24px; margin-bottom: 0; padding-left: 20px; font-size: 13px; }
+.theory-reader__contents a { color: #435b7c; text-decoration: none; }
+.theory-reader__contents a:hover { color: #2563eb; text-decoration: underline; }
+.theory-article { padding: 28px; margin-bottom: 28px; border-color: #e0e8f4; scroll-margin-top: 24px; }
+.theory-article__heading > span { color: #2563eb; font-size: 10px; font-weight: 700; letter-spacing: .13em; }
+.theory-article__heading h3 { margin: 6px 0 18px; color: #183457; font-size: 23px; line-height: 1.5; }
+.theory-article__intro { padding: 14px 18px; border-left: 3px solid #60a5fa; background: #f2f7ff; border-radius: 0 8px 8px 0; font-size: 15px; }
+.theory-article h4 { color: #234b7d; margin: 24px 0 10px; font-size: 16px; }
+.theory-section p, .theory-section li { font-size: 15px; }
+.theory-section p { margin: 10px 0; }
+.theory-section li { margin: 7px 0; }
+.theory-self-check { padding: 18px 22px; background: #f4f8ff; border: 1px dashed #bbd2f4; border-radius: 10px; margin-top: 24px; }
+.theory-self-check > span { font-size: 10px; font-weight: 700; letter-spacing: .1em; color: #3769aa; }
+.theory-self-check > p { margin: 8px 0; font-weight: 500; }
+@media (max-width: 520px) { .theory-article { padding: 16px; } .theory-article__heading h3 { font-size: 20px; } .theory-reader__contents { padding: 16px; } }
+.card details { margin: 12px 0; }
+.card summary { color: #1d4ed8; cursor: pointer; font-weight: 600; }
 .nav .brand { color: #ffc933; font-weight: 800; text-decoration: none; font-size: 18px; }
 .nav-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .nav-mail { font-size: 14px; opacity: .8; }

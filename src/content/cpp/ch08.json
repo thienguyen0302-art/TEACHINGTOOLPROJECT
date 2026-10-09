@@ -1,0 +1,723 @@
+{
+  "id": "ch08",
+  "language": "cpp",
+  "title": "Sắp xếp và gom nhóm",
+  "order": 8,
+  "description": "Chương 8 — Dùng sort/sorted và comparator hợp lệ. Có ví dụ chạy được, quiz đọc code và bài tập nâng cao HSG.",
+  "objectives": [
+    "Dùng sort/sorted và comparator hợp lệ.",
+    "Hiểu sắp xếp ổn định, thứ tự từ điển.",
+    "So sánh thuật toán bậc hai với n log n.",
+    "Sắp xếp để đếm, loại trùng và tìm khoảng cách nhỏ nhất."
+  ],
+  "prerequisites": [
+    "Hoàn thành chương 7 và tự chạy được ví dụ bằng C++17."
+  ],
+  "theory": [
+    {
+      "id": "theory01",
+      "title": "1. Sắp xếp làm xuất hiện cấu trúc",
+      "content": "Sau khi sắp tăng dần, các phần tử bằng nhau đứng liên tiếp và các số gần nhau dễ so sánh. C++ sort thay đổi vector; Python sorted tạo list mới, còn list.sort sửa list tại chỗ và trả None. Sắp xếp mất thứ tự ban đầu nên lưu chỉ số nếu đề cần vị trí gốc.",
+      "keywords": [
+        "sorting"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {5, 1, 3, 1};\n    sort(a.begin(), a.end());\n    for (int x : a)\n        cout << x << \" \";\n}",
+      "output": "1 1 3 5",
+      "explanation": "Hai số 1 được gom liền nhau.",
+      "visualization": {
+        "title": "Thứ tự trước và sau sort",
+        "description": "Quan sát kết quả thư viện sort; không mô phỏng cách sắp xếp nội bộ của thư viện.",
+        "steps": [
+          {
+            "title": "Dãy ban đầu",
+            "explanation": "Có hai số 1; thứ tự hiện tại là thứ tự dữ liệu được cung cấp.",
+            "cells": [
+              {
+                "label": "số phần tử",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                "5",
+                "1",
+                "3",
+                "1"
+              ],
+              "activeIndices": [],
+              "pointers": [],
+              "discardedIndices": []
+            }
+          },
+          {
+            "title": "Sau sort",
+            "explanation": "Các giá trị bằng nhau đứng cạnh nhau và toàn dãy không giảm.",
+            "cells": [
+              {
+                "label": "số phần tử",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "thứ tự",
+                "value": "Tăng dần",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "1",
+                "3",
+                "5"
+              ],
+              "activeIndices": [
+                0,
+                1
+              ],
+              "pointers": [],
+              "discardedIndices": []
+            }
+          }
+        ]
+      },
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Sắp xếp đổi thứ tự dãy để tạo một quan hệ dễ khai thác. Trong dãy tăng, giá trị bằng nhau nằm cùng nhóm và so sánh hai đầu có ý nghĩa. Việc đổi thứ tự là hợp lệ nếu đáp án chỉ phụ thuộc tập giá trị, không phụ thuộc vị trí gốc.",
+            "Cần tách dữ liệu gốc và dữ liệu đã sắp. Nếu đề hỏi chỉ số, lưu mỗi phần tử dưới dạng (giá trị,chỉ số) trước khi sort. Nếu đề hỏi đoạn liên tiếp của dãy gốc, sort thường phá tính liên tiếp và không được dùng trực tiếp."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Xác định sort có giữ nguyên ý nghĩa bài toán không.",
+            "Lưu chỉ số gốc nếu cần truy vết vị trí.",
+            "Sắp theo khóa phù hợp.",
+            "Tận dụng thứ tự để quét nhóm, tìm biên hoặc so cặp kề."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Sắp xếp là một hoán vị, nên không đổi số lần xuất hiện của giá trị. Các bài đếm phân biệt có thể dùng dãy sắp vì chỉ cần nhóm giá trị.",
+            "Áp dụng cho gom nhóm, hai con trỏ, nhị phân và nhiều bài tham lam."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Python a.sort() sửa a và trả None; sorted(a) tạo list mới. Không gán a=a.sort(). C++ sort thay đổi đoạn iterator được truyền."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Có thể sort trước khi tìm tổng đoạn liên tiếp lớn nhất của dãy gốc không?",
+        "answer": "Không theo cách đó, vì sort đổi các phần tử kề nhau và tạo những đoạn không tồn tại trong dãy gốc."
+      }
+    },
+    {
+      "id": "theory02",
+      "title": "2. Khóa sắp xếp và ổn định",
+      "content": "Một bản ghi có thể sắp theo nhiều khóa: điểm giảm dần rồi tên tăng dần. Python key trả tuple; C++ comparator trả true khi a phải đứng trước b. Comparator phải dùng thứ tự nghiêm ngặt, không dùng <=. Python sort ổn định; C++ sort không đảm bảo ổn định, còn stable_sort có.",
+      "keywords": [
+        "sorting"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<pair<int, string>> a = {{8, \"B\"}, {9, \"C\"}, {8, \"A\"}};\n    sort(a.begin(), a.end(), [](const auto &x, const auto &y) {\n        if (x.first != y.first)\n            return x.first > y.first;\n        return x.second < y.second;\n    });\n    for (auto x : a)\n        cout << x.second << \" \";\n}",
+      "output": "C A B",
+      "explanation": "Điểm 9 trước điểm 8; A trước B khi cùng điểm.",
+      "hsgNote": "Nếu cần bảo toàn thứ tự input khi khóa bằng nhau, dùng stable_sort hoặc thêm chỉ số gốc vào khóa.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Khóa nhiều thành phần biểu diễn quy tắc ưu tiên. So điểm giảm, sau đó tên tăng nghĩa là chỉ xét tên khi điểm bằng nhau. Không được so cả hai bằng AND như một quan hệ phân loại tùy ý; điều đó có thể không tạo thứ tự hợp lệ.",
+            "Ổn định giữ thứ tự tương đối của các bản ghi có khóa bằng nhau. Nếu thêm chỉ số gốc làm khóa cuối, ngay cả sort không ổn định vẫn có thể tạo đúng thứ tự mong muốn. Comparator C++ phải thỏa strict weak ordering; comp(a,a) luôn false."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Viết thứ tự ưu tiên các khóa bằng câu văn.",
+            "Với khóa khác nhau, trả quyết định theo khóa ưu tiên cao nhất.",
+            "Với khóa bằng nhau, xét khóa kế tiếp.",
+            "Thử ba bản ghi có cùng hoặc khác nhiều khóa để kiểm tra quan hệ."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "So từ điển theo thứ tự khóa cho quyết định nhất quán: bản ghi khác ở khóa đầu tiên nào thì thứ tự được quyết định tại khóa đó.",
+            "Áp dụng cho xếp hạng, lịch sự kiện, xử lý cùng thời điểm và bài cần giữ thứ tự input."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Dùng <= khiến comp(a,a)=true, vi phạm yêu cầu sort. Đừng giả định C++ sort giữ thứ tự các phần tử có khóa bằng nhau."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu hai học sinh có cùng điểm và tên, làm sao giữ người xuất hiện trước ở input?",
+        "answer": "Dùng sắp xếp ổn định hoặc thêm chỉ số input tăng dần làm khóa cuối."
+      }
+    },
+    {
+      "id": "theory03",
+      "title": "3. Lựa chọn thuật toán sắp xếp",
+      "content": "Insertion sort chèn từng phần tử vào tiền tố đã sắp, dễ hiểu nhưng trường hợp xấu O(n²). Merge sort chia đôi và trộn hai dãy đã sắp nên O(n log n), dùng mảng tạm. Trong bài thi thông thường dùng thư viện và tập trung vào cách khai thác thứ tự.",
+      "keywords": [
+        "sorting"
+      ],
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {3, 1, 2};\n    for (int i = 1; i < (int)a.size(); ++i) {\n        int x = a[i], j = i - 1;\n        while (j >= 0 && a[j] > x) {\n            a[j + 1] = a[j];\n            --j;\n        }\n        a[j + 1] = x;\n    }\n    for (int x : a)\n        cout << x << \" \";\n}",
+      "output": "1 2 3",
+      "explanation": "Dịch các số lớn hơn x sang phải rồi đặt x vào chỗ trống.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Insertion sort duy trì một tiền tố đã sắp. Lấy phần tử x đầu của phần chưa sắp, dịch mọi phần tử tiền tố lớn hơn x sang phải rồi đặt x vào chỗ trống. Dữ liệu gần sắp có thể cần ít dịch, nhưng dãy đảo ngược tạo nhiều dịch.",
+            "Merge sort duy trì cấu trúc khác: hai nửa được sắp riêng rồi trộn bằng hai con trỏ. Mỗi tầng xử lý O(n) phần tử, có O(log n) tầng. Điều này giải thích n log n bằng công việc qua các tầng, không chỉ nhớ tên thuật toán."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Với insertion, giả sử a[0..i-1] đã sắp.",
+            "Lưu x trước khi dịch để không ghi mất nó.",
+            "Dịch từ phải sang trái rồi chèn x.",
+            "Khi cần n lớn, ưu tiên thư viện hoặc thuật toán có bảo đảm phù hợp."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Sau khi chèn x, tiền tố a[0..i] chứa đúng các phần tử cũ cộng x và vẫn tăng. Quy nạp theo i chứng minh dãy cuối đã sắp.",
+            "Áp dụng insertion để học bất biến hoặc xử lý dãy nhỏ; sort thư viện phù hợp hầu hết bài thi thông thường."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Không đặt x=a[i] sau khi đã ghi đè a[i]. Đừng triển khai sort bậc hai cho n=200000 chỉ vì code ngắn."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Dãy đảo ngược làm insertion sort chậm vì sao?",
+        "answer": "Mỗi x nhỏ hơn mọi phần tử trước, phải dịch i phần tử ở lượt i; tổng số dịch bậc n²."
+      },
+      "visualization": {
+        "title": "Chèn vào tiền tố đã sắp",
+        "description": "Minh họa đúng insertion sort trong code: giữ x trước khi dịch ô.",
+        "steps": [
+          {
+            "title": "Lấy x=1",
+            "explanation": "Tiền tố [3] đã sắp; chuẩn bị chèn số 1.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "3",
+                "1",
+                "2"
+              ],
+              "activeIndices": [
+                0,
+                1
+              ],
+              "pointers": [
+                {
+                  "index": 1,
+                  "label": "x"
+                }
+              ],
+              "discardedIndices": []
+            }
+          },
+          {
+            "title": "Dịch 3",
+            "explanation": "3>1 nên ghi 3 sang ô bên phải. Số 1 vẫn được giữ ở x, không bị mất.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "-1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "3",
+                "3",
+                "2"
+              ],
+              "activeIndices": [
+                0,
+                1
+              ],
+              "pointers": [],
+              "discardedIndices": []
+            },
+            "formula": "a[j+1] = a[j]"
+          },
+          {
+            "title": "Chèn 1",
+            "explanation": "j=-1; đặt x vào a[0]. Tiền tố hai phần tử đã sắp.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "-1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "3",
+                "2"
+              ],
+              "activeIndices": [
+                0
+              ],
+              "pointers": [],
+              "discardedIndices": []
+            },
+            "formula": "a[j+1] = x"
+          },
+          {
+            "title": "Lấy x=2 và dịch",
+            "explanation": "Ở i=2, giữ x=2 rồi dịch 3 sang phải. 1 không lớn hơn x nên dừng dịch.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "3",
+                "3"
+              ],
+              "activeIndices": [
+                1,
+                2
+              ],
+              "pointers": [],
+              "discardedIndices": []
+            }
+          },
+          {
+            "title": "Chèn 2",
+            "explanation": "Đặt 2 vào giữa 1 và 3. Dãy hoàn chỉnh đã tăng.",
+            "cells": [
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                "1",
+                "2",
+                "3"
+              ],
+              "activeIndices": [
+                1
+              ],
+              "pointers": [],
+              "discardedIndices": []
+            },
+            "formula": "a[1] = 2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "theory04",
+      "title": "4. Khoảng cách nhỏ nhất nằm giữa hai số kề",
+      "content": "Trong dãy tăng dần, nếu hai số không kề nhau thì giữa chúng có một số khác, tạo một khoảng cách không lớn hơn. Vì vậy khoảng cách tuyệt đối nhỏ nhất giữa hai phần tử xuất hiện ở một cặp kề. Nếu có phần tử trùng nhau, kết quả là 0.",
+      "keywords": [
+        "sorting"
+      ],
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<long long> a = {8, 1, 5, 12};\n    sort(a.begin(), a.end());\n    long long best = a[1] - a[0];\n    for (int i = 2; i < (int)a.size(); ++i)\n        best = min(best, a[i] - a[i - 1]);\n    cout << best;\n}",
+      "output": "3",
+      "explanation": "Sau sắp xếp 1,5,8,12; các hiệu 4,3,4.",
+      "hsgNote": "Bài tìm cặp gần nhất trong một chiều khác bài hai chiều; không áp dụng chứng minh này cho điểm mặt phẳng.",
+      "runnable": true,
+      "sections": [
+        {
+          "title": "Hiểu bản chất",
+          "paragraphs": [
+            "Trong một chiều, khoảng cách giữa hai giá trị tăng dần là hiệu không âm. Nếu hai giá trị không kề, khoảng cách giữa chúng chứa các khoảng con từ những giá trị ở giữa. Một khoảng con không thể lớn hơn tổng khoảng đó.",
+            "Bởi vậy ít nhất một cặp tối ưu có thể chọn là cặp kề sau sort. Hai phần tử trùng có khoảng cách 0, là mức nhỏ nhất có thể. Nếu đề hỏi hai vị trí khác nhau, hai bản sao của cùng giá trị vẫn là cặp hợp lệ."
+          ]
+        },
+        {
+          "title": "Cách triển khai từng bước",
+          "bullets": [
+            "Sort dãy theo giá trị.",
+            "Khởi tạo best bằng hiệu hai phần tử đầu.",
+            "Duyệt hiệu a[i]-a[i-1] và lấy min.",
+            "Nếu cần in vị trí, giữ các chỉ số gốc của cặp tốt nhất."
+          ]
+        },
+        {
+          "title": "Vì sao đúng và khi nào áp dụng",
+          "paragraphs": [
+            "Giả sử một cặp tối ưu không kề và có x ở giữa, thì x-a hoặc b-x không vượt b-a. Lặp lại loại khoảng giữa cho một cặp kề tốt không kém.",
+            "Áp dụng cho tìm cặp số gần nhau, khoảng cách tọa độ một chiều và kiểm tra trùng."
+          ]
+        },
+        {
+          "title": "Điểm cần tránh",
+          "paragraphs": [
+            "Chứng minh một chiều không đủ cho điểm hai chiều. Với giá trị âm lớn và dương lớn, hiệu cũng có thể vượt int."
+          ]
+        }
+      ],
+      "selfCheck": {
+        "question": "Nếu dãy có hai số 5 ở hai vị trí khác nhau, khoảng cách nhỏ nhất là gì?",
+        "answer": "0. Hai vị trí khác nhau có thể chứa cùng một giá trị."
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "example01",
+      "title": "Sắp xếp làm xuất hiện cấu trúc",
+      "description": "Sau khi sắp tăng dần, các phần tử bằng nhau đứng liên tiếp và các số gần nhau dễ so sánh. C++ sort thay đổi vector; Python sorted tạo list mới, còn list.sort sửa list tại chỗ và trả None. Sắp xếp mất thứ tự ban đầu nên lưu chỉ số nếu đề cần vị trí gốc.",
+      "difficulty": "intermediate",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {5, 1, 3, 1};\n    sort(a.begin(), a.end());\n    for (int x : a)\n        cout << x << \" \";\n}",
+      "input": null,
+      "output": "1 1 3 5",
+      "explanation": "Hai số 1 được gom liền nhau.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example02",
+      "title": "Khóa sắp xếp và ổn định",
+      "description": "Một bản ghi có thể sắp theo nhiều khóa: điểm giảm dần rồi tên tăng dần. Python key trả tuple; C++ comparator trả true khi a phải đứng trước b. Comparator phải dùng thứ tự nghiêm ngặt, không dùng <=. Python sort ổn định; C++ sort không đảm bảo ổn định, còn stable_sort có.",
+      "difficulty": "intermediate",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<pair<int, string>> a = {{8, \"B\"}, {9, \"C\"}, {8, \"A\"}};\n    sort(a.begin(), a.end(), [](const auto &x, const auto &y) {\n        if (x.first != y.first)\n            return x.first > y.first;\n        return x.second < y.second;\n    });\n    for (auto x : a)\n        cout << x.second << \" \";\n}",
+      "input": null,
+      "output": "C A B",
+      "explanation": "Điểm 9 trước điểm 8; A trước B khi cùng điểm.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Nếu cần bảo toàn thứ tự input khi khóa bằng nhau, dùng stable_sort hoặc thêm chỉ số gốc vào khóa.",
+      "runnable": true
+    },
+    {
+      "id": "example03",
+      "title": "Lựa chọn thuật toán sắp xếp",
+      "description": "Insertion sort chèn từng phần tử vào tiền tố đã sắp, dễ hiểu nhưng trường hợp xấu O(n²). Merge sort chia đôi và trộn hai dãy đã sắp nên O(n log n), dùng mảng tạm. Trong bài thi thông thường dùng thư viện và tập trung vào cách khai thác thứ tự.",
+      "difficulty": "intermediate",
+      "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {3, 1, 2};\n    for (int i = 1; i < (int)a.size(); ++i) {\n        int x = a[i], j = i - 1;\n        while (j >= 0 && a[j] > x) {\n            a[j + 1] = a[j];\n            --j;\n        }\n        a[j + 1] = x;\n    }\n    for (int x : a)\n        cout << x << \" \";\n}",
+      "input": null,
+      "output": "1 2 3",
+      "explanation": "Dịch các số lớn hơn x sang phải rồi đặt x vào chỗ trống.",
+      "complexity": {
+        "time": "O(n²)",
+        "space": "O(n) input, O(1) phụ trợ"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": null,
+      "runnable": true
+    },
+    {
+      "id": "example04",
+      "title": "Khoảng cách nhỏ nhất nằm giữa hai số kề",
+      "description": "Trong dãy tăng dần, nếu hai số không kề nhau thì giữa chúng có một số khác, tạo một khoảng cách không lớn hơn. Vì vậy khoảng cách tuyệt đối nhỏ nhất giữa hai phần tử xuất hiện ở một cặp kề. Nếu có phần tử trùng nhau, kết quả là 0.",
+      "difficulty": "advanced",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<long long> a = {8, 1, 5, 12};\n    sort(a.begin(), a.end());\n    long long best = a[1] - a[0];\n    for (int i = 2; i < (int)a.size(); ++i)\n        best = min(best, a[i] - a[i - 1]);\n    cout << best;\n}",
+      "input": null,
+      "output": "3",
+      "explanation": "Sau sắp xếp 1,5,8,12; các hiệu 4,3,4.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "wrongCode": null,
+      "correctCode": null,
+      "hsgLesson": "Bài tìm cặp gần nhất trong một chiều khác bài hai chiều; không áp dụng chứng minh này cho điểm mặt phẳng.",
+      "runnable": true
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Comparator C++ hợp lệ để tăng dần là gì?",
+      "choices": [
+        "a < b",
+        "a <= b",
+        "a == b",
+        "Luôn true"
+      ],
+      "answer": "a < b",
+      "explanation": "Thứ tự phải nghiêm ngặt; comp(a,a) phải false.",
+      "betterApproach": "Không dùng <= trong sort.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "sorting"
+      ],
+      "id": "quiz01"
+    },
+    {
+      "question": "Python a.sort() trả về gì?",
+      "choices": [
+        "List đã sắp",
+        "True",
+        "Số phần tử",
+        "None"
+      ],
+      "answer": "None",
+      "explanation": "Phương thức sửa a tại chỗ.",
+      "betterApproach": "Dùng sorted(a) nếu muốn kết quả ở list mới.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "sorting"
+      ],
+      "id": "quiz02"
+    },
+    {
+      "question": "Sau khi sắp xếp, khoảng cách nhỏ nhất phải xét cặp nào?",
+      "choices": [
+        "Mọi bộ ba",
+        "Chỉ hai phần tử đầu",
+        "Các cặp kề nhau",
+        "Chỉ đầu và cuối"
+      ],
+      "answer": "Các cặp kề nhau",
+      "explanation": "Khoảng không kề bao gồm các khoảng nhỏ hơn bên trong.",
+      "betterApproach": "Chứng minh bằng phần tử nằm giữa.",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "tags": [
+        "sorting"
+      ],
+      "id": "quiz03"
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "sorting",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<int> a = {5, 1, 3, 1};\n    sort(a.begin(), a.end());\n    for (int x : a)\n        cout << x << \" \";\n}",
+      "choices": [
+        "1 1 3 5",
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0"
+      ],
+      "answer": "1 1 3 5",
+      "explanation": "Hai số 1 được gom liền nhau.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz04",
+      "runnable": true
+    },
+    {
+      "type": "output_prediction",
+      "difficulty": "intermediate",
+      "tags": [
+        "sorting",
+        "trace"
+      ],
+      "question": "Đoạn chương trình sau in ra kết quả gì?",
+      "code": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    vector<pair<int, string>> a = {{8, \"B\"}, {9, \"C\"}, {8, \"A\"}};\n    sort(a.begin(), a.end(), [](const auto &x, const auto &y) {\n        if (x.first != y.first)\n            return x.first > y.first;\n        return x.second < y.second;\n    });\n    for (auto x : a)\n        cout << x.second << \" \";\n}",
+      "choices": [
+        "Không có output",
+        "Lỗi chạy chương trình",
+        "0",
+        "C A B"
+      ],
+      "answer": "C A B",
+      "explanation": "Điểm 9 trước điểm 8; A trước B khi cùng điểm.",
+      "betterApproach": "Ghi lại trạng thái biến theo từng câu lệnh, rồi đối chiếu với code bằng cách chạy.",
+      "id": "quiz05",
+      "runnable": true
+    }
+  ],
+  "practice": [
+    {
+      "title": "Đếm giá trị phân biệt",
+      "problem": "Cho n số, đếm có bao nhiêu giá trị khác nhau.",
+      "inputDescription": "n rồi n số.",
+      "outputDescription": "Số giá trị phân biệt.",
+      "constraints": [
+        "1 <= n <= 200000",
+        "-10^9 <= a[i] <= 10^9"
+      ],
+      "sampleInput": "5\n2 1 2 4 1",
+      "sampleOutput": "3",
+      "hint": "Sau sắp xếp, mỗi nhóm bằng nhau đóng góp một giá trị.",
+      "explanation": "Đếm phần tử đầu và mọi vị trí khác phần tử ngay trước.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "Set là phương án khác; chọn theo yêu cầu bài và chi phí bộ nhớ.",
+      "id": "practice01",
+      "difficulty": "intermediate",
+      "tags": [
+        "sorting"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    cin >> n;\n    vector<int> a(n);\n    for (auto &x : a)\n        cin >> x;\n    sort(a.begin(), a.end());\n    int cnt = 1;\n    for (int i = 1; i < n; ++i)\n        if (a[i] != a[i - 1])\n            ++cnt;\n    cout << cnt;\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "3\n7 7 7",
+          "output": "1"
+        }
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Hai số gần nhau nhất",
+      "problem": "Tìm hiệu tuyệt đối nhỏ nhất giữa hai phần tử khác vị trí.",
+      "inputDescription": "n rồi n số.",
+      "outputDescription": "Khoảng cách nhỏ nhất.",
+      "constraints": [
+        "2 <= n <= 200000",
+        "-10^9 <= a[i] <= 10^9"
+      ],
+      "sampleInput": "4\n8 1 5 12",
+      "sampleOutput": "3",
+      "hint": "Chỉ xét các cặp kề sau sort.",
+      "explanation": "Nếu có một số nằm giữa hai đầu thì ít nhất một khoảng con không lớn hơn khoảng ban đầu; do đó tồn tại cặp kề tối ưu.",
+      "complexity": {
+        "time": "O(n log n)",
+        "space": "O(n)"
+      },
+      "betterApproach": "Lưu chỉ số gốc cùng giá trị nếu cần in vị trí của cặp.",
+      "id": "advanced01",
+      "difficulty": "advanced",
+      "tags": [
+        "sorting"
+      ],
+      "answer": null,
+      "solutionCode": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n;\n    cin >> n;\n    vector<long long> a(n);\n    for (auto &x : a)\n        cin >> x;\n    sort(a.begin(), a.end());\n    long long best = a[1] - a[0];\n    for (int i = 2; i < n; ++i)\n        best = min(best, a[i] - a[i - 1]);\n    cout << best;\n}",
+      "runnable": true,
+      "testCases": [
+        {
+          "input": "2\n-1000000000 1000000000",
+          "output": "2000000000"
+        },
+        {
+          "input": "3\n1 1 2",
+          "output": "0"
+        }
+      ]
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Comparator không nghiêm ngặt",
+      "fix": "Dùng < hoặc >, không dùng <=/>=."
+    },
+    {
+      "mistake": "Mất chỉ số gốc",
+      "fix": "Sắp cặp (giá trị,chỉ số)."
+    }
+  ],
+  "chapterSummary": [
+    "Sắp xếp hỗ trợ gom nhóm và tìm kiếm.",
+    "Chọn khóa và tính ổn định đúng yêu cầu.",
+    "Tận dụng cặp kề khi đã chứng minh."
+  ],
+  "references": [
+    {
+      "title": "GeeksforGeeks — Sắp xếp và gom nhóm",
+      "url": "https://www.geeksforgeeks.org/dsa/sorting-algorithms/"
+    },
+    {
+      "title": "GCC — thư viện C++ và header chuẩn",
+      "url": "https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html"
+    },
+    {
+      "title": "Algorithms for Competitive Programming — đọc thêm thuật toán",
+      "url": "https://cp-algorithms.com/"
+    }
+  ]
+}

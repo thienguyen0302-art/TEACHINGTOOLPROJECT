@@ -4,8 +4,8 @@ Nội dung mỗi chương được lưu trong một file JSON theo ngôn ngữ:
 
 ```text
 src/content/
-├── cpp/ch01.json
-└── python/ch01.json
+├── cpp/ch01.json ... ch14.json
+└── python/ch01.json ... ch14.json
 ```
 
 ## Chapter
@@ -45,6 +45,57 @@ Mọi phần tử `theory` có các trường bắt buộc:
 ```
 
 Các trường minh họa như `code`, `output`, `table`, `hsgNote`, `commonMistakes`, `applications` và `template` là tùy chọn.
+
+Các bài hiện có thêm `sections` để triển khai chi tiết theo từng chủ đề, giữ `content` làm đoạn dẫn nhập ngắn:
+
+```json
+{
+  "sections": [
+    { "title": "Hiểu bản chất", "paragraphs": ["Giải thích khái niệm...", "Phân tích ví dụ..."] },
+    { "title": "Cách triển khai", "bullets": ["Bước 1...", "Bước 2..."] },
+    { "title": "Vì sao đúng", "paragraphs": ["Bất biến hoặc chứng minh..."] }
+  ],
+  "selfCheck": {
+    "question": "Câu hỏi kiểm tra cách hiểu...",
+    "answer": "Giải thích để đối chiếu..."
+  }
+}
+```
+
+Mỗi mục lý thuyết có ít nhất ba section có nội dung và câu hỏi tự kiểm tra. Viết nội dung theo chính chủ đề, tránh thêm các đoạn mẫu chung chỉ để tăng độ dài. Mục lục lý thuyết tạo từ các ID; giữ ID ổn định khi sửa bài.
+
+`visualization` là minh họa từng bước được biên soạn cùng bài học, không thực thi code của học sinh:
+
+```json
+{
+  "visualization": {
+    "title": "Tổng tích lũy",
+    "description": "Tính 1 + 2",
+    "steps": [
+      {
+        "cells": [{ "label": "sum", "value": "0", "active": true }],
+        "explanation": "Khởi tạo tổng bằng 0."
+      },
+      {
+        "cells": [{ "label": "sum", "value": "1", "active": true }],
+        "explanation": "Cộng phần tử đầu tiên."
+      }
+    ]
+  }
+}
+```
+
+Giá trị `value` là chuỗi; `active` đánh dấu ô đang được xét. Mỗi minh họa cần ít nhất một bước và giải thích đúng với code hoặc ghi rõ nếu minh họa thuật toán khác.
+
+Mỗi bước có thể thêm `title`, `formula` và một sơ đồ:
+
+- `array`: `{ "values": ["1", "3", "7"], "activeIndices": [1], "discardedIndices": [], "pointers": [{ "index": 1, "label": "mid" }] }`. Giữ toàn dãy trong từng bước để người học không mất vị trí; chỉ số luôn trong miền.
+- `matrix`: `{ "rows": [["i", "0", "1"], ["dp", "1", "1"]], "activeCells": [[1, 2]] }`. Tọa độ bao gồm cả hàng/cột nhãn; dùng `·` cho ô chưa tính.
+- `stack`: mảng `{ "label": "fact(4)", "value": "chờ kết quả con", "active": true }`, theo thứ tự từ frame gốc đến frame mới.
+- `flow`: mảng `{ "label": "x > 0", "value": "Sai", "active": true }` cho luồng rẽ nhánh.
+- `intervals`: `{ "items": [{ "start": 1, "end": 3, "label": "A1" }], "selectedIndices": [0], "rejectedIndices": [], "currentIndex": 0 }`, các mốc không âm, start<end.
+
+Visualizer hỗ trợ chọn trực tiếp từng bước, trước/tiếp, về đầu và tự chạy 2,2 giây mỗi bước. Chuyển bước thủ công dừng chế độ tự chạy; bước cuối dừng tự động. Ô giá trị hiển thị giá trị cũ khi nhãn giữ nguyên và giá trị đổi. Giữ `cells` làm phần theo dõi biến ngay cả khi có sơ đồ.
 
 ## Example
 
@@ -91,6 +142,28 @@ Các trường bắt buộc là `id`, `title`, `description`, `difficulty`, `cod
 ```
 
 `answer` có thể là `null` đối với bài code được chấm bằng test case. `complexity` có thể là `null` nếu bài không yêu cầu phân tích độ phức tạp.
+
+`solutionCode` là chương trình tham khảo hoàn chỉnh cho đúng ngôn ngữ của chương. Website hiển thị trong phần lời giải có thể mở/đóng; bài tập không tự chấm code trên trình duyệt.
+
+## Các trường mở rộng
+
+- Quiz dạng `output_prediction` có thêm `code` để hiển thị riêng chương trình cần đọc. Đáp án phải là một trong `choices`, so khớp chính xác theo giá trị lựa chọn.
+- `references` cấp chương chứa `{ "title": "...", "url": "https://..." }`, hiển thị ở Tổng quan. Ghi nguồn đọc thêm, không sao chép nguyên bài từ nguồn.
+- `runnable: true` đánh dấu code hoàn chỉnh dùng trong kiểm tra offline. Với theory/example, so sánh output; với quiz, so sánh answer; với problem, chạy solutionCode cùng sampleInput.
+- `testCases` tùy chọn trên problem là mảng `{ "input": "...", "output": "..." }` dùng kiểm tra thêm ca biên. Không thay thế sampleInput/sampleOutput.
+
+## Kiểm tra nội dung
+
+```bash
+npm run validate:content
+npm run validate:examples
+npm run lint
+npm run build
+```
+
+Hai lệnh validate cần Python 3. Lệnh validate:examples còn cần g++ hỗ trợ C++17. Chương trình kiểm tra chỉ chạy code tham khảo đã lưu trong repository, trong thư mục tạm, với timeout; không chạy code do người học gửi lên.
+
+Các chương 2–14 có ví dụ C++17/Python 3 hoàn chỉnh. Chương 1 giữ cả các snippet để giải thích cú pháp; chỉ code được đánh dấu runnable mới được chạy tự động. Việc kiểm tra output bỏ qua khác biệt whitespace như online judge.
 
 ## Quy ước
 
