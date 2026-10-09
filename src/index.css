@@ -66,9 +66,6 @@ th, td { border: 1px solid #d5dcea; padding: 6px 10px; text-align: left; }
 .problem-sample pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 .problem-hints summary { cursor: pointer; font-weight: 600; }
 .problem-editor { min-width: 0; padding: 16px; background: #f8fafc; border: 1px solid #d5dcea; border-radius: 12px; align-self: start; position: sticky; top: 16px; }
-.problem-editor__label { display: block; margin: 16px 0 8px; font-weight: 600; }
-.problem-editor textarea { box-sizing: border-box; display: block; width: 100%; min-height: 420px; resize: vertical; padding: 16px; border: 1px solid #334155; border-radius: 8px; background: #14213d; color: #e8eefc; font: 14px/1.7 monospace; tab-size: 4; }
-.problem-editor textarea:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
 .problem-editor__note { font-size: 13px; line-height: 1.6; color: #475569; }
 .problem-editor__actions button { padding: 8px 16px; cursor: not-allowed; }
 @media (max-width: 1000px) {

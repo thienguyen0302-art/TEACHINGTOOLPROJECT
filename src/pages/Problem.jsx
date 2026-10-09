@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { difficultyLabels, getProblemBySlug } from "../services/problemService";
 import "./ProblemBank.css";
+
+const CodeEditor = lazy(() => import("../components/CodeEditor"));
 
 function ProblemWorkspace({ problem, initialLang }) {
   const [language, setLanguage] = useState(initialLang === "python" ? "python" : "cpp");
@@ -34,7 +36,12 @@ function ProblemWorkspace({ problem, initialLang }) {
         <section className="problem-editor bank-panel" aria-label="Khu vực viết code">
           <div className="bank-panel__bar"><span className="bank-code-heading"><span aria-hidden="true">〈/〉</span> Code</span><span className="bank-draft-badge">Bản nháp</span></div>
           <div className="problem-editor__toolbar"><label className="bank-sr-only" htmlFor="code-language">Ngôn ngữ</label><select id="code-language" value={language} onChange={(event) => setLanguage(event.target.value)}><option value="cpp">C++</option><option value="python">Python</option></select><span>UTF-8</span></div>
-          <div className="bank-code-area"><div className="bank-line-numbers" aria-hidden="true">{Array.from({ length: lineCount }, (_, index) => <span key={index}>{index + 1}</span>)}</div><label className="bank-sr-only" htmlFor="problem-code">Code nháp</label><textarea id="problem-code" spellCheck={false} autoCapitalize="off" autoCorrect="off" style={{ height: Math.max(360, lineCount * 23.4 + 36) }} value={drafts[language] ?? ""} onChange={(event) => setDrafts({ ...drafts, [language]: event.target.value })} /></div>
+          <div className="bank-code-area">
+            <Suspense fallback={<div className="bank-editor-loading" role="status">Đang tải trình soạn thảo code…</div>}>
+              <CodeEditor language={language} value={drafts[language] ?? ""}
+                onChange={(value) => setDrafts((previous) => ({ ...previous, [language]: value }))} />
+            </Suspense>
+          </div>
           <div className="bank-editor-footer"><span>{language === "cpp" ? "C++" : "Python"}</span><span>{lineCount} dòng</span></div>
           <div className="bank-execution"><h2>Chạy & nộp bài</h2><p className="problem-editor__note">Chạy và chấm bài sẽ được bổ sung sau. Bản nháp chỉ giữ khi đang mở bài.</p><div className="problem-editor__actions"><button type="button" disabled>▷ Chạy code</button><button className="bank-submit" type="button" disabled>Nộp bài ↑</button></div></div>
         </section>

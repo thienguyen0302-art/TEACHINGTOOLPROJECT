@@ -40,9 +40,11 @@ Bank có đủ thư mục `ch01`–`ch14` để đồng bộ curriculum; thư m�
 sẽ báo lỗi kèm đường dẫn file thay vì ghi đè bài.
 
 `/practice` hiển thị danh sách và filter độ khó; `/problem/:slug` hiển thị đề,
-ví dụ, gợi ý và textarea code tạm thời với starter C++/Python. Code nháp riêng
-cho từng ngôn ngữ, không lưu sau khi rời bài. `solution` và `aiContext` chỉ là
-dữ liệu chuẩn bị cho các phase sau. Chưa có Monaco, chấm bài, progress hay AI.
+ví dụ, gợi ý và Monaco Editor với starter C++/Python. Code nháp và lịch sử
+undo/redo riêng cho từng ngôn ngữ, không lưu sau khi rời bài. Component
+`src/components/CodeEditor.jsx` nhận `language`, `value`, `onChange`; editor và
+worker được bundle cục bộ, không tải từ CDN. `solution` và `aiContext` chỉ là
+dữ liệu chuẩn bị cho các phase sau. Chưa có chấm bài, progress hay AI.
 Hai route dùng chung yêu cầu đăng nhập/xác minh email/chọn ngôn ngữ hiện có.
 
 **Giới hạn Phase 1:** `solution.code` hiện nằm trong JSON được bundle vào frontend,

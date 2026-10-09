@@ -101,11 +101,8 @@
 .bank-ui .problem-editor__toolbar { padding: 8px 14px; background: #242830; justify-content: space-between; gap: 8px; }
 .bank-ui .problem-editor__toolbar select { background: #303640; color: #dce1e9; border: 1px solid #424955; font-size: 12px; padding: 5px 9px; border-radius: 5px; }
 .bank-ui .problem-editor__toolbar > span { font-size: 10px; color: #9198a5; }
-.bank-code-area { display: flex; align-items: stretch; overflow: auto; max-height: 60vh; min-height: 360px; background: #20242b; }
-.bank-line-numbers { padding: 18px 10px 18px 14px; text-align: right; color: #656e7c; background: #20242b; user-select: none; font: 13px/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; }
-.bank-line-numbers span { display: block; }
-.bank-ui .problem-editor textarea { flex: 1; min-width: 0; min-height: 360px; height: auto; width: 100%; resize: none; border: 0; border-radius: 0; padding: 18px 14px; background: #20242b; color: #dbe3ef; font: 13px/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; tab-size: 4; white-space: pre; overflow-x: auto; }
-.bank-ui .problem-editor textarea:focus-visible { outline-offset: -3px; }
+.bank-code-area { height: clamp(360px, 60vh, 600px); min-width: 0; background: #20242b; }
+.bank-editor-loading { display: grid; place-items: center; width: 100%; height: 100%; min-height: 360px; color: #dbe3ef; background: #20242b; font-size: 13px; }
 .bank-editor-footer { display: flex; justify-content: space-between; padding: 8px 14px; background: #242830; color: #969eab; font-size: 10px; }
 .bank-execution { padding: 16px 18px; }
 .bank-execution h2 { margin: 0; font-size: 12px; font-weight: 600; }

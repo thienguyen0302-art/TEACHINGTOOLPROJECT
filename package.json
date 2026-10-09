@@ -8,11 +8,14 @@
     "build": "vite build",
     "lint": "eslint .",
     "validate:content": "python3 scripts/validate_content.py",
+    "test:content": "python3 -m unittest discover -s scripts -p 'test_*.py'",
     "validate:examples": "python3 scripts/validate_content.py --run-code",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "firebase": "^12.19.0",
+    "monaco-editor": "^0.57.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"
