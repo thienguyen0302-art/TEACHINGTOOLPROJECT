@@ -1,4 +1,8 @@
-export default function ProblemCard({ problem }) {
+import { Link } from "react-router-dom";
+import { difficultyLabels } from "../services/problemService";
+
+export default function ProblemCard({ problem, variant = "lesson" }) {
+  if (variant === "bank") return <BankProblemCard problem={problem} />;
   return (
     <article className="card">
       <h3>{problem.title}<span className="badge">{problem.difficulty === "advanced" ? "HSG" : "Luyện tập"}</span></h3>
@@ -16,6 +20,24 @@ export default function ProblemCard({ problem }) {
         {problem.betterApproach && <div className="callout"><b>Hướng cải thiện:</b> {problem.betterApproach}</div>}
         {problem.complexity && <p><b>Độ phức tạp:</b> thời gian {problem.complexity.time}, bộ nhớ {problem.complexity.space}.</p>}
       </details>
+    </article>
+  );
+}
+
+function BankProblemCard({ problem }) {
+  return (
+    <article className="problem-card">
+      <div className="problem-card__heading">
+        <h3><Link to={`/problem/${problem.slug}`}>{problem.title}</Link></h3>
+        <span className={`difficulty-badge difficulty-badge--${problem.difficulty}`}>
+          {difficultyLabels[problem.difficulty]}
+        </span>
+      </div>
+      <p className="problem-meta">{problem.chapterId.toUpperCase()} · Cấp độ {problem.level} · {problem.type}</p>
+      <p className="problem-card__summary">{problem.statement}</p>
+      <div className="problem-tags">
+        {problem.tags.map((tag) => <span className="question-tag" key={tag}>{tag}</span>)}
+      </div>
     </article>
   );
 }

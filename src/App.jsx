@@ -9,6 +9,8 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Chapters from "./pages/Chapters";
 import Lesson from "./pages/Lesson";
+import Practice from "./pages/Practice";
+import Problem from "./pages/Problem";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -65,6 +67,8 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Chapters lang={lang} />} />
             <Route path="/lesson/:id" element={<Lesson lang={lang} />} />
+            <Route path="/practice" element={<Practice />} />
+            <Route path="/problem/:slug" element={<Problem lang={lang} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
