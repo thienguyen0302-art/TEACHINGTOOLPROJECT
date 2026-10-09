@@ -1,5 +1,48 @@
 # Content Schema
 
+## Problem Bank (Phase 1)
+
+Problem Bank độc lập với các bài `practice`/`advanced` trong chapter cũ:
+
+```text
+src/content/problems/
+├── _template.json
+├── ch01/*.json
+└── ch02...ch10/       # Có .gitkeep để giữ các thư mục chưa có bài
+```
+
+Để thêm bài, sao chép `_template.json` vào thư mục chương, đổi tên file,
+đặt `id` và `slug` duy nhất trong toàn bộ bank. `chapterId` phải khớp thư mục.
+Slug nên dùng chữ thường không dấu và dấu gạch ngang. Loader trong
+`src/services/problemService.js` dùng `import.meta.glob` để tự phát hiện JSON
+ở mọi chương; file bắt đầu bằng `_` là template và không được đưa vào danh sách.
+Vite tự cập nhật khi phát triển; bản production cần build lại sau khi thêm bài.
+
+| Trường | Kiểu / ý nghĩa |
+|---|---|
+| `id`, `slug`, `chapterId`, `title` | string; định danh, URL, mã chương, tên bài |
+| `type` | string; Phase 1 dùng `coding` |
+| `difficulty` | `basic` / `intermediate` / `advanced`; tương đối trong chương |
+| `level` | number; cấp độ học tập |
+| `tags` | string[] |
+| `statement`, `inputDescription`, `outputDescription` | string; văn bản thuần, hỗ trợ xuống dòng |
+| `constraints`, `hints` | string[] |
+| `samples` | `{ input, output, explanation }[]`; các giá trị là string |
+| `starterCode` | `{ cpp: string, python: string }` |
+| `solution` | `{ explanation, code: { cpp, python }, complexity: { time, space } }` |
+| `aiContext` | `{ objectives: string[], prerequisites: string[], commonMistakes: string[] }` |
+
+Tất cả trường trên có mặt trong mỗi file problem. Xem `_template.json` làm mẫu.
+`listProblems({ difficulty?, chapterId? })` trả danh sách theo chương và ID;
+`getProblemBySlug(slug)` trả bài hoặc `null`. Metadata sai hoặc ID/slug trùng
+sẽ báo lỗi kèm đường dẫn file thay vì ghi đè bài.
+
+`/practice` hiển thị danh sách và filter độ khó; `/problem/:slug` hiển thị đề,
+ví dụ, gợi ý và textarea code tạm thời với starter C++/Python. Code nháp riêng
+cho từng ngôn ngữ, không lưu sau khi rời bài. `solution` và `aiContext` chỉ là
+dữ liệu chuẩn bị cho các phase sau. Chưa có Monaco, chấm bài, progress hay AI.
+Hai route dùng chung yêu cầu đăng nhập/xác minh email/chọn ngôn ngữ hiện có.
+
 Nội dung mỗi chương được lưu trong một file JSON theo ngôn ngữ:
 
 ```text
