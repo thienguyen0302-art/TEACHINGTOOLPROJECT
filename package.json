@@ -16,7 +16,8 @@
     "test:judge": "node --test server/judge.test.js",
     "dev:web": "vite",
     "test:ai": "node --test server/aiTutor.test.js",
-    "test:progress": "node --test server/submissionProgress.test.js"
+    "test:progress": "node --test server/submissionProgress.test.js",
+    "test:platform": "node --test server/platform.test.js"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

@@ -14,6 +14,7 @@ const NAV = [
   { label: "Tiến độ của tôi", icon: "chart", path: "/progress" },
   { label: "Bảng xếp hạng", icon: "trophy", path: null },
 ];
+const TEACHER_NAV = { label: "Giáo viên", icon: "chart", path: "/teacher" };
 
 function isActive(item, pathname) {
   if (!item.path) return false;
@@ -22,7 +23,7 @@ function isActive(item, pathname) {
   return pathname.startsWith(item.path);
 }
 
-export default function AppShell({ user, onLogout, children }) {
+export default function AppShell({ user, isTeacher = false, weekActive = 0, onLogout, children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const timer = useRef(null);
@@ -60,14 +61,14 @@ export default function AppShell({ user, onLogout, children }) {
             <div className="profile-avatar">{initials(user)}</div>
             <div>
               <strong>{displayName(user)}</strong>
-              <span>Học viên</span>
+              <span>{isTeacher ? "Giáo viên" : "Học viên"}</span>
             </div>
             <span className="profile-chevron"><Icon name="chevron" /></span>
           </button>
 
           <nav className="side-nav" aria-label="Điều hướng học tập">
             <p>Không gian học tập</p>
-            {NAV.map((item) => (
+            {(isTeacher ? [...NAV, TEACHER_NAV] : NAV).map((item) => (
               <button
                 key={item.label}
                 className={isActive(item, pathname) ? "active" : ""}
@@ -82,10 +83,10 @@ export default function AppShell({ user, onLogout, children }) {
           <div className="weekly-goal">
             <div className="goal-heading">
               <span><Icon name="fire" /></span>
-              <div><strong>Mục tiêu tuần</strong><small>5 / 7 ngày</small></div>
+              <div><strong>Mục tiêu tuần</strong><small>{weekActive} / 7 ngày</small></div>
             </div>
-            <div className="goal-bar"><span /></div>
-            <p>Còn 2 ngày nữa, cố lên nhé!</p>
+            <div className="goal-bar"><span style={{ width: `${Math.round((weekActive / 7) * 100)}%` }} /></div>
+            <p>{weekActive >= 7 ? "Tuyệt vời, bạn đã học đủ cả tuần!" : `Còn ${7 - weekActive} ngày nữa, cố lên nhé!`}</p>
           </div>
 
           <div className="sidebar-bottom">

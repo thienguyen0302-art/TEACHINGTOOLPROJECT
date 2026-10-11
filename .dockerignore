@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.env
+.env.local
+src/components
+src/pages
+src/services
+src/hooks

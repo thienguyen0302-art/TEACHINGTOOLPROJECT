@@ -1,3 +1,5 @@
+import { authHeaders } from './authHeader.js';
+
 // Send a minimal public snapshot; hidden payload fields never leave this client.
 export function publicJudgeSnapshot(judge) {
   if (!judge) return null;
@@ -12,7 +14,7 @@ export function publicJudgeSnapshot(judge) {
 export async function askTutor({ slug, language, source, action, judgeResult, signal, message, history }) {
   let response;
   try {
-    response = await fetch('/api/ai/tutor', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    response = await fetch('/api/ai/tutor', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
       body: JSON.stringify({ slug, language, source, action, judgeResult: publicJudgeSnapshot(judgeResult), ...(action === 'chat' ? { message, history: (history ?? []).map(({ role, text }) => ({ role, text })) } : {}) }), signal });
   } catch (error) {
     if (error.name === 'AbortError') throw error;
