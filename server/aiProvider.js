@@ -3,7 +3,7 @@ export class TutorError extends Error {
   constructor(status, message) { super(message); this.status = status; }
 }
 
-const labels = { hint: 'Gợi ý', explain_error: 'Phân tích lỗi code', explain_failure: 'Tại sao bài chưa đúng?', complexity: 'Độ phức tạp', visualize: 'Trực quan hóa code' };
+const labels = { chat: 'Peanut AI', hint: 'Gợi ý', explain_error: 'Phân tích lỗi code', explain_failure: 'Tại sao bài chưa đúng?', complexity: 'Độ phức tạp', visualize: 'Trực quan hóa code' };
 const text = (value, limit = 1800) => typeof value === 'string' ? value.trim().slice(0, limit) : '';
 
 export function normalizeFeedback(raw, action, visualizationContext = {}) {
@@ -27,7 +27,7 @@ export function normalizeFeedback(raw, action, visualizationContext = {}) {
     ...(action === 'visualize' ? { visualization: normalizeVisualization(data.visualization, visualizationContext) } : {}) };
 }
 
-export const outputTokenLimits = Object.freeze({ hint: 350, explain_error: 450, explain_failure: 450, complexity: 450, visualize: 1200 });
+export const outputTokenLimits = Object.freeze({ chat: 600, hint: 350, explain_error: 450, explain_failure: 450, complexity: 450, visualize: 1200 });
 export function providerRequest({ url, model, system, context, action }) {
   if (!Object.hasOwn(outputTokenLimits, action)) throw new TutorError(400, 'AI action không hợp lệ.');
   return {

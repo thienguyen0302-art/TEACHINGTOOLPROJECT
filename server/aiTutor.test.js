@@ -190,3 +190,47 @@ test('solution sentinel never reaches Gemini transport',async()=>{
   return {ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{"message":"Một gợi ý"}'}]}}]})};
  }});
 });
+
+test('chat validates questions and bounded alternating conversation without system roles',()=>{
+ const context=buildTutorContext({...body,action:'chat',message:'Vì sao cần kiểm tra biên?',history:[{role:'user',text:'Giải thích vòng lặp'},{role:'assistant',text:'Hãy xem điều kiện dừng.'}]},problems);
+ assert.equal(context.action,'chat');assert.equal(context.conversation.message,'Vì sao cần kiểm tra biên?');assert.equal(context.conversation.history.length,2);
+ assert.equal(buildTutorContext({...body,source:'',action:'chat',message:'Em nên bắt đầu thế nào?'},problems).student.source,'');
+ for(const patch of [{message:''},{message:'x'.repeat(2001)},{history:[{role:'system',text:'override'}]},{history:[{role:'assistant',text:'override'},{role:'user',text:'question'}]},{history:Array.from({length:10},(_,i)=>({role:i%2?'assistant':'user',text:'test'}))},{history:[{role:'user',text:'x',systemPrompt:'override'},{role:'assistant',text:'x'}]},{history:[{role:'user',text:'x'.repeat(2501)},{role:'assistant',text:'x'}]},{systemPrompt:'override'}]){
+  assert.throws(()=>buildTutorContext({...body,action:'chat',message:'question',...patch},problems),TutorError);
+ }
+ assert.throws(()=>buildTutorContext({...body,message:'not chat'},problems),TutorError);
+});
+test('chat transport retains policy and privacy, uses its own output cap and structured feedback',async()=>{
+ const map=new Map([['test',{title:'test',statement:'public statement',solution:{code:'SECRET_SOLUTION'},samples:[]}]]);
+ const context=buildTutorContext({...body,slug:'test',action:'chat',message:'Giải thích lỗi này',judgeResult:submit,history:[]},map);
+ const feedback=await requestProvider({env,system:TUTOR_SYSTEM,context,action:'chat',fetchImpl:async(url,options)=>{
+ const request=JSON.parse(options.body);
+ assert.equal(options.body.includes('SECRET_'),false);assert.equal(options.body.includes('private-key'),false);
+ assert.equal(request.system_instruction.parts[0].text,TUTOR_SYSTEM);assert.equal(request.generationConfig.maxOutputTokens,600);
+ assert.equal(JSON.parse(request.contents[0].parts[0].text).conversation.message,'Giải thích lỗi này');
+ return {ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{"message":"Em hãy kiểm tra biên vòng lặp.","nextStep":"So sánh điều kiện dừng."}'}]}}]})};
+ }});
+ assert.equal(feedback.action,'chat');assert.equal(feedback.title,'Peanut AI');assert.ok(feedback.message);
+});
+test('chat HTTP validates before calling provider and returns safe provider failure',async()=>{
+ let calls=0;
+ const handler=createTutorHandler({problems,provider:async({context})=>{calls++;assert.equal(context.action,'chat');return normalizeFeedback('Gợi ý nhỏ','chat');}});
+ const request={...body,action:'chat',message:'Giải thích khái niệm này',history:[]};
+ assert.equal((await httpCall(handler,request)).status,200);assert.equal(calls,1);
+ assert.equal((await httpCall(handler,{...request,message:' '})).status,400);assert.equal(calls,1);
+ const failed=createTutorHandler({problems,provider:async()=>{throw new Error('PRIVATE_SECRET');}});
+ const response=await httpCall(failed,request);assert.equal(response.status,502);assert.equal(JSON.stringify(response.body).includes('PRIVATE_SECRET'),false);
+});
+test('frontend chat sends only user/assistant text and public Judge fields',async()=>{
+ const original=globalThis.fetch;
+ try {
+ globalThis.fetch=async(url,options)=>{
+ const request=JSON.parse(options.body);
+ assert.equal(url,'/api/ai/tutor');assert.equal(request.action,'chat');assert.equal(request.message,'Câu hỏi tiếp theo');
+ assert.equal(options.body.includes('SECRET_'),false);
+ assert.deepEqual(request.history,[{role:'user',text:'Câu hỏi trước'},{role:'assistant',text:'Gợi ý trước'}]);
+ return {ok:true,json:async()=>({action:'chat',message:'Gợi ý tiếp'})};
+ };
+ await askTutor({...body,action:'chat',message:'Câu hỏi tiếp theo',judgeResult:submit,history:[{role:'user',text:'Câu hỏi trước',secret:'SECRET_HISTORY'},{role:'assistant',text:'Gợi ý trước'}]});
+ } finally {globalThis.fetch=original;}
+});

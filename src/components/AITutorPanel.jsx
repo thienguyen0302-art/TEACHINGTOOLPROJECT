@@ -2,6 +2,7 @@ import { useEffect, useRef, useReducer } from 'react';
 import { askTutor } from '../services/aiService';
 import { preferredTutorAction, tutorActions } from '../utils/tutorActions';
 import TutorIcon from './TutorIcon';
+import AITutorChat from './AITutorChat';
 import CodeStepVisualizer from './CodeStepVisualizer';
 import './AITutorPanel.css';
 
@@ -57,6 +58,7 @@ export default function AITutorPanel({ slug, language, source, judgeResult, judg
         {feedback.action === 'visualize' && !feedback.visualization && <p className="ai-tutor-trace-empty">AI chưa tạo được các bước hợp lệ cho code này. Em có thể gửi lại yêu cầu hoặc chọn gỡ lỗi code.</p>}
       </article>}
     </div>
+    <AITutorChat slug={slug} language={language} source={source} judgeResult={judgeResult} judgeBusy={judgeBusy} />
     <p className="ai-tutor-disclaimer"><TutorIcon name="spark" />AI gợi ý, em tự khám phá. Judge0 xác nhận kết quả.</p>
   </aside>;
 }

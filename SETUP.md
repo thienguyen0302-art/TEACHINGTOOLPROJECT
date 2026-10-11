@@ -89,11 +89,11 @@ Dùng `thinkingLevel: minimal`, JSON MIME và output caps: hint 350; explain_err
 
 Chạy lại `npm run dev` sau cấu hình. Không đặt các biến này dưới prefix `VITE_`; `.env.local`/`.env` không được commit. Chưa cấu hình AI trả HTTP 503 với thông báo rõ, Judge vẫn hoạt động. AI và Judge có bộ đếm concurrency độc lập; AI giới hạn 2 request, timeout 30 giây, body 100 KB và source 50 KB.
 
-React → `POST /api/ai/tutor` → server tra metadata theo slug → `buildTutorContext` → provider adapter → normalized JSON → AITutorPanel. Client không được gửi prompt tùy ý. Context không lấy solution/code chuẩn. Submit chỉ đưa summary pass/total và trạng thái/tài nguyên từng test, không đưa output/diagnostics kể cả client gửi thêm. Public Run có stdout/stderr/compileOutput để giải thích lỗi. Secret không nằm trong prompt. Phản hồi lỗi provider được chuẩn hóa, JSON hỏng có fallback, code block/chương trình hoàn chỉnh dễ nhận biết bị chặn.
+React → `POST /api/ai/tutor` → server tra metadata theo slug → `buildTutorContext` → provider adapter → normalized JSON → AITutorPanel. Client không được gửi system prompt; câu hỏi chat được validate theo contract riêng bên dưới. Context không lấy solution/code chuẩn. Submit chỉ đưa summary pass/total và trạng thái/tài nguyên từng test, không đưa output/diagnostics kể cả client gửi thêm. Public Run có stdout/stderr/compileOutput để giải thích lỗi. Secret không nằm trong prompt. Phản hồi lỗi provider được chuẩn hóa, JSON hỏng có fallback, code block/chương trình hoàn chỉnh dễ nhận biết bị chặn.
 
 Đổi code/ngôn ngữ hủy AI request, xóa feedback cũ và chỉ dùng Judge result nếu khớp snapshot code/ngôn ngữ đã chấm. AI error/loading/retry không thay đổi draft hoặc JudgeResults. Chuyển ngôn ngữ trong Problem Bank vẫn giữ drafts Monaco riêng như trước.
 
-`npm run test:ai` dùng mock provider, không gọi LLM thật. Phải chạy thêm toàn bộ checks Day 13 trước merge. Chất lượng gợi ý và tuân thủ hint-first cần đánh giá với model thực tế; prompt và bộ chặn code đơn giản không phải bảo đảm ngữ nghĩa tuyệt đối. Judge snapshot do client cung cấp, chưa có server-owned submission attestation. Production auth/rate limit/history vẫn để phase sau. Không có chat nhiều lượt, streaming, Firestore conversation, voice hoặc RAG.
+`npm run test:ai` dùng mock provider, không gọi LLM thật. Phải chạy thêm toàn bộ checks Day 13 trước merge. Chất lượng gợi ý và tuân thủ hint-first cần đánh giá với model thực tế; prompt và bộ chặn code đơn giản không phải bảo đảm ngữ nghĩa tuyệt đối. Judge snapshot do client cung cấp, chưa có server-owned submission attestation. Production auth/rate limit/history vẫn để phase sau. Chat nhiều lượt trong phiên được mô tả ở phần Trò chuyện bên dưới; không có streaming, Firestore conversation, voice hoặc RAG.
 
 ### UI Tutor và trực quan hóa code
 
@@ -149,3 +149,15 @@ npm run build
 ```
 
 Tests progress dùng mocks; không gọi Judge0/Gemini/Firestore thật. Không thay đổi Dashboard, Quiz schema, curriculum, Judge hidden-test rule, Gemini transport hoặc visualization. Firebase production hardening và Exam Engine/Timer để phase sau.
+
+## Trò chuyện riêng trong AI Tutor
+
+Mở **Trò chuyện với AI** dưới các action Peanut AI trong Problem Bank hoặc Lesson Practice/Advanced. Nhập câu hỏi, bấm Gửi hoặc Enter; Shift+Enter xuống dòng. Có Dừng trả lời, Thử gửi lại khi lỗi và Cuộc trò chuyện mới. Đóng/mở phần chat giữ hội thoại khi panel vẫn mounted.
+
+Chat gọi cùng `POST /api/ai/tutor` với `action: "chat"`, thêm `message` (tối đa 2000 ký tự) và `history` gồm các cặp `{role: "user" | "assistant", text}`. Backend kiểm tra thứ tự user/assistant, chỉ nhận tối đa 8 messages (4 lượt), tối đa 2500 ký tự/message; không nhận system role, system prompt hay metadata tùy ý. History được đóng gói như dữ liệu không tin cậy trong sanitized context, không thay system instruction. Gemini chat output cap 600 token, thinking minimal, JSON response và normalization/redaction giống các action khác. Không thay cap các action cũ.
+
+Chat vẫn nhận bài, source hiện tại và public Judge snapshot; Submit không mang hidden diagnostics, solution không đi vào context. Có thể hỏi khi chưa viết code. Judge quyết định verdict/điểm; chat không sửa code, tự submit hoặc cập nhật progress. Mỗi câu hỏi cần thao tác gửi của học sinh, không có auto-call. Không bật tools/Search.
+
+UI giữ tối đa 10 lượt để tránh tăng bộ nhớ, chỉ gửi 4 lượt gần nhất cho model. Lịch sử không lưu Firestore/localStorage và mất khi refresh/đóng workspace. Đổi source, ngôn ngữ hoặc Judge result sẽ abort request và reset hội thoại để tránh phân tích code mới bằng context cũ; câu hỏi nháp vẫn giữ. Giới hạn chung AI vẫn là concurrency 2, body 100 KB, source 50 KB, timeout 30 giây. Chat thêm lượt đồng nghĩa thêm requests/quota Gemini. Prompt và bộ chặn full code giữ hint-first nhưng không bảo đảm tuyệt đối chất lượng nội dung của model.
+
+Kiểm tra chat: test:ai gồm 22 cases, bao gồm validate message/history, giữ system policy, không gửi hidden diagnostics/solution, cap chat và frontend allowlist. Các lệnh test:ai, test:judge, test:progress, validate:content, test:content, lint, build đều pass. Browser mock kiểm tra nhiều lượt, history 4 lượt, collapse/open, retry, cancel không gửi lại, reset theo source/language/Judge, hỏi khi chưa có code, mobile và regression quick actions/visualization. Không gọi Gemini thật trong tests.
