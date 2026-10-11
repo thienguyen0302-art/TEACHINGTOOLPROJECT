@@ -91,3 +91,11 @@ React → `POST /api/ai/tutor` → server tra metadata theo slug → `buildTutor
 Đổi code/ngôn ngữ hủy AI request, xóa feedback cũ và chỉ dùng Judge result nếu khớp snapshot code/ngôn ngữ đã chấm. AI error/loading/retry không thay đổi draft hoặc JudgeResults. Chuyển ngôn ngữ trong Problem Bank vẫn giữ drafts Monaco riêng như trước.
 
 `npm run test:ai` dùng mock provider, không gọi LLM thật. Phải chạy thêm toàn bộ checks Day 13 trước merge. Chất lượng gợi ý và tuân thủ hint-first cần đánh giá với model thực tế; prompt và bộ chặn code đơn giản không phải bảo đảm ngữ nghĩa tuyệt đối. Judge snapshot do client cung cấp, chưa có server-owned submission attestation. Production auth/rate limit/history vẫn để phase sau. Không có chat nhiều lượt, streaming, Firestore conversation, voice hoặc RAG.
+
+### UI Tutor và trực quan hóa code
+
+Chọn một chip hành động rồi bấm nút mũi tên trong panel Peanut AI. Giao diện có composer gọn, lựa chọn đề xuất theo Judge và feedback tách rõ bước tiếp theo. Đây vẫn là request theo action cố định, không phải chat tự do.
+
+Action `visualize` bổ sung minh họa tối đa 16 bước từ code học sinh và **public sample đầu tiên**, gồm dòng đang xét, trạng thái biến, thanh chọn bước và phát/tạm dừng. Chỉ số dòng và cấu trúc step được backend kiểm tra; input/output mẫu lấy từ metadata backend, không lấy từ model. Phản hồi không có bước hợp lệ sẽ báo rõ thay vì crash.
+
+Visualization là **AI illustration**, chưa phải instrumentation/trace thực thi thực tế. Nó không thay đổi Judge verdict và không sử dụng hidden input/output. Cần AI provider cấu hình để tạo các bước; chất lượng minh họa tùy model.

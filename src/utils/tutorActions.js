@@ -1,8 +1,9 @@
 export const tutorActions = [
-  { id: 'hint', label: 'Gợi ý bước tiếp theo' },
-  { id: 'explain_error', label: 'Phân tích lỗi code' },
-  { id: 'explain_failure', label: 'Tại sao bài chưa đúng?' },
-  { id: 'complexity', label: 'Phân tích độ phức tạp' },
+  { id: 'hint', label: 'Gợi ý tiếp theo', icon: 'spark', description: 'Một gợi ý nhỏ để tự tìm lời giải.' },
+  { id: 'explain_error', label: 'Gỡ lỗi code', icon: 'bug', description: 'Hiểu thông báo lỗi và vị trí cần xem lại.' },
+  { id: 'explain_failure', label: 'Vì sao chưa đúng?', icon: 'search', description: 'Tìm điểm cần kiểm tra trong logic hiện tại.' },
+  { id: 'complexity', label: 'Độ phức tạp', icon: 'chart', description: 'Xem chi phí thời gian và bộ nhớ của code.' },
+  { id: 'visualize', label: 'Trực quan hóa', icon: 'steps', description: 'Theo dõi từng dòng và trạng thái biến với ví dụ công khai.' },
 ];
 export function preferredTutorAction(judge) {
   if (!judge) return 'hint';

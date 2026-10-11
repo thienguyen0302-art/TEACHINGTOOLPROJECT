@@ -52,3 +52,11 @@ No configured real AI provider/model was available; pedagogical quality, model b
 Prompt policy plus an obvious-code blocker does not guarantee semantic compliance by every model. Client-supplied Judge snapshots are not cryptographically attested. Existing solutions are still bundled in frontend educational content (Day 13 limitation), but excluded from Tutor context. Production auth, per-user limits and submission/history storage remain deferred.
 
 No merge to main performed. Unrelated local package-lock.json changes remain excluded.
+
+## UI refinement and code visualization
+
+Panel redesigned with a light Gemini-inspired layout, gradient greeting, selectable action chips and compact send composer. Added `visualize` action, `server/tutorVisualization.js`, `src/components/CodeStepVisualizer.jsx`/CSS and `TutorIcon.jsx`. No arbitrary user prompt or code-writing action added.
+
+The provider returns up to 16 bounded steps, each linked to an existing source line with explanatory variables. Public input/expected output come from server metadata, not model-returned fields. Malformed traces fall back gracefully. Nested credentials are redacted. Visualization is explicitly marked AI illustration, not an executed Judge0 trace.
+
+Installed temporary Playwright/Chromium and runtime libraries under /tmp (no project dependency change). Browser checks of the actual panel, using mock HTTP AI responses, passed on desktop and 390px mobile: hint/error/retry, action selection/send, highlighted source line, previous/next steps, autoplay, reset and no horizontal page overflow or browser exceptions. Screenshots saved under /tmp/tutor-ui-check. Full authenticated app navigation, Monaco language-switch flows and actual LLM trace quality remain unverified.

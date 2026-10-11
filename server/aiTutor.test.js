@@ -132,3 +132,29 @@ test('obvious solution-shaped provider output is not displayed',()=>{
   assert.equal(response.confidence,'low');assert.equal(response.nextStep,'');
  }
 });
+
+import { normalizeVisualization } from './tutorVisualization.js';
+test('visualization only returns bounded source lines and variables with server-owned sample',()=>{
+ const options={source:'a = 2\nb = 3\nprint(a+b)',samples:[{input:'2 3',output:'5'}]};
+ const raw={input:'SECRET_HIDDEN',expectedOutput:'SECRET_HIDDEN',steps:[
+ {line:1,title:'Read input',explanation:'Read a',variables:[{name:'a',value:'2',secret:'SECRET_HIDDEN'}],input:'SECRET_HIDDEN'},
+ {line:3,title:'Output',explanation:'Use sum',variables:[{name:'sum',value:'5'}]},
+ {line:999,explanation:'Invalid'},{line:0,explanation:'Invalid'},{line:2,variables:[]},null]};
+ const visualization=normalizeVisualization(raw,options);
+ assert.equal(visualization.steps.length,2);assert.equal(visualization.input,'2 3');assert.equal(visualization.expectedOutput,'5');
+ assert.equal(JSON.stringify(visualization).includes('SECRET_HIDDEN'),false);
+ assert.equal(visualization.kind,'ai-illustration');
+ for(const malformed of [null,{},[],{steps:[]},{steps:[{line:999,explanation:'bad'}]}])assert.equal(normalizeVisualization(malformed,options),null);
+ const feedback=normalizeFeedback({message:'Look at these steps',visualization:raw},'visualize',options);
+ assert.equal(feedback.action,'visualize');assert.ok(feedback.visualization);
+ assert.equal(normalizeFeedback('{bad','visualize',options).visualization,null);
+});
+test('visualize is allowlisted and still excludes solutions and hidden data',()=>{
+ const context=buildTutorContext({...body,action:'visualize',judgeResult:submit},problems);
+ assert.equal(context.action,'visualize');assert.equal(JSON.stringify(context).includes('SECRET_'),false);
+ assert.ok(TUTOR_SYSTEM.includes('trace thực thi'));
+});
+test('visualization credentials are redacted in nested fields',async()=>{
+ const feedback=await requestProvider({env,action:'visualize',system:TUTOR_SYSTEM,context:{student:{source:'a=2'},problem:{samples:[]}},fetchImpl:async()=>({ok:true,json:async()=>({choices:[{message:{content:JSON.stringify({message:'Trace',visualization:{steps:[{line:1,explanation:'private-key',variables:[{name:'a',value:'private-key'}]}]}})}}]})})});
+ assert.equal(JSON.stringify(feedback).includes('private-key'),false);
+});
