@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
-import { useNotice } from "../components/AppShell";
+import { useNotice } from "../hooks/useNotice";
 import { curriculum, LANG_BY_KEY } from "../data/curriculum";
 
 // Danh sách 12 chương theo thiết kế. Chương nào đã có file JSON (cùng số thứ tự) thì mở được và lấy tiến độ thật.

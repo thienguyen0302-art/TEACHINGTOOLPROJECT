@@ -51,3 +51,31 @@ test('chapter exercises have distinct language/section IDs and deduplicated serv
     }
   }
 });
+
+import { gradeSubmission, compareOutputTokens } from './judge.js';
+test('token comparison does not treat numeric representations as equal', () => {
+  assert.equal(compareOutputTokens('01', '1'), false);
+  assert.equal(compareOutputTokens('a\nb', 'a b'), true);
+});
+test('compilation errors stop submission; wrong answers retain full breakdown', async () => {
+  const tests = [{ input: '1', output: '1' }, { input: '2', output: '2' }];
+  let calls = 0;
+  const compiled = await gradeSubmission({ tests, publicTestCount: 1, execute: async () => { calls++; return { statusId: 6, status: 'Compilation Error', compileOutput: 'bad code' }; } });
+  assert.equal(calls, 1);
+  assert.equal(compiled.stoppedEarly, true);
+  assert.equal(compiled.total, 2);
+  assert.equal(compiled.score, 0);
+  const wrong = await gradeSubmission({ tests, publicTestCount: 1, execute: async () => ({ statusId: 3, stdout: '1', status: 'Accepted' }) });
+  assert.equal(wrong.results.length, 2);
+  assert.equal(wrong.score, 50);
+  assert.equal(wrong.stoppedEarly, false);
+  assert.deepEqual(Object.keys(wrong.results[1]).sort(), ['index','hidden','passed','status','time','memory'].sort());
+});
+test('infrastructure failures do not produce a score', async () => {
+  for (const statusId of [13,14]) {
+    await assert.rejects(gradeSubmission({ tests: [{ input: '', output: '' }], publicTestCount: 1, execute: async () => ({ statusId, status: 'Internal Error' }) }), /nội bộ/);
+  }
+});
+test('runtime and time limit failures remain failed tests', () => {
+  for (const statusId of [5,7,8,9,10,11,12]) assert.equal(gradeResult({statusId, status:'Execution failed', stdout:'1'}, {output:'1'}, 0, false).passed, false);
+});

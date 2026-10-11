@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
-import { useNotice } from "../components/AppShell";
+import { useNotice } from "../hooks/useNotice";
 import { curriculum, LANG_BY_KEY } from "../data/curriculum";
 import { firstName, greeting, todayText } from "../utils/format";
 

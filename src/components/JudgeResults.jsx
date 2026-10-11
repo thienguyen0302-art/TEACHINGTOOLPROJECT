@@ -12,6 +12,7 @@ export default function JudgeResults({ busy, error, submission }) {
               </>}
               {submission?.mode === "submit" && <>
                 <h3>Điểm: {submission.score}/100 · Đạt {submission.passed}/{submission.total} test</h3>
+                {submission.stoppedEarly && <p>Đã dừng chấm do lỗi biên dịch. Các test còn lại chưa chạy; hãy sửa code và nộp lại.</p>}
                 {submission.results.map((test) => <details key={test.index}>
                   <summary>Test {test.index} {test.hidden ? "(ẩn)" : "(ví dụ)"}: {test.status}</summary>
                   <p>Thời gian: {test.time ?? "—"} s · Bộ nhớ: {test.memory ?? "—"} KB</p>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
   signInWithPopup, GoogleAuthProvider,
@@ -105,20 +105,12 @@ export default function Login() {
   const [isErr, setIsErr] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [feedbacks, setFeedbacks] = useState([]);
-
-  useEffect(() => {
-    const savedFeedbacks = window.localStorage.getItem(feedbackStorageKey);
-
-    if (savedFeedbacks) {
-      try {
-        const parsedFeedbacks = JSON.parse(savedFeedbacks);
-        setFeedbacks(parsedFeedbacks.filter((feedback) => feedback.verified));
-      } catch {
-        window.localStorage.removeItem(feedbackStorageKey);
-      }
-    }
-  }, []);
+  const [feedbacks] = useState(() => {
+    try {
+      const parsed = JSON.parse(window.localStorage.getItem(feedbackStorageKey) || '[]');
+      return Array.isArray(parsed) ? parsed.filter((feedback) => feedback?.verified) : [];
+    } catch { return []; }
+  });
 
   const fail = (e) => {
     setIsErr(true);
