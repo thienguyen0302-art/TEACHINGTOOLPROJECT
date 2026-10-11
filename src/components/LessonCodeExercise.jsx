@@ -1,3 +1,4 @@
+import AITutorPanel from "./AITutorPanel";
 import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react';
 import { judgeCode } from '../services/judgeService';
 import JudgeResults from './JudgeResults';
@@ -29,7 +30,7 @@ export default function LessonCodeExercise({ problem, language, chapterId, secti
     setSubmission(null);
     try {
       const result = await judgeCode({ slug: `lesson/${language}/${chapterId}/${section}/${problem.id}`, source, language, mode, stdin, signal: controller.signal });
-      if (!controller.signal.aborted) setSubmission({ ...result, language });
+      if (!controller.signal.aborted) setSubmission({ ...result, language, judgedSource: source });
     } catch (failure) {
       if (!controller.signal.aborted) setError(failure.message);
     } finally {
@@ -53,5 +54,6 @@ export default function LessonCodeExercise({ problem, language, chapterId, secti
       <button type="button" className="bank-submit" disabled={Boolean(busy) || !source.trim()} onClick={() => execute('submit')}>{busy === 'submit' ? 'Đang chấm…' : 'Nộp bài ↑'}</button>
     </div>
     <JudgeResults busy={busy} error={error} submission={submission} />
+    <AITutorPanel slug={`lesson/${language}/${chapterId}/${section}/${problem.id}`} language={language} source={source} judgeBusy={Boolean(busy)} judgeResult={submission?.judgedSource === source ? submission : null} />
   </section>;
 }

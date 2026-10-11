@@ -1,3 +1,4 @@
+import AITutorPanel from "../components/AITutorPanel";
 import { lazy, Suspense, useEffect, useId, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { difficultyLabels, getProblemBySlug } from "../services/problemService";
@@ -77,7 +78,7 @@ function ProblemWorkspace({ problem, initialLang }) {
     setSubmission(null);
     try {
       const result = await judgeCode({ slug: problem.slug, source: drafts[language], language, mode, stdin, signal: controller.signal });
-      if (!controller.signal.aborted) setSubmission({ ...result, language });
+      if (!controller.signal.aborted) setSubmission({ ...result, language, judgedSource: drafts[language] });
     } catch (failure) {
       if (!controller.signal.aborted) setError(failure.message);
     } finally {
@@ -204,6 +205,7 @@ function ProblemWorkspace({ problem, initialLang }) {
               <button className="bank-submit" type="button" disabled={Boolean(busy) || !drafts[language]?.trim()} onClick={() => execute("submit")}>{busy === "submit" ? "Đang chấm…" : "Nộp bài ↑"}</button>
             </div>
             <JudgeResults busy={busy} error={error} submission={submission} />
+            <AITutorPanel slug={problem.slug} language={language} source={drafts[language] ?? ""} judgeBusy={Boolean(busy)} judgeResult={submission?.language === language && submission?.judgedSource === drafts[language] ? submission : null} />
           </div>
         </section>
       </div>

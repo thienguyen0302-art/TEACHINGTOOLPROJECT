@@ -1,0 +1,8 @@
+.ai-tutor-panel { margin-top: 20px; padding: 16px; border: 1px solid #657184; border-radius: 10px; }
+.ai-tutor-panel h3 { margin-top: 0; }
+.ai-tutor-panel p { overflow-wrap: anywhere; white-space: pre-wrap; }
+.ai-tutor-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ai-tutor-actions button { padding: 10px; border-radius: 8px; }
+.ai-tutor-actions small { display: block; margin-top: 4px; }
+.ai-tutor-actions .ai-tutor-recommended { border: 2px solid #6798e7; }
+.ai-tutor-feedback { margin-top: 12px; }

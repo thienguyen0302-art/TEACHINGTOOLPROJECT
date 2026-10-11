@@ -1,3 +1,4 @@
+import { createTutorHandler } from './aiTutor.js';
 import http from 'node:http';
 import { readFileSync, readdirSync } from 'node:fs';
 import { Buffer } from 'node:buffer';
@@ -16,12 +17,14 @@ const lessonProblems = loadLessonProblems();
 const hiddenTests = JSON.parse(readFileSync(new URL('./testcases.json', import.meta.url), 'utf8'));
 const languages = { cpp: Number(process.env.JUDGE0_CPP_ID || 2), python: Number(process.env.JUDGE0_PYTHON_ID || 28) };
 let active = 0;
+const tutorHandler = createTutorHandler();
 
 const server = http.createServer(async (req, res) => {
   const reply = (status, data) => { if (!res.destroyed) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); } };
-  if (req.url !== '/api/judge' || req.method !== 'POST') return reply(404, { error: 'Không tìm thấy API.' });
+  if (!['/api/judge', '/api/ai/tutor'].includes(req.url) || req.method !== 'POST') return reply(404, { error: 'Không tìm thấy API.' });
   // The development service is localhost-only; reject cross-origin browser requests.
   if (req.headers.origin && !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(req.headers.origin) && req.headers.origin !== process.env.APP_ORIGIN) return reply(403, { error: 'Origin không được phép.' });
+  if (req.url === '/api/ai/tutor') return tutorHandler(req, res);
   if (!process.env.JUDGE0_URL) return reply(503, { error: 'Chưa cấu hình JUDGE0_URL cho backend.' });
   if (active >= 2) return reply(429, { error: 'Máy chấm đang bận. Hãy thử lại sau.' });
   const controller = new AbortController();

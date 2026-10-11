@@ -69,3 +69,25 @@ npm run test:content
 npm run lint
 npm run build
 ```
+
+## Day 14 — AI Tutor MVP
+
+AI Tutor xuất hiện cạnh JudgeResults trong Problem Bank và Lesson Practice/Advanced. Có bốn thao tác one-shot: gợi ý, giải thích lỗi code, giải thích chưa đúng và phân tích độ phức tạp. Chưa chạy Judge vẫn hỏi gợi ý được. UI ưu tiên lỗi compile/runtime, bài chưa đúng, hoặc complexity khi Accepted; mọi action vẫn do học sinh chọn. AI không submit, không sửa Monaco và không thay đổi điểm Judge0.
+
+Cấu hình **server-only** trong `.env.local`:
+
+```env
+AI_API_URL=
+AI_API_KEY=
+AI_MODEL=
+```
+
+`AI_API_URL` là URL đầy đủ của endpoint Chat Completions tương thích (kết thúc bằng `/chat/completions` tùy provider), không phải chỉ base URL. `AI_MODEL` là tên model của provider bạn chọn; không có model mặc định. Adapter gửi Bearer auth và `messages`, nhận `choices[0].message.content`; không yêu cầu native JSON mode. Khi đổi provider khác protocol, thay transport trong `server/aiProvider.js`, UI không đổi. Tham khảo [định dạng Chat Completions](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create).
+
+Chạy lại `npm run dev` sau cấu hình. Không đặt các biến này dưới prefix `VITE_`; `.env.local`/`.env` không được commit. Chưa cấu hình AI trả HTTP 503 với thông báo rõ, Judge vẫn hoạt động. AI và Judge có bộ đếm concurrency độc lập; AI giới hạn 2 request, timeout 30 giây, body 100 KB và source 50 KB.
+
+React → `POST /api/ai/tutor` → server tra metadata theo slug → `buildTutorContext` → provider adapter → normalized JSON → AITutorPanel. Client không được gửi prompt tùy ý. Context không lấy solution/code chuẩn. Submit chỉ đưa summary pass/total và trạng thái/tài nguyên từng test, không đưa output/diagnostics kể cả client gửi thêm. Public Run có stdout/stderr/compileOutput để giải thích lỗi. Secret không nằm trong prompt. Phản hồi lỗi provider được chuẩn hóa, JSON hỏng có fallback, code block/chương trình hoàn chỉnh dễ nhận biết bị chặn.
+
+Đổi code/ngôn ngữ hủy AI request, xóa feedback cũ và chỉ dùng Judge result nếu khớp snapshot code/ngôn ngữ đã chấm. AI error/loading/retry không thay đổi draft hoặc JudgeResults. Chuyển ngôn ngữ trong Problem Bank vẫn giữ drafts Monaco riêng như trước.
+
+`npm run test:ai` dùng mock provider, không gọi LLM thật. Phải chạy thêm toàn bộ checks Day 13 trước merge. Chất lượng gợi ý và tuân thủ hint-first cần đánh giá với model thực tế; prompt và bộ chặn code đơn giản không phải bảo đảm ngữ nghĩa tuyệt đối. Judge snapshot do client cung cấp, chưa có server-owned submission attestation. Production auth/rate limit/history vẫn để phase sau. Không có chat nhiều lượt, streaming, Firestore conversation, voice hoặc RAG.
