@@ -1,6 +1,7 @@
 import { lazy, Suspense, useId, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { difficultyLabels, getProblemBySlug } from "../services/problemService";
+import { runSample } from "../services/judgeService";
 import "./ProblemBank.css";
 
 const CodeEditor = lazy(() => import("../components/CodeEditor"));
@@ -55,15 +56,64 @@ function ProblemHints({ hints }) {
   );
 }
 
+function ExecutionResult({ result, error, sample }) {
+  if (error) {
+    return (
+      <div className="judge-console judge-console--error" role="alert">
+        <div className="judge-console__header">
+          <strong>Không thể chạy code</strong>
+        </div>
+        <pre>{error}</pre>
+      </div>
+    );
+  }
+
+  if (!result) return null;
+
+  const accepted = result.category === "accepted";
+  const details = result.compileOutput || result.stderr || result.message || result.stdout || "(không có output)";
+
+  return (
+    <div className={`judge-console ${accepted ? "judge-console--accepted" : "judge-console--failed"}`} aria-live="polite">
+      <div className="judge-console__header">
+        <strong>{result.status.description}</strong>
+        <span>
+          {result.time ? `${result.time}s` : "—"}
+          {" · "}
+          {result.memory ? `${result.memory} KB` : "—"}
+        </span>
+      </div>
+      <div className="judge-console__grid">
+        <div>
+          <h3>Input mẫu</h3>
+          <pre>{sample?.input ?? ""}</pre>
+        </div>
+        <div>
+          <h3>Output mong đợi</h3>
+          <pre>{sample?.output ?? ""}</pre>
+        </div>
+      </div>
+      <div>
+        <h3>{result.compileOutput ? "Compiler" : result.stderr ? "Stderr" : "Output"}</h3>
+        <pre>{details}</pre>
+      </div>
+    </div>
+  );
+}
+
 function ProblemWorkspace({ problem, initialLang }) {
   const [language, setLanguage] = useState(initialLang === "python" ? "python" : "cpp");
   const [drafts, setDrafts] = useState({ ...problem.starterCode });
   const [activeTab, setActiveTab] = useState("statement");
+  const [isRunning, setIsRunning] = useState(false);
+  const [runResult, setRunResult] = useState(null);
+  const [runError, setRunError] = useState("");
   const tabRefs = useRef([]);
   const prefix = useId();
   const lineCount = (drafts[language] ?? "").split("\n").length;
   const languageId = `${prefix}-language`;
   const noteId = `${prefix}-note`;
+  const sample = problem.samples[0] ?? null;
 
   function handleTabKeyDown(event, index) {
     let nextIndex;
@@ -77,6 +127,25 @@ function ProblemWorkspace({ problem, initialLang }) {
     event.preventDefault();
     setActiveTab(tabs[nextIndex].id);
     tabRefs.current[nextIndex]?.focus();
+  }
+
+  async function handleRun() {
+    setIsRunning(true);
+    setRunResult(null);
+    setRunError("");
+
+    try {
+      const result = await runSample({
+        sourceCode: drafts[language] ?? "",
+        language,
+        sample,
+      });
+      setRunResult(result);
+    } catch (error) {
+      setRunError(error instanceof Error ? error.message : "Không thể kết nối Judge0.");
+    } finally {
+      setIsRunning(false);
+    }
   }
 
   return (
@@ -143,7 +212,15 @@ function ProblemWorkspace({ problem, initialLang }) {
           </div>
           <div className="problem-editor__toolbar">
             <label className="bank-sr-only" htmlFor={languageId}>Ngôn ngữ</label>
-            <select id={languageId} value={language} onChange={(event) => setLanguage(event.target.value)}>
+            <select
+              id={languageId}
+              value={language}
+              onChange={(event) => {
+                setLanguage(event.target.value);
+                setRunResult(null);
+                setRunError("");
+              }}
+            >
               <option value="cpp">C++</option>
               <option value="python">Python</option>
             </select>
@@ -169,12 +246,15 @@ function ProblemWorkspace({ problem, initialLang }) {
           <div className="bank-execution">
             <h2>Chạy & nộp bài</h2>
             <p id={noteId} className="problem-editor__note">
-              Chạy và chấm bài sẽ được bổ sung sau. Bản nháp chỉ giữ khi đang mở bài.
+              Chạy code dùng ví dụ đầu tiên của đề. Nộp bài với hidden tests sẽ được bổ sung ở bước tiếp theo.
             </p>
             <div className="problem-editor__actions">
-              <button type="button" disabled>▷ Chạy code</button>
+              <button type="button" onClick={handleRun} disabled={isRunning || !sample}>
+                {isRunning ? "Đang chạy…" : "▷ Chạy code"}
+              </button>
               <button className="bank-submit" type="button" disabled>Nộp bài ↑</button>
             </div>
+            <ExecutionResult result={runResult} error={runError} sample={sample} />
           </div>
         </section>
       </div>
