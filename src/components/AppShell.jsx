@@ -1,12 +1,11 @@
-import { createContext, useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Icon from "./Icon";
 import Logo from "./Logo";
 import { displayName, initials } from "../utils/format";
 
 // Thông báo nhỏ ở góc dưới (toast) dùng chung cho mọi trang
-const NoticeContext = createContext(() => {});
-export const useNotice = () => useContext(NoticeContext);
+import { NoticeContext } from "../hooks/useNotice";
 
 const NAV = [
   { label: "Tổng quan", icon: "grid", path: "/" },

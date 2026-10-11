@@ -1,7 +1,7 @@
 import http from 'node:http';
 import { readFileSync, readdirSync } from 'node:fs';
 import { Buffer } from 'node:buffer';
-import { executeTest, gradeResult } from './judge.js';
+import { executeTest, gradeSubmission } from './judge.js';
 import { loadLessonProblems } from './lessonProblems.js';
 
 const bankRoot = new URL('../src/content/problems/', import.meta.url);
@@ -14,7 +14,7 @@ for (const chapter of readdirSync(bankRoot, { withFileTypes: true }).filter((ent
 }
 const lessonProblems = loadLessonProblems();
 const hiddenTests = JSON.parse(readFileSync(new URL('./testcases.json', import.meta.url), 'utf8'));
-const languages = { cpp: Number(process.env.JUDGE0_CPP_ID || 54), python: Number(process.env.JUDGE0_PYTHON_ID || 71) };
+const languages = { cpp: Number(process.env.JUDGE0_CPP_ID || 2), python: Number(process.env.JUDGE0_PYTHON_ID || 28) };
 let active = 0;
 
 const server = http.createServer(async (req, res) => {
@@ -52,17 +52,14 @@ const server = http.createServer(async (req, res) => {
     if (process.env.JUDGE0_API_HOST) headers['X-RapidAPI-Host'] = process.env.JUDGE0_API_HOST;
     if (process.env.JUDGE0_AUTH_TOKEN) headers['X-Auth-Token'] = process.env.JUDGE0_AUTH_TOKEN;
     const config = { source, languageId: languages[language], signal: controller.signal, baseUrl: process.env.JUDGE0_URL, headers };
-    if (mode === 'run') return reply(200, { mode, result: await executeTest({ ...config, input: stdin }) });
-    const tests = [...problem.samples, ...(lessonProblem ? [] : hiddenTests[slug])];
-    const results = [];
-    for (const [index, test] of tests.entries()) {
-      const result = await executeTest({ ...config, input: test.input });
-      // Infrastructure failures must not be reported as a student's zero score.
+    if (mode === 'run') {
+      const result = await executeTest({ ...config, input: stdin });
       if (result.statusId >= 13) throw new Error('Máy chấm gặp lỗi nội bộ. Hãy thử lại.');
-      results.push(gradeResult(result, test, index, index >= problem.samples.length));
+      return reply(200, { mode, result });
     }
-    const passed = results.filter((result) => result.passed).length;
-    reply(200, { mode, passed, total: tests.length, score: Math.round(passed / tests.length * 100), results });
+    const tests = [...problem.samples, ...(lessonProblem ? [] : hiddenTests[slug])];
+    const graded = await gradeSubmission({ tests, publicTestCount: problem.samples.length, config });
+    reply(200, { mode, ...graded });
   } catch (error) {
     reply(502, { error: controller.signal.aborted ? 'Hết thời gian chờ máy chấm. Hãy thử lại.' : error.message });
   } finally { clearTimeout(timer); active--; }

@@ -219,20 +219,24 @@
 
 ## 📅 Day 13 — Judge0 Integration
 
+**DAY 13 — JUDGE0 MVP = DONE**
+
+Kiểm tra API thật và các giới hạn MVP: xem [báo cáo Day 13](day13-judge0-finalization.md). Production hardening để phase sau.
+
 ### 👤 Người 1
-- [ ] Dựng loading state UI
-- [ ] Dựng error state UI
-- [ ] Dựng result display UI
+- [x] Dựng loading state UI
+- [x] Dựng error state UI
+- [x] Dựng result display UI
 
 ### 👤 Người 2
-- [ ] Implement POST submission lên Judge0 *(judgeService.js trống)*
-- [ ] Lấy token từ response
-- [ ] Implement GET result theo token
-- [ ] Parse stdout / stderr / status
-- [ ] Xử lý compile error
-- [ ] Xử lý runtime error
-- [ ] Xử lý wrong answer
-- [ ] Xử lý time limit exceeded
+- [x] Implement POST submission lên Judge0
+- [x] Lấy token từ response
+- [x] Implement GET result theo token
+- [x] Parse stdout / stderr / status
+- [x] Xử lý compile error
+- [x] Xử lý runtime error
+- [x] Xử lý wrong answer
+- [x] Xử lý time limit exceeded
 
 ---
 
