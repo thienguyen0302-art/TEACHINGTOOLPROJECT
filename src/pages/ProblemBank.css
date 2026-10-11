@@ -110,8 +110,21 @@
 .bank-execution h2 { margin: 0; font-size: 12px; font-weight: 600; }
 .bank-ui .problem-editor__note { color: #969da7; font-size: 11px; margin: 8px 0 14px; }
 .bank-ui .problem-editor__actions { justify-content: flex-end; gap: 8px; }
-.bank-ui .problem-editor__actions button { border: 1px solid #e0e4e9; padding: 8px 14px; color: #68727e; border-radius: 6px; background: #f3f4f6; font-size: 12px; cursor: not-allowed; }
+.bank-ui .problem-editor__actions button { border: 1px solid #d7dce2; padding: 8px 14px; color: #374151; border-radius: 6px; background: #fff; font-size: 12px; cursor: pointer; }
+.bank-ui .problem-editor__actions button:hover:not(:disabled) { border-color: #c28a22; color: #8a5b0f; background: #fff9ec; }
+.bank-ui .problem-editor__actions button:disabled { color: #8e96a1; border-color: #e0e4e9; background: #f3f4f6; cursor: not-allowed; }
 .bank-ui .problem-editor__actions .bank-submit { color: #fff; border-color: #739e8f; background: #739e8f; }
+.bank-ui .problem-editor__actions .bank-submit:disabled { color: #eef5f2; border-color: #a9beb7; background: #a9beb7; }
+
+.judge-console { margin-top: 16px; padding: 14px; border: 1px solid #dfe4ea; border-radius: 8px; background: #f8f9fb; }
+.judge-console--accepted { border-color: #b8dfd1; background: #f2fbf7; }
+.judge-console--failed, .judge-console--error { border-color: #efc5ca; background: #fff7f8; }
+.judge-console__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 12px; }
+.judge-console__header strong { color: #303743; font-size: 13px; }
+.judge-console__header span { color: #7b8490; white-space: nowrap; }
+.judge-console__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.judge-console h3 { margin: 10px 0 6px; color: #69727e; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.judge-console pre { margin: 0; padding: 10px 12px; overflow: auto; border-radius: 6px; background: #20242b; color: #dbe3ef; font: 12px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
 @media (max-width: 1100px) {
   .layout:has(.bank-ui) { grid-template-columns: 175px minmax(0, 1fr); gap: 14px; }
   .bank-level { padding: 15px 12px; gap: 8px; }
@@ -134,5 +147,6 @@
   .bank-filters select { flex: 1; min-width: 0; font-size: 12px; }
   .workspace-nav { flex-wrap: wrap; gap: 10px; }
   .workspace-nav__language { display: none; }
+  .judge-console__grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { .bank-ui * { transition: none; } }
