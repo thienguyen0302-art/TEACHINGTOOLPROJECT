@@ -72,17 +72,20 @@ npm run build
 
 ## Day 14 — AI Tutor MVP
 
-AI Tutor xuất hiện cạnh JudgeResults trong Problem Bank và Lesson Practice/Advanced. Có bốn thao tác one-shot: gợi ý, giải thích lỗi code, giải thích chưa đúng và phân tích độ phức tạp. Chưa chạy Judge vẫn hỏi gợi ý được. UI ưu tiên lỗi compile/runtime, bài chưa đúng, hoặc complexity khi Accepted; mọi action vẫn do học sinh chọn. AI không submit, không sửa Monaco và không thay đổi điểm Judge0.
+AI Tutor xuất hiện cạnh JudgeResults trong Problem Bank và Lesson Practice/Advanced. Có năm thao tác one-shot: gợi ý, giải thích lỗi code, giải thích chưa đúng phân tích độ phức tạp và trực quan hóa code. Chưa chạy Judge vẫn hỏi gợi ý được. UI ưu tiên lỗi compile/runtime, bài chưa đúng, hoặc complexity khi Accepted; mọi action vẫn do học sinh chọn. AI không submit, không sửa Monaco và không thay đổi điểm Judge0.
 
 Cấu hình **server-only** trong `.env.local`:
 
 ```env
-AI_API_URL=
+AI_PROVIDER=gemini
+AI_API_URL=https://generativelanguage.googleapis.com/v1beta
 AI_API_KEY=
-AI_MODEL=
+AI_MODEL=gemini-3.5-flash-lite
 ```
 
-`AI_API_URL` là URL đầy đủ của endpoint Chat Completions tương thích (kết thúc bằng `/chat/completions` tùy provider), không phải chỉ base URL. `AI_MODEL` là tên model của provider bạn chọn; không có model mặc định. Adapter gửi Bearer auth và `messages`, nhận `choices[0].message.content`; không yêu cầu native JSON mode. Khi đổi provider khác protocol, thay transport trong `server/aiProvider.js`, UI không đổi. Tham khảo [định dạng Chat Completions](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create).
+Điền Gemini Developer API key trong `.env.local`, không điền key thật vào `.env.example`. Provider mặc định là Gemini native REST: backend gọi `${AI_API_URL}/models/${AI_MODEL}:generateContent` với header `x-goog-api-key`; URL cấu hình là base URL, không phải endpoint OpenAI. Adapter này không hỗ trợ OpenAI runtime.
+
+Dùng `thinkingLevel: minimal`, JSON MIME và output caps: hint 350; explain_error, explain_failure, complexity 450; visualize 1200 token. Không bật Search, code execution, URL context hoặc tools. Xem [Gemini thinking](https://ai.google.dev/gemini-api/docs/generate-content/thinking) và [structured output](https://ai.google.dev/gemini-api/docs/structured-output). Quota free tier phụ thuộc tài khoản/model; 429 báo rõ quota/rate limit, không tự retry gây tốn thêm requests. Phản hồi bị safety block, hết token hoặc không có text được báo lỗi an toàn; JSON nội dung hỏng vẫn có fallback.
 
 Chạy lại `npm run dev` sau cấu hình. Không đặt các biến này dưới prefix `VITE_`; `.env.local`/`.env` không được commit. Chưa cấu hình AI trả HTTP 503 với thông báo rõ, Judge vẫn hoạt động. AI và Judge có bộ đếm concurrency độc lập; AI giới hạn 2 request, timeout 30 giây, body 100 KB và source 50 KB.
 
@@ -100,8 +103,3 @@ Action `visualize` bổ sung minh họa tối đa 16 bước từ code học sin
 
 Visualization là **AI illustration**, chưa phải instrumentation/trace thực thi thực tế. Nó không thay đổi Judge verdict và không sử dụng hidden input/output. Cần AI provider cấu hình để tạo các bước; chất lượng minh họa tùy model.
 
-### OpenAI Responses API
-
-Adapter tự nhận biết endpoint kết thúc bằng `/responses` và gửi `instructions`/`input`, đọc assistant `output_text`. Với `/chat/completions` vẫn dùng `messages`/`choices`. Ví dụ URL Responses: `https://api.openai.com/v1/responses`. Giữ `AI_MODEL` là model có quyền dùng trong tài khoản API, không phải tên tự suy đoán. Responses request đặt `store: false`, không nối conversation. Xem [hướng dẫn Responses](https://developers.openai.com/api/docs/guides/migrate-to-responses).
-
-Lỗi key, quyền model, quota và rate limit được báo riêng; không trả raw error provider chứa dữ liệu nhạy cảm.

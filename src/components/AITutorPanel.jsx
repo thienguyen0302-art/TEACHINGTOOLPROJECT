@@ -1,22 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useReducer } from 'react';
 import { askTutor } from '../services/aiService';
 import { preferredTutorAction, tutorActions } from '../utils/tutorActions';
 import TutorIcon from './TutorIcon';
 import CodeStepVisualizer from './CodeStepVisualizer';
 import './AITutorPanel.css';
 
-export default function AITutorPanel(props) {
-  return <TutorRequest key={`${props.language}:${props.source}:${JSON.stringify(props.judgeResult)}`} {...props} />;
-}
-function TutorRequest({ slug, language, source, judgeResult, judgeBusy }) {
-  const [pending, setPending] = useState('');
-  const [error, setError] = useState('');
-  const [feedback, setFeedback] = useState(null);
+export default function AITutorPanel({ slug, language, source, judgeResult, judgeBusy }) {
+  const [state, update] = useReducer((current, patch) => ({ ...current, ...patch }), { pending: '', error: '', feedback: null });
+  const { pending, error, feedback } = state;
+  const setPending = (pending) => update({ pending });
+  const setError = (error) => update({ error });
+  const setFeedback = (feedback) => update({ feedback });
   const preferred = preferredTutorAction(judgeResult);
   const [selected, setSelected] = useState(preferred);
   const controllerRef = useRef(null);
   const chosen = tutorActions.find((action) => action.id === selected);
-  useEffect(() => () => controllerRef.current?.abort(), []);
+  useEffect(() => {
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    update({ pending: '', error: '', feedback: null });
+    return () => { controllerRef.current?.abort(); controllerRef.current = null; };
+  }, [slug, language, source, judgeResult]);
   const disabled = Boolean(pending || judgeBusy || !source?.trim());
   const status = judgeBusy ? 'Judge đang chạy' : !judgeResult ? 'Chưa chạy code' : judgeResult.mode === 'submit' ? `${judgeResult.passed}/${judgeResult.total} test đạt` : judgeResult.result.status;
 

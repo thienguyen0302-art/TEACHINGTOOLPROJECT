@@ -5,10 +5,10 @@ Implementation branch: `feature/ai-tutor`, updated from `dev` Day 13 commit `7d0
 ## Implementation
 
 - `server/aiTutor.js`: server-owned hint-first system prompt, backend problem lookup, explicit context allowlist, Judge sanitizer, action/source validation, HTTP handler.
-- `server/aiProvider.js`: isolated one-shot Chat Completions-compatible provider adapter, structured/text normalization, malformed-output fallback, normalized provider errors, secret redaction and obvious complete-code blocker.
+- `server/aiProvider.js`: isolated one-shot Gemini native generateContent provider adapter, structured/text normalization, malformed-output fallback, normalized provider errors, secret redaction and obvious complete-code blocker.
 - `server/index.js`: dispatch `/api/ai/tutor` before Judge-specific availability/concurrency checks, preserving origin/localhost protections and existing Judge path.
 - `src/services/aiService.js`: only calls backend, strips all Submit diagnostics before sending, supports AbortController.
-- `src/components/AITutorPanel.jsx` and CSS: four action buttons, recommended action, loading/error/retry, contextual feedback, cancellation on source/language/result changes.
+- `src/components/AITutorPanel.jsx` and CSS: five action buttons, recommended action, loading/error/retry, contextual feedback, cancellation on source/language/result changes.
 - `src/utils/tutorActions.js`: pure Judge-aware action selection.
 - `src/pages/Problem.jsx`, `src/components/LessonCodeExercise.jsx`: additive panel next to JudgeResults; record judged source to avoid applying an old Judge verdict to changed code. Editor/draft ownership unchanged.
 - `vite.config.js`: AI route proxy to existing Node service.
@@ -66,3 +66,13 @@ Installed temporary Playwright/Chromium and runtime libraries under /tmp (no pro
 Added automatic endpoint detection for `/responses`, with server-side instructions/input, store=false, and assistant output_text extraction. Chat Completions compatibility is preserved. Added regression tests for request/response envelopes and safe key/model/quota errors.
 
 A real request using the user's configured Responses URL, API key and model succeeded for a Python hint on tong-hai-so. It returned Vietnamese hint-first feedback and correctly stated that Judge0 had not run. This supersedes the earlier lack of live-provider validation for this single hint flow; actual-model visualization and other pedagogical flows still need evaluation.
+
+## Gemini finalization — fix/gemini-day14
+
+Default runtime: Google Gemini Developer API, `gemini-3.5-flash-lite`, base URL `https://generativelanguage.googleapis.com/v1beta`, server-side `x-goog-api-key`. No OpenAI runtime fallback. Minimal thinking, JSON MIME, no tools. Output caps: hint 350; explain_error/explain_failure/complexity 450; visualize 1200. Normalizers and recursive credential redaction remain the final response boundary.
+
+Gemini safety blocking, empty responses, truncated output, authentication/model/config errors, quota and timeout return safe messages. Panel stays mounted and uses an effect to cancel requests/reset feedback on source/language/Judge context changes. Monaco state remains owned by the existing editors.
+
+All six checks passed: test:ai (18 mocked cases), test:judge, validate:content, test:content (13 cases), lint, build. One live Gemini hint for tong-hai-so/Python/no Judge passed: Vietnamese hint about reviewing subtraction versus the required sum, no full solution. No live visualize request, to conserve quota. Browser mock checks cover hint/error/retry, visualization playback/steps, mobile layout and source-change cancellation without panel remount.
+
+Remaining limits: AI visualization is illustration, not actual execution; model responses can be inaccurate; free-tier quota/model access depends on account; frontend solution.code remains a production limitation; Judge snapshot is client-provided. Auth/rate limiting/history are later phases. Existing Monaco bundle-size warning remains non-fatal. User's unrelated package-lock.json edits are excluded.
