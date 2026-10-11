@@ -27,39 +27,46 @@ export function normalizeFeedback(raw, action, visualizationContext = {}) {
     ...(action === 'visualize' ? { visualization: normalizeVisualization(data.visualization, visualizationContext) } : {}) };
 }
 
-// Responses and Chat Completions use distinct request/response envelopes.
-export function providerRequest({ url, model, system, context }) {
-  const responses = new URL(url).pathname.replace(/\/$/, '').endsWith('/responses');
-  return { responses, body: responses
-    ? { model, store: false, stream: false, instructions: system, input: JSON.stringify(context) }
-    : { model, stream: false, messages: [{ role: 'system', content: system }, { role: 'user', content: JSON.stringify(context) }] } };
+export const outputTokenLimits = Object.freeze({ hint: 350, explain_error: 450, explain_failure: 450, complexity: 450, visualize: 1200 });
+export function providerRequest({ url, model, system, context, action }) {
+  if (!Object.hasOwn(outputTokenLimits, action)) throw new TutorError(400, 'AI action không hợp lệ.');
+  return {
+    url: `${url.replace(/\/+$/, '')}/models/${encodeURIComponent(model)}:generateContent`,
+    body: {
+      system_instruction: { parts: [{ text: system }] },
+      contents: [{ role: 'user', parts: [{ text: JSON.stringify(context) }] }],
+      generationConfig: { maxOutputTokens: outputTokenLimits[action], thinkingConfig: { thinkingLevel: 'minimal' }, responseMimeType: 'application/json' },
+    },
+  };
 }
-export function providerText(payload, responses) {
-  if (!responses) return payload?.choices?.[0]?.message?.content;
-  return (Array.isArray(payload?.output) ? payload.output : [])
-    .filter((item) => item?.type === 'message' && item.role === 'assistant')
-    .flatMap((item) => Array.isArray(item.content) ? item.content : [])
-    .filter((item) => item?.type === 'output_text' && typeof item.text === 'string')
-    .map((item) => item.text).join('\n');
+export function providerText(payload) {
+  const candidate = payload?.candidates?.[0];
+  if (payload?.promptFeedback?.blockReason || candidate?.safetyRatings?.some((rating) => rating?.blocked))
+    throw new TutorError(502, 'Gemini đã chặn phản hồi theo chính sách an toàn. Hãy thử một hành động khác.');
+  if (candidate?.finishReason === 'MAX_TOKENS')
+    throw new TutorError(502, 'Gemini đã đạt giới hạn token trước khi hoàn tất phản hồi. Hãy thử lại với một hành động ngắn hơn.');
+  if (candidate?.finishReason && candidate.finishReason !== 'STOP')
+    throw new TutorError(502, 'Gemini không thể hoàn tất phản hồi. Hãy thử một hành động khác.');
+  return (Array.isArray(candidate?.content?.parts) ? candidate.content.parts : [])
+    .filter((part) => part && !part.thought && typeof part.text === 'string')
+    .map((part) => part.text).join('');
 }
-function providerError(status, payload) {
-  const code = payload?.error?.code ?? payload?.error?.type;
-  if (status === 401) return 'AI API key không hợp lệ hoặc đã hết hiệu lực. Kiểm tra AI_API_KEY.';
-  if (status === 403) return 'AI provider từ chối quyền truy cập. Kiểm tra quyền của key và model.';
-  if (status === 404 || code === 'model_not_found') return 'Không tìm thấy AI endpoint/model hoặc key chưa có quyền dùng model. Kiểm tra AI_API_URL và AI_MODEL.';
-  if (status === 429 && code === 'insufficient_quota') return 'AI API đã hết quota hoặc chưa có ngân sách sử dụng. Kiểm tra billing của tài khoản API.';
-  if (status === 429) return 'AI API đang giới hạn tần suất. Hãy thử lại sau.';
-  if (status === 400) return 'AI provider không chấp nhận cấu hình request/model. Kiểm tra endpoint và AI_MODEL.';
-  return `AI provider không khả dụng (HTTP ${status}). Hãy thử lại.`;
+function providerError(status) {
+  if (status === 401 || status === 403) return 'Gemini API key không hợp lệ hoặc chưa có quyền truy cập model. Kiểm tra AI_API_KEY.';
+  if (status === 404) return 'Không tìm thấy Gemini model/endpoint. Kiểm tra AI_API_URL và AI_MODEL.';
+  if (status === 429) return 'Gemini đã đạt free-tier quota hoặc rate limit. Kiểm tra quota và thử lại sau.';
+  if (status === 400) return 'Gemini request/model/config không hợp lệ. Kiểm tra AI_API_URL và AI_MODEL.';
+  return `Gemini provider không khả dụng (HTTP ${status}). Hãy thử lại.`;
 }
 
 // One-shot compatible adapter. Provider transport stays out of UI.
 export async function requestProvider({ system, context, action, signal, env = process.env, fetchImpl = fetch }) {
-  if (!env.AI_API_URL || !env.AI_API_KEY || !env.AI_MODEL) throw new TutorError(503, 'AI Tutor chưa được cấu hình.');
+  if (!env.AI_API_KEY?.trim()) throw new TutorError(503, 'AI Tutor chưa được cấu hình.');
   try {
-    const request = providerRequest({ url: env.AI_API_URL.trim(), model: env.AI_MODEL.trim(), system, context });
-    const response = await fetchImpl(env.AI_API_URL.trim(), { method: 'POST', signal,
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.AI_API_KEY.trim()}` },
+    if ((env.AI_PROVIDER || 'gemini').trim() !== 'gemini') throw new TutorError(503, 'AI_PROVIDER phải là gemini.');
+    const request = providerRequest({ url: (env.AI_API_URL || 'https://generativelanguage.googleapis.com/v1beta').trim(), model: (env.AI_MODEL || 'gemini-3.5-flash-lite').trim(), system, context, action });
+    const response = await fetchImpl(request.url, { method: 'POST', signal,
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.AI_API_KEY.trim() },
       body: JSON.stringify(request.body),
     });
     let payload;
@@ -68,7 +75,7 @@ export async function requestProvider({ system, context, action, signal, env = p
       throw new TutorError(502, 'AI provider trả về JSON không hợp lệ. Hãy thử lại.');
     }
     if (!response.ok) throw new TutorError(502, providerError(response.status, payload));
-    const content = providerText(payload, request.responses);
+    const content = providerText(payload);
     if (typeof content !== 'string' || !content.trim()) throw new TutorError(502, 'AI provider trả về phản hồi không hợp lệ. Hãy thử lại.');
     const feedback = normalizeFeedback(content, action, { source: context?.student?.source, samples: context?.problem?.samples });
     // Redact credentials from all nested strings, including visualization cells.

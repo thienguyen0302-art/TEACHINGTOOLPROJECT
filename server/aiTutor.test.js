@@ -52,15 +52,15 @@ test('provider normalizes text, malformed JSON and model-supplied action safely'
  const feedback=normalizeFeedback('{"action":"solve","message":"x","confidence":"high","solution":"secret"}','hint');
  assert.equal(feedback.action,'hint');assert.equal('solution' in feedback,false);
 });
-const env={AI_API_URL:'https://provider.example/chat/completions',AI_API_KEY:'private-key',AI_MODEL:'mock-model'};
-test('adapter uses server prompt, no credentials in context, structured feedback without native JSON mode',async()=>{
+const env={AI_PROVIDER:'gemini',AI_API_URL:'https://generativelanguage.googleapis.com/v1beta',AI_API_KEY:'private-key',AI_MODEL:'mock-model'};
+test('adapter uses server prompt, no credentials in context, Gemini structured feedback',async()=>{
  let payload;
  const feedback=await requestProvider({system:TUTOR_SYSTEM,context:buildTutorContext(body,problems),action:'hint',env,fetchImpl:async(url,options)=>{
- assert.equal(url,env.AI_API_URL);assert.equal(options.headers.Authorization,'Bearer private-key');
+ assert.equal(url,`${env.AI_API_URL}/models/mock-model:generateContent`);assert.equal(options.headers['x-goog-api-key'],'private-key');assert.equal(options.headers.Authorization,undefined);
  payload=JSON.parse(options.body);
- return {ok:true,json:async()=>({choices:[{message:{content:'{"message":"Check private-key","nextStep":"Look at input","confidence":"medium"}'}}]})};
+ return {ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{"message":"Check private-key","nextStep":"Look at input","confidence":"medium"}'}]}}]})};
  }});
- assert.equal(payload.messages.length,2);assert.equal(payload.stream,false);
+ assert.equal(payload.system_instruction.parts[0].text,TUTOR_SYSTEM);assert.deepEqual(JSON.parse(payload.contents[0].parts[0].text),buildTutorContext(body,problems));assert.equal(payload.generationConfig.maxOutputTokens,350);assert.equal(payload.generationConfig.thinkingConfig.thinkingLevel,'minimal');assert.equal(payload.generationConfig.responseMimeType,'application/json');assert.equal('tools' in payload,false);
  assert.equal(JSON.stringify(payload).includes('private-key'),false);
  assert.equal(feedback.message,'Check [redacted]');
 });
@@ -155,24 +155,38 @@ test('visualize is allowlisted and still excludes solutions and hidden data',()=
  assert.ok(TUTOR_SYSTEM.includes('trace thực thi'));
 });
 test('visualization credentials are redacted in nested fields',async()=>{
- const feedback=await requestProvider({env,action:'visualize',system:TUTOR_SYSTEM,context:{student:{source:'a=2'},problem:{samples:[]}},fetchImpl:async()=>({ok:true,json:async()=>({choices:[{message:{content:JSON.stringify({message:'Trace',visualization:{steps:[{line:1,explanation:'private-key',variables:[{name:'a',value:'private-key'}]}]}})}}]})})});
+ const feedback=await requestProvider({env,action:'visualize',system:TUTOR_SYSTEM,context:{student:{source:'a=2'},problem:{samples:[]}},fetchImpl:async()=>({ok:true,json:async()=>({candidates:[{content:{parts:[{text:JSON.stringify({message:'Trace',visualization:{steps:[{line:1,explanation:'private-key',variables:[{name:'a',value:'private-key'}]}]}})}]}}]})})});
  assert.equal(JSON.stringify(feedback).includes('private-key'),false);
 });
 
 import { providerRequest, providerText } from './aiProvider.js';
-test('Responses endpoint uses instructions/input and decodes assistant output only', async()=>{
- const request=providerRequest({url:'https://api.openai.com/v1/responses',model:'chosen-model',system:'policy',context:{action:'hint'}});
- assert.equal(request.responses,true);assert.equal(request.body.instructions,'policy');assert.equal(request.body.store,false);
- assert.equal('messages' in request.body,false);assert.equal(JSON.parse(request.body.input).action,'hint');
- const payload={output:[{type:'reasoning',content:[{type:'output_text',text:'PRIVATE_REASONING'}]},{type:'message',role:'assistant',content:[{type:'output_text',text:'{"message":"Một gợi ý nhỏ"}'}]}]};
- assert.equal(providerText(payload,true).includes('PRIVATE_REASONING'),false);
- const feedback=await requestProvider({env:{...env,AI_API_URL:'https://api.openai.com/v1/responses'},system:TUTOR_SYSTEM,context:buildTutorContext(body,problems),action:'hint',fetchImpl:async(url,options)=>{
-  assert.equal('messages' in JSON.parse(options.body),false);return {ok:true,json:async()=>payload};
- }});
- assert.equal(feedback.message,'Một gợi ý nhỏ');
+test('Gemini caps, parts, finish reasons and privacy boundaries', async()=>{
+ for(const [action,cap] of Object.entries({hint:350,explain_error:450,explain_failure:450,complexity:450,visualize:1200})) {
+  const request=providerRequest({url:env.AI_API_URL+'/',model:env.AI_MODEL,system:TUTOR_SYSTEM,context:buildTutorContext({...body,action,judgeResult:submit},problems),action});
+  assert.equal(request.body.generationConfig.maxOutputTokens,cap);
+  assert.equal(JSON.stringify(request.body).includes('SECRET_'),false);
+  assert.equal('solution' in JSON.parse(request.body.contents[0].parts[0].text).problem,false);
+ }
+ assert.equal(providerText({candidates:[{finishReason:'STOP',content:{parts:[{thought:true,text:'PRIVATE_REASONING'},{text:'a'},{text:'b'},{thoughtSignature:'PRIVATE_METADATA'}]}}]}),'ab');
+ for(const payload of [{promptFeedback:{blockReason:'SAFETY'}},{candidates:[{finishReason:'SAFETY'}]},{candidates:[{finishReason:'MAX_TOKENS'}]},{candidates:[{content:{parts:{}}}]}]) {
+  await assert.rejects(requestProvider({env,action:'hint',context:{},fetchImpl:async()=>({ok:true,json:async()=>payload})}),TutorError);
+ }
+ const feedback=await requestProvider({env,action:'hint',context:{},fetchImpl:async()=>({ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{bad json'}]}}]})})});
+ assert.equal(feedback.confidence,'low');
+ const options={source:'x=1',samples:[]};
+ const trace=normalizeVisualization({steps:Array.from({length:30},()=>({line:1,explanation:'step',variables:[]}))},options);
+ assert.equal(trace.steps.length,16);
 });
 test('provider errors explain authentication, model and quota without raw provider text',async()=>{
  for(const [status,code,pattern] of [[401,'invalid_api_key',/key/],[404,'model_not_found',/model/],[429,'insufficient_quota',/quota/]]){
  await assert.rejects(requestProvider({env,action:'hint',context:{},fetchImpl:async()=>({ok:false,status,json:async()=>({error:{code,message:'PRIVATE_KEY'}})})}),e=>pattern.test(e.message)&&!e.message.includes('PRIVATE_KEY'));
  }
+});
+
+test('solution sentinel never reaches Gemini transport',async()=>{
+ const map=new Map([['test',{title:'test',statement:'statement',samples:[],solution:{code:'PRIVATE_SOLUTION_SENTINEL'}}]]);
+ await requestProvider({env,action:'hint',system:TUTOR_SYSTEM,context:buildTutorContext({...body,slug:'test'},map),fetchImpl:async(url,options)=>{
+  assert.equal(options.body.includes('PRIVATE_SOLUTION_SENTINEL'),false);
+  return {ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{"message":"Một gợi ý"}'}]}}]})};
+ }});
 });
