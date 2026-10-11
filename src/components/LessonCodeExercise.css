@@ -1,0 +1,3 @@
+.lesson-code-exercise { margin-top: 20px; border-top: 1px solid #656e7c; padding-top: 16px; }
+.lesson-code-exercise__editor { height: 360px; overflow: hidden; border-radius: 8px; margin: 12px 0 16px; }
+.lesson-code-exercise .judge-results { min-width: 0; }

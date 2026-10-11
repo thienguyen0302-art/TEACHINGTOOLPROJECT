@@ -4,14 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/dev.js",
     "prebuild": "npm run validate:content",
     "build": "vite build",
     "lint": "eslint .",
     "validate:content": "python3 scripts/validate_content.py",
     "test:content": "python3 -m unittest discover -s scripts -p 'test_*.py'",
     "validate:examples": "python3 scripts/validate_content.py --run-code",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "judge:dev": "node --env-file-if-exists=.env.local server/index.js",
+    "test:judge": "node --test server/judge.test.js",
+    "dev:web": "vite"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

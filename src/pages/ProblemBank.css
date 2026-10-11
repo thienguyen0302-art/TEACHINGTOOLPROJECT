@@ -136,3 +136,29 @@
   .workspace-nav__language { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .bank-ui * { transition: none; } }
+
+.judge-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8px 0 16px;
+  padding: 12px;
+  background: #20242b;
+  color: #dbe3ef;
+  border: 1px solid #656e7c;
+  border-radius: 8px;
+  font-family: ui-monospace, Consolas, monospace;
+  resize: vertical;
+}
+.judge-results pre {
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 12px;
+  background: #20242b;
+  color: #dbe3ef;
+  border-radius: 6px;
+}
+.judge-results details { margin: 12px 0; }
+.judge-results summary { cursor: pointer; }

@@ -1,7 +1,8 @@
+import LessonCodeExercise from "./LessonCodeExercise";
 import { Link } from "react-router-dom";
 import { difficultyLabels } from "../services/problemService";
 
-export default function ProblemCard({ problem, variant = "lesson" }) {
+export default function ProblemCard({ problem, variant = "lesson", language, chapterId, section }) {
   if (variant === "bank") return <BankProblemCard problem={problem} />;
   return (
     <article className="card">
@@ -12,6 +13,7 @@ export default function ProblemCard({ problem, variant = "lesson" }) {
       <ul>{problem.constraints.map((constraint, i) => <li key={i}>{constraint}</li>)}</ul>
       <h4>Input mẫu</h4><pre><code>{problem.sampleInput}</code></pre>
       <h4>Output mẫu</h4><pre><code>{problem.sampleOutput}</code></pre>
+      {language && chapterId && section && problem.runnable && <LessonCodeExercise problem={problem} language={language} chapterId={chapterId} section={section} />}
       {problem.hint && <details><summary>Gợi ý</summary><p>{problem.hint}</p></details>}
       <details>
         <summary>Xem lời giải sau khi tự làm</summary>

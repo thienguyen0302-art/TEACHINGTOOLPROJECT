@@ -1,7 +1,9 @@
-import { lazy, Suspense, useId, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useId, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { difficultyLabels, getProblemBySlug } from "../services/problemService";
 import "./ProblemBank.css";
+import JudgeResults from "../components/JudgeResults";
+import { judgeCode } from "../services/judgeService";
 
 const CodeEditor = lazy(() => import("../components/CodeEditor"));
 
@@ -59,6 +61,30 @@ function ProblemWorkspace({ problem, initialLang }) {
   const [language, setLanguage] = useState(initialLang === "python" ? "python" : "cpp");
   const [drafts, setDrafts] = useState({ ...problem.starterCode });
   const [activeTab, setActiveTab] = useState("statement");
+  const [stdin, setStdin] = useState(problem.samples[0]?.input ?? "");
+  const [busy, setBusy] = useState("");
+  const [error, setError] = useState("");
+  const [submission, setSubmission] = useState(null);
+  const requestRef = useRef(null);
+  useEffect(() => () => requestRef.current?.abort(), []);
+
+  async function execute(mode) {
+    if (requestRef.current) return;
+    const controller = new AbortController();
+    requestRef.current = controller;
+    setBusy(mode);
+    setError("");
+    setSubmission(null);
+    try {
+      const result = await judgeCode({ slug: problem.slug, source: drafts[language], language, mode, stdin, signal: controller.signal });
+      if (!controller.signal.aborted) setSubmission({ ...result, language });
+    } catch (failure) {
+      if (!controller.signal.aborted) setError(failure.message);
+    } finally {
+      if (requestRef.current === controller) requestRef.current = null;
+      if (!controller.signal.aborted) setBusy("");
+    }
+  }
   const tabRefs = useRef([]);
   const prefix = useId();
   const lineCount = (drafts[language] ?? "").split("\n").length;
@@ -169,12 +195,15 @@ function ProblemWorkspace({ problem, initialLang }) {
           <div className="bank-execution">
             <h2>Chạy & nộp bài</h2>
             <p id={noteId} className="problem-editor__note">
-              Chạy và chấm bài sẽ được bổ sung sau. Bản nháp chỉ giữ khi đang mở bài.
+              Chạy code với input bên dưới. Nộp bài để chấm ví dụ và test ẩn, tính điểm trên 100. Bản nháp chỉ giữ khi đang mở bài.
             </p>
+            <label htmlFor={`${prefix}-stdin`}>Input chạy thử</label>
+            <textarea id={`${prefix}-stdin`} className="judge-input" value={stdin} maxLength={10000} onChange={(event) => setStdin(event.target.value)} rows={4} spellCheck={false} />
             <div className="problem-editor__actions">
-              <button type="button" disabled>▷ Chạy code</button>
-              <button className="bank-submit" type="button" disabled>Nộp bài ↑</button>
+              <button type="button" disabled={Boolean(busy) || !drafts[language]?.trim()} onClick={() => execute("run")}>{busy === "run" ? "Đang chạy…" : "▷ Chạy code"}</button>
+              <button className="bank-submit" type="button" disabled={Boolean(busy) || !drafts[language]?.trim()} onClick={() => execute("submit")}>{busy === "submit" ? "Đang chấm…" : "Nộp bài ↑"}</button>
             </div>
+            <JudgeResults busy={busy} error={error} submission={submission} />
           </div>
         </section>
       </div>

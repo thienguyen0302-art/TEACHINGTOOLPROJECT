@@ -172,8 +172,8 @@ function LessonContent({ lang, id }) {
       {tab === "examples" && <Examples items={ch.examples} />}
       {(tab === "practice" || tab === "advanced") && (
         <section aria-label={tab === "advanced" ? "Bài tập nâng cao HSG" : "Bài luyện tập"}>
-          <p>Viết và chạy chương trình trên máy của em. Mở gợi ý khi cần, rồi đối chiếu lời giải sau khi tự làm.</p>
-          {(ch[tab] ?? []).map((problem) => <ProblemCard key={problem.id} problem={problem} />)}
+          <p>Viết code trực tiếp bên dưới, chạy thử và nộp bài để chấm. Mở gợi ý khi cần, rồi đối chiếu lời giải sau khi tự làm.</p>
+          {(ch[tab] ?? []).map((problem) => <ProblemCard key={`${lang}:${id}:${tab}:${problem.id}`} problem={problem} language={lang} chapterId={id} section={tab} />)}
           {!ch[tab]?.length && <p>Chưa có bài tập trong phần này.</p>}
         </section>
       )}
