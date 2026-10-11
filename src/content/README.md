@@ -100,6 +100,22 @@ src/content/
 └── python/ch01.json ... ch14.json
 ```
 
+## Judge0 Run (Phase 1)
+
+Trang `/problem/:slug` có thể chạy code trên sample đầu tiên qua Judge0. Luồng hiện tại:
+`Monaco -> judgeService.runSample -> POST /submissions -> poll token -> hiển thị status/output`.
+C++ dùng Judge0 language ID 105 (GCC 14.1.0) và Python dùng ID 92 (Python 3.11.2)
+theo public instance `https://ce.judge0.com`; có thể override bằng biến môi trường
+`VITE_JUDGE0_URL`, `VITE_JUDGE0_CPP_ID`, `VITE_JUDGE0_PYTHON_ID`.
+
+Run chỉ dùng sample công khai của đề và có thể gửi `expected_output` để Judge0 trả
+Accepted/Wrong Answer. Nút Submit vẫn disabled; hidden tests, official solution,
+judge configuration và progress không được đưa vào frontend trong phase này.
+
+Public Judge0 endpoint chỉ phù hợp development/demo. Trước production cần proxy
+Judge0 qua backend/Cloud Function để kiểm soát quota, timeout/rate limit, authentication
+và giữ hidden tests ở private storage. Frontend không được chứa Judge0 secret/token.
+
 ## Chapter
 
 Các trường cấp chương:
