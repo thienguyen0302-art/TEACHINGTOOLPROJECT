@@ -60,3 +60,9 @@ Panel redesigned with a light Gemini-inspired layout, gradient greeting, selecta
 The provider returns up to 16 bounded steps, each linked to an existing source line with explanatory variables. Public input/expected output come from server metadata, not model-returned fields. Malformed traces fall back gracefully. Nested credentials are redacted. Visualization is explicitly marked AI illustration, not an executed Judge0 trace.
 
 Installed temporary Playwright/Chromium and runtime libraries under /tmp (no project dependency change). Browser checks of the actual panel, using mock HTTP AI responses, passed on desktop and 390px mobile: hint/error/retry, action selection/send, highlighted source line, previous/next steps, autoplay, reset and no horizontal page overflow or browser exceptions. Screenshots saved under /tmp/tutor-ui-check. Full authenticated app navigation, Monaco language-switch flows and actual LLM trace quality remain unverified.
+
+## Responses API compatibility fix
+
+Added automatic endpoint detection for `/responses`, with server-side instructions/input, store=false, and assistant output_text extraction. Chat Completions compatibility is preserved. Added regression tests for request/response envelopes and safe key/model/quota errors.
+
+A real request using the user's configured Responses URL, API key and model succeeded for a Python hint on tong-hai-so. It returned Vietnamese hint-first feedback and correctly stated that Judge0 had not run. This supersedes the earlier lack of live-provider validation for this single hint flow; actual-model visualization and other pedagogical flows still need evaluation.

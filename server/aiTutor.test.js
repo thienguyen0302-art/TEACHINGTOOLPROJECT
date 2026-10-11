@@ -158,3 +158,21 @@ test('visualization credentials are redacted in nested fields',async()=>{
  const feedback=await requestProvider({env,action:'visualize',system:TUTOR_SYSTEM,context:{student:{source:'a=2'},problem:{samples:[]}},fetchImpl:async()=>({ok:true,json:async()=>({choices:[{message:{content:JSON.stringify({message:'Trace',visualization:{steps:[{line:1,explanation:'private-key',variables:[{name:'a',value:'private-key'}]}]}})}}]})})});
  assert.equal(JSON.stringify(feedback).includes('private-key'),false);
 });
+
+import { providerRequest, providerText } from './aiProvider.js';
+test('Responses endpoint uses instructions/input and decodes assistant output only', async()=>{
+ const request=providerRequest({url:'https://api.openai.com/v1/responses',model:'chosen-model',system:'policy',context:{action:'hint'}});
+ assert.equal(request.responses,true);assert.equal(request.body.instructions,'policy');assert.equal(request.body.store,false);
+ assert.equal('messages' in request.body,false);assert.equal(JSON.parse(request.body.input).action,'hint');
+ const payload={output:[{type:'reasoning',content:[{type:'output_text',text:'PRIVATE_REASONING'}]},{type:'message',role:'assistant',content:[{type:'output_text',text:'{"message":"Một gợi ý nhỏ"}'}]}]};
+ assert.equal(providerText(payload,true).includes('PRIVATE_REASONING'),false);
+ const feedback=await requestProvider({env:{...env,AI_API_URL:'https://api.openai.com/v1/responses'},system:TUTOR_SYSTEM,context:buildTutorContext(body,problems),action:'hint',fetchImpl:async(url,options)=>{
+  assert.equal('messages' in JSON.parse(options.body),false);return {ok:true,json:async()=>payload};
+ }});
+ assert.equal(feedback.message,'Một gợi ý nhỏ');
+});
+test('provider errors explain authentication, model and quota without raw provider text',async()=>{
+ for(const [status,code,pattern] of [[401,'invalid_api_key',/key/],[404,'model_not_found',/model/],[429,'insufficient_quota',/quota/]]){
+ await assert.rejects(requestProvider({env,action:'hint',context:{},fetchImpl:async()=>({ok:false,status,json:async()=>({error:{code,message:'PRIVATE_KEY'}})})}),e=>pattern.test(e.message)&&!e.message.includes('PRIVATE_KEY'));
+ }
+});

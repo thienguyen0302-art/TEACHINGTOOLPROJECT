@@ -99,3 +99,9 @@ Chọn một chip hành động rồi bấm nút mũi tên trong panel Peanut AI
 Action `visualize` bổ sung minh họa tối đa 16 bước từ code học sinh và **public sample đầu tiên**, gồm dòng đang xét, trạng thái biến, thanh chọn bước và phát/tạm dừng. Chỉ số dòng và cấu trúc step được backend kiểm tra; input/output mẫu lấy từ metadata backend, không lấy từ model. Phản hồi không có bước hợp lệ sẽ báo rõ thay vì crash.
 
 Visualization là **AI illustration**, chưa phải instrumentation/trace thực thi thực tế. Nó không thay đổi Judge verdict và không sử dụng hidden input/output. Cần AI provider cấu hình để tạo các bước; chất lượng minh họa tùy model.
+
+### OpenAI Responses API
+
+Adapter tự nhận biết endpoint kết thúc bằng `/responses` và gửi `instructions`/`input`, đọc assistant `output_text`. Với `/chat/completions` vẫn dùng `messages`/`choices`. Ví dụ URL Responses: `https://api.openai.com/v1/responses`. Giữ `AI_MODEL` là model có quyền dùng trong tài khoản API, không phải tên tự suy đoán. Responses request đặt `store: false`, không nối conversation. Xem [hướng dẫn Responses](https://developers.openai.com/api/docs/guides/migrate-to-responses).
+
+Lỗi key, quyền model, quota và rate limit được báo riêng; không trả raw error provider chứa dữ liệu nhạy cảm.
