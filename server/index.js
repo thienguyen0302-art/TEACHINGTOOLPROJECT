@@ -1,4 +1,5 @@
 import { createTutorHandler } from './aiTutor.js';
+import { createAuthGuard } from './auth.js';
 import http from 'node:http';
 import { readFileSync, readdirSync } from 'node:fs';
 import { Buffer } from 'node:buffer';
@@ -18,12 +19,16 @@ const hiddenTests = JSON.parse(readFileSync(new URL('./testcases.json', import.m
 const languages = { cpp: Number(process.env.JUDGE0_CPP_ID || 2), python: Number(process.env.JUDGE0_PYTHON_ID || 28) };
 let active = 0;
 const tutorHandler = createTutorHandler();
+// Production: đặt REQUIRE_AUTH=true và FIREBASE_PROJECT_ID để chỉ người đã đăng nhập mới gọi được Judge/AI.
+const authGuard = createAuthGuard({ projectId: process.env.FIREBASE_PROJECT_ID, required: process.env.REQUIRE_AUTH === 'true' });
 
 const server = http.createServer(async (req, res) => {
   const reply = (status, data) => { if (!res.destroyed) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); } };
   if (!['/api/judge', '/api/ai/tutor'].includes(req.url) || req.method !== 'POST') return reply(404, { error: 'Không tìm thấy API.' });
   // The development service is localhost-only; reject cross-origin browser requests.
   if (req.headers.origin && !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(req.headers.origin) && req.headers.origin !== process.env.APP_ORIGIN) return reply(403, { error: 'Origin không được phép.' });
+  const caller = await authGuard(req);
+  if (!caller.ok) return reply(caller.status, { error: caller.error });
   if (req.url === '/api/ai/tutor') return tutorHandler(req, res);
   if (!process.env.JUDGE0_URL) return reply(503, { error: 'Chưa cấu hình JUDGE0_URL cho backend.' });
   if (active >= 2) return reply(429, { error: 'Máy chấm đang bận. Hãy thử lại sau.' });
@@ -67,4 +72,6 @@ const server = http.createServer(async (req, res) => {
     reply(502, { error: controller.signal.aborted ? 'Hết thời gian chờ máy chấm. Hãy thử lại.' : error.message });
   } finally { clearTimeout(timer); active--; }
 });
-server.listen(Number(process.env.JUDGE_PORT || 3001), '127.0.0.1', () => console.log('Judge API: http://127.0.0.1:3001'));
+const port = Number(process.env.PORT || process.env.JUDGE_PORT || 3001);
+const host = process.env.HOST || '127.0.0.1'; // Cloud Run/Docker đặt HOST=0.0.0.0
+server.listen(port, host, () => console.log(`Judge API: http://${host}:${port}`));

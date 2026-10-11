@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { onAuthStateChanged, signOut, sendEmailVerification } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./services/firebase";
 import Login from "./pages/Login";
 import ChooseLang from "./pages/ChooseLang";
@@ -11,16 +11,28 @@ import Lesson from "./pages/Lesson";
 import Dashboard from "./pages/Dashboard";
 import Practice from "./pages/Practice";
 import Problem from "./pages/Problem";
+import Teacher from "./pages/Teacher";
 import AppShell from "./components/AppShell";
 import useStudyTimer from "./hooks/useStudyTimer";
 import useLearningData from "./hooks/useLearningData";
+import { setSubmissionPersistenceAdapter } from "./services/submissionProgressService";
+import { persistSubmission } from "./services/submissionPersistence";
+import { weekSummary } from "./utils/activity";
 
 // Phần giao diện sau đăng nhập. Tách riêng để dùng hook dữ liệu (cần uid + lang).
 function Learning({ user, lang, onChangeLang }) {
   const data = useLearningData(user.uid, lang);
+  const isTeacher = data.profile.role === "teacher";
+  const week = weekSummary(data.daily);
+
+  // Nối bài nộp code (Judge) với Firestore; gỡ adapter khi đăng xuất.
+  useEffect(() => {
+    setSubmissionPersistenceAdapter(persistSubmission);
+    return () => setSubmissionPersistenceAdapter(null);
+  }, []);
 
   return (
-    <AppShell user={user} onLogout={() => signOut(auth)}>
+    <AppShell user={user} isTeacher={isTeacher} weekActive={week.activeCount} onLogout={() => signOut(auth)}>
       {data.error && (
         <div className="content"><p className="err">{data.error}</p></div>
       )}
@@ -31,6 +43,12 @@ function Learning({ user, lang, onChangeLang }) {
         <Route path="/practice" element={<Practice />} />
         <Route path="/problem/:slug" element={<Problem lang={lang} />} />
         <Route path="/progress" element={<Dashboard user={user} lang={lang} data={data} />} />
+        <Route
+          path="/teacher"
+          element={data.loading
+            ? <div className="content">Đang tải...</div>
+            : isTeacher ? <Teacher /> : <Navigate to="/" replace />}
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AppShell>
@@ -51,8 +69,14 @@ export default function App() {
       setPicking(false);
       try {
         if (u && u.emailVerified) {
-          const snap = await getDoc(doc(db, "users", u.uid));
+          const ref = doc(db, "users", u.uid);
+          const snap = await getDoc(ref);
           if (snap.exists()) setLang(snap.data().language ?? null);
+          // Lưu tên/email để Teacher Dashboard hiển thị được học sinh.
+          const profile = snap.exists() ? snap.data() : {};
+          if (profile.email !== u.email || profile.displayName !== (u.displayName ?? null)) {
+            setDoc(ref, { email: u.email, displayName: u.displayName ?? null }, { merge: true }).catch(() => {});
+          }
         }
       } catch (e) {
         console.error("Không đọc được hồ sơ người dùng:", e);

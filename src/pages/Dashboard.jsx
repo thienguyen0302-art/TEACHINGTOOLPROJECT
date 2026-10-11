@@ -3,6 +3,7 @@ import Icon from "../components/Icon";
 import { useNotice } from "../hooks/useNotice";
 import { curriculum, LANG_BY_KEY } from "../data/curriculum";
 import { firstName, greeting, todayText } from "../utils/format";
+import { calcStreak, weekSummary } from "../utils/activity";
 
 const TONES = ["blue", "purple", "cyan", "orange"];
 const ICONS = ["code", "check", "clock", "grid"];
@@ -17,13 +18,19 @@ export default function Dashboard({ user, lang, data }) {
   const contentByOrder = Object.fromEntries(data.chapters.map((c) => [c.order, c.id]));
   const progressById = Object.fromEntries(data.rows.map((r) => [r.chapterId, r]));
 
-  const cards = list.slice(0, 4).map((c, i) => {
+  const all = list.map((c, i) => {
     const id = contentByOrder[i + 1];
     const p = id ? progressById[id] : undefined;
     const progress = p?.completed ? 100 : p ? Math.min(99, Math.round(p.bestScore || 0)) : 0;
     return { ...c, n: i + 1, id, progress };
   });
-  const resume = cards.find((c) => c.id && c.progress < 100) || cards[0];
+  // Hiển thị 4 chương bắt đầu từ chương chưa hoàn thành đầu tiên (không cố định 4 chương đầu).
+  const resumeIndex = Math.max(0, all.findIndex((c) => c.id && c.progress < 100));
+  const cards = all.slice(resumeIndex, resumeIndex + 4);
+  const resume = all[resumeIndex];
+  const week = weekSummary(data.daily);
+  const streak = calcStreak(data.daily);
+  const maxSeconds = Math.max(...week.days.map((d) => d.seconds), 1);
 
   const hours = ((data.profile.studySeconds || 0) / 3600).toFixed(1);
   const avg = data.rows.length
@@ -42,7 +49,7 @@ export default function Dashboard({ user, lang, data }) {
         </div>
         <div className="streak-card">
           <span><Icon name="fire" /></span>
-          <div><strong>5 ngày</strong><small>Chuỗi học liên tiếp</small></div>
+          <div><strong>{streak} ngày</strong><small>Chuỗi học liên tiếp</small></div>
         </div>
       </section>
 
@@ -92,13 +99,13 @@ export default function Dashboard({ user, lang, data }) {
         <div className="activity-card">
           <div className="card-title">
             <div><span>Hoạt động học tập</span><h2>Tuần này của bạn</h2></div>
-            <button onClick={() => notice("Thống kê theo ngày đang được cập nhật")}>7 ngày qua <Icon name="chevron" /></button>
+            <button onClick={() => notice(`Tuần này bạn học ${week.activeCount}/7 ngày`)}>Tuần này <Icon name="chevron" /></button>
           </div>
           <div className="chart">
-            {[32, 52, 38, 76, 55, 88, 44].map((height, index) => (
-              <div key={index}>
-                <span style={{ height: `${height}%` }} className={index === 5 ? "peak" : ""} />
-                <small>{["T2", "T3", "T4", "T5", "T6", "T7", "CN"][index]}</small>
+            {week.days.map((day) => (
+              <div key={day.key} title={`${Math.round(day.seconds / 60)} phút`}>
+                <span style={{ height: `${Math.max(4, Math.round((day.seconds / maxSeconds) * 100))}%` }} className={day.isToday ? "peak" : ""} />
+                <small>{day.label}</small>
               </div>
             ))}
           </div>

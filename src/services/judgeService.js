@@ -1,6 +1,8 @@
+import { authHeaders } from './authHeader.js';
+
 export async function judgeCode({ slug, source, language, mode, stdin, signal }) {
   const response = await fetch('/api/judge', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
     body: JSON.stringify({ slug, source, language, mode, stdin }), signal,
   });
   let data;

@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import { useNotice } from "../hooks/useNotice";
 import { languageCourses, LANG_BY_KEY } from "../data/curriculum";
-import { firstName, todayText } from "../utils/format";
+import { firstName, fmtTime, todayText } from "../utils/format";
+import { calcStreak, weekSummary } from "../utils/activity";
 
 // Các khối chưa có dữ liệu thật (chuỗi ngày học, XP, nhật ký, bài tập…) giữ số liệu mẫu của bản thiết kế.
 export default function Overview({ user, lang, data, onChangeLang }) {
@@ -11,6 +12,8 @@ export default function Overview({ user, lang, data, onChangeLang }) {
   const label = LANG_BY_KEY[lang];
   const course = languageCourses[label];
   const firstChapter = data.chapters[0];
+  const week = weekSummary(data.daily);
+  const streak = calcStreak(data.daily);
 
   const openFirst = () => {
     if (firstChapter) nav(`/lesson/${firstChapter.id}`);
@@ -186,20 +189,20 @@ export default function Overview({ user, lang, data, onChangeLang }) {
         <div className="week-progress-card">
           <div className="insight-heading">
             <div><span>Tiến độ tuần</span><h2>Một tuần học tập hiệu quả</h2></div>
-            <strong>5/7 ngày</strong>
+            <strong>{week.activeCount}/7 ngày</strong>
           </div>
           <div className="study-days">
-            {["T2", "T3", "T4", "T5", "T6", "T7", "CN"].map((day, index) => (
-              <div className={index < 5 ? "completed" : index === 5 ? "today" : ""} key={day}>
-                <span>{index < 5 ? <Icon name="check" /> : index + 1}</span>
-                <small>{day}</small>
+            {week.days.map((day, index) => (
+              <div className={day.active ? "completed" : day.isToday ? "today" : ""} key={day.key}>
+                <span>{day.active ? <Icon name="check" /> : index + 1}</span>
+                <small>{day.label}</small>
               </div>
             ))}
           </div>
           <div className="week-summary">
-            <div><span><Icon name="clock" /></span><p><strong>4 giờ 25 phút</strong><small>Thời gian học</small></p></div>
-            <div><span><Icon name="code" /></span><p><strong>18 bài</strong><small>Đã hoàn thành</small></p></div>
-            <div><span><Icon name="fire" /></span><p><strong>5 ngày</strong><small>Chuỗi hiện tại</small></p></div>
+            <div><span><Icon name="clock" /></span><p><strong>{fmtTime(week.totalSeconds)}</strong><small>Thời gian học</small></p></div>
+            <div><span><Icon name="code" /></span><p><strong>{data.rows.filter((r) => r.completed).length} chương</strong><small>Đã hoàn thành</small></p></div>
+            <div><span><Icon name="fire" /></span><p><strong>{streak} ngày</strong><small>Chuỗi hiện tại</small></p></div>
           </div>
         </div>
 

@@ -44,9 +44,9 @@
 ## 📅 Day 2 — Lesson Renderer *(MVP 0)*
 
 ### 👤 Người 1
-- [ ] Dựng Navbar *(file tạo rồi nhưng chưa có code)*
-- [ ] Dựng Sidebar *(file tạo rồi nhưng chưa có code)*
-- [ ] Tạo route `/lesson/:id` *(đang làm trong feature/router)*
+- [x] Dựng Navbar (`AppShell.jsx`)
+- [x] Dựng Sidebar (`AppShell.jsx`)
+- [x] Tạo route `/lesson/:id`
 
 ### 👤 Người 2
 - [ ] Viết `Lesson.jsx` *(file tạo rồi nhưng chưa có code)*
@@ -98,8 +98,8 @@
 ## 📅 Day 5 — Practice / Advanced Engine
 
 ### 👤 Người 1
-- [ ] Thiết kế Firestore schema cho user profile *(progressService.js trống)*
-- [ ] Thiết kế Firestore schema cho progress
+- [x] Thiết kế Firestore schema cho user profile
+- [x] Thiết kế Firestore schema cho progress
 
 ### 👤 Người 2
 - [ ] Implement Practice Engine *(Practice.jsx trống)*
@@ -111,9 +111,9 @@
 ## 📅 Day 6 — Progress Integration
 
 ### 👤 Người 1
-- [ ] Implement save progress lên Firestore
-- [ ] Implement chapter completion tracking
-- [ ] Kiểm tra CRUD Firestore hoạt động
+- [x] Implement save progress lên Firestore (`saveProgress`)
+- [x] Implement chapter completion tracking
+- [ ] Kiểm tra CRUD Firestore hoạt động *(chờ Người 2 gọi `saveProgress` từ Lesson.jsx)*
 
 ### 👤 Người 2
 - [ ] Tạo progress object chuẩn: `{ chapterId, quizScore, correct, total }`
@@ -147,8 +147,8 @@
 ## 📅 Day 8 — Content Loader + Student Dashboard
 
 ### 👤 Người 1
-- [ ] Dựng Student Dashboard *(Dashboard.jsx trống)*
-- [ ] Hiển thị danh sách chương + tiến độ từ Firestore
+- [x] Dựng Student Dashboard (streak/biểu đồ tuần dùng dữ liệu thật)
+- [x] Hiển thị danh sách chương + tiến độ từ Firestore
 
 ### 👤 Người 2
 - [ ] Implement `loadChapter(language, chapterId)`
@@ -161,8 +161,8 @@
 ## 📅 Day 9 — Exam Engine
 
 ### 👤 Người 1
-- [ ] Implement study timer (thời gian học)
-- [ ] Dựng progress UI trực quan
+- [x] Implement study timer (thời gian học, theo ngày)
+- [x] Dựng progress UI trực quan
 
 ### 👤 Người 2
 - [ ] Implement Exam State *(Exam.jsx trống)*
@@ -176,8 +176,8 @@
 ## 📅 Day 10 — Exam Timer
 
 ### 👤 Người 1
-- [ ] Tích hợp exam với Firestore (lưu kết quả thi)
-- [ ] Lưu exam history
+- [x] Tích hợp exam với Firestore (`saveExamResult`)
+- [x] Lưu exam history (`getExamHistory`)
 
 ### 👤 Người 2
 - [ ] Implement countdown timer *(timer.js tạo rồi nhưng chưa có code)*
@@ -275,9 +275,9 @@ Kiểm tra API thật và các giới hạn MVP: xem [báo cáo Day 13](day13-ju
 ## 📅 Day 16 — Teacher Dashboard + User Test
 
 ### 👤 Người 1
-- [ ] Dựng Teacher Dashboard
-- [ ] Thống kê tiến độ học sinh
-- [ ] Hiển thị chương yếu của từng học sinh
+- [x] Dựng Teacher Dashboard (`/teacher`)
+- [x] Thống kê tiến độ học sinh
+- [x] Hiển thị chương yếu của từng học sinh
 
 ### 👤 Người 2
 - [ ] Test toàn bộ learning flow

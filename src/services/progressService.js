@@ -1,7 +1,9 @@
 import {
   doc, getDoc, setDoc, getDocs, collection, increment, serverTimestamp,
+  writeBatch, query, where,
 } from "firebase/firestore";
 import { db } from "./firebase";
+import { dateKey } from "../utils/activity";
 
 const PASS_SCORE = 70; // điểm tối thiểu để tính là hoàn thành chương
 
@@ -37,11 +39,30 @@ export async function getProfile(uid) {
   return snap.exists() ? snap.data() : {};
 }
 
+// Cộng thời gian học vào hồ sơ và vào bản ghi theo ngày (để tính chuỗi ngày + biểu đồ tuần).
 export async function addStudySeconds(uid, seconds) {
   if (seconds <= 0) return;
-  await setDoc(
+  const today = dateKey();
+  const batch = writeBatch(db);
+  batch.set(
     doc(db, "users", uid),
     { studySeconds: increment(seconds), lastActive: serverTimestamp() },
     { merge: true }
   );
+  batch.set(
+    doc(db, "users", uid, "daily", today),
+    { date: today, seconds: increment(seconds) },
+    { merge: true }
+  );
+  await batch.commit();
+}
+
+// Trả về { "YYYY-MM-DD": số giây } cho `days` ngày gần nhất.
+export async function getDailyActivity(uid, days = 35) {
+  const since = new Date();
+  since.setDate(since.getDate() - days);
+  const snap = await getDocs(
+    query(collection(db, "users", uid, "daily"), where("date", ">=", dateKey(since)))
+  );
+  return Object.fromEntries(snap.docs.map((d) => [d.data().date, d.data().seconds ?? 0]));
 }
