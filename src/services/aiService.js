@@ -11,11 +11,11 @@ export function publicJudgeSnapshot(judge) {
     results: judge.results.map(({ hidden, passed, status, time, memory }) => ({ hidden, passed, status, time, memory })) };
 }
 
-export async function askTutor({ slug, language, source, action, judgeResult, signal }) {
+export async function askTutor({ slug, language, source, action, judgeResult, signal, message, history }) {
   let response;
   try {
     response = await fetch('/api/ai/tutor', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-      body: JSON.stringify({ slug, language, source, action, judgeResult: publicJudgeSnapshot(judgeResult) }), signal });
+      body: JSON.stringify({ slug, language, source, action, judgeResult: publicJudgeSnapshot(judgeResult), ...(action === 'chat' ? { message, history: (history ?? []).map(({ role, text }) => ({ role, text })) } : {}) }), signal });
   } catch (error) {
     if (error.name === 'AbortError') throw error;
     throw new Error('Không kết nối được AI Tutor. Hãy thử lại.', { cause: error });

@@ -69,3 +69,27 @@
 @keyframes tutor-pulse { 50% { opacity: .4; transform: scale(.9); } }
 @media (max-width: 480px) { .ai-tutor-panel { padding: 16px; border-radius: 18px; } .ai-tutor-panel .ai-tutor-actions button { font-size: 10px; padding: 8px 9px; } }
 @media (prefers-reduced-motion: reduce) { .ai-tutor-loading > div > span, .is-thinking { animation: none; } .ai-tutor-panel * { transition: none; } }
+
+.ai-tutor-chat { margin-top: 20px; border-top: 1px solid #e5eaf3; padding-top: 16px; }
+.ai-tutor-chat summary { display: flex; align-items: center; gap: 10px; cursor: pointer; color: #405c94; font-size: 14px; font-weight: 600; list-style: none; }
+.ai-tutor-chat summary::after { content: '+'; margin-left: auto; font-size: 22px; }
+.ai-tutor-chat[open] summary::after { content: '−'; }
+.ai-tutor-chat summary > svg { width: 22px; height: 22px; }
+.ai-tutor-chat summary small { display: block; font-size: 11px; margin-top: 4px; color: #7b869c; font-weight: 400; }
+.ai-tutor-chat__toolbar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 10px; color: #7b869c; }
+.ai-tutor-chat button { border-radius: 9px; padding: 8px 10px; background: #eef3fc; border: 1px solid #dce5f4; color: #405c94; cursor: pointer; font-size: 11px; }
+.ai-tutor-chat button:disabled { opacity: .5; cursor: not-allowed; }
+.ai-tutor-chat__note, .ai-tutor-chat__empty { font-size: 11px; color: #7b869c; line-height: 1.7; }
+.ai-tutor-chat__messages { max-height: 360px; overflow-y: auto; padding: 8px 2px; display: flex; flex-direction: column; gap: 12px; }
+.ai-tutor-chat__bubble { max-width: 94%; padding: 12px 14px; border-radius: 14px; background: #f3f6fb; align-self: flex-start; overflow-wrap: anywhere; }
+.ai-tutor-chat__bubble.is-user { align-self: flex-end; background: #eaf0fe; }
+.ai-tutor-chat__bubble strong { font-size: 10px; color: #6d7f9b; }
+.ai-tutor-chat__bubble p { margin: 6px 0 0; font-size: 13px; color: #46546e; line-height: 1.8; white-space: pre-wrap; }
+.ai-tutor-chat__messages > [role=status] { color: #7b869c; font-size: 12px; }
+.ai-tutor-chat__form { margin-top: 12px; }
+.ai-tutor-chat__form label { display: block; color: #64748b; font-size: 11px; margin-bottom: 6px; }
+.ai-tutor-chat__form textarea { box-sizing: border-box; width: 100%; resize: vertical; min-height: 76px; border: 1px solid #dce5f4; border-radius: 12px; padding: 12px; font: inherit; font-size: 13px; color: #46546e; background: #fafcff; }
+.ai-tutor-chat__form > div { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; margin-top: 8px; }
+.ai-tutor-chat__form small { color: #8490a5; font-size: 10px; }
+.ai-tutor-chat__form button { display: inline-flex; align-items: center; gap: 6px; }
+.ai-tutor-chat__form button svg { width: 14px; height: 14px; }
