@@ -1,3 +1,6 @@
+import SubmissionProgress from "./SubmissionProgress";
+import useSubmissionProgress from "../hooks/useSubmissionProgress";
+import { currentJudgeResult } from "../services/submissionService";
 import AITutorPanel from "./AITutorPanel";
 import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react';
 import { judgeCode } from '../services/judgeService';
@@ -17,6 +20,7 @@ export default function LessonCodeExercise({ problem, language, chapterId, secti
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
   const [submission, setSubmission] = useState(null);
+  const progress = useSubmissionProgress({ slug: `lesson/${language}/${chapterId}/${section}/${problem.id}`, chapterId, language });
   const requestRef = useRef(null);
   const inputId = useId();
   useEffect(() => () => requestRef.current?.abort(), []);
@@ -30,7 +34,13 @@ export default function LessonCodeExercise({ problem, language, chapterId, secti
     setSubmission(null);
     try {
       const result = await judgeCode({ slug: `lesson/${language}/${chapterId}/${section}/${problem.id}`, source, language, mode, stdin, signal: controller.signal });
-      if (!controller.signal.aborted) setSubmission({ ...result, language, judgedSource: source });
+      if (!controller.signal.aborted) {
+        setSubmission({ ...result, language, judgedSource: source });
+        // A persistence/normalization issue must not turn a Judge verdict into an error.
+        if (mode === 'submit') {
+          try { progress.record(result); } catch { /* Invalid result: no fake progress event. */ }
+        }
+      }
     } catch (failure) {
       if (!controller.signal.aborted) setError(failure.message);
     } finally {
@@ -53,7 +63,8 @@ export default function LessonCodeExercise({ problem, language, chapterId, secti
       <button type="button" disabled={Boolean(busy) || !source.trim()} onClick={() => execute('run')}>{busy === 'run' ? 'Đang chạy…' : '▷ Chạy code'}</button>
       <button type="button" className="bank-submit" disabled={Boolean(busy) || !source.trim()} onClick={() => execute('submit')}>{busy === 'submit' ? 'Đang chấm…' : 'Nộp bài ↑'}</button>
     </div>
+    <SubmissionProgress entry={progress.entry} />
     <JudgeResults busy={busy} error={error} submission={submission} />
-    <AITutorPanel slug={`lesson/${language}/${chapterId}/${section}/${problem.id}`} language={language} source={source} judgeBusy={Boolean(busy)} judgeResult={submission?.judgedSource === source ? submission : null} />
+    <AITutorPanel slug={`lesson/${language}/${chapterId}/${section}/${problem.id}`} language={language} source={source} judgeBusy={Boolean(busy)} judgeResult={currentJudgeResult(submission, source, language)} />
   </section>;
 }

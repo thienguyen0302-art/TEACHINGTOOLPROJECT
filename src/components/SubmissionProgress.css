@@ -1,0 +1,5 @@
+.submission-progress { margin: 12px 0; padding: 10px 12px; border: 1px solid #e3e7ee; border-radius: 10px; background: #f8fafc; color: #475569; font-size: 13px; }
+.submission-progress > div { display: flex; gap: 8px 18px; flex-wrap: wrap; }
+.submission-progress strong { color: #15803d; font-weight: 600; }
+.submission-progress small { display: block; margin-top: 5px; color: #64748b; }
+.submission-progress p { margin: 6px 0 0; color: #92400e; }

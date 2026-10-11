@@ -15,7 +15,8 @@
     "judge:dev": "node --env-file-if-exists=.env.local server/index.js",
     "test:judge": "node --test server/judge.test.js",
     "dev:web": "vite",
-    "test:ai": "node --test server/aiTutor.test.js"
+    "test:ai": "node --test server/aiTutor.test.js",
+    "test:progress": "node --test server/submissionProgress.test.js"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

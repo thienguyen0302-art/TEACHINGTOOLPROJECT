@@ -103,3 +103,49 @@ Action `visualize` bổ sung minh họa tối đa 16 bước từ code học sin
 
 Visualization là **AI illustration**, chưa phải instrumentation/trace thực thi thực tế. Nó không thay đổi Judge verdict và không sử dụng hidden input/output. Cần AI provider cấu hình để tạo các bước; chất lượng minh họa tùy model.
 
+
+## Day 15 — Judge + AI + Progress
+
+Submit thành công từ `/api/judge` tạo normalized submission bằng `buildSubmissionResult()` trong `src/services/submissionService.js`. App dùng hai trạng thái `accepted` / `attempted`; `judgeStatus` giữ trạng thái Judge chi tiết. Accepted cần tất cả test đạt, không chỉ score làm tròn bằng 100. `time` / `memory` là giá trị lớn nhất trong các test đã chạy, không phải tổng tài nguyên.
+
+Submission gồm `problemId`, `slug`, `chapterId`, `sourceType` (`problem-bank` / `lesson`), `section` (`null` / `practice` / `advanced`), `language`, `status`, `judgeStatus`, `score`, `passed`, `total`, `time`, `memory`, `submittedAt`. Không có source, test input/output, diagnostics, solution hoặc credentials. Với Problem Bank, `problemId` giữ ID metadata hiện có, `slug` là route; Lesson dùng ID exercise và slug `lesson/<language>/<chapter>/<section>/<id>`.
+
+Progress trong bộ nhớ của tab được phân biệt theo user (hoặc guest), slug và language. Stats gồm `attempts`, `bestScore`, `lastScore`, `solved`, `lastStatus`. Mỗi Submit tăng một attempt, kể cả CE/RE/WA/TLE. Best score chỉ tăng; solved không mất sau lần nộp sai. Run, request Judge thất bại hoặc kết quả Submit không hợp lệ không ghi progress. Đổi source, đổi ngôn ngữ rồi quay lại và mở lại bài trong cùng tab giữ progress; refresh/đóng tab sẽ mất progress phiên. Draft Monaco vẫn theo behavior trước đó.
+
+### Persistence handoff cho Dev1
+
+`src/services/progressService.js` và `useLearningData.js` hiện lưu/read Quiz theo chương; Day 15 không đưa exercise attempts vào dữ liệu đó. Adapter riêng `src/services/submissionProgressService.js` expose `recordSubmissionProgress(submission, stats, options)` và `setSubmissionPersistenceAdapter()`.
+
+Đăng ký một adapter ở app bootstrap khi Dev1 đã chuẩn bị persistence:
+
+```js
+setSubmissionPersistenceAdapter(async (contract, { uid }) => {
+  await yourExerciseProgressAPI(uid, contract);
+});
+```
+
+Contract allowlist:
+
+```js
+{
+  problemId, slug, chapterId, sourceType, section, language,
+  status, score, passed, total,
+  attempts, bestScore, solved, submittedAt
+}
+```
+
+Adapter mặc định chưa nối Firestore/API; entry đánh dấu `session-only`. Chưa login thì không gọi persistence. Submit cập nhật progress ngay, không chờ persistence; lỗi adapter chỉ hiện warning không chặn và không đổi Judge verdict. Kết quả persistence cũ không ghi đè stats của lần nộp mới. Adapter Dev1 cần tự quản lý merge/idempotency nếu lưu lâu dài, nhiều tab hoặc nhiều phiên; số attempts/bestScore trong contract hiện là stats của phiên, không phải aggregate Firestore toàn thời gian.
+
+Panel tự đề xuất `explain_error` cho CE/RE, `explain_failure` cho WA/TLE/partial, `complexity` khi tất cả test đạt. Không tự gọi Gemini sau Submit. `currentJudgeResult()` chỉ đưa snapshot vào AI khi source và language vẫn khớp; sửa code giữ progress/lần Submit trước nhưng AI nhận context chưa Judge cho source mới. AI failure không thay đổi progress hoặc kết quả chấm.
+
+```bash
+npm run test:ai
+npm run test:judge
+npm run test:progress
+npm run validate:content
+npm run test:content
+npm run lint
+npm run build
+```
+
+Tests progress dùng mocks; không gọi Judge0/Gemini/Firestore thật. Không thay đổi Dashboard, Quiz schema, curriculum, Judge hidden-test rule, Gemini transport hoặc visualization. Firebase production hardening và Exam Engine/Timer để phase sau.

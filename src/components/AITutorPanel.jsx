@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useReducer } from 'react';
+import { useEffect, useRef, useReducer } from 'react';
 import { askTutor } from '../services/aiService';
 import { preferredTutorAction, tutorActions } from '../utils/tutorActions';
 import TutorIcon from './TutorIcon';
@@ -6,19 +6,19 @@ import CodeStepVisualizer from './CodeStepVisualizer';
 import './AITutorPanel.css';
 
 export default function AITutorPanel({ slug, language, source, judgeResult, judgeBusy }) {
-  const [state, update] = useReducer((current, patch) => ({ ...current, ...patch }), { pending: '', error: '', feedback: null });
-  const { pending, error, feedback } = state;
+  const [state, update] = useReducer((current, patch) => ({ ...current, ...patch }), { pending: '', error: '', feedback: null, selected: preferredTutorAction(judgeResult) });
+  const { pending, error, feedback, selected } = state;
+  const setSelected = (selected) => update({ selected });
   const setPending = (pending) => update({ pending });
   const setError = (error) => update({ error });
   const setFeedback = (feedback) => update({ feedback });
   const preferred = preferredTutorAction(judgeResult);
-  const [selected, setSelected] = useState(preferred);
   const controllerRef = useRef(null);
   const chosen = tutorActions.find((action) => action.id === selected);
   useEffect(() => {
     controllerRef.current?.abort();
     controllerRef.current = null;
-    update({ pending: '', error: '', feedback: null });
+    update({ pending: '', error: '', feedback: null, selected: preferredTutorAction(judgeResult) });
     return () => { controllerRef.current?.abort(); controllerRef.current = null; };
   }, [slug, language, source, judgeResult]);
   const disabled = Boolean(pending || judgeBusy || !source?.trim());
