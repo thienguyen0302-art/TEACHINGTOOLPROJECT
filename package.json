@@ -17,7 +17,8 @@
     "dev:web": "vite",
     "test:ai": "node --test server/aiTutor.test.js",
     "test:progress": "node --test server/submissionProgress.test.js",
-    "test:platform": "node --test server/platform.test.js"
+    "test:platform": "node --test server/platform.test.js",
+    "test:lesson": "node --test server/lessonSelfCheck.test.js"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

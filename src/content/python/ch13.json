@@ -116,7 +116,8 @@
                   "label": "A4"
                 }
               ]
-            }
+            },
+            "line": 2
           },
           {
             "title": "Chọn A1",
@@ -161,7 +162,8 @@
                 0
               ],
               "rejectedIndices": []
-            }
+            },
+            "line": 7
           },
           {
             "title": "Chọn A2",
@@ -207,7 +209,8 @@
                 1
               ],
               "rejectedIndices": []
-            }
+            },
+            "line": 7
           },
           {
             "title": "Bỏ A3",
@@ -255,7 +258,8 @@
               "rejectedIndices": [
                 2
               ]
-            }
+            },
+            "line": 5
           },
           {
             "title": "Chọn A4",
@@ -304,7 +308,8 @@
               "rejectedIndices": [
                 2
               ]
-            }
+            },
+            "line": 7
           }
         ]
       },

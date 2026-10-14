@@ -72,7 +72,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "8 > 6 → r -= 1"
+            "formula": "8 > 6 → r -= 1",
+            "line": 12
           },
           {
             "title": "Tổng quá nhỏ",
@@ -119,7 +120,8 @@
                 3
               ]
             },
-            "formula": "5 < 6 → l += 1"
+            "formula": "5 < 6 → l += 1",
+            "line": 10
           },
           {
             "title": "Tìm thấy",
@@ -167,7 +169,8 @@
                 3
               ]
             },
-            "formula": "a[1] + a[2] = 6"
+            "formula": "a[1] + a[2] = 6",
+            "line": 7
           }
         ]
       },

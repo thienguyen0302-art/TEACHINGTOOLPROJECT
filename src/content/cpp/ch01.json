@@ -88,7 +88,8 @@
               }
             ],
             "explanation": "Khai báo int a; không được đọc trước khi gán.",
-            "title": "Khởi tạo"
+            "title": "Khởi tạo",
+            "line": 1
           },
           {
             "cells": [
@@ -99,7 +100,8 @@
               }
             ],
             "explanation": "Gán a=10.",
-            "title": "Cập nhật biến"
+            "title": "Cập nhật biến",
+            "line": 2
           },
           {
             "cells": [
@@ -115,7 +117,8 @@
               }
             ],
             "explanation": "Khai báo và khởi tạo b=20.",
-            "title": "Cập nhật biến"
+            "title": "Cập nhật biến",
+            "line": 4
           },
           {
             "cells": [
@@ -136,7 +139,8 @@
               }
             ],
             "explanation": "Khởi tạo biến tổng 64 bit bằng 0.",
-            "title": "Trạng thái cuối"
+            "title": "Trạng thái cuối",
+            "line": 6
           }
         ]
       },

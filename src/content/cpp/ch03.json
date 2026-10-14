@@ -54,7 +54,8 @@
               "activeIndices": [],
               "pointers": [],
               "discardedIndices": []
-            }
+            },
+            "line": 9
           },
           {
             "title": "Cộng 1",
@@ -89,7 +90,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "s = 0 + 1 = 1"
+            "formula": "s = 0 + 1 = 1",
+            "line": 11
           },
           {
             "title": "Cộng 2",
@@ -124,7 +126,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "s = 1 + 2 = 3"
+            "formula": "s = 1 + 2 = 3",
+            "line": 11
           },
           {
             "title": "Cộng 3",
@@ -159,7 +162,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "s = 3 + 3 = 6"
+            "formula": "s = 3 + 3 = 6",
+            "line": 11
           },
           {
             "title": "Cộng 4",
@@ -194,7 +198,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "s = 6 + 4 = 10"
+            "formula": "s = 6 + 4 = 10",
+            "line": 11
           }
         ]
       },

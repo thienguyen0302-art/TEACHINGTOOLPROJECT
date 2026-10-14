@@ -132,6 +132,7 @@ def validate(path, chapter):
                 all(isinstance(x, str) and x.strip() for x in chapter[key]),
                 f"{context}: invalid {key}")
     ids = set()
+    theory_ids = set()
     jobs = []
     for section in ["theory", "examples", "quiz", "practice", "advanced"]:
         require(isinstance(chapter[section], list) and chapter[section], f"{context}: empty {section}")
@@ -143,6 +144,7 @@ def validate(path, chapter):
             prefix = "example" if section == "examples" else section
             require(item["id"].startswith(prefix), f"{location}: invalid ID prefix")
             if section == "theory":
+                theory_ids.add(item["id"])
                 fields(item, ["title", "content", "keywords", "sections", "selfCheck"], location)
                 require(len(item["sections"]) >= 3, f"{location}: insufficient theory sections")
                 for block in item["sections"]:
@@ -154,6 +156,9 @@ def validate(path, chapter):
                         f"{location}: missing self-check")
             elif section == "examples":
                 fields(item, ["title", "description", "difficulty", "code", "explanation"], location)
+                if "theoryId" in item:
+                    require(isinstance(item["theoryId"], str) and item["theoryId"] in theory_ids,
+                            f"{location}: invalid theoryId")
             elif section == "quiz":
                 fields(item, ["type", "difficulty", "tags", "question", "choices", "answer",
                               "explanation", "betterApproach"], location)
@@ -177,9 +182,18 @@ def validate(path, chapter):
                 visual = item["visualization"]
                 fields(visual, ["title", "description", "steps"], location)
                 require(bool(visual["steps"]), f"{location}: empty trace")
+                source_code = visual.get("code") or item.get("code")
+                line_count = len(source_code.splitlines()) if isinstance(source_code, str) and source_code else 0
                 for step in visual["steps"]:
                     fields(step, ["cells", "explanation"], location)
                     require(bool(step["cells"]) and bool(step["explanation"]), f"{location}: invalid step")
+                    line_values = step.get("lines") if "lines" in step else ([step["line"]] if "line" in step else [])
+                    if line_count:
+                        require(bool(line_values), f"{location}: visualization step missing code line")
+                    if line_values:
+                        require(isinstance(line_values, list) and line_values and
+                                all(type(line) is int and 1 <= line <= line_count for line in line_values),
+                                f"{location}: visualization line outside code range")
                     for cell in step["cells"]:
                         fields(cell, ["label", "value", "active"], location)
                         require(isinstance(cell["value"], str) and isinstance(cell["active"], bool), f"{location}: invalid cell")

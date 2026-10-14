@@ -161,7 +161,8 @@
                 0,
                 1
               ]
-            }
+            },
+            "line": 3
           },
           {
             "title": "Loại bội của 2",
@@ -210,7 +211,8 @@
                 10
               ]
             },
-            "formula": "j = 4,6,8,10"
+            "formula": "j = 4,6,8,10",
+            "line": 8
           },
           {
             "title": "Loại bội của 3",
@@ -260,7 +262,8 @@
                 10
               ]
             },
-            "formula": "j = 9"
+            "formula": "j = 9",
+            "line": 8
           },
           {
             "title": "Các nguyên tố còn lại",
@@ -302,7 +305,8 @@
                 9,
                 10
               ]
-            }
+            },
+            "line": 10
           }
         ]
       },

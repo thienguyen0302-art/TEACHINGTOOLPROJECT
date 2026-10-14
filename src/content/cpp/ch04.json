@@ -60,7 +60,8 @@
                 }
               ],
               "discardedIndices": []
-            }
+            },
+            "line": 9
           },
           {
             "title": "Gán giá trị mới",
@@ -94,7 +95,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "a[1] = 5"
+            "formula": "a[1] = 5",
+            "line": 10
           }
         ]
       },

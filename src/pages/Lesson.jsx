@@ -1,105 +1,26 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { loadChapter } from "../services/contentService";
-import QuestionCard from "../components/QuestionCard";
-import { calculateScore, countAnswered } from "../utils/grading";
-import StepVisualizer from "../components/StepVisualizer";
-import ProblemCard from "../components/ProblemCard";
-import { saveProgress } from "../services/progressService";
+import LessonPractice from "../components/LessonPractice";
+import LessonSummary from "../components/LessonSummary";
+import LessonTheory from "../components/LessonTheory";
 import { auth } from "../services/firebase";
+import { loadChapter } from "../services/contentService";
+import { saveProgress } from "../services/progressService";
+import { calculateScore, countAnswered } from "../utils/grading";
+import "./Lesson.css";
 
-const COL = {
-  type: "Kiểu", purpose: "Công dụng", typicalRange: "Khoảng giá trị",
-  example: "Ví dụ", operator: "Toán tử", meaning: "Ý nghĩa",
-  concept: "Khái niệm", cpp: "C++", python: "Python",
-};
+const TABS = [["overview", "Tổng quan"], ["theory", "Lý thuyết"], ["practice", "Thực hành"], ["summary", "Tổng kết"]];
 
-// [tên trường, nhãn, kiểu hiển thị]; thứ tự là thứ tự hiện trên trang
-const FIELDS = [
-  ["example", "Ví dụ", "text"],
-  ["exampleInput", "Input mẫu", "code"],
-  ["template", "Mẫu code", "code"],
-  ["code", "Code", "code"],
-  ["output", "Output", "code"],
-  ["result", "Kết quả", "code"],
-  ["typicalOutput", "Output thường gặp", "code"],
-  ["trapExample", "Ví dụ dễ sai", "code"],
-  ["trapResult", "Kết quả của ví dụ dễ sai", "text"],
-  ["dangerCode", "Code nguy hiểm", "code"],
-  ["correctCode", "Code đúng", "code"],
-  ["table", "", "table"],
-  ["steps", "Các bước", "list"],
-  ["strategy", "Chiến lược", "list"],
-  ["applications", "Ứng dụng", "list"],
-  ["commonMistakes", "Lỗi thường gặp", "list"],
-  ["explanation", "Giải thích", "text"],
-  ["cppComparison", "So sánh với C++", "text"],
-  ["warning", "Lưu ý", "warn"],
-  ["hsgNote", "Ghi chú HSG", "note"],
-];
-
-function Table({ rows }) {
-  if (!rows.length) return null;
-  const keys = Object.keys(rows[0]);
-  return (
-    <table>
-      <thead><tr>{keys.map((k) => <th key={k}>{COL[k] || k}</th>)}</tr></thead>
-      <tbody>
-        {rows.map((r, i) => (
-          <tr key={i}>{keys.map((k) => <td key={k}>{String(r[k] ?? "")}</td>)}</tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-function Field({ label, kind, value }) {
-  if (kind === "code")
-    return <><h4>{label}</h4><pre><code>{value}</code></pre></>;
-  if (kind === "text")
-    return <p><b>{label}:</b> {value}</p>;
-  if (kind === "list")
-    return <><h4>{label}</h4><ul>{value.map((x, i) => <li key={i}>{x}</li>)}</ul></>;
-  if (kind === "table") return <Table rows={value} />;
-  if (kind === "warn")
-    return <div className="callout warn"><b>{label}:</b> {value}</div>;
-  return <div className="callout"><b>{label}:</b> {value}</div>;
-}
-
-function Theory({ items }) {
-  return <div className="theory-reader">
-    <nav className="theory-reader__contents" aria-label="Mục lục lý thuyết"><b>Trong bài này</b><ol>{items.map((t) => <li key={t.id}><a href={`#${t.id}`}>{t.title.replace(/^\d+\.\s*/, "")}</a></li>)}</ol></nav>
-    {items.map((t) => (
-    <article className="card theory-article" id={t.id} key={t.id}>
-      <div className="theory-article__heading"><span>LÝ THUYẾT</span><h3>{t.title}</h3></div>
-      <p className="theory-article__intro">{t.content}</p>
-      {t.sections?.map((section, i) => <section className="theory-section" key={i}><h4>{section.title}</h4>{section.paragraphs?.map((paragraph, j) => <p key={j}>{paragraph}</p>)}{section.bullets?.length > 0 && <ul>{section.bullets.map((text, j) => <li key={j}>{text}</li>)}</ul>}</section>)}
-      {FIELDS.map(([k, label, kind]) =>
-        t[k] ? <Field key={k} label={label} kind={kind} value={t[k]} /> : null
-      )}
-      {t.visualization && <StepVisualizer key={t.id} visualization={t.visualization} />}
-      {t.selfCheck && <div className="theory-self-check"><span>TỰ KIỂM TRA</span><p>{t.selfCheck.question}</p><details><summary>Đối chiếu cách hiểu</summary><p>{t.selfCheck.answer}</p></details></div>}
-    </article>
-  ))}</div>;
-}
-
-function Examples({ items }) {
-  return items.map((e) => (
-    <div className="card" key={e.id}>
-      <h3>{e.title}<span className="badge">{e.difficulty}</span></h3>
-      <p>{e.description}</p>
-      <pre><code>{e.code}</code></pre>
-      {e.input && <Field label="Input" kind="code" value={e.input} />}
-      {e.output && <Field label="Output" kind="code" value={e.output} />}
-      <p><b>Giải thích:</b> {e.explanation}</p>
-      {e.complexity && (
-        <p><b>Độ phức tạp:</b> thời gian {e.complexity.time}, bộ nhớ {e.complexity.space}</p>
-      )}
-      {e.wrongCode && <Field label="Code sai" kind="code" value={e.wrongCode} />}
-      {e.correctCode && <Field label="Code đúng" kind="code" value={e.correctCode} />}
-      {e.hsgLesson && <Field label="Bài học HSG" kind="note" value={e.hsgLesson} />}
+function LessonOverview({ chapter }) {
+  return <section className="lesson-overview" aria-labelledby="lesson-overview-title">
+    <div className="lesson-section-heading"><span>BẮT ĐẦU</span><h3 id="lesson-overview-title">Em sẽ học gì trong chương này?</h3></div>
+    <p className="lesson-overview__description">{chapter.description}</p>
+    <div className="lesson-overview__columns">
+      <section><h4>Mục tiêu học tập</h4><ul>{chapter.objectives.map((item, index) => <li key={index}>{item}</li>)}</ul></section>
+      <section><h4>Kiến thức cần có trước</h4><ul>{chapter.prerequisites.map((item, index) => <li key={index}>{item}</li>)}</ul></section>
     </div>
-  ));
+    {chapter.references?.length > 0 && <section className="lesson-references"><h4>Nguồn tham khảo và đọc thêm</h4><p>Nội dung tiếng Việt, bài tập và minh họa được biên soạn cho lộ trình này.</p><ul>{chapter.references.map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul></section>}
+  </section>;
 }
 
 function LessonBody({ lang }) {
@@ -108,15 +29,29 @@ function LessonBody({ lang }) {
 }
 
 function LessonContent({ lang, id }) {
-  const [ch, setCh] = useState(undefined); // undefined = đang tải, null = không có
+  const [chapter, setChapter] = useState(undefined);
   const [tab, setTab] = useState("overview");
+  const [practiceMode, setPracticeMode] = useState("quiz");
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [saveStatus, setSaveStatus] = useState(""); // "" | "saving" | "saved" | "error"
+  const [saveStatus, setSaveStatus] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    loadChapter(lang, id).then((result) => { if (active) setChapter(result); });
+    return () => { active = false; };
+  }, [lang, id]);
+
+  if (chapter === undefined) return <p>Đang tải bài học...</p>;
+  if (chapter === null) return <p>Không tìm thấy chương này.</p>;
+
+  const questions = chapter.quiz ?? [];
+  const answeredCount = countAnswered(questions, answers);
+  const score = calculateScore(questions, answers);
+  const canSubmit = score.total > 0 && answeredCount === score.total;
 
   function handleSelect(questionId, choice) {
-    if (submitted) return;
-    setAnswers((previous) => ({ ...previous, [questionId]: choice }));
+    if (!submitted) setAnswers((previous) => ({ ...previous, [questionId]: choice }));
   }
 
   function resetQuiz() {
@@ -129,148 +64,29 @@ function LessonContent({ lang, id }) {
     if (!canSubmit) return;
     setSubmitted(true);
     const uid = auth.currentUser?.uid;
-    if (uid) {
-      setSaveStatus("saving");
-      try {
-        await saveProgress(uid, id, {
-          language: lang,
-          chapterId: id,
-          quizScore: currentScore.percentage,
-          correct: currentScore.correct,
-          total: currentScore.total,
-        });
-        setSaveStatus("saved");
-      } catch (e) {
-        console.error("Lỗi lưu tiến độ:", e);
-        setSaveStatus("error");
-      }
+    if (!uid) return;
+    setSaveStatus("saving");
+    try {
+      await saveProgress(uid, id, { language: lang, chapterId: id, quizScore: currentScore.percentage, correct: currentScore.correct, total: currentScore.total });
+      setSaveStatus("saved");
+    } catch (error) {
+      console.error("Lỗi lưu tiến độ:", error);
+      setSaveStatus("error");
     }
   }
 
-  useEffect(() => {
-    let on = true;
-    loadChapter(lang, id).then((c) => on && setCh(c));
-    return () => { on = false; };
-  }, [lang, id]);
-
-  if (ch === undefined) return <p>Đang tải bài học...</p>;
-  if (ch === null) return <p>Không tìm thấy chương này.</p>;
-
-  const questions = ch.quiz ?? [];
-  const answeredCount = countAnswered(questions, answers);
-  const score = calculateScore(questions, answers);
-  const canSubmit = score.total > 0 && answeredCount === score.total;
-
-  const tabs = [
-    ["overview", "Tổng quan"], ["theory", "Lý thuyết"], ["examples", "Ví dụ"],
-    ["quiz", "Quiz"],
-    ["practice", "Luyện tập"], ["advanced", "Nâng cao HSG"],
-    ["mistakes", "Lỗi thường gặp"], ["summary", "Tóm tắt"],
-  ];
-
-  return (
-    <div>
-      <h2>Chương {ch.order}: {ch.title}</h2>
-      <div className="tabs">
-        {tabs.map(([k, name]) => (
-          <button key={k} className={tab === k ? "on" : ""} onClick={() => setTab(k)}>
-            {name}
-          </button>
-        ))}
-      </div>
-
-      {tab === "overview" && (
-        <div>
-          <p>{ch.description}</p>
-          <h4>Mục tiêu học tập</h4>
-          <ul>{ch.objectives.map((x, i) => <li key={i}>{x}</li>)}</ul>
-          <h4>Kiến thức cần có trước</h4>
-          <ul>{ch.prerequisites.map((x, i) => <li key={i}>{x}</li>)}</ul>
-          {ch.references?.length > 0 && (
-            <><h4>Nguồn tham khảo và đọc thêm</h4>
-              <p>Nội dung tiếng Việt, bài tập và minh họa được biên soạn cho lộ trình này.</p>
-              <ul>{ch.references.map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul>
-            </>
-          )}
-        </div>
-      )}
-      {tab === "theory" && <Theory items={ch.theory} />}
-      {tab === "examples" && <Examples items={ch.examples} />}
-      {(tab === "practice" || tab === "advanced") && (
-        <section aria-label={tab === "advanced" ? "Bài tập nâng cao HSG" : "Bài luyện tập"}>
-          <p>Viết code trực tiếp bên dưới, chạy thử và nộp bài để chấm. Mở gợi ý khi cần, rồi đối chiếu lời giải sau khi tự làm.</p>
-          {(ch[tab] ?? []).map((problem) => <ProblemCard key={`${lang}:${id}:${tab}:${problem.id}`} problem={problem} language={lang} chapterId={id} section={tab} />)}
-          {!ch[tab]?.length && <p>Chưa có bài tập trong phần này.</p>}
-        </section>
-      )}
-      {tab === "quiz" && (
-        <section aria-label="Quiz của chương">
-          {questions.length === 0 ? <p>Chương này chưa có câu hỏi Quiz.</p> : (
-            <>
-              <div className="callout" role="status">
-                {submitted ? (
-                  <>
-                    <b>Kết quả: {score.correct}/{score.total} câu đúng ({score.percentage}%).</b>
-                    <p>Xem đáp án và giải thích bên dưới, hoặc làm lại để ôn tập.</p>
-                    {saveStatus === "saving" && <p className="quiz-save-status"><em>Đang đồng bộ tiến độ học tập...</em></p>}
-                    {saveStatus === "saved" && <p className="quiz-save-status text-success"><strong>✓ Đã cập nhật kết quả vào hồ sơ học tập.</strong></p>}
-                    {saveStatus === "error" && <p className="quiz-save-status text-warning">Chưa đồng bộ được với máy chủ (vẫn xem được giải thích bên dưới).</p>}
-                  </>
-                ) : (
-                  <><b>Đã trả lời {answeredCount}/{questions.length} câu.</b>
-                    <p>Chọn một đáp án cho mỗi câu rồi nộp bài để xem kết quả.</p></>
-                )}
-              </div>
-              {questions.map((question, index) => (
-                <QuestionCard
-                  key={question.id}
-                  question={question}
-                  index={index}
-                  selectedAnswer={answers[question.id]}
-                  onSelect={(choice) => handleSelect(question.id, choice)}
-                  submitted={submitted}
-                />
-              ))}
-              <div className="quiz-actions">
-                {!submitted && (
-                  <button type="button" disabled={!canSubmit} onClick={() => handleSubmitQuiz(score)}>
-                    Nộp bài
-                  </button>
-                )}
-                <button type="button" disabled={!submitted && answeredCount === 0} onClick={resetQuiz}>Làm lại</button>
-                {!submitted && !canSubmit && <p>Còn {questions.length - answeredCount} câu chưa trả lời.</p>}
-              </div>
-            </>
-          )}
-        </section>
-      )}
-      {tab === "mistakes" && (
-        <div>
-          {ch.commonMistakes.map((m, i) => (
-            <div className="card" key={i}>
-              <p><b>Lỗi:</b> {m.mistake}</p>
-              <p><b>Cách sửa:</b> {m.fix}</p>
-            </div>
-          ))}
-          {ch.cppVsPython && (
-            <>
-              <h4>So sánh C++ và Python</h4>
-              <Table rows={ch.cppVsPython} />
-            </>
-          )}
-        </div>
-      )}
-      {tab === "summary" && (
-        <ul>{ch.chapterSummary.map((x, i) => <li key={i}>{x}</li>)}</ul>
-      )}
-    </div>
-  );
+  return <div>
+    <header className="lesson-heading"><p>CHƯƠNG {chapter.order}</p><h2>{chapter.title}</h2></header>
+    <nav className="tabs lesson-tabs" aria-label="Nội dung chương">
+      {TABS.map(([key, label]) => <button type="button" key={key} className={tab === key ? "on" : ""} aria-current={tab === key ? "page" : undefined} onClick={() => setTab(key)}>{label}</button>)}
+    </nav>
+    {tab === "overview" && <LessonOverview chapter={chapter} />}
+    {tab === "theory" && <LessonTheory chapter={chapter} language={lang} />}
+    {tab === "practice" && <LessonPractice chapter={chapter} language={lang} practiceMode={practiceMode} setPracticeMode={setPracticeMode} answers={answers} submitted={submitted} saveStatus={saveStatus} answeredCount={answeredCount} score={score} canSubmit={canSubmit} onSelect={handleSelect} onSubmit={handleSubmitQuiz} onReset={resetQuiz} />}
+    {tab === "summary" && <LessonSummary chapter={chapter} />}
+  </div>;
 }
 
 export default function Lesson({ lang }) {
-  return (
-    <div className="content lesson-page">
-      <LessonBody lang={lang} />
-    </div>
-  );
+  return <div className="content lesson-page"><LessonBody lang={lang} /></div>;
 }

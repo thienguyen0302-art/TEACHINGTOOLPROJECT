@@ -48,7 +48,8 @@
               "activeIndices": [],
               "pointers": [],
               "discardedIndices": []
-            }
+            },
+            "line": 10
           },
           {
             "title": "Sau sort",
@@ -78,7 +79,8 @@
               ],
               "pointers": [],
               "discardedIndices": []
-            }
+            },
+            "line": 11
           }
         ]
       },
@@ -254,7 +256,8 @@
                 }
               ],
               "discardedIndices": []
-            }
+            },
+            "line": 11
           },
           {
             "title": "Dịch 3",
@@ -289,7 +292,8 @@
               "pointers": [],
               "discardedIndices": []
             },
-            "formula": "a[j+1] = a[j]"
+            "formula": "a[j+1] = a[j]",
+            "line": 13
           },
           {
             "title": "Chèn 1",
@@ -323,7 +327,8 @@
               "pointers": [],
               "discardedIndices": []
             },
-            "formula": "a[j+1] = x"
+            "formula": "a[j+1] = x",
+            "line": 16
           },
           {
             "title": "Lấy x=2 và dịch",
@@ -357,7 +362,8 @@
               ],
               "pointers": [],
               "discardedIndices": []
-            }
+            },
+            "line": 13
           },
           {
             "title": "Chèn 2",
@@ -391,7 +397,8 @@
               "pointers": [],
               "discardedIndices": []
             },
-            "formula": "a[1] = 2"
+            "formula": "a[1] = 2",
+            "line": 16
           }
         ]
       }

@@ -91,7 +91,8 @@
               }
             ],
             "explanation": "Gán a=10.",
-            "title": "Khởi tạo"
+            "title": "Khởi tạo",
+            "line": 1
           },
           {
             "cells": [
@@ -107,7 +108,8 @@
               }
             ],
             "explanation": "Gán name=\"An\".",
-            "title": "Cập nhật biến"
+            "title": "Cập nhật biến",
+            "line": 2
           },
           {
             "cells": [
@@ -128,7 +130,8 @@
               }
             ],
             "explanation": "Gán x=3.14. Mỗi tên trỏ tới một đối tượng.",
-            "title": "Trạng thái cuối"
+            "title": "Trạng thái cuối",
+            "line": 3
           }
         ]
       },

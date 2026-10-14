@@ -171,7 +171,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "s[0] == s[4]"
+            "formula": "s[0] == s[4]",
+            "line": 5
           },
           {
             "title": "Tiến vào giữa",
@@ -217,7 +218,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "s[1] == s[3]"
+            "formula": "s[1] == s[3]",
+            "line": 8
           },
           {
             "title": "Gặp tại tâm",
@@ -258,7 +260,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "l >= r → kết thúc"
+            "formula": "l >= r → kết thúc",
+            "line": 10
           }
         ]
       },

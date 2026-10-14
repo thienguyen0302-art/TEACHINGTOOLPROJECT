@@ -6,6 +6,33 @@ export class TutorError extends Error {
 const labels = { chat: 'Peanut AI', hint: 'Gợi ý', explain_error: 'Phân tích lỗi code', explain_failure: 'Tại sao bài chưa đúng?', complexity: 'Độ phức tạp', visualize: 'Trực quan hóa code' };
 const text = (value, limit = 1800) => typeof value === 'string' ? value.trim().slice(0, limit) : '';
 
+function parseProviderJson(raw) {
+  if (typeof raw !== 'string') return raw;
+  try { return JSON.parse(raw.replace(/^```(?:json)?\s*|\s*```$/g, '')); }
+  catch { return {}; }
+}
+
+export function normalizeSelfCheckFeedback(raw) {
+  const data = parseProviderJson(raw);
+  const value = data && typeof data === 'object' && !Array.isArray(data) ? data : {};
+  const numericAccuracy = Number(value.accuracy);
+  const accuracy = Number.isFinite(numericAccuracy) ? Math.round(Math.min(100, Math.max(0, numericAccuracy))) : 0;
+  const levels = new Set(['accurate', 'mostly_correct', 'partial', 'misunderstood']);
+  const list = (items) => Array.isArray(items)
+    ? items.map((item) => text(item, 350)).filter(Boolean).slice(0, 6)
+    : [];
+  return {
+    accuracy,
+    level: levels.has(value.level) ? value.level : 'partial',
+    summary: text(value.summary, 600) || 'AI chưa thể đưa ra nhận xét đủ rõ. Em hãy tự đối chiếu với đáp án tham khảo.',
+    correctPoints: list(value.correctPoints),
+    missingPoints: list(value.missingPoints),
+    misconceptions: list(value.misconceptions),
+    suggestedRevision: text(value.suggestedRevision, 800),
+    followUpQuestion: text(value.followUpQuestion, 500),
+  };
+}
+
 export function normalizeFeedback(raw, action, visualizationContext = {}) {
   let data = raw;
   if (typeof raw === 'string') {
@@ -27,7 +54,7 @@ export function normalizeFeedback(raw, action, visualizationContext = {}) {
     ...(action === 'visualize' ? { visualization: normalizeVisualization(data.visualization, visualizationContext) } : {}) };
 }
 
-export const outputTokenLimits = Object.freeze({ chat: 600, hint: 350, explain_error: 450, explain_failure: 450, complexity: 450, visualize: 1200 });
+export const outputTokenLimits = Object.freeze({ chat: 600, hint: 350, explain_error: 450, explain_failure: 450, complexity: 450, visualize: 1200, self_check: 550 });
 export function providerRequest({ url, model, system, context, action }) {
   if (!Object.hasOwn(outputTokenLimits, action)) throw new TutorError(400, 'AI action không hợp lệ.');
   return {
@@ -77,7 +104,9 @@ export async function requestProvider({ system, context, action, signal, env = p
     if (!response.ok) throw new TutorError(502, providerError(response.status, payload));
     const content = providerText(payload);
     if (typeof content !== 'string' || !content.trim()) throw new TutorError(502, 'AI provider trả về phản hồi không hợp lệ. Hãy thử lại.');
-    const feedback = normalizeFeedback(content, action, { source: context?.student?.source, samples: context?.problem?.samples });
+    const feedback = action === 'self_check'
+      ? normalizeSelfCheckFeedback(content)
+      : normalizeFeedback(content, action, { source: context?.student?.source, samples: context?.problem?.samples });
     // Redact credentials from all nested strings, including visualization cells.
     const secrets = [env.AI_API_KEY, env.JUDGE0_API_KEY, env.JUDGE0_AUTH_TOKEN].filter(Boolean);
     function redact(value) {

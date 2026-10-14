@@ -52,7 +52,8 @@
                 "label": "else",
                 "value": "Chưa xét"
               }
-            ]
+            ],
+            "line": 9
           },
           {
             "title": "Kiểm tra dương",
@@ -84,7 +85,8 @@
                 "value": "Chưa xét"
               }
             ],
-            "formula": "-3 > 0 → false"
+            "formula": "-3 > 0 → false",
+            "line": 10
           },
           {
             "title": "Kiểm tra bằng 0",
@@ -116,7 +118,8 @@
                 "value": "Chưa xét"
               }
             ],
-            "formula": "-3 == 0 → false"
+            "formula": "-3 == 0 → false",
+            "line": 12
           },
           {
             "title": "Chọn nhánh else",
@@ -147,7 +150,8 @@
                 "value": "AM",
                 "active": true
               }
-            ]
+            ],
+            "line": 15
           }
         ]
       },

@@ -110,7 +110,8 @@
                 }
               ],
               "discardedIndices": []
-            }
+            },
+            "line": 11
           },
           {
             "title": "Tính dp[1]",
@@ -161,7 +162,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "dp[1] = 1 + 0 = 1"
+            "formula": "dp[1] = 1 + 0 = 1",
+            "line": 13
           },
           {
             "title": "Tính dp[2]",
@@ -216,7 +218,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "dp[2] = 1 + 1 = 2"
+            "formula": "dp[2] = 1 + 1 = 2",
+            "line": 15
           },
           {
             "title": "Tính dp[3]",
@@ -271,7 +274,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "dp[3] = 2 + 1 = 3"
+            "formula": "dp[3] = 2 + 1 = 3",
+            "line": 15
           },
           {
             "title": "Tính dp[4]",
@@ -326,7 +330,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "dp[4] = 3 + 2 = 5"
+            "formula": "dp[4] = 3 + 2 = 5",
+            "line": 15
           },
           {
             "title": "Tính dp[5]",
@@ -381,7 +386,8 @@
               ],
               "discardedIndices": []
             },
-            "formula": "dp[5] = 5 + 3 = 8"
+            "formula": "dp[5] = 5 + 3 = 8",
+            "line": 15
           }
         ]
       },
@@ -521,7 +527,8 @@
                 ]
               ],
               "activeCells": []
-            }
+            },
+            "line": 13
           },
           {
             "title": "Cập nhật c=4",
@@ -573,7 +580,8 @@
                 ]
               ]
             },
-            "formula": "dp[4] = max(0, 0 + 3) = 3"
+            "formula": "dp[4] = max(0, 0 + 3) = 3",
+            "line": 15
           },
           {
             "title": "Cập nhật c=3",
@@ -625,7 +633,8 @@
                 ]
               ]
             },
-            "formula": "dp[3] = max(0, 0 + 3) = 3"
+            "formula": "dp[3] = max(0, 0 + 3) = 3",
+            "line": 15
           },
           {
             "title": "Cập nhật c=2",
@@ -677,7 +686,8 @@
                 ]
               ]
             },
-            "formula": "dp[2] = max(0, 0 + 3) = 3"
+            "formula": "dp[2] = max(0, 0 + 3) = 3",
+            "line": 15
           }
         ]
       },
@@ -865,7 +875,8 @@
                 ]
               ],
               "activeCells": []
-            }
+            },
+            "line": 11
           },
           {
             "title": "Ô (1,1)",
@@ -927,7 +938,8 @@
                 ]
               ]
             },
-            "formula": "dp[1][1] = 1"
+            "formula": "dp[1][1] = 1",
+            "line": 15
           },
           {
             "title": "Ô (1,2)",
@@ -989,7 +1001,8 @@
                 ]
               ]
             },
-            "formula": "dp[1][2] = 1"
+            "formula": "dp[1][2] = 1",
+            "line": 17
           },
           {
             "title": "Ô (2,1)",
@@ -1051,7 +1064,8 @@
                 ]
               ]
             },
-            "formula": "dp[2][1] = 1"
+            "formula": "dp[2][1] = 1",
+            "line": 17
           },
           {
             "title": "Ô (2,2)",
@@ -1113,7 +1127,8 @@
                 ]
               ]
             },
-            "formula": "dp[2][2] = 1"
+            "formula": "dp[2][2] = 1",
+            "line": 17
           },
           {
             "title": "Ô (3,1)",
@@ -1175,7 +1190,8 @@
                 ]
               ]
             },
-            "formula": "dp[3][1] = 1"
+            "formula": "dp[3][1] = 1",
+            "line": 17
           },
           {
             "title": "Ô (3,2)",
@@ -1237,7 +1253,8 @@
                 ]
               ]
             },
-            "formula": "dp[3][2] = 2"
+            "formula": "dp[3][2] = 2",
+            "line": 15
           }
         ]
       }

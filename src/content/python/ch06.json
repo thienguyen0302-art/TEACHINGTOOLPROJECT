@@ -102,7 +102,8 @@
                 "active": true
               }
             ],
-            "formula": "fact(4) = 4 × fact(3)"
+            "formula": "fact(4) = 4 × fact(3)",
+            "line": 4
           },
           {
             "title": "Gọi fact(3)",
@@ -131,7 +132,8 @@
                 "active": true
               }
             ],
-            "formula": "fact(3) = 3 × fact(2)"
+            "formula": "fact(3) = 3 × fact(2)",
+            "line": 4
           },
           {
             "title": "Gọi fact(2)",
@@ -165,7 +167,8 @@
                 "active": true
               }
             ],
-            "formula": "fact(2) = 2 × fact(1)"
+            "formula": "fact(2) = 2 × fact(1)",
+            "line": 4
           },
           {
             "title": "Gọi fact(1)",
@@ -204,7 +207,8 @@
                 "active": true
               }
             ],
-            "formula": "fact(1) = 1 × fact(0)"
+            "formula": "fact(1) = 1 × fact(0)",
+            "line": 4
           },
           {
             "title": "Gọi fact(0)",
@@ -248,7 +252,8 @@
                 "active": true
               }
             ],
-            "formula": "fact(0) = 1"
+            "formula": "fact(0) = 1",
+            "line": 3
           },
           {
             "title": "Trả về 1",
@@ -287,7 +292,8 @@
                 "active": true
               }
             ],
-            "formula": "1 × 1 = 1"
+            "formula": "1 × 1 = 1",
+            "line": 4
           },
           {
             "title": "Trả về 2",
@@ -321,7 +327,8 @@
                 "active": true
               }
             ],
-            "formula": "2 × 1 = 2"
+            "formula": "2 × 1 = 2",
+            "line": 4
           },
           {
             "title": "Trả về 6",
@@ -350,7 +357,8 @@
                 "active": true
               }
             ],
-            "formula": "3 × 2 = 6"
+            "formula": "3 × 2 = 6",
+            "line": 4
           },
           {
             "title": "Trả về 24",
@@ -374,7 +382,8 @@
                 "active": true
               }
             ],
-            "formula": "4 × 6 = 24"
+            "formula": "4 × 6 = 24",
+            "line": 4
           }
         ]
       },

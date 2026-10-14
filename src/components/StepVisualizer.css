@@ -24,6 +24,17 @@
 .step-visualizer__counter strong { color: #fff; font-size: 32px; font-weight: 600; }
 .step-visualizer__progress { height: 3px; background: #dce8fa; }
 .step-visualizer__progress span { display: block; height: 100%; background: #60a5fa; transition: width .25s ease; }
+.code-line-viewer { border-bottom: 1px solid #d9e4f2; background: #0d1930; color: #dbe8fa; }
+.code-line-viewer__label { padding: 10px 18px 7px; color: #8eafd9; font-size: 10px; font-weight: 800; letter-spacing: .14em; }
+.code-line-viewer__viewport { max-height: 260px; overflow: auto; padding: 3px 0 12px; scroll-behavior: smooth; }
+.code-line-viewer__viewport:focus-visible { outline: 3px solid #60a5fa; outline-offset: -3px; }
+.code-line-viewer__viewport code { display: block; min-width: max-content; font: 12.5px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.code-line-viewer__line { display: grid; min-height: 21px; padding: 0 16px 0 0; grid-template-columns: 46px minmax(0, 1fr) 72px; border-left: 4px solid transparent; white-space: pre; }
+.code-line-viewer__line.is-active { border-left-color: #60a5fa; background: #18365f; color: #fff; font-weight: 700; }
+.code-line-viewer__number { padding-right: 12px; color: #6881a4; text-align: right; user-select: none; }
+.code-line-viewer__line.is-active .code-line-viewer__number { color: #b9d5ff; }
+.code-line-viewer__source { min-width: 0; }
+.code-line-viewer__marker { padding-left: 14px; color: #88bcff; font: 700 10px/1.9 system-ui, sans-serif; }
 .step-visualizer__body { display: grid; grid-template-columns: 145px minmax(0, 1fr); }
 .step-visualizer__timeline { padding: 20px 14px; background: #f8faff; border-right: 1px solid #e6edf8; display: flex; flex-direction: column; gap: 6px; }
 .step-visualizer__timeline button { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border: 0; border-radius: 8px; background: transparent; text-align: left; color: #66758e; cursor: pointer; font-size: 12px; line-height: 1.4; }
@@ -106,6 +117,8 @@
   .step-visualizer__controls { gap: 5px; }
   .visual-control { padding: 8px; font-size: 11px; }
   .step-visualizer__note { padding: 0 14px 14px; }
+  .code-line-viewer__line { grid-template-columns: 38px minmax(0, 1fr) 38px; padding-right: 8px; }
+  .code-line-viewer__marker .sr-only { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .step-visualizer__progress span, .step-visualizer__cell { transition: none; }
