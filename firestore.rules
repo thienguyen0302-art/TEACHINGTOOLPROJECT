@@ -40,6 +40,33 @@ service cloud.firestore {
       }
     }
 
+    // Authoring writes go through the authenticated teacher backend. This also
+    // enforces unique slugs, publish validation and fairness locks atomically.
+    match /problems/{id} {
+      allow read: if isTeacher() || (signedIn() && resource.data.published == true);
+      allow write: if false;
+    }
+    match /problemSecrets/{id} {
+      allow read: if isTeacher();
+      allow write: if false;
+    }
+    match /problemSlugs/{slug} { allow read, write: if false; }
+    function publishedContest(id) {
+      return get(/databases/$(database)/documents/contests/$(id)).data.status == 'published';
+    }
+    match /contests/{id} {
+      allow read: if isTeacher() || (signedIn() && resource.data.status == 'published');
+      allow write: if false;
+      match /submissions/{submissionId} {
+        allow read: if isTeacher() || (signedIn() && resource.data.uid == request.auth.uid);
+        allow write: if false;
+      }
+      match /scoreboard/{uid} {
+        allow read: if isTeacher() || (signedIn() && publishedContest(id));
+        allow write: if false;
+      }
+    }
+
     // Giáo viên đọc tiến độ toàn lớp bằng collectionGroup('progress').
     match /{path=**}/progress/{id} {
       allow read: if isTeacher();

@@ -50,3 +50,21 @@ firebase deploy --only firestore:rules,hosting
 ## Giới hạn còn lại
 
 Giới hạn tốc độ theo từng người dùng, và việc `solution.code` vẫn nằm trong bundle frontend (xem báo cáo Day 13), chưa xử lý.
+
+## Contest backend: Firebase Admin và quyền dữ liệu
+
+Backend contest/authoring dùng Firebase Admin SDK qua Application Default Credentials của service
+account Cloud Run. Đặt `FIREBASE_PROJECT_ID` đúng project Auth/Firestore. Gán cho service account
+runtime quyền Firestore cần thiết, ví dụ `roles/datastore.user`; không tạo/commit key JSON.
+Dockerfile cài production dependencies bằng `npm ci --omit=dev` và copy `src/utils` cho validation/scoring.
+Xem [Firebase Admin setup](https://firebase.google.com/docs/admin/setup).
+
+Deploy backend và rules cùng phiên bản trước khi cho giáo viên publish contest. Mọi ghi mới
+(problems, secrets, contests, submissions, scoreboard, slug index) đi qua Admin backend; browser
+teacher cũng không ghi trực tiếp. API kiểm tra role teacher/ownership và fairness locks.
+Student không thể tự ghi score hoặc đọc problemSecrets. Các endpoint mới vẫn thuộc rewrite `/api/**`.
+
+Sau deploy, thực hiện flow Teacher/Student trong SETUP.md, bao gồm Run/Submit bằng Judge0 thật,
+kiểm tra Firebase token, secret read denial và scoreboard write denial bằng student SDK.
+Thiếu ADC/IAM sẽ làm authoring/persistence lỗi; thiếu project ID làm API trả 503.
+Bộ browser mock trong repository không xác nhận quyền IAM/rules trên project production.

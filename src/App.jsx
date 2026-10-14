@@ -12,6 +12,13 @@ import Dashboard from "./pages/Dashboard";
 import Practice from "./pages/Practice";
 import Problem from "./pages/Problem";
 import Teacher from "./pages/Teacher";
+import TeacherProblems from "./pages/authoring/TeacherProblems";
+import ProblemEditor from "./pages/authoring/ProblemEditor";
+import TeacherContests from "./pages/authoring/TeacherContests";
+import ContestEditor from "./pages/authoring/ContestEditor";
+import Contests from "./pages/contest/Contests";
+import Contest from "./pages/contest/Contest";
+import ContestProblem from "./pages/contest/ContestProblem";
 import AppShell from "./components/AppShell";
 import useStudyTimer from "./hooks/useStudyTimer";
 import useLearningData from "./hooks/useLearningData";
@@ -49,6 +56,18 @@ function Learning({ user, lang, onChangeLang }) {
             ? <div className="content">Đang tải...</div>
             : isTeacher ? <Teacher /> : <Navigate to="/" replace />}
         />
+        <Route path="/contests" element={<Contests />} />
+        <Route path="/contest/:contestId" element={<Contest user={user} teacher={isTeacher} />} />
+        <Route path="/contest/:contestId/scoreboard" element={<Contest user={user} teacher={isTeacher} scoreboardOnly />} />
+        <Route path="/contest/:contestId/problem/:problemId" element={<ContestProblem user={user} />} />
+        {[
+          ["/teacher/problems", <TeacherProblems />],
+          ["/teacher/problems/new", <ProblemEditor key="new" />],
+          ["/teacher/problems/:problemId/edit", <ProblemEditor />],
+          ["/teacher/contests", <TeacherContests />],
+          ["/teacher/contests/new", <ContestEditor key="new" />],
+          ["/teacher/contests/:contestId/edit", <ContestEditor />],
+        ].map(([path, page]) => <Route key={path} path={path} element={data.loading ? <div className="content">Đang tải...</div> : isTeacher ? page : <Navigate to="/" replace />} />)}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AppShell>

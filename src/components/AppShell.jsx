@@ -12,7 +12,7 @@ const NAV = [
   { label: "Chương trình học", icon: "book", path: "/curriculum" },
   { label: "Kho bài tập", icon: "code", path: "/practice" },
   { label: "Tiến độ của tôi", icon: "chart", path: "/progress" },
-  { label: "Bảng xếp hạng", icon: "trophy", path: null },
+  { label: "Contests", icon: "trophy", path: "/contests" },
 ];
 const TEACHER_NAV = { label: "Giáo viên", icon: "chart", path: "/teacher" };
 

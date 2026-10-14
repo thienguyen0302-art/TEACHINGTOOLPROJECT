@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL } from "../utils/format";
 import "./Teacher.css";
+import "./contest/Contest.css";
 
 const chapterName = (c) => `${LANG_LABEL[c.language] ?? c.language} · Chương ${Number(c.chapterId.slice(2))}`;
 
@@ -25,13 +27,15 @@ export default function Teacher() {
     return () => { cancelled = true; };
   }, []);
 
-  if (state.loading) return <div className="content">Đang tải dữ liệu lớp...</div>;
-  if (state.error) return <div className="content"><p className="err">{state.error}</p></div>;
+  const managementLinks = <nav className="contest-actions"><Link to="/teacher/problems">Quản lý bài tập</Link><Link to="/teacher/contests">Quản lý contest</Link></nav>;
+  if (state.loading) return <div className="content">{managementLinks}Đang tải dữ liệu lớp...</div>;
+  if (state.error) return <div className="content">{managementLinks}<p className="err">{state.error}</p></div>;
   const o = state.overview;
 
   return (
     <div className="content">
       <h1>Bảng điều khiển giáo viên</h1>
+      {managementLinks}
       <div className="teacher-stats">
         <div><strong>{o.studentCount}</strong><small>Học sinh</small></div>
         <div><strong>{o.activeLast7d}</strong><small>Hoạt động 7 ngày qua</small></div>

@@ -161,3 +161,33 @@ Chat vẫn nhận bài, source hiện tại và public Judge snapshot; Submit kh
 UI giữ tối đa 10 lượt để tránh tăng bộ nhớ, chỉ gửi 4 lượt gần nhất cho model. Lịch sử không lưu Firestore/localStorage và mất khi refresh/đóng workspace. Đổi source, ngôn ngữ hoặc Judge result sẽ abort request và reset hội thoại để tránh phân tích code mới bằng context cũ; câu hỏi nháp vẫn giữ. Giới hạn chung AI vẫn là concurrency 2, body 100 KB, source 50 KB, timeout 30 giây. Chat thêm lượt đồng nghĩa thêm requests/quota Gemini. Prompt và bộ chặn full code giữ hint-first nhưng không bảo đảm tuyệt đối chất lượng nội dung của model.
 
 Kiểm tra chat: test:ai gồm 22 cases, bao gồm validate message/history, giữ system policy, không gửi hidden diagnostics/solution, cap chat và frontend allowlist. Các lệnh test:ai, test:judge, test:progress, validate:content, test:content, lint, build đều pass. Browser mock kiểm tra nhiều lượt, history 4 lượt, collapse/open, retry, cancel không gửi lại, reset theo source/language/Judge, hỏi khi chưa có code, mobile và regression quick actions/visualization. Không gọi Gemini thật trong tests.
+
+## Contest Mode và Teacher Authoring
+
+Xem [Checklist/contest-mode.md](Checklist/contest-mode.md) để biết schema, JSON mẫu và security boundaries.
+
+1. Dùng Node 22+, `npm ci`.
+2. Trong `.env.local`, đặt `FIREBASE_PROJECT_ID` cùng project với `VITE_FB_PROJECT_ID`.
+   Contest/authoring luôn yêu cầu Firebase ID token và email xác minh, kể cả local dev.
+3. Chuẩn bị Application Default Credentials cho backend local:
+   `gcloud auth application-default login`, tài khoản phải có quyền Firestore của project.
+   Không đặt credentials vào VITE_*, không commit service-account JSON.
+4. Deploy `firestore.rules` của nhánh này trước khi thử với Firebase thật; gán role teacher
+   bằng Console theo hướng dẫn ở DEPLOY.md. API teacher kiểm tra lại role/ownership phía server.
+5. Giữ cấu hình JUDGE0_URL, language IDs và các key server hiện có; chạy `npm run dev`.
+
+Teacher: Giáo viên → Quản lý bài tập → Tạo bài → nhập form hoặc tải mẫu/import JSON → Preview →
+xác nhận preview → chọn Draft/Published → Lưu bài. Tạo ít nhất 3 bài published có hidden tests.
+Quản lý contest → Tạo → chọn A/B/C → điểm → thời gian tương lai → thời lượng → Publish.
+Các bài bị khóa từ lúc publish đến hết contest; contest đã bắt đầu không sửa cấu hình được.
+
+Student: Contests → mở contest → đợi bắt đầu → Problem A → Monaco → Run → Submit WA → sửa →
+Submit AC → xem điểm, My submissions và Leaderboard; bấm Tải lại kết quả để cập nhật.
+Mở DevTools xác nhận response hidden chỉ có index/hidden/passed/status/time/memory và không có
+hidden input/output/stdout/stderr. Dùng student SDK thử đọc `problemSecrets` và ghi scoreboard
+phải nhận permission-denied; student chỉ đọc lịch sử của mình. Contest workspace không có AI.
+Teacher mở contest để xem participants, toàn bộ bài nộp, lọc học sinh và xem source/verdict.
+
+Các lệnh mới: `npm run test:contest`, `npm run test:authoring`.
+Browser mock regression: `npx playwright install --with-deps chromium`,
+`npm run test:contest:browser`. Test này không thay cho kiểm thử Firebase login/rules/Judge0 thật.
