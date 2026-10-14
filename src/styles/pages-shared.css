@@ -1,0 +1,397 @@
+/* ================================================================
+   pages-shared.css  –  Design system chung cho 3 trang giáo viên
+   Font: Nunito (Google Fonts, hỗ trợ tiếng Việt)
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+/* ── Biến màu & khoảng cách ───────────────────────────────────── */
+:root {
+  --ps-font:          'Nunito', 'Segoe UI', sans-serif;
+  --ps-blue:          #2563eb;
+  --ps-blue-light:    #eff6ff;
+  --ps-blue-border:   #bfdbfe;
+  --ps-bg:            #f1f5f9;
+  --ps-surface:       #ffffff;
+  --ps-border:        #e2e8f0;
+  --ps-text-main:     #1e293b;
+  --ps-text-sub:      #64748b;
+  --ps-text-muted:    #94a3b8;
+  --ps-green:         #16a34a;
+  --ps-orange:        #ea580c;
+  --ps-red:           #dc2626;
+  --ps-radius-card:   20px;
+  --ps-radius-input:  10px;
+}
+
+/* ── Page wrapper ─────────────────────────────────────────────── */
+.ps-page {
+  font-family: var(--ps-font);
+  padding: 36px 0 64px;
+  color: var(--ps-text-main);
+}
+
+/* ── Page header (tiêu đề + mô tả) ───────────────────────────── */
+.ps-page-header {
+  margin-bottom: 24px;
+}
+.ps-page-header h1 {
+  font-size: 23px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: var(--ps-text-main);
+  letter-spacing: -0.02em;
+}
+.ps-page-header p {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ps-text-sub);
+  margin: 0;
+}
+
+/* ── Card trắng bo 20px ───────────────────────────────────────── */
+.ps-card {
+  background: var(--ps-surface);
+  border: 1px solid var(--ps-border);
+  border-radius: var(--ps-radius-card);
+  padding: 24px;
+}
+.ps-card + .ps-card { margin-top: 20px; }
+
+/* ── Toolbar (tìm kiếm + filters + actions) ──────────────────── */
+.ps-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.ps-toolbar-left { flex: 1; }
+.ps-toolbar-left h2 {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0 0 2px;
+  color: var(--ps-text-main);
+}
+.ps-toolbar-left p {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ps-text-sub);
+  margin: 0;
+}
+
+/* ── Search box ──────────────────────────────────────────────── */
+.ps-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 38px;
+  background: var(--ps-bg);
+  border: 1px solid var(--ps-border);
+  border-radius: var(--ps-radius-input);
+  min-width: 220px;
+  flex: 1;
+}
+.ps-search svg { width: 15px; height: 15px; color: var(--ps-text-muted); flex-shrink: 0; }
+.ps-search input {
+  border: none;
+  background: transparent;
+  font-family: var(--ps-font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ps-text-main);
+  outline: none;
+  width: 100%;
+}
+.ps-search input::placeholder { color: var(--ps-text-muted); font-weight: 500; }
+
+/* ── Filter select ───────────────────────────────────────────── */
+.ps-select {
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--ps-border);
+  border-radius: var(--ps-radius-input);
+  background: var(--ps-bg);
+  font-family: var(--ps-font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ps-text-main);
+  cursor: pointer;
+  outline: none;
+}
+.ps-select:focus { border-color: var(--ps-blue); }
+
+/* ── Tabs trạng thái nhỏ gọn ─────────────────────────────────── */
+.ps-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.ps-tab-btn {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--ps-border);
+  border-radius: 20px;
+  background: transparent;
+  font-family: var(--ps-font);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ps-text-sub);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.ps-tab-btn.active {
+  background: var(--ps-blue);
+  border-color: var(--ps-blue);
+  color: #fff;
+}
+.ps-tab-btn:hover:not(.active) { border-color: var(--ps-blue); color: var(--ps-blue); }
+
+/* ── Chips nhỏ (chủ đề, tag) ─────────────────────────────────── */
+.ps-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.ps-chip {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--ps-border);
+  border-radius: 20px;
+  background: transparent;
+  font-family: var(--ps-font);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ps-text-sub);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.ps-chip.active {
+  background: var(--ps-blue-light);
+  border-color: var(--ps-blue);
+  color: var(--ps-blue);
+}
+.ps-chip:hover:not(.active) { border-color: var(--ps-blue); color: var(--ps-blue); }
+
+/* ── Results bar ─────────────────────────────────────────────── */
+.ps-results-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ps-text-sub);
+}
+.ps-results-bar b { color: var(--ps-text-main); }
+.ps-clear-btn {
+  background: none;
+  border: none;
+  font-family: var(--ps-font);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ps-blue);
+  cursor: pointer;
+  padding: 0;
+}
+.ps-clear-btn:hover { text-decoration: underline; }
+
+/* ── Table ───────────────────────────────────────────────────── */
+.ps-table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--ps-border);
+}
+.ps-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--ps-font);
+  font-size: 14px;
+}
+.ps-table thead tr {
+  background: var(--ps-bg);
+  border-bottom: 1px solid var(--ps-border);
+}
+.ps-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ps-text-sub);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.ps-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--ps-border);
+  vertical-align: middle;
+}
+.ps-table tbody tr:last-child td { border-bottom: none; }
+.ps-table tbody tr:hover { background: #f8fafc; }
+
+/* ── Table: avatar học sinh ──────────────────────────────────── */
+.ps-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--ps-blue-light);
+  color: var(--ps-blue);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ps-student-cell { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.ps-student-cell strong { font-size: 14px; font-weight: 700; display: block; color: var(--ps-text-main); }
+.ps-student-cell small { font-size: 11px; color: var(--ps-text-muted); }
+
+/* ── Badges ngôn ngữ ─────────────────────────────────────────── */
+.ps-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ps-badge.cpp    { background: #fef3c7; color: #92400e; }
+.ps-badge.python { background: #dbeafe; color: #1d4ed8; }
+
+/* ── Badge độ khó ────────────────────────────────────────────── */
+.ps-diff { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.ps-diff.basic        { background: #dcfce7; color: #15803d; }
+.ps-diff.intermediate { background: #fef9c3; color: #a16207; }
+.ps-diff.advanced     { background: #fee2e2; color: #b91c1c; }
+
+/* ── Progress bar ────────────────────────────────────────────── */
+.ps-progress-wrap { display: flex; flex-direction: column; gap: 4px; }
+.ps-progress-track {
+  height: 6px;
+  background: var(--ps-border);
+  border-radius: 99px;
+  overflow: hidden;
+  min-width: 80px;
+}
+.ps-progress-fill {
+  height: 100%;
+  background: var(--ps-blue);
+  border-radius: 99px;
+  transition: width 0.3s;
+}
+.ps-progress-wrap small { font-size: 11px; color: var(--ps-text-muted); font-weight: 600; }
+
+/* ── Status dot ──────────────────────────────────────────────── */
+.ps-status { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ps-text-sub); }
+.ps-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.ps-dot.active { background: var(--ps-green); box-shadow: 0 0 0 2px #dcfce7; }
+.ps-dot.idle   { background: var(--ps-text-muted); }
+
+/* ── Weak-chapter chips ──────────────────────────────────────── */
+.ps-weak-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #c2410c;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  margin: 2px 2px 0 0;
+}
+
+/* ── Action button ───────────────────────────────────────────── */
+.ps-action-btn {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--ps-blue-border);
+  border-radius: 8px;
+  background: var(--ps-blue-light);
+  color: var(--ps-blue);
+  font-family: var(--ps-font);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.ps-action-btn:hover { background: var(--ps-blue); color: #fff; }
+
+/* ── Export button ───────────────────────────────────────────── */
+.ps-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--ps-blue-border);
+  border-radius: var(--ps-radius-input);
+  background: var(--ps-blue-light);
+  color: var(--ps-blue);
+  font-family: var(--ps-font);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.ps-export-btn:hover { background: var(--ps-blue); color: #fff; }
+.ps-export-btn svg { width: 14px; height: 14px; }
+
+/* ── Open-problem button ─────────────────────────────────────── */
+.ps-open-btn {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--ps-border);
+  background: var(--ps-bg);
+  color: var(--ps-blue);
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.ps-open-btn:hover { background: var(--ps-blue); color: #fff; border-color: var(--ps-blue); }
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.ps-empty {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--ps-text-sub);
+}
+.ps-empty svg { width: 32px; height: 32px; opacity: 0.4; margin-bottom: 12px; }
+.ps-empty h3 { font-size: 15px; font-weight: 700; margin: 0 0 6px; }
+.ps-empty p  { font-size: 13px; font-weight: 600; margin: 0; }
+
+/* ── Exam history: score highlight ──────────────────────────── */
+.ps-score { color: var(--ps-blue); font-weight: 800; font-size: 14px; }
+.ps-score small { color: var(--ps-text-muted); font-weight: 600; font-size: 12px; margin-left: 4px; }
+
+/* ── Submit tag ─────────────────────────────────────────────── */
+.ps-submit-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ps-submit-tag.auto   { background: #fef3c7; color: #92400e; }
+.ps-submit-tag.manual { background: #dcfce7; color: #15803d; }
+
+/* ── Footer hint ────────────────────────────────────────────── */
+.ps-footer-hint {
+  margin-top: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ps-text-muted);
+  text-align: center;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ps-toolbar { flex-direction: column; align-items: stretch; }
+  .ps-search  { min-width: 0; }
+  .ps-page-header h1 { font-size: 20px; }
+  .ps-card { padding: 16px; }
+  .ps-table-wrap { border-radius: 10px; }
+  .ps-table th, .ps-table td { padding: 9px 10px; }
+}
