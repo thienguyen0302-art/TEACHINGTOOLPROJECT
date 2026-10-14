@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     allowedHosts: true,
-    proxy: { "/api/judge": "http://127.0.0.1:3001", "/api/ai/tutor": "http://127.0.0.1:3001" }
+    proxy: { "/api": "http://127.0.0.1:3001" }
   },
 })

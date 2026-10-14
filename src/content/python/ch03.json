@@ -27,174 +27,194 @@
       "explanation": "Các tổng lần lượt 1,3,6,10.",
       "visualization": {
         "title": "Tổng lớn dần qua mỗi lượt",
-        "description": "Màu xanh đánh dấu số đang được thêm vào tổng s.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Khởi tạo",
-            "explanation": "Chưa cộng số nào; tổng rỗng bằng 0.",
+            "line": 1,
+            "title": "Khởi tạo tổng",
+            "explanation": "Khởi tạo tổng. Dòng 1: s = 0",
             "cells": [
               {
-                "label": "i",
+                "label": "s",
+                "value": "0",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Lượt lặp tiếp theo, điều kiện còn đúng",
+            "explanation": "Lượt lặp tiếp theo, điều kiện còn đúng. Dòng 2: for i in range(1, 5):",
+            "cells": [
+              {
+                "label": "s",
                 "value": "0",
                 "active": false
               },
               {
-                "label": "s",
-                "value": "0",
+                "label": "i",
+                "value": "1",
                 "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "activeIndices": [],
-              "pointers": [],
-              "discardedIndices": []
-            }
+            ]
           },
           {
-            "title": "Cộng 1",
-            "explanation": "Đã xử lý các số từ 1 đến 1. Tổng hiện tại là 1.",
+            "line": 3,
+            "title": "Cộng i vào tổng",
+            "explanation": "Cộng i vào tổng. Dòng 3: s += i",
             "cells": [
               {
-                "label": "i",
+                "label": "s",
                 "value": "1",
                 "active": true
               },
               {
-                "label": "s",
+                "label": "i",
                 "value": "1",
-                "active": true
+                "active": false
               }
-            ],
-            "array": {
-              "values": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "activeIndices": [
-                0
-              ],
-              "pointers": [
-                {
-                  "index": 0,
-                  "label": "i"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "s = 0 + 1 = 1"
+            ]
           },
           {
-            "title": "Cộng 2",
-            "explanation": "Đã xử lý các số từ 1 đến 2. Tổng hiện tại là 3.",
+            "line": 2,
+            "title": "Lượt lặp tiếp theo, điều kiện còn đúng",
+            "explanation": "Lượt lặp tiếp theo, điều kiện còn đúng. Dòng 2: for i in range(1, 5):",
             "cells": [
+              {
+                "label": "s",
+                "value": "1",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "2",
                 "active": true
-              },
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Cộng i vào tổng",
+            "explanation": "Cộng i vào tổng. Dòng 3: s += i",
+            "cells": [
               {
                 "label": "s",
                 "value": "3",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
               }
-            ],
-            "array": {
-              "values": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "activeIndices": [
-                1
-              ],
-              "pointers": [
-                {
-                  "index": 1,
-                  "label": "i"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "s = 1 + 2 = 3"
+            ]
           },
           {
-            "title": "Cộng 3",
-            "explanation": "Đã xử lý các số từ 1 đến 3. Tổng hiện tại là 6.",
+            "line": 2,
+            "title": "Lượt lặp tiếp theo, điều kiện còn đúng",
+            "explanation": "Lượt lặp tiếp theo, điều kiện còn đúng. Dòng 2: for i in range(1, 5):",
             "cells": [
+              {
+                "label": "s",
+                "value": "3",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "3",
                 "active": true
-              },
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Cộng i vào tổng",
+            "explanation": "Cộng i vào tổng. Dòng 3: s += i",
+            "cells": [
               {
                 "label": "s",
                 "value": "6",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
               }
-            ],
-            "array": {
-              "values": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "activeIndices": [
-                2
-              ],
-              "pointers": [
-                {
-                  "index": 2,
-                  "label": "i"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "s = 3 + 3 = 6"
+            ]
           },
           {
-            "title": "Cộng 4",
-            "explanation": "Đã xử lý các số từ 1 đến 4. Tổng hiện tại là 10.",
+            "line": 2,
+            "title": "Lượt lặp tiếp theo, điều kiện còn đúng",
+            "explanation": "Lượt lặp tiếp theo, điều kiện còn đúng. Dòng 2: for i in range(1, 5):",
             "cells": [
+              {
+                "label": "s",
+                "value": "6",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "4",
                 "active": true
-              },
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Cộng i vào tổng",
+            "explanation": "Cộng i vào tổng. Dòng 3: s += i",
+            "cells": [
               {
                 "label": "s",
                 "value": "10",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
               }
-            ],
-            "array": {
-              "values": [
-                "1",
-                "2",
-                "3",
-                "4"
-              ],
-              "activeIndices": [
-                3
-              ],
-              "pointers": [
-                {
-                  "index": 3,
-                  "label": "i"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "s = 6 + 4 = 10"
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Hết lượt lặp, thoát for",
+            "explanation": "Hết lượt lặp, thoát for. Dòng 2: for i in range(1, 5):",
+            "cells": [
+              {
+                "label": "s",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Xuất tổng",
+            "explanation": "Xuất tổng. Dòng 4: print(s)",
+            "cells": [
+              {
+                "label": "s",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "10",
+                "active": true
+              }
+            ]
           }
         ]
       },

@@ -78,303 +78,318 @@
       "explanation": "Các lời gọi 4→3→2→1→0; kết quả quay về 1→1→2→6→24.",
       "visualization": {
         "title": "Đi xuống stack, trả kết quả đi lên",
-        "description": "Theo dõi fact(4), từ frame gốc ở trên đến lời gọi mới ở dưới.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Gọi fact(4)",
-            "explanation": "Frame fact(4) giữ n=4 và gọi fact(3); các frame cha vẫn chờ.",
+            "line": 1,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 1: #include <iostream>",
             "cells": [
               {
-                "label": "n hiện tại",
-                "value": "4",
-                "active": true
-              },
-              {
-                "label": "số frame",
-                "value": "1",
-                "active": false
-              }
-            ],
-            "stack": [
-              {
-                "label": "fact(4)",
-                "value": "chờ kết quả con",
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
                 "active": true
               }
-            ],
-            "formula": "fact(4) = 4 × fact(3)"
+            ]
           },
           {
-            "title": "Gọi fact(3)",
-            "explanation": "Frame fact(3) giữ n=3 và gọi fact(2); các frame cha vẫn chờ.",
+            "line": 2,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 2: #include <string>",
             "cells": [
               {
-                "label": "n hiện tại",
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 3: #include <vector>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Khai báo không gian tên, chưa chạy thuật toán",
+            "explanation": "Khai báo không gian tên, chưa chạy thuật toán. Dòng 4: using namespace std;",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Khai báo không gian tên, chưa chạy thuật toán",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Bắt đầu thực thi tại main",
+            "explanation": "Bắt đầu thực thi tại main. Dòng 10: int main() {",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Bắt đầu thực thi tại main",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Thiết lập nhập xuất",
+            "explanation": "Thiết lập nhập xuất. Dòng 11: ios::sync_with_stdio(false);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập nhập xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 12,
+            "title": "Thiết lập luồng nhập",
+            "explanation": "Thiết lập luồng nhập. Dòng 12: cin.tie(nullptr);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập luồng nhập",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 13,
+            "title": "Gọi fact(4), chờ kết quả để xuất",
+            "explanation": "Gọi fact(4), chờ kết quả để xuất. Dòng 13: cout << fact(4);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Gọi fact(4), chờ kết quả để xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Vào fact(4), kiểm tra n == 0: sai",
+            "explanation": "Vào fact(4), kiểm tra n == 0: sai. Dòng 6: if (n == 0)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Tạm dừng fact(4) để gọi fact(3)",
+            "explanation": "Tạm dừng fact(4) để gọi fact(3). Dòng 8: return n * fact(n - 1);",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Vào fact(3), kiểm tra n == 0: sai",
+            "explanation": "Vào fact(3), kiểm tra n == 0: sai. Dòng 6: if (n == 0)",
+            "cells": [
+              {
+                "label": "n",
                 "value": "3",
                 "active": true
-              },
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Tạm dừng fact(3) để gọi fact(2)",
+            "explanation": "Tạm dừng fact(3) để gọi fact(2). Dòng 8: return n * fact(n - 1);",
+            "cells": [
               {
-                "label": "số frame",
+                "label": "n",
+                "value": "3",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Vào fact(2), kiểm tra n == 0: sai",
+            "explanation": "Vào fact(2), kiểm tra n == 0: sai. Dòng 6: if (n == 0)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "2",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Tạm dừng fact(2) để gọi fact(1)",
+            "explanation": "Tạm dừng fact(2) để gọi fact(1). Dòng 8: return n * fact(n - 1);",
+            "cells": [
+              {
+                "label": "n",
                 "value": "2",
                 "active": false
               }
-            ],
-            "stack": [
-              {
-                "label": "fact(4)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(3)",
-                "value": "chờ kết quả con",
-                "active": true
-              }
-            ],
-            "formula": "fact(3) = 3 × fact(2)"
+            ]
           },
           {
-            "title": "Gọi fact(2)",
-            "explanation": "Frame fact(2) giữ n=2 và gọi fact(1); các frame cha vẫn chờ.",
+            "line": 6,
+            "title": "Vào fact(1), kiểm tra n == 0: sai",
+            "explanation": "Vào fact(1), kiểm tra n == 0: sai. Dòng 6: if (n == 0)",
             "cells": [
               {
-                "label": "n hiện tại",
-                "value": "2",
-                "active": true
-              },
-              {
-                "label": "số frame",
-                "value": "3",
-                "active": false
-              }
-            ],
-            "stack": [
-              {
-                "label": "fact(4)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(3)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(2)",
-                "value": "chờ kết quả con",
-                "active": true
-              }
-            ],
-            "formula": "fact(2) = 2 × fact(1)"
-          },
-          {
-            "title": "Gọi fact(1)",
-            "explanation": "Frame fact(1) giữ n=1 và gọi fact(0); các frame cha vẫn chờ.",
-            "cells": [
-              {
-                "label": "n hiện tại",
+                "label": "n",
                 "value": "1",
                 "active": true
-              },
-              {
-                "label": "số frame",
-                "value": "4",
-                "active": false
               }
-            ],
-            "stack": [
-              {
-                "label": "fact(4)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(3)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(2)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(1)",
-                "value": "chờ kết quả con",
-                "active": true
-              }
-            ],
-            "formula": "fact(1) = 1 × fact(0)"
+            ]
           },
           {
-            "title": "Gọi fact(0)",
-            "explanation": "Đã đến cơ sở: trả 1.",
+            "line": 8,
+            "title": "Tạm dừng fact(1) để gọi fact(0)",
+            "explanation": "Tạm dừng fact(1) để gọi fact(0). Dòng 8: return n * fact(n - 1);",
             "cells": [
               {
-                "label": "n hiện tại",
+                "label": "n",
+                "value": "1",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Vào fact(0), kiểm tra n == 0: đúng",
+            "explanation": "Vào fact(0), kiểm tra n == 0: đúng. Dòng 6: if (n == 0)",
+            "cells": [
+              {
+                "label": "n",
                 "value": "0",
                 "active": true
-              },
-              {
-                "label": "số frame",
-                "value": "5",
-                "active": false
               }
-            ],
-            "stack": [
-              {
-                "label": "fact(4)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(3)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(2)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(1)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(0)",
-                "value": "1",
-                "active": true
-              }
-            ],
-            "formula": "fact(0) = 1"
+            ]
           },
           {
-            "title": "Trả về 1",
-            "explanation": "fact(0) đã trả 1. Nhân với 1; frame con đã được bỏ khỏi stack.",
+            "line": 7,
+            "title": "Trả về giá trị cơ sở",
+            "explanation": "Trả về giá trị cơ sở. Dòng 7: return 1;",
             "cells": [
               {
-                "label": "n hiện tại",
-                "value": "1",
-                "active": true
-              },
-              {
-                "label": "kết quả",
-                "value": "1",
-                "active": true
-              }
-            ],
-            "stack": [
-              {
-                "label": "fact(4)",
-                "value": "chờ kết quả con",
+                "label": "n",
+                "value": "0",
                 "active": false
               },
               {
-                "label": "fact(3)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(2)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(1)",
+                "label": "returned",
                 "value": "1",
                 "active": true
               }
-            ],
-            "formula": "1 × 1 = 1"
+            ]
           },
           {
-            "title": "Trả về 2",
-            "explanation": "fact(1) đã trả 1. Nhân với 2; frame con đã được bỏ khỏi stack.",
+            "line": 8,
+            "title": "Trở lại fact(1), nhân và trả kết quả",
+            "explanation": "Trở lại fact(1), nhân và trả kết quả. Dòng 8: return n * fact(n - 1);",
             "cells": [
               {
-                "label": "n hiện tại",
+                "label": "n",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "returned",
+                "value": "1",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Trở lại fact(2), nhân và trả kết quả",
+            "explanation": "Trở lại fact(2), nhân và trả kết quả. Dòng 8: return n * fact(n - 1);",
+            "cells": [
+              {
+                "label": "n",
                 "value": "2",
                 "active": true
               },
               {
-                "label": "kết quả",
+                "label": "returned",
                 "value": "2",
                 "active": true
               }
-            ],
-            "stack": [
-              {
-                "label": "fact(4)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(3)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(2)",
-                "value": "2",
-                "active": true
-              }
-            ],
-            "formula": "2 × 1 = 2"
+            ]
           },
           {
-            "title": "Trả về 6",
-            "explanation": "fact(2) đã trả 2. Nhân với 3; frame con đã được bỏ khỏi stack.",
+            "line": 8,
+            "title": "Trở lại fact(3), nhân và trả kết quả",
+            "explanation": "Trở lại fact(3), nhân và trả kết quả. Dòng 8: return n * fact(n - 1);",
             "cells": [
               {
-                "label": "n hiện tại",
+                "label": "n",
                 "value": "3",
                 "active": true
               },
               {
-                "label": "kết quả",
+                "label": "returned",
                 "value": "6",
                 "active": true
               }
-            ],
-            "stack": [
-              {
-                "label": "fact(4)",
-                "value": "chờ kết quả con",
-                "active": false
-              },
-              {
-                "label": "fact(3)",
-                "value": "6",
-                "active": true
-              }
-            ],
-            "formula": "3 × 2 = 6"
+            ]
           },
           {
-            "title": "Trả về 24",
-            "explanation": "fact(3) đã trả 6. Nhân với 4; frame con đã được bỏ khỏi stack.",
+            "line": 8,
+            "title": "Trở lại fact(4), nhân và trả kết quả",
+            "explanation": "Trở lại fact(4), nhân và trả kết quả. Dòng 8: return n * fact(n - 1);",
             "cells": [
               {
-                "label": "n hiện tại",
+                "label": "n",
                 "value": "4",
                 "active": true
               },
               {
-                "label": "kết quả",
+                "label": "returned",
                 "value": "24",
                 "active": true
               }
-            ],
-            "stack": [
+            ]
+          },
+          {
+            "line": 13,
+            "title": "Xuất kết quả hàm",
+            "explanation": "Xuất kết quả hàm. Dòng 13: cout << fact(4);",
+            "cells": [
               {
-                "label": "fact(4)",
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "returned",
+                "value": "24",
+                "active": false
+              },
+              {
+                "label": "Output",
                 "value": "24",
                 "active": true
               }
-            ],
-            "formula": "4 × 6 = 24"
+            ]
           }
         ]
       },

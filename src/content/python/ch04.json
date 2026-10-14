@@ -27,74 +27,72 @@
       "explanation": "Gán vào vị trí 1 thay giá trị thứ hai, không phải phần tử đầu.",
       "visualization": {
         "title": "Sửa một ô, giữ những ô còn lại",
-        "description": "Chỉ số 1 là phần tử thứ hai; phép gán không chèn thêm phần tử.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Trước phép gán",
-            "explanation": "a[1] đang là 2. Dãy có 3 phần tử.",
+            "line": 1,
+            "title": "Khởi tạo dãy",
+            "explanation": "Khởi tạo dãy. Dòng 1: a = [4, 2, 7]",
             "cells": [
               {
-                "label": "chỉ số",
-                "value": "1",
-                "active": true
-              },
-              {
-                "label": "a[1]",
-                "value": "2",
+                "label": "a",
+                "value": "[4, 2, 7]",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "4",
-                "2",
-                "7"
+                4,
+                2,
+                7
               ],
-              "activeIndices": [
-                1
-              ],
-              "pointers": [
-                {
-                  "index": 1,
-                  "label": "a[1]"
-                }
-              ],
-              "discardedIndices": []
+              "activeIndices": []
             }
           },
           {
-            "title": "Gán giá trị mới",
-            "explanation": "Ghi 5 vào ô chỉ số 1. Độ dài và các ô khác không đổi.",
+            "line": 2,
+            "title": "Thay phần tử ở chỉ số 1",
+            "explanation": "Thay phần tử ở chỉ số 1. Dòng 2: a[1] = 5",
             "cells": [
               {
-                "label": "chỉ số",
-                "value": "1",
-                "active": false
-              },
-              {
-                "label": "a[1]",
-                "value": "5",
+                "label": "a",
+                "value": "[4, 5, 7]",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "4",
-                "5",
-                "7"
+                4,
+                5,
+                7
               ],
-              "activeIndices": [
-                1
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Xuất dãy",
+            "explanation": "Xuất dãy. Dòng 3: print(*a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[4, 5, 7]",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "4 5 7",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                4,
+                5,
+                7
               ],
-              "pointers": [
-                {
-                  "index": 1,
-                  "label": "đã sửa"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "a[1] = 5"
+              "activeIndices": []
+            }
           }
         ]
       },

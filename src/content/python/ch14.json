@@ -74,314 +74,773 @@
       "explanation": "dp lần lượt 1,1,2,3,5,8. dp[0]=1 biểu diễn một cách không bước nào.",
       "visualization": {
         "title": "DP leo bậc: cộng hai tiền nhiệm",
-        "description": "Tính từ trái sang phải; mỗi ô là số cách tới chính xác bậc đó.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Cơ sở dp[0]=1",
-            "explanation": "Một cách ở bậc 0 mà không bước nào. Các trạng thái khác chưa được tính.",
+            "line": 1,
+            "title": "Khởi tạo số bậc",
+            "explanation": "Khởi tạo số bậc. Dòng 1: n = 5",
             "cells": [
               {
-                "label": "i",
-                "value": "0",
+                "label": "n",
+                "value": "5",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Khởi tạo bảng",
+            "explanation": "Khởi tạo bảng. Dòng 2: dp = [0] * (n + 1)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
               },
               {
-                "label": "số cách",
-                "value": "1",
+                "label": "dp",
+                "value": "[0, 0, 0, 0, 0, 0]",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "·",
-                "·",
-                "·",
-                "·",
-                "·"
-              ],
-              "activeIndices": [
+                0,
+                0,
+                0,
+                0,
+                0,
                 0
               ],
-              "pointers": [
-                {
-                  "index": 0,
-                  "label": "cơ sở"
-                }
-              ],
-              "discardedIndices": []
+              "activeIndices": []
             }
           },
           {
-            "title": "Tính dp[1]",
-            "explanation": "Nhóm bước cuối dài 1 có 1 cách, nhóm bước cuối dài 2 có 0 cách; hai nhóm không trùng.",
+            "line": 3,
+            "title": "Đặt trạng thái cơ sở",
+            "explanation": "Đặt trạng thái cơ sở. Dòng 3: dp[0] = 1",
             "cells": [
               {
-                "label": "i",
-                "value": "1",
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 0, 0, 0, 0, 0]",
                 "active": true
-              },
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét bậc tiếp theo",
+            "explanation": "Xét bậc tiếp theo. Dòng 4: for i in range(1, n + 1):",
+            "cells": [
               {
-                "label": "từ i-1",
-                "value": "1",
+                "label": "n",
+                "value": "5",
                 "active": false
               },
               {
-                "label": "từ i-2",
-                "value": "0",
+                "label": "dp",
+                "value": "[1, 0, 0, 0, 0, 0]",
                 "active": false
               },
               {
-                "label": "số cách",
+                "label": "i",
                 "value": "1",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "1",
-                "·",
-                "·",
-                "·",
-                "·"
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
               ],
-              "activeIndices": [
-                1
-              ],
-              "pointers": [
-                {
-                  "index": 1,
-                  "label": "đang tính"
-                },
-                {
-                  "index": 0,
-                  "label": "tiền nhiệm"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "dp[1] = 1 + 0 = 1"
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tính dp[2]",
-            "explanation": "Nhóm bước cuối dài 1 có 1 cách, nhóm bước cuối dài 2 có 1 cách; hai nhóm không trùng.",
+            "line": 5,
+            "title": "Lấy số cách từ bậc trước",
+            "explanation": "Lấy số cách từ bậc trước. Dòng 5: dp[i] = dp[i - 1]",
             "cells": [
               {
-                "label": "i",
-                "value": "2",
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 0, 0, 0, 0]",
                 "active": true
               },
               {
-                "label": "từ i-1",
+                "label": "i",
                 "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Kiểm tra i >= 2: sai",
+            "explanation": "Kiểm tra i >= 2: sai. Dòng 6: if i >= 2:",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
                 "active": false
               },
               {
-                "label": "từ i-2",
-                "value": "1",
+                "label": "dp",
+                "value": "[1, 1, 0, 0, 0, 0]",
                 "active": false
               },
               {
-                "label": "số cách",
+                "label": "i",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét bậc tiếp theo",
+            "explanation": "Xét bậc tiếp theo. Dòng 4: for i in range(1, n + 1):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 0, 0, 0, 0]",
+                "active": false
+              },
+              {
+                "label": "i",
                 "value": "2",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "1",
-                "2",
-                "·",
-                "·",
-                "·"
+                1,
+                1,
+                0,
+                0,
+                0,
+                0
               ],
-              "activeIndices": [
-                2
-              ],
-              "pointers": [
-                {
-                  "index": 2,
-                  "label": "đang tính"
-                },
-                {
-                  "index": 1,
-                  "label": "tiền nhiệm"
-                },
-                {
-                  "index": 0,
-                  "label": "tiền nhiệm"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "dp[2] = 1 + 1 = 2"
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tính dp[3]",
-            "explanation": "Nhóm bước cuối dài 1 có 2 cách, nhóm bước cuối dài 2 có 1 cách; hai nhóm không trùng.",
+            "line": 5,
+            "title": "Lấy số cách từ bậc trước",
+            "explanation": "Lấy số cách từ bậc trước. Dòng 5: dp[i] = dp[i - 1]",
             "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 1, 0, 0, 0]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Kiểm tra i >= 2: đúng",
+            "explanation": "Kiểm tra i >= 2: đúng. Dòng 6: if i >= 2:",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 1, 0, 0, 0]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                1,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 7,
+            "title": "Cộng nhóm bước dài 2",
+            "explanation": "Cộng nhóm bước dài 2. Dòng 7: dp[i] += dp[i - 2]",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 0, 0, 0]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét bậc tiếp theo",
+            "explanation": "Xét bậc tiếp theo. Dòng 4: for i in range(1, n + 1):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 0, 0, 0]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "3",
                 "active": true
-              },
-              {
-                "label": "từ i-1",
-                "value": "2",
-                "active": false
-              },
-              {
-                "label": "từ i-2",
-                "value": "1",
-                "active": false
-              },
-              {
-                "label": "số cách",
-                "value": "3",
-                "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "1",
-                "2",
-                "3",
-                "·",
-                "·"
+                1,
+                1,
+                2,
+                0,
+                0,
+                0
               ],
-              "activeIndices": [
-                3
-              ],
-              "pointers": [
-                {
-                  "index": 3,
-                  "label": "đang tính"
-                },
-                {
-                  "index": 2,
-                  "label": "tiền nhiệm"
-                },
-                {
-                  "index": 1,
-                  "label": "tiền nhiệm"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "dp[3] = 2 + 1 = 3"
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tính dp[4]",
-            "explanation": "Nhóm bước cuối dài 1 có 3 cách, nhóm bước cuối dài 2 có 2 cách; hai nhóm không trùng.",
+            "line": 5,
+            "title": "Lấy số cách từ bậc trước",
+            "explanation": "Lấy số cách từ bậc trước. Dòng 5: dp[i] = dp[i - 1]",
             "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 2, 0, 0]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                2,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Kiểm tra i >= 2: đúng",
+            "explanation": "Kiểm tra i >= 2: đúng. Dòng 6: if i >= 2:",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 2, 0, 0]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                2,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 7,
+            "title": "Cộng nhóm bước dài 2",
+            "explanation": "Cộng nhóm bước dài 2. Dòng 7: dp[i] += dp[i - 2]",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 0, 0]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét bậc tiếp theo",
+            "explanation": "Xét bậc tiếp theo. Dòng 4: for i in range(1, n + 1):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 0, 0]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "4",
                 "active": true
-              },
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Lấy số cách từ bậc trước",
+            "explanation": "Lấy số cách từ bậc trước. Dòng 5: dp[i] = dp[i - 1]",
+            "cells": [
               {
-                "label": "từ i-1",
-                "value": "3",
+                "label": "n",
+                "value": "5",
                 "active": false
               },
               {
-                "label": "từ i-2",
-                "value": "2",
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 3, 0]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                3,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Kiểm tra i >= 2: đúng",
+            "explanation": "Kiểm tra i >= 2: đúng. Dòng 6: if i >= 2:",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
                 "active": false
               },
               {
-                "label": "số cách",
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 3, 0]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                3,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 7,
+            "title": "Cộng nhóm bước dài 2",
+            "explanation": "Cộng nhóm bước dài 2. Dòng 7: dp[i] += dp[i - 2]",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 5, 0]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                5,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét bậc tiếp theo",
+            "explanation": "Xét bậc tiếp theo. Dòng 4: for i in range(1, n + 1):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 5, 0]",
+                "active": false
+              },
+              {
+                "label": "i",
                 "value": "5",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "1",
-                "2",
-                "3",
-                "5",
-                "·"
+                1,
+                1,
+                2,
+                3,
+                5,
+                0
               ],
-              "activeIndices": [
-                4
-              ],
-              "pointers": [
-                {
-                  "index": 4,
-                  "label": "đang tính"
-                },
-                {
-                  "index": 3,
-                  "label": "tiền nhiệm"
-                },
-                {
-                  "index": 2,
-                  "label": "tiền nhiệm"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "dp[4] = 3 + 2 = 5"
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tính dp[5]",
-            "explanation": "Nhóm bước cuối dài 1 có 5 cách, nhóm bước cuối dài 2 có 3 cách; hai nhóm không trùng.",
+            "line": 5,
+            "title": "Lấy số cách từ bậc trước",
+            "explanation": "Lấy số cách từ bậc trước. Dòng 5: dp[i] = dp[i - 1]",
             "cells": [
               {
-                "label": "i",
+                "label": "n",
                 "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 5, 5]",
                 "active": true
               },
               {
-                "label": "từ i-1",
+                "label": "i",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                5,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Kiểm tra i >= 2: đúng",
+            "explanation": "Kiểm tra i >= 2: đúng. Dòng 6: if i >= 2:",
+            "cells": [
+              {
+                "label": "n",
                 "value": "5",
                 "active": false
               },
               {
-                "label": "từ i-2",
-                "value": "3",
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 5, 5]",
                 "active": false
               },
               {
-                "label": "số cách",
+                "label": "i",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                5,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 7,
+            "title": "Cộng nhóm bước dài 2",
+            "explanation": "Cộng nhóm bước dài 2. Dòng 7: dp[i] += dp[i - 2]",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 5, 8]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                5,
+                8
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Kết thúc vòng lặp",
+            "explanation": "Kết thúc vòng lặp. Dòng 4: for i in range(1, n + 1):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 5, 8]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                2,
+                3,
+                5,
+                8
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 8,
+            "title": "Xuất số cách",
+            "explanation": "Xuất số cách. Dòng 8: print(dp[n])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[1, 1, 2, 3, 5, 8]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "Output",
                 "value": "8",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "1",
-                "2",
-                "3",
-                "5",
-                "8"
+                1,
+                1,
+                2,
+                3,
+                5,
+                8
               ],
-              "activeIndices": [
-                5
-              ],
-              "pointers": [
-                {
-                  "index": 5,
-                  "label": "đang tính"
-                },
-                {
-                  "index": 4,
-                  "label": "tiền nhiệm"
-                },
-                {
-                  "index": 3,
-                  "label": "tiền nhiệm"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "dp[5] = 5 + 3 = 8"
+              "activeIndices": []
+            }
           }
         ]
       },
@@ -484,12 +943,121 @@
       "runnable": true,
       "visualization": {
         "title": "Vì sao ba lô 0/1 phải duyệt giảm?",
-        "description": "Chỉ xét vật đầu (2,3) của code mẫu. Sức chứa 4 vẫn chỉ nhận giá trị 3, không phải 6.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Trước vật đầu",
-            "explanation": "Một vật w=2,v=3. Không có vật thì giá trị tốt nhất bằng 0 với mọi sức chứa.",
+            "line": 1,
+            "title": "Khởi tạo vật",
+            "explanation": "Khởi tạo vật. Dòng 1: items, capacity = [(2, 3), (3, 4)], 5",
             "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": true
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Khởi tạo bảng",
+            "explanation": "Khởi tạo bảng. Dòng 2: dp = [0] * (capacity + 1)",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 0, 0, 0]",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Lấy vật tiếp theo",
+            "explanation": "Lấy vật tiếp theo. Dòng 3: for w, v in items:",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 0, 0, 0]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Duyệt sức chứa giảm dần",
+            "explanation": "Duyệt sức chứa giảm dần. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 0, 0, 0]",
+                "active": false
+              },
               {
                 "label": "w",
                 "value": "2",
@@ -499,185 +1067,893 @@
                 "label": "v",
                 "value": "3",
                 "active": false
+              },
+              {
+                "label": "c",
+                "value": "5",
+                "active": true
               }
             ],
-            "matrix": {
-              "rows": [
-                [
-                  "c",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "dp[c]",
-                  0,
-                  0,
-                  0,
-                  0,
-                  0
-                ]
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
               ],
-              "activeCells": []
+              "activeIndices": []
             }
           },
           {
-            "title": "Cập nhật c=4",
-            "explanation": "Đọc dp[2]=0 của lớp trước. Duyệt giảm bảo đảm chưa dùng vật hiện tại trong tiền nhiệm.",
+            "line": 5,
+            "title": "Cập nhật giá trị tốt nhất",
+            "explanation": "Cập nhật giá trị tốt nhất. Dòng 5: dp[c] = max(dp[c], dp[c - w] + v)",
             "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 0, 0, 3]",
+                "active": true
+              },
+              {
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Duyệt sức chứa giảm dần",
+            "explanation": "Duyệt sức chứa giảm dần. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 0, 0, 3]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              },
               {
                 "label": "c",
                 "value": "4",
                 "active": true
-              },
-              {
-                "label": "dp[c-w]",
-                "value": "0",
-                "active": true
-              },
-              {
-                "label": "dp[c]",
-                "value": "3",
-                "active": true
               }
             ],
-            "matrix": {
-              "rows": [
-                [
-                  "c",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "dp[c]",
-                  0,
-                  0,
-                  0,
-                  0,
-                  3
-                ]
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                3
               ],
-              "activeCells": [
-                [
-                  1,
-                  3
-                ],
-                [
-                  1,
-                  5
-                ]
-              ]
-            },
-            "formula": "dp[4] = max(0, 0 + 3) = 3"
+              "activeIndices": []
+            }
           },
           {
-            "title": "Cập nhật c=3",
-            "explanation": "Đọc dp[1]=0 của lớp trước. Duyệt giảm bảo đảm chưa dùng vật hiện tại trong tiền nhiệm.",
+            "line": 5,
+            "title": "Cập nhật giá trị tốt nhất",
+            "explanation": "Cập nhật giá trị tốt nhất. Dòng 5: dp[c] = max(dp[c], dp[c - w] + v)",
             "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 0, 3, 3]",
+                "active": true
+              },
+              {
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Duyệt sức chứa giảm dần",
+            "explanation": "Duyệt sức chứa giảm dần. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 0, 3, 3]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              },
               {
                 "label": "c",
                 "value": "3",
                 "active": true
-              },
-              {
-                "label": "dp[c-w]",
-                "value": "0",
-                "active": true
-              },
-              {
-                "label": "dp[c]",
-                "value": "3",
-                "active": true
               }
             ],
-            "matrix": {
-              "rows": [
-                [
-                  "c",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "dp[c]",
-                  0,
-                  0,
-                  0,
-                  3,
-                  3
-                ]
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                3,
+                3
               ],
-              "activeCells": [
-                [
-                  1,
-                  2
-                ],
-                [
-                  1,
-                  4
-                ]
-              ]
-            },
-            "formula": "dp[3] = max(0, 0 + 3) = 3"
+              "activeIndices": []
+            }
           },
           {
-            "title": "Cập nhật c=2",
-            "explanation": "Đọc dp[0]=0 của lớp trước. Duyệt giảm bảo đảm chưa dùng vật hiện tại trong tiền nhiệm.",
+            "line": 5,
+            "title": "Cập nhật giá trị tốt nhất",
+            "explanation": "Cập nhật giá trị tốt nhất. Dòng 5: dp[c] = max(dp[c], dp[c - w] + v)",
             "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 3, 3, 3]",
+                "active": true
+              },
+              {
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                3,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Duyệt sức chứa giảm dần",
+            "explanation": "Duyệt sức chứa giảm dần. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 0, 3, 3, 3]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              },
               {
                 "label": "c",
                 "value": "2",
                 "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                3,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Cập nhật giá trị tốt nhất",
+            "explanation": "Cập nhật giá trị tốt nhất. Dòng 5: dp[c] = max(dp[c], dp[c - w] + v)",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
               },
               {
-                "label": "dp[c-w]",
-                "value": "0",
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 3, 3, 3]",
                 "active": true
               },
               {
-                "label": "dp[c]",
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                3,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Kết thúc lượt vật này",
+            "explanation": "Kết thúc lượt vật này. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 3, 3, 3]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                3,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Lấy vật tiếp theo",
+            "explanation": "Lấy vật tiếp theo. Dòng 3: for w, v in items:",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 3, 3, 3]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "c",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                3,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Duyệt sức chứa giảm dần",
+            "explanation": "Duyệt sức chứa giảm dần. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 3, 3, 3]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "5",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                3,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Cập nhật giá trị tốt nhất",
+            "explanation": "Cập nhật giá trị tốt nhất. Dòng 5: dp[c] = max(dp[c], dp[c - w] + v)",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 3, 3, 7]",
+                "active": true
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Duyệt sức chứa giảm dần",
+            "explanation": "Duyệt sức chứa giảm dần. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "4",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Cập nhật giá trị tốt nhất",
+            "explanation": "Cập nhật giá trị tốt nhất. Dòng 5: dp[c] = max(dp[c], dp[c - w] + v)",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 3, 4, 7]",
+                "active": true
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                3,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Duyệt sức chứa giảm dần",
+            "explanation": "Duyệt sức chứa giảm dần. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 3, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
                 "value": "3",
                 "active": true
               }
             ],
-            "matrix": {
-              "rows": [
-                [
-                  "c",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "dp[c]",
-                  0,
-                  0,
-                  3,
-                  3,
-                  3
-                ]
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                3,
+                4,
+                7
               ],
-              "activeCells": [
-                [
-                  1,
-                  1
-                ],
-                [
-                  1,
-                  3
-                ]
-              ]
-            },
-            "formula": "dp[2] = max(0, 0 + 3) = 3"
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Cập nhật giá trị tốt nhất",
+            "explanation": "Cập nhật giá trị tốt nhất. Dòng 5: dp[c] = max(dp[c], dp[c - w] + v)",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 4, 4, 7]",
+                "active": true
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                4,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Kết thúc lượt vật này",
+            "explanation": "Kết thúc lượt vật này. Dòng 4: for c in range(capacity, w - 1, -1):",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 4, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                4,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Đã xét hết vật",
+            "explanation": "Đã xét hết vật. Dòng 3: for w, v in items:",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 4, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                4,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Xuất giá trị tốt nhất",
+            "explanation": "Xuất giá trị tốt nhất. Dòng 6: print(dp[capacity])",
+            "cells": [
+              {
+                "label": "items",
+                "value": "[[2, 3], [3, 4]]",
+                "active": false
+              },
+              {
+                "label": "capacity",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[0, 0, 3, 4, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "w",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "v",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "c",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "7",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                3,
+                4,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
           }
         ]
       },
@@ -814,75 +2090,94 @@
       },
       "visualization": {
         "title": "Điền bảng LCS của abc và ac",
-        "description": "Hàng là tiền tố abc, cột là tiền tố ac. Dấu · là ô chưa tính.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Hai tiền tố rỗng",
-            "explanation": "Hàng/cột cơ sở đều 0; chưa xét ký tự.",
+            "line": 1,
+            "title": "Khởi tạo hai chuỗi",
+            "explanation": "Khởi tạo hai chuỗi. Dòng 1: a, b = \"abc\", \"ac\"",
             "cells": [
               {
-                "label": "i",
-                "value": "0",
+                "label": "a",
+                "value": "abc",
+                "active": true
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Khởi tạo bảng LCS",
+            "explanation": "Khởi tạo bảng LCS. Dòng 2: dp = [[0] * (len(b) + 1) for _ in range(len(a) + 1)]",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
                 "active": false
               },
               {
-                "label": "j",
-                "value": "0",
+                "label": "b",
+                "value": "ac",
                 "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]",
+                "active": true
               }
             ],
             "matrix": {
               "rows": [
                 [
-                  "a / b",
-                  "∅",
-                  "a",
-                  "c"
-                ],
-                [
-                  "∅",
                   0,
                   0,
                   0
                 ],
                 [
-                  "a",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ],
                 [
-                  "b",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ],
                 [
-                  "c",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ]
               ],
               "activeCells": []
             }
           },
           {
-            "title": "Ô (1,1)",
-            "explanation": "So a với a: khớp, lấy đường chéo + 1.",
+            "line": 3,
+            "title": "Xét tiền tố chuỗi a",
+            "explanation": "Xét tiền tố chuỗi a. Dòng 3: for i in range(1, len(a) + 1):",
             "cells": [
               {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
+              {
                 "label": "i",
-                "value": "1",
-                "active": true
-              },
-              {
-                "label": "j",
-                "value": "1",
-                "active": true
-              },
-              {
-                "label": "dp[i][j]",
                 "value": "1",
                 "active": true
               }
@@ -890,61 +2185,56 @@
             "matrix": {
               "rows": [
                 [
-                  "a / b",
-                  "∅",
-                  "a",
-                  "c"
-                ],
-                [
-                  "∅",
                   0,
                   0,
                   0
                 ],
                 [
-                  "a",
                   0,
-                  1,
-                  "·"
+                  0,
+                  0
                 ],
                 [
-                  "b",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ],
                 [
-                  "c",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ]
               ],
-              "activeCells": [
-                [
-                  2,
-                  2
-                ]
-              ]
-            },
-            "formula": "dp[1][1] = 1"
+              "activeCells": []
+            }
           },
           {
-            "title": "Ô (1,2)",
-            "explanation": "So a với c: khác, lấy max ô trên và ô trái.",
+            "line": 4,
+            "title": "Xét tiền tố chuỗi b",
+            "explanation": "Xét tiền tố chuỗi b. Dòng 4: for j in range(1, len(b) + 1):",
             "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "1",
-                "active": true
+                "active": false
               },
               {
                 "label": "j",
-                "value": "2",
-                "active": true
-              },
-              {
-                "label": "dp[i][j]",
                 "value": "1",
                 "active": true
               }
@@ -952,49 +2242,391 @@
             "matrix": {
               "rows": [
                 [
-                  "a / b",
-                  "∅",
-                  "a",
-                  "c"
-                ],
-                [
-                  "∅",
                   0,
                   0,
                   0
                 ],
                 [
-                  "a",
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "So sánh hai ký tự: bằng nhau",
+            "explanation": "So sánh hai ký tự: bằng nhau. Dòng 5: if a[i - 1] == b[j - 1]:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Lấy đường chéo cộng 1",
+            "explanation": "Lấy đường chéo cộng 1. Dòng 6: dp[i][j] = dp[i - 1][j - 1] + 1",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 0], [0, 0, 0], [0, 0, 0]]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét tiền tố chuỗi b",
+            "explanation": "Xét tiền tố chuỗi b. Dòng 4: for j in range(1, len(b) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 0], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "So sánh hai ký tự: khác nhau",
+            "explanation": "So sánh hai ký tự: khác nhau. Dòng 5: if a[i - 1] == b[j - 1]:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 0], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 8,
+            "title": "Lấy max ô trên và ô trái",
+            "explanation": "Lấy max ô trên và ô trái. Dòng 8: dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 0, 0], [0, 0, 0]]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
                   0,
                   1,
                   1
                 ],
                 [
-                  "b",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ],
                 [
-                  "c",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ]
               ],
-              "activeCells": [
-                [
-                  2,
-                  3
-                ]
-              ]
-            },
-            "formula": "dp[1][2] = 1"
+              "activeCells": []
+            }
           },
           {
-            "title": "Ô (2,1)",
-            "explanation": "So b với a: khác, lấy max ô trên và ô trái.",
+            "line": 4,
+            "title": "Kết thúc hàng",
+            "explanation": "Kết thúc hàng. Dòng 4: for j in range(1, len(b) + 1):",
             "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Xét tiền tố chuỗi a",
+            "explanation": "Xét tiền tố chuỗi a. Dòng 3: for i in range(1, len(a) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "2",
@@ -1002,11 +2634,63 @@
               },
               {
                 "label": "j",
-                "value": "1",
-                "active": true
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét tiền tố chuỗi b",
+            "explanation": "Xét tiền tố chuỗi b. Dòng 4: for j in range(1, len(b) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
               },
               {
-                "label": "dp[i][j]",
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
                 "value": "1",
                 "active": true
               }
@@ -1014,111 +2698,391 @@
             "matrix": {
               "rows": [
                 [
-                  "a / b",
-                  "∅",
-                  "a",
-                  "c"
-                ],
-                [
-                  "∅",
                   0,
                   0,
                   0
                 ],
                 [
-                  "a",
                   0,
                   1,
                   1
                 ],
                 [
-                  "b",
                   0,
-                  1,
-                  "·"
+                  0,
+                  0
                 ],
                 [
-                  "c",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ]
               ],
-              "activeCells": [
-                [
-                  3,
-                  2
-                ]
-              ]
-            },
-            "formula": "dp[2][1] = 1"
+              "activeCells": []
+            }
           },
           {
-            "title": "Ô (2,2)",
-            "explanation": "So b với c: khác, lấy max ô trên và ô trái.",
+            "line": 5,
+            "title": "So sánh hai ký tự: khác nhau",
+            "explanation": "So sánh hai ký tự: khác nhau. Dòng 5: if a[i - 1] == b[j - 1]:",
             "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 0, 0], [0, 0, 0]]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 8,
+            "title": "Lấy max ô trên và ô trái",
+            "explanation": "Lấy max ô trên và ô trái. Dòng 8: dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 0], [0, 0, 0]]",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét tiền tố chuỗi b",
+            "explanation": "Xét tiền tố chuỗi b. Dòng 4: for j in range(1, len(b) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 0], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
               },
               {
                 "label": "j",
                 "value": "2",
                 "active": true
-              },
-              {
-                "label": "dp[i][j]",
-                "value": "1",
-                "active": true
               }
             ],
             "matrix": {
               "rows": [
                 [
-                  "a / b",
-                  "∅",
-                  "a",
-                  "c"
-                ],
-                [
-                  "∅",
                   0,
                   0,
                   0
                 ],
                 [
-                  "a",
                   0,
                   1,
                   1
                 ],
                 [
-                  "b",
                   0,
                   1,
-                  1
+                  0
                 ],
                 [
-                  "c",
                   0,
-                  "·",
-                  "·"
+                  0,
+                  0
                 ]
               ],
-              "activeCells": [
-                [
-                  3,
-                  3
-                ]
-              ]
-            },
-            "formula": "dp[2][2] = 1"
+              "activeCells": []
+            }
           },
           {
-            "title": "Ô (3,1)",
-            "explanation": "So c với a: khác, lấy max ô trên và ô trái.",
+            "line": 5,
+            "title": "So sánh hai ký tự: khác nhau",
+            "explanation": "So sánh hai ký tự: khác nhau. Dòng 5: if a[i - 1] == b[j - 1]:",
             "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 0], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 8,
+            "title": "Lấy max ô trên và ô trái",
+            "explanation": "Lấy max ô trên và ô trái. Dòng 8: dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 0, 0]]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Kết thúc hàng",
+            "explanation": "Kết thúc hàng. Dòng 4: for j in range(1, len(b) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Xét tiền tố chuỗi a",
+            "explanation": "Xét tiền tố chuỗi a. Dòng 3: for i in range(1, len(a) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 0, 0]]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "3",
@@ -1126,11 +3090,63 @@
               },
               {
                 "label": "j",
-                "value": "1",
-                "active": true
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét tiền tố chuỗi b",
+            "explanation": "Xét tiền tố chuỗi b. Dòng 4: for j in range(1, len(b) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
               },
               {
-                "label": "dp[i][j]",
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 0, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
                 "value": "1",
                 "active": true
               }
@@ -1138,61 +3154,460 @@
             "matrix": {
               "rows": [
                 [
-                  "a / b",
-                  "∅",
-                  "a",
-                  "c"
-                ],
-                [
-                  "∅",
                   0,
                   0,
                   0
                 ],
                 [
-                  "a",
                   0,
                   1,
                   1
                 ],
                 [
-                  "b",
                   0,
                   1,
                   1
                 ],
                 [
-                  "c",
                   0,
-                  1,
-                  "·"
+                  0,
+                  0
                 ]
               ],
-              "activeCells": [
-                [
-                  4,
-                  2
-                ]
-              ]
-            },
-            "formula": "dp[3][1] = 1"
+              "activeCells": []
+            }
           },
           {
-            "title": "Ô (3,2)",
-            "explanation": "So c với c: khớp, lấy đường chéo + 1.",
+            "line": 5,
+            "title": "So sánh hai ký tự: khác nhau",
+            "explanation": "So sánh hai ký tự: khác nhau. Dòng 5: if a[i - 1] == b[j - 1]:",
             "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 0, 0]]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 8,
+            "title": "Lấy max ô trên và ô trái",
+            "explanation": "Lấy max ô trên và ô trái. Dòng 8: dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 1, 0]]",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét tiền tố chuỗi b",
+            "explanation": "Xét tiền tố chuỗi b. Dòng 4: for j in range(1, len(b) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 1, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
               },
               {
                 "label": "j",
                 "value": "2",
                 "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "So sánh hai ký tự: bằng nhau",
+            "explanation": "So sánh hai ký tự: bằng nhau. Dòng 5: if a[i - 1] == b[j - 1]:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
               },
               {
-                "label": "dp[i][j]",
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 1, 0]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Lấy đường chéo cộng 1",
+            "explanation": "Lấy đường chéo cộng 1. Dòng 6: dp[i][j] = dp[i - 1][j - 1] + 1",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 1, 2]]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  2
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Kết thúc hàng",
+            "explanation": "Kết thúc hàng. Dòng 4: for j in range(1, len(b) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 1, 2]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  2
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Kết thúc bảng",
+            "explanation": "Kết thúc bảng. Dòng 3: for i in range(1, len(a) + 1):",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 1, 2]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  2
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 9,
+            "title": "Xuất độ dài LCS",
+            "explanation": "Xuất độ dài LCS. Dòng 9: print(dp[-1][-1])",
+            "cells": [
+              {
+                "label": "a",
+                "value": "abc",
+                "active": false
+              },
+              {
+                "label": "b",
+                "value": "ac",
+                "active": false
+              },
+              {
+                "label": "dp",
+                "value": "[[0, 0, 0], [0, 1, 1], [0, 1, 1], [0, 1, 2]]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "Output",
                 "value": "2",
                 "active": true
               }
@@ -1200,44 +3615,28 @@
             "matrix": {
               "rows": [
                 [
-                  "a / b",
-                  "∅",
-                  "a",
-                  "c"
-                ],
-                [
-                  "∅",
                   0,
                   0,
                   0
                 ],
                 [
-                  "a",
                   0,
                   1,
                   1
                 ],
                 [
-                  "b",
                   0,
                   1,
                   1
                 ],
                 [
-                  "c",
                   0,
                   1,
                   2
                 ]
               ],
-              "activeCells": [
-                [
-                  4,
-                  3
-                ]
-              ]
-            },
-            "formula": "dp[3][2] = 2"
+              "activeCells": []
+            }
           }
         ]
       }

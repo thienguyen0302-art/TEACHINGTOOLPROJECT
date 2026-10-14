@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from validate_content import ROOT, validate_problem, validate_problem_bank
+from validate_content import ROOT, validate, validate_problem, validate_problem_bank
 
 
 class ProblemBankValidationTests(unittest.TestCase):
@@ -169,6 +169,21 @@ class ProblemBankValidationTests(unittest.TestCase):
         self.assertEqual(scripts["validate:content"], "python3 scripts/validate_content.py")
         self.assertEqual(scripts["test:content"],
                          "python3 -m unittest discover -s scripts -p 'test_*.py'")
+
+    def test_visualization_lines_match_parent_code(self):
+        chapter = json.loads((ROOT / "cpp/ch01.json").read_text())
+        validate(ROOT / "cpp/ch01.json", chapter)
+        visual_theory = next(item for item in chapter["theory"] if item.get("visualization"))
+        visual_theory["visualization"]["steps"][0]["line"] = 999
+        with self.assertRaisesRegex(ValueError, "outside code range"):
+            validate(ROOT / "cpp/ch01.json", chapter)
+
+    def test_visualization_with_code_requires_line_mapping(self):
+        chapter = json.loads((ROOT / "python/ch01.json").read_text())
+        visual_theory = next(item for item in chapter["theory"] if item.get("visualization"))
+        del visual_theory["visualization"]["steps"][0]["line"]
+        with self.assertRaisesRegex(ValueError, "missing code line"):
+            validate(ROOT / "python/ch01.json", chapter)
 
 
 if __name__ == "__main__":

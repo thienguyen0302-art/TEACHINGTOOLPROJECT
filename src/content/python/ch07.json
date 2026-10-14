@@ -74,114 +74,199 @@
       "explanation": "Số lượt là 0+1+2+3=6=n(n-1)/2.",
       "visualization": {
         "title": "Vòng trong chạy bao nhiêu lần?",
-        "description": "Đếm từng cặp (i,j) với j<i; không đo thời gian bằng số dòng code.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Khởi tạo",
-            "explanation": "n=4, chưa có lượt vòng trong.",
+            "line": 1,
+            "title": "Khởi tạo n",
+            "explanation": "Khởi tạo n. Dòng 1: n = 4",
             "cells": [
               {
+                "label": "n",
+                "value": "4",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Khởi tạo bộ đếm",
+            "explanation": "Khởi tạo bộ đếm. Dòng 2: count = 0",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Bắt đầu lượt vòng ngoài",
+            "explanation": "Bắt đầu lượt vòng ngoài. Dòng 3: for i in range(n):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": false
+              },
+              {
                 "label": "i",
-                "value": "—",
+                "value": "0",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Vòng trong kết thúc",
+            "explanation": "Vòng trong kết thúc. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "0",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Bắt đầu lượt vòng ngoài",
+            "explanation": "Bắt đầu lượt vòng ngoài. Dòng 3: for i in range(n):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
                 "active": false
               },
               {
                 "label": "j",
-                "value": "—",
+                "value": "0",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 5: count += 1",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
                 "active": false
               },
               {
                 "label": "count",
-                "value": "0",
-                "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": []
-            }
-          },
-          {
-            "title": "i=1, j=0",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 1.",
-            "cells": [
-              {
-                "label": "i",
                 "value": "1",
                 "active": true
               },
               {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
                 "label": "j",
                 "value": "0",
-                "active": true
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Vòng trong kết thúc",
+            "explanation": "Vòng trong kết thúc. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "1",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
               }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  2,
-                  0
-                ],
-                [
-                  2,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
+            ]
           },
           {
-            "title": "i=2, j=0",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 2.",
+            "line": 3,
+            "title": "Bắt đầu lượt vòng ngoài",
+            "explanation": "Bắt đầu lượt vòng ngoài. Dòng 3: for i in range(n):",
             "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "2",
@@ -190,110 +275,160 @@
               {
                 "label": "j",
                 "value": "0",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 5: count += 1",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "2",
                 "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  3,
-                  0
-                ],
-                [
-                  3,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
-          },
-          {
-            "title": "i=2, j=1",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 3.",
-            "cells": [
+              },
               {
                 "label": "i",
                 "value": "2",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
               },
               {
                 "label": "j",
                 "value": "1",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 5: count += 1",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "3",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
               }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  3,
-                  0
-                ],
-                [
-                  3,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
+            ]
           },
           {
-            "title": "i=3, j=0",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 4.",
+            "line": 4,
+            "title": "Vòng trong kết thúc",
+            "explanation": "Vòng trong kết thúc. Dòng 4: for j in range(i):",
             "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Bắt đầu lượt vòng ngoài",
+            "explanation": "Bắt đầu lượt vòng ngoài. Dòng 3: for i in range(n):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "3",
@@ -301,162 +436,258 @@
               },
               {
                 "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
                 "value": "0",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 5: count += 1",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "4",
                 "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  4,
-                  0
-                ],
-                [
-                  4,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
-          },
-          {
-            "title": "i=3, j=1",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 5.",
-            "cells": [
+              },
               {
                 "label": "i",
                 "value": "3",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
               },
               {
                 "label": "j",
                 "value": "1",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 5: count += 1",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "5",
                 "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  4,
-                  0
-                ],
-                [
-                  4,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
-          },
-          {
-            "title": "i=3, j=2",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 6.",
-            "cells": [
+              },
               {
                 "label": "i",
                 "value": "3",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
               },
               {
                 "label": "j",
                 "value": "2",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 5: count += 1",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "6",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
               }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  4,
-                  0
-                ],
-                [
-                  4,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Vòng trong kết thúc",
+            "explanation": "Vòng trong kết thúc. Dòng 4: for j in range(i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Vòng ngoài kết thúc",
+            "explanation": "Vòng ngoài kết thúc. Dòng 3: for i in range(n):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Xuất số lượt",
+            "explanation": "Xuất số lượt. Dòng 6: print(count)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "6",
+                "active": true
+              }
+            ]
           }
         ]
       },

@@ -124,52 +124,183 @@
       "explanation": "Loại 4,6,8,10 bởi 2 và 9 bởi 3.",
       "visualization": {
         "title": "Sàng: loại bội của nguyên tố",
-        "description": "Các ô nhạt bị đánh dấu không nguyên tố. Giá trị 0 và 1 bị loại ngay từ đầu.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Khởi tạo",
-            "explanation": "0 và 1 không nguyên tố; các ô 2..10 là ứng viên.",
+            "line": 1,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 1: #include <iostream>",
             "cells": [
               {
-                "label": "N",
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 2: #include <string>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 3: #include <vector>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Khai báo không gian tên, chưa chạy thuật toán",
+            "explanation": "Khai báo không gian tên, chưa chạy thuật toán. Dòng 4: using namespace std;",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Khai báo không gian tên, chưa chạy thuật toán",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Bắt đầu thực thi tại main",
+            "explanation": "Bắt đầu thực thi tại main. Dòng 6: int main() {",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Bắt đầu thực thi tại main",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Thiết lập nhập xuất",
+            "explanation": "Thiết lập nhập xuất. Dòng 7: ios::sync_with_stdio(false);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập nhập xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Thiết lập luồng nhập",
+            "explanation": "Thiết lập luồng nhập. Dòng 8: cin.tie(nullptr);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập luồng nhập",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Khởi tạo giới hạn",
+            "explanation": "Khởi tạo giới hạn. Dòng 9: int n = 10;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Khởi tạo ứng viên nguyên tố",
+            "explanation": "Khởi tạo ứng viên nguyên tố. Dòng 10: vector<bool> p(n + 1, true);",
+            "cells": [
+              {
+                "label": "n",
                 "value": "10",
                 "active": false
               },
               {
-                "label": "i",
-                "value": "—",
-                "active": false
+                "label": "p",
+                "value": "[true, true, true, true, true, true, true, true, true, true, true]",
+                "active": true
               }
             ],
             "array": {
               "values": [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10"
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
               ],
-              "activeIndices": [],
-              "pointers": [],
-              "discardedIndices": [
-                0,
-                1
-              ]
+              "activeIndices": []
             }
           },
           {
-            "title": "Loại bội của 2",
-            "explanation": "2 chưa bị loại. Đánh dấu các bội 4,6,8,10 bắt đầu từ 2².",
+            "line": 11,
+            "title": "Loại 0 và 1",
+            "explanation": "Loại 0 và 1. Dòng 11: p[0] = p[1] = false;",
             "cells": [
               {
-                "label": "N",
+                "label": "n",
                 "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Kiểm tra i*i <= n: đúng",
+            "explanation": "Kiểm tra i*i <= n: đúng. Dòng 12: for (int i = 2; i * i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
                 "active": false
               },
               {
@@ -180,92 +311,1439 @@
             ],
             "array": {
               "values": [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10"
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
               ],
-              "activeIndices": [
-                2
-              ],
-              "pointers": [
-                {
-                  "index": 2,
-                  "label": "i"
-                }
-              ],
-              "discardedIndices": [
-                0,
-                1,
-                4,
-                6,
-                8,
-                10
-              ]
-            },
-            "formula": "j = 4,6,8,10"
+              "activeIndices": []
+            }
           },
           {
-            "title": "Loại bội của 3",
-            "explanation": "3 chưa bị loại; 3²=9. Bội nhỏ hơn 9 đã được xử lý bởi 2.",
+            "line": 13,
+            "title": "Kiểm tra ứng viên: đúng",
+            "explanation": "Kiểm tra ứng viên: đúng. Dòng 13: if (p[i])",
             "cells": [
               {
-                "label": "N",
+                "label": "n",
                 "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 14: for (int j = i * i; j <= n; j += i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "4",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 15,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 15: p[j] = false;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, true, true, true, true, true]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 14: for (int j = i * i; j <= n; j += i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, true, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 15,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 15: p[j] = false;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, true, true, true]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "6",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                true,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 14: for (int j = i * i; j <= n; j += i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "8",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                true,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 15,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 15: p[j] = false;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, true, true]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "8",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 14: for (int j = i * i; j <= n; j += i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "10",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                true
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 15,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 15: p[j] = false;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "10",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Kết thúc vòng bội",
+            "explanation": "Kết thúc vòng bội. Dòng 14: for (int j = i * i; j <= n; j += i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Kiểm tra i*i <= n: đúng",
+            "explanation": "Kiểm tra i*i <= n: đúng. Dòng 12: for (int i = 2; i * i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
                 "active": false
               },
               {
                 "label": "i",
                 "value": "3",
                 "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
               }
             ],
             "array": {
               "values": [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10"
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
               ],
-              "activeIndices": [
-                3
-              ],
-              "pointers": [
-                {
-                  "index": 3,
-                  "label": "i"
-                }
-              ],
-              "discardedIndices": [
-                0,
-                1,
-                4,
-                6,
-                8,
-                9,
-                10
-              ]
-            },
-            "formula": "j = 9"
+              "activeIndices": []
+            }
           },
           {
-            "title": "Các nguyên tố còn lại",
-            "explanation": "Lượt i=4 vượt căn 10 nên ngừng sàng. Các ô chưa bị loại là 2,3,5,7.",
+            "line": 13,
+            "title": "Kiểm tra ứng viên: đúng",
+            "explanation": "Kiểm tra ứng viên: đúng. Dòng 13: if (p[i])",
             "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 14: for (int j = i * i; j <= n; j += i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "9",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 15,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 15: p[j] = false;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "9",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Kết thúc vòng bội",
+            "explanation": "Kết thúc vòng bội. Dòng 14: for (int j = i * i; j <= n; j += i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Kiểm tra i*i <= n: sai",
+            "explanation": "Kiểm tra i*i <= n: sai. Dòng 12: for (int i = 2; i * i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: đúng",
+            "explanation": "Kiểm tra p[i]: đúng. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Xuất số nguyên tố",
+            "explanation": "Xuất số nguyên tố. Dòng 18: cout << i << \" \";",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: đúng",
+            "explanation": "Kiểm tra p[i]: đúng. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Xuất số nguyên tố",
+            "explanation": "Xuất số nguyên tố. Dòng 18: cout << i << \" \";",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: sai",
+            "explanation": "Kiểm tra p[i]: sai. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "5",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: đúng",
+            "explanation": "Kiểm tra p[i]: đúng. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Xuất số nguyên tố",
+            "explanation": "Xuất số nguyên tố. Dòng 18: cout << i << \" \";",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "6",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: sai",
+            "explanation": "Kiểm tra p[i]: sai. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "7",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: đúng",
+            "explanation": "Kiểm tra p[i]: đúng. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "7",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Xuất số nguyên tố",
+            "explanation": "Xuất số nguyên tố. Dòng 18: cout << i << \" \";",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "7",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
               {
                 "label": "Output",
                 "value": "2 3 5 7",
@@ -274,34 +1752,355 @@
             ],
             "array": {
               "values": [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10"
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
               ],
-              "activeIndices": [
-                2,
-                3,
-                5,
-                7
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "8",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5 7",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
               ],
-              "pointers": [],
-              "discardedIndices": [
-                0,
-                1,
-                4,
-                6,
-                8,
-                9,
-                10
-              ]
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: sai",
+            "explanation": "Kiểm tra p[i]: sai. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "8",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5 7",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "9",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5 7",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: sai",
+            "explanation": "Kiểm tra p[i]: sai. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "9",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5 7",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Duyệt kết quả",
+            "explanation": "Duyệt kết quả. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "10",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5 7",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 17,
+            "title": "Kiểm tra p[i]: sai",
+            "explanation": "Kiểm tra p[i]: sai. Dòng 17: if (p[i])",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5 7",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Kết thúc xuất",
+            "explanation": "Kết thúc xuất. Dòng 16: for (int i = 2; i <= n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "11",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "12",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "2 3 5 7",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false
+              ],
+              "activeIndices": []
             }
           }
         ]

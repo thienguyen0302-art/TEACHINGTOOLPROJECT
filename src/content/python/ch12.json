@@ -124,52 +124,67 @@
       "explanation": "Loại 4,6,8,10 bởi 2 và 9 bởi 3.",
       "visualization": {
         "title": "Sàng: loại bội của nguyên tố",
-        "description": "Các ô nhạt bị đánh dấu không nguyên tố. Giá trị 0 và 1 bị loại ngay từ đầu.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Khởi tạo",
-            "explanation": "0 và 1 không nguyên tố; các ô 2..10 là ứng viên.",
+            "line": 1,
+            "title": "Khởi tạo giới hạn",
+            "explanation": "Khởi tạo giới hạn. Dòng 1: n = 10",
             "cells": [
               {
-                "label": "N",
+                "label": "n",
+                "value": "10",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Khởi tạo ứng viên nguyên tố",
+            "explanation": "Khởi tạo ứng viên nguyên tố. Dòng 2: is_prime = [True] * (n + 1)",
+            "cells": [
+              {
+                "label": "n",
                 "value": "10",
                 "active": false
               },
               {
-                "label": "i",
-                "value": "—",
-                "active": false
+                "label": "is_prime",
+                "value": "[true, true, true, true, true, true, true, true, true, true, true]",
+                "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10"
-              ],
-              "activeIndices": [],
-              "pointers": [],
-              "discardedIndices": [
-                0,
-                1
-              ]
-            }
+            ]
           },
           {
-            "title": "Loại bội của 2",
-            "explanation": "2 chưa bị loại. Đánh dấu các bội 4,6,8,10 bắt đầu từ 2².",
+            "line": 3,
+            "title": "Loại 0 và 1",
+            "explanation": "Loại 0 và 1. Dòng 3: is_prime[0] = is_prime[1] = False",
             "cells": [
               {
-                "label": "N",
+                "label": "n",
                 "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Khởi tạo i",
+            "explanation": "Khởi tạo i. Dòng 4: i = 2",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
                 "active": false
               },
               {
@@ -177,132 +192,542 @@
                 "value": "2",
                 "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10"
-              ],
-              "activeIndices": [
-                2
-              ],
-              "pointers": [
-                {
-                  "index": 2,
-                  "label": "i"
-                }
-              ],
-              "discardedIndices": [
-                0,
-                1,
-                4,
-                6,
-                8,
-                10
-              ]
-            },
-            "formula": "j = 4,6,8,10"
+            ]
           },
           {
-            "title": "Loại bội của 3",
-            "explanation": "3 chưa bị loại; 3²=9. Bội nhỏ hơn 9 đã được xử lý bởi 2.",
+            "line": 5,
+            "title": "Kiểm tra i*i <= n: đúng",
+            "explanation": "Kiểm tra i*i <= n: đúng. Dòng 5: while i * i <= n:",
             "cells": [
               {
-                "label": "N",
+                "label": "n",
                 "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Kiểm tra ứng viên: đúng",
+            "explanation": "Kiểm tra ứng viên: đúng. Dòng 6: if is_prime[i]:",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 7: for j in range(i * i, n + 1, i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, true, true, true, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "4",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 8: is_prime[j] = False",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, true, true, true, true, true]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "4",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 7: for j in range(i * i, n + 1, i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, true, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "6",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 8: is_prime[j] = False",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, true, true, true]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "6",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 7: for j in range(i * i, n + 1, i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, true, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "8",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 8: is_prime[j] = False",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, true, true]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "8",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 7: for j in range(i * i, n + 1, i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, true, true]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "10",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 8: is_prime[j] = False",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "10",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Kết thúc vòng bội",
+            "explanation": "Kết thúc vòng bội. Dòng 7: for j in range(i * i, n + 1, i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "10",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Tăng i",
+            "explanation": "Tăng i. Dòng 9: i += 1",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
                 "active": false
               },
               {
                 "label": "i",
                 "value": "3",
                 "active": true
+              },
+              {
+                "label": "j",
+                "value": "10",
+                "active": false
               }
-            ],
-            "array": {
-              "values": [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10"
-              ],
-              "activeIndices": [
-                3
-              ],
-              "pointers": [
-                {
-                  "index": 3,
-                  "label": "i"
-                }
-              ],
-              "discardedIndices": [
-                0,
-                1,
-                4,
-                6,
-                8,
-                9,
-                10
-              ]
-            },
-            "formula": "j = 9"
+            ]
           },
           {
-            "title": "Các nguyên tố còn lại",
-            "explanation": "Lượt i=4 vượt căn 10 nên ngừng sàng. Các ô chưa bị loại là 2,3,5,7.",
+            "line": 5,
+            "title": "Kiểm tra i*i <= n: đúng",
+            "explanation": "Kiểm tra i*i <= n: đúng. Dòng 5: while i * i <= n:",
             "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "10",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Kiểm tra ứng viên: đúng",
+            "explanation": "Kiểm tra ứng viên: đúng. Dòng 6: if is_prime[i]:",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "10",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Chọn bội cần loại",
+            "explanation": "Chọn bội cần loại. Dòng 7: for j in range(i * i, n + 1, i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, true, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "9",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Đánh dấu hợp số",
+            "explanation": "Đánh dấu hợp số. Dòng 8: is_prime[j] = False",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "9",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Kết thúc vòng bội",
+            "explanation": "Kết thúc vòng bội. Dòng 7: for j in range(i * i, n + 1, i):",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "9",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Tăng i",
+            "explanation": "Tăng i. Dòng 9: i += 1",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "9",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Kiểm tra i*i <= n: sai",
+            "explanation": "Kiểm tra i*i <= n: sai. Dòng 5: while i * i <= n:",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "9",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Xuất các số nguyên tố",
+            "explanation": "Xuất các số nguyên tố. Dòng 10: print(*(i for i in range(2, n + 1) if is_prime[i]))",
+            "cells": [
+              {
+                "label": "n",
+                "value": "10",
+                "active": false
+              },
+              {
+                "label": "is_prime",
+                "value": "[false, false, true, true, false, true, false, true, false, false, false]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "9",
+                "active": false
+              },
               {
                 "label": "Output",
                 "value": "2 3 5 7",
                 "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10"
-              ],
-              "activeIndices": [
-                2,
-                3,
-                5,
-                7
-              ],
-              "pointers": [],
-              "discardedIndices": [
-                0,
-                1,
-                4,
-                6,
-                8,
-                9,
-                10
-              ]
-            }
+            ]
           }
         ]
       },
