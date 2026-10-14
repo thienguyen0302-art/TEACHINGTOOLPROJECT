@@ -12,6 +12,11 @@ import Dashboard from "./pages/Dashboard";
 import Practice from "./pages/Practice";
 import Problem from "./pages/Problem";
 import Teacher from "./pages/Teacher";
+import Profile from "./pages/Profile";
+import Schedule from "./pages/Schedule";
+import Ranking from "./pages/Ranking";
+import Exam from "./pages/Exam";
+import { saveExamResult } from "./services/examService";
 import AppShell from "./components/AppShell";
 import useStudyTimer from "./hooks/useStudyTimer";
 import useLearningData from "./hooks/useLearningData";
@@ -24,6 +29,16 @@ function Learning({ user, lang, onChangeLang }) {
   const data = useLearningData(user.uid, lang);
   const isTeacher = data.profile.role === "teacher";
   const week = weekSummary(data.daily);
+  // Tên hiển thị ưu tiên hồ sơ học viên đã nhập, sau đó mới tới tên tài khoản.
+  const viewUser = { displayName: data.profile.displayName || user.displayName, email: user.email };
+
+  // Chỉ khi chạy dev: cho phép thử bảng xếp hạng bằng Console trình duyệt khi Exam chưa xong.
+  // Ví dụ: await peanutDev.saveExamResult({ examId: "HSG-QN-24", language: "cpp", correct: 18, total: 20, durationSec: 3000 })
+  useEffect(() => {
+    if (!import.meta.env.DEV) return undefined;
+    window.peanutDev = { saveExamResult: (result) => saveExamResult(user.uid, result) };
+    return () => { delete window.peanutDev; };
+  }, [user.uid]);
 
   // Nối bài nộp code (Judge) với Firestore; gỡ adapter khi đăng xuất.
   useEffect(() => {
@@ -32,24 +47,40 @@ function Learning({ user, lang, onChangeLang }) {
   }, []);
 
   return (
-    <AppShell user={user} isTeacher={isTeacher} weekActive={week.activeCount} onLogout={() => signOut(auth)}>
+    <AppShell user={viewUser} isTeacher={isTeacher} weekActive={week.activeCount} onLogout={() => signOut(auth)}>
       {data.error && (
         <div className="content"><p className="err">{data.error}</p></div>
       )}
       <Routes>
-        <Route path="/" element={<Overview user={user} lang={lang} data={data} onChangeLang={onChangeLang} />} />
+        <Route
+          path="/"
+          element={isTeacher
+            ? <Navigate to="/teacher" replace />
+            : <Overview user={viewUser} lang={lang} data={data} onChangeLang={onChangeLang} />}
+        />
         <Route path="/curriculum" element={<Curriculum lang={lang} data={data} onChangeLang={onChangeLang} />} />
         <Route path="/lesson/:id" element={<Lesson lang={lang} />} />
         <Route path="/practice" element={<Practice />} />
         <Route path="/problem/:slug" element={<Problem lang={lang} />} />
-        <Route path="/progress" element={<Dashboard user={user} lang={lang} data={data} />} />
+        <Route path="/exam" element={<Exam lang={lang} />} />
+        <Route path="/exam/:examId" element={<Exam lang={lang} />} />
+        <Route
+          path="/progress"
+          element={isTeacher ? <Navigate to="/teacher" replace /> : <Dashboard user={viewUser} lang={lang} data={data} />}
+        />
+        <Route path="/ranking" element={<Ranking key={lang} uid={user.uid} lang={lang} />} />
+        <Route
+          path="/calendar"
+          element={isTeacher ? <Navigate to="/teacher" replace /> : <Schedule user={viewUser} data={data} />}
+        />
+        <Route path="/profile" element={<Profile user={viewUser} uid={user.uid} lang={lang} data={data} />} />
         <Route
           path="/teacher"
           element={data.loading
             ? <div className="content">Đang tải...</div>
             : isTeacher ? <Teacher /> : <Navigate to="/" replace />}
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to={isTeacher ? "/teacher" : "/"} replace />} />
       </Routes>
     </AppShell>
   );
@@ -74,9 +105,11 @@ export default function App() {
           if (snap.exists()) setLang(snap.data().language ?? null);
           // Lưu tên/email để Teacher Dashboard hiển thị được học sinh.
           const profile = snap.exists() ? snap.data() : {};
-          if (profile.email !== u.email || profile.displayName !== (u.displayName ?? null)) {
-            setDoc(ref, { email: u.email, displayName: u.displayName ?? null }, { merge: true }).catch(() => {});
-          }
+          // Không ghi đè displayName nếu học sinh đã tự nhập tên trong hồ sơ.
+          const patch = {};
+          if (profile.email !== u.email) patch.email = u.email;
+          if (!profile.displayName && u.displayName) patch.displayName = u.displayName;
+          if (Object.keys(patch).length) setDoc(ref, patch, { merge: true }).catch(() => {});
         }
       } catch (e) {
         console.error("Không đọc được hồ sơ người dùng:", e);

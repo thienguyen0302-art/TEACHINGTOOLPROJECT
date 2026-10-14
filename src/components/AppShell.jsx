@@ -7,18 +7,28 @@ import { displayName, initials } from "../utils/format";
 // Thông báo nhỏ ở góc dưới (toast) dùng chung cho mọi trang
 import { NoticeContext } from "../hooks/useNotice";
 
-const NAV = [
+const STUDENT_NAV = [
   { label: "Tổng quan", icon: "grid", path: "/" },
   { label: "Chương trình học", icon: "book", path: "/curriculum" },
   { label: "Kho bài tập", icon: "code", path: "/practice" },
+  { label: "Luyện đề HSG", icon: "clock", path: "/exam" },
+  { label: "Lịch học", icon: "calendar", path: "/calendar" },
   { label: "Tiến độ của tôi", icon: "chart", path: "/progress" },
-  { label: "Bảng xếp hạng", icon: "trophy", path: null },
+  { label: "Bảng xếp hạng", icon: "trophy", path: "/ranking" },
 ];
-const TEACHER_NAV = { label: "Giáo viên", icon: "chart", path: "/teacher" };
+
+const TEACHER_NAV = [
+  { label: "Quản trị lớp học", icon: "chart", path: "/teacher" },
+  { label: "Chương trình học", icon: "book", path: "/curriculum" },
+  { label: "Kho bài tập", icon: "code", path: "/practice" },
+  { label: "Đề thi HSG", icon: "clock", path: "/exam" },
+  { label: "Bảng xếp hạng", icon: "trophy", path: "/ranking" },
+];
 
 function isActive(item, pathname) {
   if (!item.path) return false;
   if (item.path === "/") return pathname === "/";
+  if (item.path === "/teacher") return pathname === "/teacher";
   if (item.path === "/curriculum") return pathname.startsWith("/curriculum") || pathname.startsWith("/lesson");
   return pathname.startsWith(item.path);
 }
@@ -42,6 +52,8 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
     else showNotice(`${item.label} đang được cập nhật`);
   };
 
+  const navItems = isTeacher ? TEACHER_NAV : STUDENT_NAV;
+
   return (
     <NoticeContext.Provider value={showNotice}>
       <main className="dashboard-shell">
@@ -55,8 +67,8 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
           </div>
 
           <button
-            className={`profile-card ${pathname.startsWith("/progress") ? "active" : ""}`}
-            onClick={() => { nav("/progress"); setMenuOpen(false); }}
+            className={`profile-card ${pathname.startsWith("/profile") ? "active" : ""}`}
+            onClick={() => { nav("/profile"); setMenuOpen(false); }}
           >
             <div className="profile-avatar">{initials(user)}</div>
             <div>
@@ -67,8 +79,8 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
           </button>
 
           <nav className="side-nav" aria-label="Điều hướng học tập">
-            <p>Không gian học tập</p>
-            {(isTeacher ? [...NAV, TEACHER_NAV] : NAV).map((item) => (
+            <p>{isTeacher ? "Không gian Quản lý" : "Không gian học tập"}</p>
+            {navItems.map((item) => (
               <button
                 key={item.label}
                 className={isActive(item, pathname) ? "active" : ""}
@@ -80,14 +92,26 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
             ))}
           </nav>
 
-          <div className="weekly-goal">
-            <div className="goal-heading">
-              <span><Icon name="fire" /></span>
-              <div><strong>Mục tiêu tuần</strong><small>{weekActive} / 7 ngày</small></div>
+          {isTeacher ? (
+            <div className="weekly-goal" style={{ background: "linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(124, 58, 237, 0.08))" }}>
+              <div className="goal-heading">
+                <span style={{ background: "#eff6ff", color: "#2563eb" }}><Icon name="chart" /></span>
+                <div><strong>Quản lý lớp học</strong><small>Bồi dưỡng HSG</small></div>
+              </div>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#64748b", lineHeight: 1.4 }}>
+                Theo dõi sát sao năng lực học sinh để kịp thời bồi dưỡng chuyên đề yếu.
+              </p>
             </div>
-            <div className="goal-bar"><span style={{ width: `${Math.round((weekActive / 7) * 100)}%` }} /></div>
-            <p>{weekActive >= 7 ? "Tuyệt vời, bạn đã học đủ cả tuần!" : `Còn ${7 - weekActive} ngày nữa, cố lên nhé!`}</p>
-          </div>
+          ) : (
+            <div className="weekly-goal">
+              <div className="goal-heading">
+                <span><Icon name="fire" /></span>
+                <div><strong>Mục tiêu tuần</strong><small>{weekActive} / 7 ngày</small></div>
+              </div>
+              <div className="goal-bar"><span style={{ width: `${Math.round((weekActive / 7) * 100)}%` }} /></div>
+              <p>{weekActive >= 7 ? "Tuyệt vời, bạn đã học đủ cả tuần!" : `Còn ${7 - weekActive} ngày nữa, cố lên nhé!`}</p>
+            </div>
+          )}
 
           <div className="sidebar-bottom">
             <button onClick={() => showNotice("Trung tâm trợ giúp sẽ sớm có mặt")}>
@@ -117,7 +141,7 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
               <button className="notification-button" onClick={() => showNotice("Bạn chưa có thông báo mới")} aria-label="Thông báo">
                 <span />
               </button>
-              <button className="avatar-button" onClick={() => nav("/progress")} aria-label="Tài khoản">
+              <button className="avatar-button" onClick={() => nav("/profile")} aria-label="Hồ sơ học viên">
                 {initials(user)}
               </button>
             </div>

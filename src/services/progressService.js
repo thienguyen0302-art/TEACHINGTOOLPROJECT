@@ -4,6 +4,8 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { dateKey } from "../utils/activity";
+import { normalizeProfile } from "../utils/profile";
+import { syncLeaderboardProfile } from "./leaderboardService";
 
 const PASS_SCORE = 70; // điểm tối thiểu để tính là hoàn thành chương
 
@@ -65,4 +67,13 @@ export async function getDailyActivity(uid, days = 35) {
     query(collection(db, "users", uid, "daily"), where("date", ">=", dateKey(since)))
   );
   return Object.fromEntries(snap.docs.map((d) => [d.data().date, d.data().seconds ?? 0]));
+}
+
+// Lưu hồ sơ học viên (tên, trường, lớp, tỉnh, huyện) vào users/{uid}. Không đụng tới `role`.
+export async function saveProfile(uid, input) {
+  const profile = normalizeProfile(input);
+  await setDoc(doc(db, "users", uid), profile, { merge: true });
+  // Làm mới thông tin trên bảng xếp hạng; lỗi ở đây không làm hỏng việc lưu hồ sơ.
+  await syncLeaderboardProfile(uid, profile).catch(() => {});
+  return profile;
 }

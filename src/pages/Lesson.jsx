@@ -5,6 +5,8 @@ import QuestionCard from "../components/QuestionCard";
 import { calculateScore, countAnswered } from "../utils/grading";
 import StepVisualizer from "../components/StepVisualizer";
 import ProblemCard from "../components/ProblemCard";
+import { saveProgress } from "../services/progressService";
+import { auth } from "../services/firebase";
 
 const COL = {
   type: "Kiểu", purpose: "Công dụng", typicalRange: "Khoảng giá trị",
@@ -110,6 +112,7 @@ function LessonContent({ lang, id }) {
   const [tab, setTab] = useState("overview");
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [saveStatus, setSaveStatus] = useState(""); // "" | "saving" | "saved" | "error"
 
   function handleSelect(questionId, choice) {
     if (submitted) return;
@@ -119,6 +122,29 @@ function LessonContent({ lang, id }) {
   function resetQuiz() {
     setAnswers({});
     setSubmitted(false);
+    setSaveStatus("");
+  }
+
+  async function handleSubmitQuiz(currentScore) {
+    if (!canSubmit) return;
+    setSubmitted(true);
+    const uid = auth.currentUser?.uid;
+    if (uid) {
+      setSaveStatus("saving");
+      try {
+        await saveProgress(uid, id, {
+          language: lang,
+          chapterId: id,
+          quizScore: currentScore.percentage,
+          correct: currentScore.correct,
+          total: currentScore.total,
+        });
+        setSaveStatus("saved");
+      } catch (e) {
+        console.error("Lỗi lưu tiến độ:", e);
+        setSaveStatus("error");
+      }
+    }
   }
 
   useEffect(() => {
@@ -183,8 +209,13 @@ function LessonContent({ lang, id }) {
             <>
               <div className="callout" role="status">
                 {submitted ? (
-                  <><b>Kết quả: {score.correct}/{score.total} câu đúng ({score.percentage}%).</b>
-                    <p>Xem đáp án và giải thích bên dưới, hoặc làm lại để ôn tập.</p></>
+                  <>
+                    <b>Kết quả: {score.correct}/{score.total} câu đúng ({score.percentage}%).</b>
+                    <p>Xem đáp án và giải thích bên dưới, hoặc làm lại để ôn tập.</p>
+                    {saveStatus === "saving" && <p className="quiz-save-status"><em>Đang đồng bộ tiến độ học tập...</em></p>}
+                    {saveStatus === "saved" && <p className="quiz-save-status text-success"><strong>✓ Đã cập nhật kết quả vào hồ sơ học tập.</strong></p>}
+                    {saveStatus === "error" && <p className="quiz-save-status text-warning">Chưa đồng bộ được với máy chủ (vẫn xem được giải thích bên dưới).</p>}
+                  </>
                 ) : (
                   <><b>Đã trả lời {answeredCount}/{questions.length} câu.</b>
                     <p>Chọn một đáp án cho mỗi câu rồi nộp bài để xem kết quả.</p></>
@@ -202,7 +233,7 @@ function LessonContent({ lang, id }) {
               ))}
               <div className="quiz-actions">
                 {!submitted && (
-                  <button type="button" disabled={!canSubmit} onClick={() => { if (canSubmit) setSubmitted(true); }}>
+                  <button type="button" disabled={!canSubmit} onClick={() => handleSubmitQuiz(score)}>
                     Nộp bài
                   </button>
                 )}
