@@ -1,0 +1,54 @@
+.calendar-page { padding-top: 40px; }
+.calendar-hero { display: flex; min-height: 170px; padding: 30px 36px; align-items: center; justify-content: space-between; gap: 28px; border-radius: 21px; background: linear-gradient(120deg, #17366e, #2b67ca); color: #fff; }
+.calendar-hero > div:first-child > span { display: flex; align-items: center; gap: 6px; color: #a8c8ff; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.calendar-hero svg { width: 14px; height: 14px; }
+.calendar-hero h1 { margin: 10px 0 7px; font-size: 28px; letter-spacing: -.03em; }
+.calendar-hero p { margin: 0; color: #c3d3ec; font-size: 14px; }
+.calendar-hero > div:last-child { min-width: 190px; padding: 18px; border: 1px solid rgba(255, 255, 255, .16); border-radius: 15px; background: rgba(255, 255, 255, .1); text-align: center; }
+.calendar-hero > div:last-child strong, .calendar-hero > div:last-child span { display: block; }
+.calendar-hero > div:last-child strong { color: #ffd276; font-size: 30px; }
+.calendar-hero > div:last-child span { color: #c0d1ea; font-size: 12px; }
+.calendar-hero > div:last-child button { width: 100%; margin-top: 12px; padding: 9px; border: 0; border-radius: 8px; background: #fff; color: #2b62bd; font-size: 12px; font-weight: 800; }
+
+.calendar-layout { display: grid; margin-top: 16px; grid-template-columns: 1.25fr .75fr; gap: 14px; }
+.month-calendar-card, .calendar-agenda { padding: 24px; border: 1px solid #e2e8f2; border-radius: 18px; background: #fff; }
+.calendar-card-heading { display: flex; align-items: flex-end; justify-content: space-between; }
+.calendar-card-heading > div > span { color: #3978ed; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.calendar-card-heading h2 { margin: 5px 0 0; color: #263650; font-size: 18px; }
+.calendar-card-heading > strong { padding: 6px 10px; border-radius: 8px; background: #edf4ff; color: #3978ed; font-size: 12px; }
+.month-weekdays, .month-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.month-weekdays { margin-top: 20px; }
+.month-weekdays span { color: #9ba5b5; font-size: 11px; font-weight: 700; text-align: center; }
+.month-days { margin-top: 7px; }
+.month-days > i, .month-days > button { aspect-ratio: 1.2; border: 0; border-radius: 9px; background: #f4f6fa; color: #6f7c91; font-size: 13px; }
+.month-days > i { background: transparent; }
+.month-days > button.studied { background: #dceaff; color: #3978ed; font-weight: 700; }
+.month-days > button.strong { background: #3978ed; color: #fff; font-weight: 700; }
+.month-days > button.today { outline: 2px solid #f0a64a; outline-offset: 1px; }
+.month-days > button.selected { box-shadow: 0 0 0 3px #bcd2f8; }
+.calendar-legend { display: flex; margin-top: 16px; gap: 14px; color: #8793a6; font-size: 11px; }
+.calendar-legend span { display: flex; align-items: center; gap: 5px; }
+.calendar-legend i { width: 10px; height: 10px; border-radius: 3px; background: #dceaff; }
+.calendar-legend i.none { background: #f4f6fa; border: 1px solid #e2e7ef; }
+.calendar-legend i.strong { background: #3978ed; }
+
+.agenda-day { margin-top: 18px; padding: 16px; border-radius: 12px; background: #f7f9fd; }
+.agenda-day strong, .agenda-day small { display: block; }
+.agenda-day strong { color: #34435b; font-size: 20px; }
+.agenda-day small { margin-top: 5px; color: #8793a6; font-size: 12px; }
+.agenda-day button { margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 8px; background: #e7efff; color: #3978ed; font-size: 12px; font-weight: 700; }
+.agenda-progress { display: flex; margin-top: 14px; padding: 14px; align-items: center; gap: 10px; border-radius: 12px; background: #eff8f4; }
+.agenda-progress > span { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 9px; background: #dff3ea; color: #32a17a; }
+.agenda-progress svg { width: 15px; height: 15px; }
+.agenda-progress > div { flex: 1; }
+.agenda-progress strong, .agenda-progress small { display: block; }
+.agenda-progress strong { color: #48685d; font-size: 13px; }
+.agenda-progress small { margin-top: 3px; color: #80a094; font-size: 11px; }
+.agenda-progress > div > div { height: 5px; margin-top: 8px; overflow: hidden; border-radius: 5px; background: #d8e9e2; }
+.agenda-progress i { display: block; height: 100%; background: #35a57d; }
+
+@media (max-width: 800px) {
+  .calendar-layout { grid-template-columns: 1fr; }
+  .calendar-hero { flex-direction: column; align-items: flex-start; padding: 24px; }
+  .calendar-hero > div:last-child { width: 100%; }
+}

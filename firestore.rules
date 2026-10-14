@@ -40,6 +40,15 @@ service cloud.firestore {
       }
     }
 
+    // Bảng xếp hạng đề thi thật: mọi người đã đăng nhập được đọc; chỉ chủ sở hữu ghi dòng của mình.
+    match /leaderboards/{lang}/entries/{uid} {
+      allow read: if signedIn();
+      allow create, update: if isOwner(uid) && lang in ['cpp', 'python']
+        && request.resource.data.uid == uid
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0 && request.resource.data.total <= 100000;
+    }
+
     // Giáo viên đọc tiến độ toàn lớp bằng collectionGroup('progress').
     match /{path=**}/progress/{id} {
       allow read: if isTeacher();

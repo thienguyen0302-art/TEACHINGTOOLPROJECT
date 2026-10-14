@@ -25,6 +25,8 @@ export function buildClassOverview(users, progressRows, { passScore = 70, now = 
       uid: u.uid,
       name: u.displayName || u.email || `HS ${u.uid.slice(0, 6)}`,
       language: u.language ?? null,
+      school: u.school ?? "",
+      className: u.className ?? "",
       studySeconds: u.studySeconds ?? 0,
       lastActive: u.lastActive ?? null,
       chaptersTried: mine.length,

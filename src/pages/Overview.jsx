@@ -4,6 +4,7 @@ import { useNotice } from "../hooks/useNotice";
 import { languageCourses, LANG_BY_KEY } from "../data/curriculum";
 import { firstName, fmtTime, todayText } from "../utils/format";
 import { calcStreak, weekSummary } from "../utils/activity";
+import { isProfileComplete } from "../utils/profile";
 
 // Các khối chưa có dữ liệu thật (chuỗi ngày học, XP, nhật ký, bài tập…) giữ số liệu mẫu của bản thiết kế.
 export default function Overview({ user, lang, data, onChangeLang }) {
@@ -22,6 +23,12 @@ export default function Overview({ user, lang, data, onChangeLang }) {
 
   return (
     <div className="content overview-content">
+      {!data.loading && !isProfileComplete(data.profile) && (
+        <div className="profile-banner">
+          <span>Hoàn thiện hồ sơ (họ tên, trường, lớp, địa phương) để giáo viên nhận ra bạn trong lớp.</span>
+          <button onClick={() => nav("/profile")}>Cập nhật ngay</button>
+        </div>
+      )}
       <section className="overview-hero">
         <div className="overview-copy">
           <div className="overview-kicker">

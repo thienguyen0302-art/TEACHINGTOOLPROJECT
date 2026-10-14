@@ -113,34 +113,34 @@
 ### 👤 Người 1
 - [x] Implement save progress lên Firestore (`saveProgress`)
 - [x] Implement chapter completion tracking
-- [ ] Kiểm tra CRUD Firestore hoạt động *(chờ Người 2 gọi `saveProgress` từ Lesson.jsx)*
+- [x] Kiểm tra CRUD Firestore hoạt động (Lesson.jsx đã gọi `saveProgress`)
 
 ### 👤 Người 2
-- [ ] Tạo progress object chuẩn: `{ chapterId, quizScore, correct, total }`
-- [ ] Gọi progress service của Người 1
-- [ ] Hoàn thiện content 3 chương C++ (quiz đủ đáp án)
+- [x] Tạo progress object chuẩn: `{ chapterId, quizScore, correct, total }`
+- [x] Gọi progress service của Người 1
+- [x] Hoàn thiện content 3 chương C++ (quiz đủ đáp án)
 
 ### 🔗 Integration checkpoint
-- [ ] Người 2 tính score → Người 1 lưu Firestore thành công
+- [x] Người 2 tính score → Người 1 lưu Firestore thành công
 
 ---
 
 ## 📅 Day 7 — MVP 1 ✅
 
 ### 👤 Cả hai — Kiểm thử toàn flow
-- [ ] Login hoạt động
-- [ ] Vào Lesson hiển thị đúng
-- [ ] Làm Quiz → Submit
-- [ ] Xem Result + Explanation
-- [ ] Progress được lưu
-- [ ] Không thêm feature nếu flow chưa ổn
+- [x] Login hoạt động
+- [x] Vào Lesson hiển thị đúng
+- [x] Làm Quiz → Submit
+- [x] Xem Result + Explanation
+- [x] Progress được lưu
+- [x] Không thêm feature nếu flow chưa ổn
 
 ### 🎯 MVP 1 Done
-- [ ] Có ít nhất 3 chương C++ với nội dung đầy đủ
-- [ ] Quiz Engine hoạt động
-- [ ] Grading Engine hoạt động
-- [ ] Explanation hiển thị
-- [ ] Progress save thành công
+- [x] Có ít nhất 3 chương C++ với nội dung đầy đủ (thực tế 14 chương)
+- [x] Quiz Engine hoạt động
+- [x] Grading Engine hoạt động
+- [x] Explanation hiển thị
+- [x] Progress save thành công
 
 ---
 
@@ -165,11 +165,11 @@
 - [x] Dựng progress UI trực quan
 
 ### 👤 Người 2
-- [ ] Implement Exam State *(Exam.jsx trống)*
-- [ ] Quản lý `answers` và `currentQuestion`
-- [ ] Implement submit exam
-- [ ] Implement score exam
-- [ ] Review content chương 8–10
+- [x] Implement Exam State (Exam.jsx hoàn chỉnh)
+- [x] Quản lý `answers` và `currentQuestion`
+- [x] Implement submit exam
+- [x] Implement score exam
+- [x] Review content chương 8–10
 
 ---
 
@@ -180,26 +180,26 @@
 - [x] Lưu exam history (`getExamHistory`)
 
 ### 👤 Người 2
-- [ ] Implement countdown timer *(timer.js tạo rồi nhưng chưa có code)*
-- [ ] Implement manual submit
-- [ ] Implement auto-submit khi hết giờ
+- [x] Implement countdown timer (`useExamTimer` trong `timer.js`)
+- [x] Implement manual submit
+- [x] Implement auto-submit khi hết giờ
 
 ---
 
 ## 📅 Day 11 — MVP 2 ✅
 
 ### 👤 Cả hai — Kiểm thử toàn flow
-- [ ] Lesson → Quiz → Practice → Exam → Progress → Dashboard
-- [ ] Có ít nhất 1 đề thi hoàn chỉnh
-- [ ] Có ít nhất 10 chương C++
+- [x] Lesson → Quiz → Practice → Exam → Progress → Dashboard
+- [x] Có ít nhất 1 đề thi hoàn chỉnh (C++ và Python)
+- [x] Có 14 chương C++ (vượt 10 chương)
 
 ### 🎯 MVP 2 Done
-- [ ] Practice Engine hoạt động
-- [ ] Advanced Engine hoạt động
-- [ ] 10 chương C++ đầy đủ
-- [ ] Exam hoạt động với timer
-- [ ] Auto-submit hoạt động
-- [ ] Exam result/history hiển thị
+- [x] Practice Engine hoạt động
+- [x] Advanced Engine hoạt động
+- [x] 10 chương C++ đầy đủ (thực tế 14 chương)
+- [x] Exam hoạt động với timer
+- [x] Auto-submit hoạt động
+- [x] Exam result/history hiển thị
 
 ---
 
