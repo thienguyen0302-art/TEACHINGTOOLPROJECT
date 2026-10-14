@@ -26,61 +26,419 @@
       "explanation": "Hai số 1 được gom liền nhau.",
       "visualization": {
         "title": "Thứ tự trước và sau sort",
-        "description": "Quan sát kết quả thư viện sort; không mô phỏng cách sắp xếp nội bộ của thư viện.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Dãy ban đầu",
-            "explanation": "Có hai số 1; thứ tự hiện tại là thứ tự dữ liệu được cung cấp.",
+            "line": 1,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 1: #include <algorithm>",
             "cells": [
               {
-                "label": "số phần tử",
-                "value": "4",
-                "active": false
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "5",
-                "1",
-                "3",
-                "1"
-              ],
-              "activeIndices": [],
-              "pointers": [],
-              "discardedIndices": []
-            },
-            "line": 10
+            ]
           },
           {
-            "title": "Sau sort",
-            "explanation": "Các giá trị bằng nhau đứng cạnh nhau và toàn dãy không giảm.",
+            "line": 2,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 2: #include <iostream>",
             "cells": [
               {
-                "label": "số phần tử",
-                "value": "4",
-                "active": false
-              },
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 3: #include <string>",
+            "cells": [
               {
-                "label": "thứ tự",
-                "value": "Tăng dần",
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 4: #include <vector>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Khai báo không gian tên, chưa chạy thuật toán",
+            "explanation": "Khai báo không gian tên, chưa chạy thuật toán. Dòng 5: using namespace std;",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Khai báo không gian tên, chưa chạy thuật toán",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Bắt đầu thực thi tại main",
+            "explanation": "Bắt đầu thực thi tại main. Dòng 7: int main() {",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Bắt đầu thực thi tại main",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Thiết lập nhập xuất",
+            "explanation": "Thiết lập nhập xuất. Dòng 8: ios::sync_with_stdio(false);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập nhập xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Thiết lập luồng nhập",
+            "explanation": "Thiết lập luồng nhập. Dòng 9: cin.tie(nullptr);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập luồng nhập",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Khởi tạo dãy",
+            "explanation": "Khởi tạo dãy. Dòng 10: vector<int> a = {5, 1, 3, 1};",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[5, 1, 3, 1]",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "1",
-                "3",
-                "5"
-              ],
-              "activeIndices": [
-                0,
+                5,
+                1,
+                3,
                 1
               ],
-              "pointers": [],
-              "discardedIndices": []
-            },
-            "line": 11
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Sắp xếp dãy",
+            "explanation": "Sắp xếp dãy. Dòng 11: sort(a.begin(), a.end());",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Lấy phần tử tiếp theo",
+            "explanation": "Lấy phần tử tiếp theo. Dòng 12: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Xuất phần tử",
+            "explanation": "Xuất phần tử. Dòng 13: cout << x << \" \";",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Lấy phần tử tiếp theo",
+            "explanation": "Lấy phần tử tiếp theo. Dòng 12: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "Output",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Xuất phần tử",
+            "explanation": "Xuất phần tử. Dòng 13: cout << x << \" \";",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1 1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Lấy phần tử tiếp theo",
+            "explanation": "Lấy phần tử tiếp theo. Dòng 12: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "Output",
+                "value": "1 1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Xuất phần tử",
+            "explanation": "Xuất phần tử. Dòng 13: cout << x << \" \";",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1 1 3",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Lấy phần tử tiếp theo",
+            "explanation": "Lấy phần tử tiếp theo. Dòng 12: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "5",
+                "active": true
+              },
+              {
+                "label": "Output",
+                "value": "1 1 3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Xuất phần tử",
+            "explanation": "Xuất phần tử. Dòng 13: cout << x << \" \";",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1 1 3 5",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Hết phần tử, thoát vòng lặp",
+            "explanation": "Hết phần tử, thoát vòng lặp. Dòng 12: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 1, 3, 5]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1 1 3 5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                1,
+                3,
+                5
+              ],
+              "activeIndices": []
+            }
           }
         ]
       },
@@ -217,158 +575,532 @@
       },
       "visualization": {
         "title": "Chèn vào tiền tố đã sắp",
-        "description": "Minh họa đúng insertion sort trong code: giữ x trước khi dịch ô.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Lấy x=1",
-            "explanation": "Tiền tố [3] đã sắp; chuẩn bị chèn số 1.",
+            "line": 1,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 1: #include <iostream>",
             "cells": [
               {
-                "label": "i",
-                "value": "1",
-                "active": true
-              },
-              {
-                "label": "x",
-                "value": "1",
-                "active": true
-              },
-              {
-                "label": "j",
-                "value": "0",
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
                 "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "3",
-                "1",
-                "2"
-              ],
-              "activeIndices": [
-                0,
-                1
-              ],
-              "pointers": [
-                {
-                  "index": 1,
-                  "label": "x"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "line": 11
+            ]
           },
           {
-            "title": "Dịch 3",
-            "explanation": "3>1 nên ghi 3 sang ô bên phải. Số 1 vẫn được giữ ở x, không bị mất.",
+            "line": 2,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 2: #include <string>",
             "cells": [
               {
-                "label": "i",
-                "value": "1",
-                "active": false
-              },
-              {
-                "label": "x",
-                "value": "1",
-                "active": false
-              },
-              {
-                "label": "j",
-                "value": "-1",
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
                 "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "3",
-                "3",
-                "2"
-              ],
-              "activeIndices": [
-                0,
-                1
-              ],
-              "pointers": [],
-              "discardedIndices": []
-            },
-            "formula": "a[j+1] = a[j]",
-            "line": 13
+            ]
           },
           {
-            "title": "Chèn 1",
-            "explanation": "j=-1; đặt x vào a[0]. Tiền tố hai phần tử đã sắp.",
+            "line": 3,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 3: #include <vector>",
             "cells": [
               {
-                "label": "i",
-                "value": "1",
-                "active": false
-              },
-              {
-                "label": "x",
-                "value": "1",
-                "active": false
-              },
-              {
-                "label": "j",
-                "value": "-1",
-                "active": false
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "1",
-                "3",
-                "2"
-              ],
-              "activeIndices": [
-                0
-              ],
-              "pointers": [],
-              "discardedIndices": []
-            },
-            "formula": "a[j+1] = x",
-            "line": 16
+            ]
           },
           {
-            "title": "Lấy x=2 và dịch",
-            "explanation": "Ở i=2, giữ x=2 rồi dịch 3 sang phải. 1 không lớn hơn x nên dừng dịch.",
+            "line": 4,
+            "title": "Khai báo không gian tên, chưa chạy thuật toán",
+            "explanation": "Khai báo không gian tên, chưa chạy thuật toán. Dòng 4: using namespace std;",
             "cells": [
               {
-                "label": "i",
-                "value": "2",
+                "label": "Chương trình",
+                "value": "Khai báo không gian tên, chưa chạy thuật toán",
                 "active": true
-              },
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Bắt đầu thực thi tại main",
+            "explanation": "Bắt đầu thực thi tại main. Dòng 6: int main() {",
+            "cells": [
               {
-                "label": "x",
-                "value": "2",
+                "label": "Chương trình",
+                "value": "Bắt đầu thực thi tại main",
                 "active": true
-              },
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Thiết lập nhập xuất",
+            "explanation": "Thiết lập nhập xuất. Dòng 7: ios::sync_with_stdio(false);",
+            "cells": [
               {
-                "label": "j",
-                "value": "0",
+                "label": "Chương trình",
+                "value": "Thiết lập nhập xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Thiết lập luồng nhập",
+            "explanation": "Thiết lập luồng nhập. Dòng 8: cin.tie(nullptr);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập luồng nhập",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Khởi tạo dãy",
+            "explanation": "Khởi tạo dãy. Dòng 9: vector<int> a = {3, 1, 2};",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[3, 1, 2]",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "3",
-                "3"
-              ],
-              "activeIndices": [
+                3,
                 1,
                 2
               ],
-              "pointers": [],
-              "discardedIndices": []
-            },
-            "line": 13
+              "activeIndices": []
+            }
           },
           {
-            "title": "Chèn 2",
-            "explanation": "Đặt 2 vào giữa 1 và 3. Dãy hoàn chỉnh đã tăng.",
+            "line": 10,
+            "title": "Lượt chèn tiếp theo",
+            "explanation": "Lượt chèn tiếp theo. Dòng 10: for (int i = 1; i < (int)a.size(); ++i) {",
             "cells": [
+              {
+                "label": "a",
+                "value": "[3, 1, 2]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                3,
+                1,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Giữ giá trị cần chèn",
+            "explanation": "Giữ giá trị cần chèn. Dòng 11: int x = a[i], j = i - 1;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[3, 1, 2]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                3,
+                1,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Kiểm tra điều kiện dịch: đúng",
+            "explanation": "Kiểm tra điều kiện dịch: đúng. Dòng 12: while (j >= 0 && a[j] > x) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[3, 1, 2]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                3,
+                1,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Dịch phần tử sang phải",
+            "explanation": "Dịch phần tử sang phải. Dòng 13: a[j + 1] = a[j];",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[3, 3, 2]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                3,
+                3,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Lùi chỉ số j",
+            "explanation": "Lùi chỉ số j. Dòng 14: --j;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[3, 3, 2]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "-1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                3,
+                3,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Kiểm tra điều kiện dịch: sai",
+            "explanation": "Kiểm tra điều kiện dịch: sai. Dòng 12: while (j >= 0 && a[j] > x) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[3, 3, 2]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "-1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                3,
+                3,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Chèn x vào vị trí trống",
+            "explanation": "Chèn x vào vị trí trống. Dòng 16: a[j + 1] = x;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 2]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "-1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 10,
+            "title": "Lượt chèn tiếp theo",
+            "explanation": "Lượt chèn tiếp theo. Dòng 10: for (int i = 1; i < (int)a.size(); ++i) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 2]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "-1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Giữ giá trị cần chèn",
+            "explanation": "Giữ giá trị cần chèn. Dòng 11: int x = a[i], j = i - 1;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 2]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Kiểm tra điều kiện dịch: đúng",
+            "explanation": "Kiểm tra điều kiện dịch: đúng. Dòng 12: while (j >= 0 && a[j] > x) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 2]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                2
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Dịch phần tử sang phải",
+            "explanation": "Dịch phần tử sang phải. Dòng 13: a[j + 1] = a[j];",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Lùi chỉ số j",
+            "explanation": "Lùi chỉ số j. Dòng 14: --j;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Kiểm tra điều kiện dịch: sai",
+            "explanation": "Kiểm tra điều kiện dịch: sai. Dòng 12: while (j >= 0 && a[j] > x) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "2",
@@ -387,18 +1119,357 @@
             ],
             "array": {
               "values": [
-                "1",
-                "2",
-                "3"
+                1,
+                3,
+                3
               ],
-              "activeIndices": [
-                1
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Chèn x vào vị trí trống",
+            "explanation": "Chèn x vào vị trí trống. Dòng 16: a[j + 1] = x;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
               ],
-              "pointers": [],
-              "discardedIndices": []
-            },
-            "formula": "a[1] = 2",
-            "line": 16
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 10,
+            "title": "Kết thúc vòng chèn",
+            "explanation": "Kết thúc vòng chèn. Dòng 10: for (int i = 1; i < (int)a.size(); ++i) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Lấy phần tử tiếp theo",
+            "explanation": "Lấy phần tử tiếp theo. Dòng 18: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 19,
+            "title": "Xuất phần tử",
+            "explanation": "Xuất phần tử. Dòng 19: cout << x << \" \";",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Lấy phần tử tiếp theo",
+            "explanation": "Lấy phần tử tiếp theo. Dòng 18: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 19,
+            "title": "Xuất phần tử",
+            "explanation": "Xuất phần tử. Dòng 19: cout << x << \" \";",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1 2",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Lấy phần tử tiếp theo",
+            "explanation": "Lấy phần tử tiếp theo. Dòng 18: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1 2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 19,
+            "title": "Xuất phần tử",
+            "explanation": "Xuất phần tử. Dòng 19: cout << x << \" \";",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1 2 3",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Hết phần tử, thoát vòng lặp",
+            "explanation": "Hết phần tử, thoát vòng lặp. Dòng 18: for (int x : a)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 3]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "1 2 3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                3
+              ],
+              "activeIndices": []
+            }
           }
         ]
       }

@@ -1,3 +1,12 @@
 .lesson-code-exercise { margin-top: 20px; border-top: 1px solid #656e7c; padding-top: 16px; }
 .lesson-code-exercise__editor { height: 360px; overflow: hidden; border-radius: 8px; margin: 12px 0 16px; }
 .lesson-code-exercise .judge-results { min-width: 0; }
+.lesson-code-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin: 16px 0 20px; }
+.lesson-code-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 11px 20px; border: 1px solid #cddcf0; border-radius: 11px; background: #fff; color: #315b92; font-family: inherit; font-size: 13px; font-weight: 600; line-height: 1.4; cursor: pointer; transition: background .15s, border-color .15s, box-shadow .15s; }
+.lesson-code-actions button svg { width: 18px; height: 18px; flex-shrink: 0; }
+.lesson-code-actions .lesson-code-actions__submit { background: #3978ed; border-color: #3978ed; color: #fff; box-shadow: 0 3px 8px rgb(57 120 237 / 16%); }
+.lesson-code-actions__run:hover:not(:disabled) { background: #eef5ff; border-color: #92b5eb; }
+.lesson-code-actions__submit:hover:not(:disabled) { background: #2865d6; border-color: #2865d6; box-shadow: 0 4px 12px rgb(57 120 237 / 24%); }
+.lesson-code-actions button:focus-visible { outline: 3px solid #8ab6ff; outline-offset: 3px; }
+.lesson-code-actions button:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+@media (max-width: 520px) { .lesson-code-actions button { flex: 1 1 120px; padding-inline: 12px; } }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./StepVisualizer.css";
 import CodeLineViewer from "./CodeLineViewer";
+import LessonCodeSnippet from "./LessonCodeSnippet";
 import { activeVisualizationLines } from "../utils/visualizationLines";
 
 function Icon({ name }) {
@@ -53,7 +54,7 @@ function Diagram({ step }) {
 }
 
 // Authored traces let students inspect every decision at their own pace.
-export default function StepVisualizer({ visualization, code }) {
+export default function StepVisualizer({ visualization, code, language }) {
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const steps = visualization.steps ?? [];
@@ -84,7 +85,7 @@ export default function StepVisualizer({ visualization, code }) {
         <span className="step-visualizer__counter"><strong>{String(index + 1).padStart(2, "0")}</strong> / {String(total).padStart(2, "0")}</span>
       </header>
       <div className="step-visualizer__progress" aria-hidden="true"><span style={{ width: `${(index + 1) / total * 100}%` }} /></div>
-      {source && <CodeLineViewer code={source} activeLines={activeLines} />}
+      {source && (language ? <LessonCodeSnippet code={source} language={language} activeLines={activeLines} /> : <CodeLineViewer code={source} activeLines={activeLines} />)}
       <div className="step-visualizer__body">
         <nav className="step-visualizer__timeline" aria-label="Chọn bước minh họa">
           {steps.map((item, i) => <button type="button" key={i} className={`${i === index ? "is-current" : ""}${i < index ? " is-complete" : ""}`} aria-current={i === index ? "step" : undefined} onClick={() => goTo(i)}><span>{i + 1}</span><span>{item.title || `Bước ${i + 1}`}</span></button>)}

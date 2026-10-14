@@ -77,33 +77,36 @@
       ],
       "visualization": {
         "title": "Theo dõi biến sau từng lệnh",
-        "description": "Các ô là tên biến và giá trị, không phải sơ đồ địa chỉ bộ nhớ.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
+            "line": 1,
+            "title": "Khai báo a, chưa được đọc giá trị",
+            "explanation": "Khai báo a, chưa được đọc giá trị. Dòng 1: int a;",
             "cells": [
               {
                 "label": "a",
                 "value": "chưa gán",
                 "active": true
               }
-            ],
-            "explanation": "Khai báo int a; không được đọc trước khi gán.",
-            "title": "Khởi tạo",
-            "line": 1
+            ]
           },
           {
+            "line": 2,
+            "title": "Gán a bằng 10",
+            "explanation": "Gán a bằng 10. Dòng 2: a = 10;",
             "cells": [
               {
                 "label": "a",
                 "value": "10",
                 "active": true
               }
-            ],
-            "explanation": "Gán a=10.",
-            "title": "Cập nhật biến",
-            "line": 2
+            ]
           },
           {
+            "line": 4,
+            "title": "Khởi tạo b",
+            "explanation": "Khởi tạo b. Dòng 4: int b = 20;",
             "cells": [
               {
                 "label": "a",
@@ -115,12 +118,12 @@
                 "value": "20",
                 "active": true
               }
-            ],
-            "explanation": "Khai báo và khởi tạo b=20.",
-            "title": "Cập nhật biến",
-            "line": 4
+            ]
           },
           {
+            "line": 6,
+            "title": "Khởi tạo total",
+            "explanation": "Khởi tạo total. Dòng 6: long long total = 0;",
             "cells": [
               {
                 "label": "a",
@@ -137,10 +140,7 @@
                 "value": "0",
                 "active": true
               }
-            ],
-            "explanation": "Khởi tạo biến tổng 64 bit bằng 0.",
-            "title": "Trạng thái cuối",
-            "line": 6
+            ]
           }
         ]
       },

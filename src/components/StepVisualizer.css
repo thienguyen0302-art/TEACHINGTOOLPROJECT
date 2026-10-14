@@ -44,6 +44,7 @@
 .step-visualizer__timeline button.is-current { color: #1d4ed8; background: #e7f0ff; font-weight: 700; }
 .step-visualizer__timeline button.is-current > span:first-child { background: var(--visual-blue); color: #fff; border-color: var(--visual-blue); }
 .step-visualizer__workspace { padding: 24px; min-width: 0; }
+.step-visualizer__timeline { max-height: 520px; overflow-y: auto; }
 .step-visualizer__stage { padding: 20px; border: 1px solid #e4ecf8; border-radius: 12px; min-height: 165px; background-color: #fcfdff; background-image: radial-gradient(#dbe6f4 .7px, transparent .7px); background-size: 16px 16px; }
 .step-visualizer__stage-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; color: #5d708d; font-size: 11px; font-weight: 600; }
 .step-visualizer__stage-heading > span:last-child { display: inline-flex; gap: 6px; align-items: center; }

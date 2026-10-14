@@ -125,12 +125,30 @@
       "explanation": "l/l khớp, e/e khớp, đến v ở giữa thì dừng.",
       "visualization": {
         "title": "Đối xứng qua tâm chuỗi",
-        "description": "Hai vị trí màu xanh phải chứa cùng ký tự; l và r đi dần vào giữa.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "So hai đầu",
-            "explanation": "s[0] và s[4] cùng là l, nên cặp ngoài cùng khớp.",
+            "line": 1,
+            "title": "Khởi tạo chuỗi",
+            "explanation": "Khởi tạo chuỗi. Dòng 1: s = \"level\"",
             "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Đặt hai con trỏ",
+            "explanation": "Đặt hai con trỏ. Dòng 2: l, r = 0, len(s) - 1",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
               {
                 "label": "l",
                 "value": "0",
@@ -140,44 +158,100 @@
                 "label": "r",
                 "value": "4",
                 "active": true
-              },
-              {
-                "label": "khớp",
-                "value": "Có",
-                "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "l",
-                "e",
-                "v",
-                "e",
-                "l"
-              ],
-              "activeIndices": [
-                0,
-                4
-              ],
-              "pointers": [
-                {
-                  "index": 0,
-                  "label": "l"
-                },
-                {
-                  "index": 4,
-                  "label": "r"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "s[0] == s[4]",
-            "line": 5
+            ]
           },
           {
-            "title": "Tiến vào giữa",
-            "explanation": "Tăng l và giảm r. Hai ký tự e cũng khớp.",
+            "line": 3,
+            "title": "Khởi tạo cờ đối xứng",
+            "explanation": "Khởi tạo cờ đối xứng. Dòng 3: ok = True",
             "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Kiểm tra l < r: đúng",
+            "explanation": "Kiểm tra l < r: đúng. Dòng 4: while l < r:",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Hai ký tự bằng nhau: không vào nhánh sai",
+            "explanation": "Hai ký tự bằng nhau: không vào nhánh sai. Dòng 5: if s[l] != s[r]:",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Tăng con trỏ trái",
+            "explanation": "Tăng con trỏ trái. Dòng 8: l += 1",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
               {
                 "label": "l",
                 "value": "1",
@@ -185,46 +259,107 @@
               },
               {
                 "label": "r",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Giảm con trỏ phải",
+            "explanation": "Giảm con trỏ phải. Dòng 9: r -= 1",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
                 "value": "3",
                 "active": true
               },
               {
-                "label": "khớp",
-                "value": "Có",
+                "label": "ok",
+                "value": "true",
                 "active": false
               }
-            ],
-            "array": {
-              "values": [
-                "l",
-                "e",
-                "v",
-                "e",
-                "l"
-              ],
-              "activeIndices": [
-                1,
-                3
-              ],
-              "pointers": [
-                {
-                  "index": 1,
-                  "label": "l"
-                },
-                {
-                  "index": 3,
-                  "label": "r"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "s[1] == s[3]",
-            "line": 8
+            ]
           },
           {
-            "title": "Gặp tại tâm",
-            "explanation": "l=r=2; ký tự v không cần so với một ký tự khác. Tất cả các cặp đã khớp, kết luận YES.",
+            "line": 4,
+            "title": "Kiểm tra l < r: đúng",
+            "explanation": "Kiểm tra l < r: đúng. Dòng 4: while l < r:",
             "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 5,
+            "title": "Hai ký tự bằng nhau: không vào nhánh sai",
+            "explanation": "Hai ký tự bằng nhau: không vào nhánh sai. Dòng 5: if s[l] != s[r]:",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Tăng con trỏ trái",
+            "explanation": "Tăng con trỏ trái. Dòng 8: l += 1",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
               {
                 "label": "l",
                 "value": "2",
@@ -232,36 +367,101 @@
               },
               {
                 "label": "r",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Giảm con trỏ phải",
+            "explanation": "Giảm con trỏ phải. Dòng 9: r -= 1",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "r",
                 "value": "2",
                 "active": true
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Kiểm tra l < r: sai",
+            "explanation": "Kiểm tra l < r: sai. Dòng 4: while l < r:",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Xuất kết quả",
+            "explanation": "Xuất kết quả. Dòng 10: print(\"YES\" if ok else \"NO\")",
+            "cells": [
+              {
+                "label": "s",
+                "value": "level",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
               },
               {
                 "label": "Output",
                 "value": "YES",
                 "active": true
               }
-            ],
-            "array": {
-              "values": [
-                "l",
-                "e",
-                "v",
-                "e",
-                "l"
-              ],
-              "activeIndices": [
-                2
-              ],
-              "pointers": [
-                {
-                  "index": 2,
-                  "label": "l = r"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "l >= r → kết thúc",
-            "line": 10
+            ]
           }
         ]
       },

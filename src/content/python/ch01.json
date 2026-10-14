@@ -80,21 +80,24 @@
       ],
       "visualization": {
         "title": "Theo dõi biến sau từng lệnh",
-        "description": "Các ô là tên biến và giá trị, không phải sơ đồ địa chỉ bộ nhớ.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
+            "line": 1,
+            "title": "Gán a",
+            "explanation": "Gán a. Dòng 1: a = 10",
             "cells": [
               {
                 "label": "a",
                 "value": "10",
                 "active": true
               }
-            ],
-            "explanation": "Gán a=10.",
-            "title": "Khởi tạo",
-            "line": 1
+            ]
           },
           {
+            "line": 2,
+            "title": "Gán name",
+            "explanation": "Gán name. Dòng 2: name = \"An\"",
             "cells": [
               {
                 "label": "a",
@@ -106,12 +109,12 @@
                 "value": "An",
                 "active": true
               }
-            ],
-            "explanation": "Gán name=\"An\".",
-            "title": "Cập nhật biến",
-            "line": 2
+            ]
           },
           {
+            "line": 3,
+            "title": "Gán x",
+            "explanation": "Gán x. Dòng 3: x = 3.14",
             "cells": [
               {
                 "label": "a",
@@ -128,10 +131,7 @@
                 "value": "3.14",
                 "active": true
               }
-            ],
-            "explanation": "Gán x=3.14. Mỗi tên trỏ tới một đối tượng.",
-            "title": "Trạng thái cuối",
-            "line": 3
+            ]
           }
         ]
       },

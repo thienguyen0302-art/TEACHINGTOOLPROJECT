@@ -1,4 +1,4 @@
-import { useEffect, useId } from "react";
+import { useEffect, useId, useRef } from "react";
 import Editor, { loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor/editor/editor.api.js";
 import "monaco-editor/languages/definitions/cpp/register.js";
@@ -56,7 +56,17 @@ function defineTheme(editorApi) {
   });
 }
 
-export default function CodeEditor({ language, value, onChange }) {
+export default function CodeEditor({ language, value, onChange, readOnly = false, activeLines = [] }) {
+  const editorRef = useRef(null);
+  const decorationsRef = useRef(null);
+  function highlight(editor) {
+    decorationsRef.current ??= editor.createDecorationsCollection();
+    decorationsRef.current.set(activeLines.map((line) => ({ range: new monaco.Range(line, 1, line, 1), options: { isWholeLine: true, className: "lesson-active-code-line", linesDecorationsClassName: "lesson-active-code-marker" } })));
+    if (activeLines.length) editor.revealLineInCenterIfOutsideViewport(activeLines[0]);
+  }
+  useEffect(() => {
+    if (editorRef.current) highlight(editorRef.current);
+  });
   const id = useId();
   const modelRoot = `inmemory://problem-bank/${encodeURIComponent(id)}`;
 
@@ -74,10 +84,11 @@ export default function CodeEditor({ language, value, onChange }) {
       language={language}
       path={`${modelRoot}/draft.${language === "python" ? "py" : "cpp"}`}
       value={value}
-      onChange={(nextValue) => onChange(nextValue ?? "")}
+      onChange={(nextValue) => onChange?.(nextValue ?? "")}
+      onMount={(editor) => { editorRef.current = editor; highlight(editor); }}
       beforeMount={defineTheme}
       theme="problem-bank-dark"
-      options={options}
+      options={readOnly ? { ...options, readOnly: true, domReadOnly: true, ariaLabel: "Code minh họa", folding: false, renderLineHighlight: "none", scrollbar: { alwaysConsumeMouseWheel: false }, fontSize: 13 } : options}
       saveViewState
       keepCurrentModel
       loading={<div className="bank-editor-loading" role="status">Đang tải trình soạn thảo code…</div>}

@@ -27,103 +27,144 @@
       "explanation": "x > 0 sai, x == 0 sai, nên chương trình đi vào else.",
       "visualization": {
         "title": "Một giá trị, một đường đi",
-        "description": "Theo dõi x=-3; một chuỗi if chỉ chạy nhánh đầu tiên đúng.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Đọc dữ liệu",
-            "explanation": "Giá trị ban đầu x=-3; chưa đánh giá điều kiện.",
+            "line": 1,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 1: #include <iostream>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 2: #include <string>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 3: #include <vector>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Khai báo không gian tên, chưa chạy thuật toán",
+            "explanation": "Khai báo không gian tên, chưa chạy thuật toán. Dòng 4: using namespace std;",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Khai báo không gian tên, chưa chạy thuật toán",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Bắt đầu thực thi tại main",
+            "explanation": "Bắt đầu thực thi tại main. Dòng 6: int main() {",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Bắt đầu thực thi tại main",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Thiết lập nhập xuất",
+            "explanation": "Thiết lập nhập xuất. Dòng 7: ios::sync_with_stdio(false);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập nhập xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Thiết lập luồng nhập",
+            "explanation": "Thiết lập luồng nhập. Dòng 8: cin.tie(nullptr);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập luồng nhập",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Khởi tạo x",
+            "explanation": "Khởi tạo x. Dòng 9: int x = -3;",
             "cells": [
               {
                 "label": "x",
                 "value": "-3",
                 "active": true
               }
-            ],
-            "flow": [
-              {
-                "label": "x > 0",
-                "value": "Chưa xét"
-              },
-              {
-                "label": "x == 0",
-                "value": "Chưa xét"
-              },
-              {
-                "label": "else",
-                "value": "Chưa xét"
-              }
-            ],
-            "line": 9
+            ]
           },
           {
-            "title": "Kiểm tra dương",
-            "explanation": "-3 không lớn hơn 0. Bỏ nhánh số dương và chuyển sang điều kiện kế.",
+            "line": 10,
+            "title": "Kiểm tra x > 0: sai, bỏ nhánh dương",
+            "explanation": "Kiểm tra x > 0: sai, bỏ nhánh dương. Dòng 10: if (x > 0)",
             "cells": [
               {
                 "label": "x",
                 "value": "-3",
                 "active": false
-              },
-              {
-                "label": "x > 0",
-                "value": "Sai",
-                "active": true
               }
-            ],
-            "flow": [
-              {
-                "label": "x > 0",
-                "value": "Sai",
-                "active": true
-              },
-              {
-                "label": "x == 0",
-                "value": "Chưa xét"
-              },
-              {
-                "label": "else",
-                "value": "Chưa xét"
-              }
-            ],
-            "formula": "-3 > 0 → false",
-            "line": 10
+            ]
           },
           {
-            "title": "Kiểm tra bằng 0",
-            "explanation": "-3 khác 0, nên điều kiện thứ hai cũng sai. Không có điều kiện riêng cho else.",
+            "line": 12,
+            "title": "Kiểm tra x == 0: sai",
+            "explanation": "Kiểm tra x == 0: sai. Dòng 12: else if (x == 0)",
             "cells": [
               {
                 "label": "x",
                 "value": "-3",
                 "active": false
-              },
-              {
-                "label": "x == 0",
-                "value": "Sai",
-                "active": true
               }
-            ],
-            "flow": [
-              {
-                "label": "x > 0",
-                "value": "Sai"
-              },
-              {
-                "label": "x == 0",
-                "value": "Sai",
-                "active": true
-              },
-              {
-                "label": "else",
-                "value": "Chưa xét"
-              }
-            ],
-            "formula": "-3 == 0 → false",
-            "line": 12
+            ]
           },
           {
-            "title": "Chọn nhánh else",
-            "explanation": "Hai nhánh trước đều không phù hợp; xuất AM.",
+            "line": 14,
+            "title": "Đi vào nhánh else",
+            "explanation": "Đi vào nhánh else. Dòng 14: else",
+            "cells": [
+              {
+                "label": "x",
+                "value": "-3",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 15,
+            "title": "Xuất kết quả",
+            "explanation": "Xuất kết quả. Dòng 15: cout << \"AM\";",
             "cells": [
               {
                 "label": "x",
@@ -135,23 +176,7 @@
                 "value": "AM",
                 "active": true
               }
-            ],
-            "flow": [
-              {
-                "label": "x > 0",
-                "value": "Sai"
-              },
-              {
-                "label": "x == 0",
-                "value": "Sai"
-              },
-              {
-                "label": "else",
-                "value": "AM",
-                "active": true
-              }
-            ],
-            "line": 15
+            ]
           }
         ]
       },

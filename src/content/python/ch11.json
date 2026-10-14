@@ -27,12 +27,49 @@
       "explanation": "1+7=8 lớn, giảm r; 1+4=5 nhỏ, tăng l; 2+4=6.",
       "visualization": {
         "title": "Tìm cặp tổng 6",
-        "description": "Hai đầu l,r chỉ tiến vào trong; ô nhạt đã bị loại khỏi miền còn lại.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Tổng quá lớn",
-            "explanation": "1+7=8>6. Các cặp còn lại dùng 7 không thể giảm đủ với đầu trái >=1, nên bỏ r=3.",
+            "line": 1,
+            "title": "Khởi tạo dữ liệu",
+            "explanation": "Khởi tạo dữ liệu. Dòng 1: a, k = [1, 2, 4, 7], 6",
             "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": true
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 2,
+            "title": "Khởi tạo hai con trỏ",
+            "explanation": "Khởi tạo hai con trỏ. Dòng 2: l, r = 0, len(a) - 1",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": true
+              },
               {
                 "label": "l",
                 "value": "0",
@@ -42,47 +79,257 @@
                 "label": "r",
                 "value": "3",
                 "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Khởi tạo cờ",
+            "explanation": "Khởi tạo cờ. Dòng 3: ok = False",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
               },
               {
-                "label": "tổng",
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện l < r đúng",
+            "explanation": "Điều kiện l < r đúng. Dòng 4: while l < r:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Tính tổng hai đầu",
+            "explanation": "Tính tổng hai đầu. Dòng 5: s = a[l] + a[r]",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
                 "value": "8",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "2",
-                "4",
-                "7"
+                1,
+                2,
+                4,
+                7
               ],
-              "activeIndices": [
-                0,
-                3
-              ],
-              "pointers": [
-                {
-                  "index": 0,
-                  "label": "l"
-                },
-                {
-                  "index": 3,
-                  "label": "r"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "8 > 6 → r -= 1",
-            "line": 12
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tổng quá nhỏ",
-            "explanation": "1+4=5<6. Không số nào còn trong miền bên phải giúp 1 đạt 6, nên tăng l.",
+            "line": 6,
+            "title": "Kiểm tra s == k: sai",
+            "explanation": "Kiểm tra s == k: sai. Dòng 6: if s == k:",
             "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
               {
                 "label": "l",
                 "value": "0",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "8",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 9,
+            "title": "Kiểm tra s < k: sai",
+            "explanation": "Kiểm tra s < k: sai. Dòng 9: if s < k:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "8",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Giảm r",
+            "explanation": "Giảm r. Dòng 12: r -= 1",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
               },
               {
                 "label": "r",
@@ -90,43 +337,225 @@
                 "active": true
               },
               {
-                "label": "tổng",
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "8",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện l < r đúng",
+            "explanation": "Điều kiện l < r đúng. Dòng 4: while l < r:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "8",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Tính tổng hai đầu",
+            "explanation": "Tính tổng hai đầu. Dòng 5: s = a[l] + a[r]",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
                 "value": "5",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "2",
-                "4",
-                "7"
+                1,
+                2,
+                4,
+                7
               ],
-              "activeIndices": [
-                0,
-                2
-              ],
-              "pointers": [
-                {
-                  "index": 0,
-                  "label": "l"
-                },
-                {
-                  "index": 2,
-                  "label": "r"
-                }
-              ],
-              "discardedIndices": [
-                3
-              ]
-            },
-            "formula": "5 < 6 → l += 1",
-            "line": 10
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tìm thấy",
-            "explanation": "2+4=6. Hai phần tử ở hai vị trí khác nhau, xuất YES.",
+            "line": 6,
+            "title": "Kiểm tra s == k: sai",
+            "explanation": "Kiểm tra s == k: sai. Dòng 6: if s == k:",
             "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 9,
+            "title": "Kiểm tra s < k: đúng",
+            "explanation": "Kiểm tra s < k: đúng. Dòng 9: if s < k:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 10,
+            "title": "Tăng l",
+            "explanation": "Tăng l. Dòng 10: l += 1",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
               {
                 "label": "l",
                 "value": "1",
@@ -135,42 +564,309 @@
               {
                 "label": "r",
                 "value": "2",
-                "active": true
+                "active": false
               },
               {
-                "label": "tổng",
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Điều kiện l < r đúng",
+            "explanation": "Điều kiện l < r đúng. Dòng 4: while l < r:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Tính tổng hai đầu",
+            "explanation": "Tính tổng hai đầu. Dòng 5: s = a[l] + a[r]",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
                 "value": "6",
                 "active": true
               }
             ],
             "array": {
               "values": [
-                "1",
-                "2",
-                "4",
-                "7"
-              ],
-              "activeIndices": [
                 1,
-                2
+                2,
+                4,
+                7
               ],
-              "pointers": [
-                {
-                  "index": 1,
-                  "label": "l"
-                },
-                {
-                  "index": 2,
-                  "label": "r"
-                }
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Kiểm tra s == k: đúng",
+            "explanation": "Kiểm tra s == k: đúng. Dòng 6: if s == k:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "false",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "6",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
               ],
-              "discardedIndices": [
-                0,
-                3
-              ]
-            },
-            "formula": "a[1] + a[2] = 6",
-            "line": 7
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 7,
+            "title": "Tìm thấy cặp",
+            "explanation": "Tìm thấy cặp. Dòng 7: ok = True",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": true
+              },
+              {
+                "label": "s",
+                "value": "6",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 8,
+            "title": "Break: thoát vòng lặp",
+            "explanation": "Break: thoát vòng lặp. Dòng 8: break",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "6",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Xuất kết quả",
+            "explanation": "Xuất kết quả. Dòng 13: print(\"YES\" if ok else \"NO\")",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 2, 4, 7]",
+                "active": false
+              },
+              {
+                "label": "k",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "ok",
+                "value": "true",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "YES",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                2,
+                4,
+                7
+              ],
+              "activeIndices": []
+            }
           }
         ]
       },

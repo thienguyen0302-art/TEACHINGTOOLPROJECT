@@ -1,16 +1,41 @@
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; padding: 0; margin: -1px; border: 0; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.lesson-code-snippet { min-width: 0; overflow: hidden; margin: 12px 0; border-radius: 12px; background: #20242b; }
+.lesson-active-code-line { background: #25426680; }
+.lesson-active-code-marker { border-left: 3px solid #88bcff; }
+.lesson-active-code-marker::before { content: "●"; color: #88bcff; }
 .lesson-heading p, .lesson-section-heading > span { margin: 0; color: #3978ed; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
 .lesson-heading h2 { margin-top: 5px; }
-.lesson-tabs { position: sticky; z-index: 4; top: 0; padding: 8px 0; background: #f7f9fc; }
+.lesson-page .lesson-tabs { position: static; margin: 0 0 24px; padding: 8px 0; }
+.lesson-tabs button:disabled { opacity: .55; cursor: not-allowed; background: #f0f3f8; }
+.lesson-completion { margin-top: 28px; padding: 20px; border: 1px solid #dce5f3; border-radius: 14px; background: #f0f6ff; }
+.lesson-completion p { margin: 0 0 12px; color: #425775; }
+.lesson-completion button { min-height: 44px; padding: 10px 18px; border: 0; border-radius: 10px; background: #3978ed; color: #fff; font: inherit; cursor: pointer; }
+.lesson-completion button:disabled { opacity: .45; cursor: not-allowed; }
+.lesson-completion button:focus-visible { outline: 3px solid #8ab6ff; outline-offset: 3px; }
+.lesson-overview-end { margin-top: 16px; color: #647791; font-size: 12px; }
+.lesson-heading { scroll-margin-top: 24px; }
 .lesson-tabs button { flex: 1 1 120px; }
 .lesson-section-heading { margin: 8px 0 22px; }
 .lesson-section-heading h3 { margin: 5px 0 0; color: #142d56; font-size: 22px; }
 .lesson-overview__description { max-width: 720px; color: #52647e; font-size: 16px; }
 .lesson-overview__columns { display: grid; margin: 24px 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .lesson-overview__columns > section, .lesson-references { padding: 20px; border: 1px solid #e1e8f2; border-radius: 15px; background: #fff; }
-.theory-reader__contents { margin-bottom: 20px; padding: 16px 20px; border-left: 3px solid #79a7f5; border-radius: 0 12px 12px 0; background: #edf4ff; }
-.theory-reader__contents ol { display: flex; margin: 8px 0 0; padding-left: 22px; flex-wrap: wrap; gap: 4px 28px; }
-.theory-reader__contents a { color: #315f9f; }
+.theory-reader__contents { margin-bottom: 28px; padding: 24px; border: 1px solid #dce5f3; border-radius: 18px; background: linear-gradient(135deg, #f5f8ff, #fff); }
+.theory-contents__heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.theory-contents__heading > div > span { color: #647fad; font-size: 10px; font-weight: 800; letter-spacing: .14em; }
+.theory-contents__heading h3 { margin: 3px 0 0; color: #18345c; font-size: 20px; }
+.theory-contents__count { flex-shrink: 0; padding: 5px 10px; border: 1px solid #dce6f5; border-radius: 20px; background: #fff; color: #647791; font-size: 11px; }
+.theory-reader__contents ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding: 0; gap: 5px 20px; list-style: none; }
+.theory-reader__contents li { min-width: 0; }
+.theory-reader__contents a { display: flex; align-items: center; gap: 11px; min-height: 46px; padding: 9px 10px; border: 1px solid transparent; border-radius: 10px; color: #425775; text-decoration: none; line-height: 1.5; transition: background .15s, border-color .15s; }
+.theory-contents__number { flex-shrink: 0; color: #8c9cb3; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.theory-contents__arrow { margin-left: auto; color: #8ba5cd; }
+.theory-reader__contents a:hover { background: #edf4ff; border-color: #d5e3fa; color: #245ebd; }
+.theory-reader__contents a:focus-visible { outline: 3px solid #8ab6ff; outline-offset: 2px; }
+@media (max-width: 620px) {
+  .theory-reader__contents { padding: 18px 14px; }
+  .theory-reader__contents ol { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+}
 .theory-article { scroll-margin-top: 82px; }
 .theory-article__heading > span, .lesson-example__heading > span { color: #3978ed; font-size: 9px; font-weight: 800; letter-spacing: .12em; }
 .theory-article__heading h3 { margin-top: 5px !important; font-size: 20px !important; }

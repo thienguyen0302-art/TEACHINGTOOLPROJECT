@@ -13,8 +13,7 @@ function FeedbackList({ title, tone, items }) {
   return <section className={`self-check-feedback__list self-check-feedback__list--${tone}`}><h5>{title}</h5><ul>{items.map((item, index) => <li key={`${tone}-${index}`}>{item}</li>)}</ul></section>;
 }
 
-export default function TheorySelfCheck({ selfCheck, language, chapterId, theoryId }) {
-  const [explanation, setExplanation] = useState("");
+export default function TheorySelfCheck({ selfCheck, language, chapterId, theoryId, explanation = "", onExplanationChange }) {
   const [feedback, setFeedback] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,7 +67,7 @@ export default function TheorySelfCheck({ selfCheck, language, chapterId, theory
         maxLength={2000}
         rows={5}
         placeholder="Viết lại theo cách hiểu của em..."
-        onChange={(event) => { setExplanation(event.target.value); setError(""); setConfirmAnswer(false); }}
+        onChange={(event) => { onExplanationChange?.(theoryId, event.target.value); setError(""); setConfirmAnswer(false); }}
         disabled={loading}
       />
       <div className="theory-self-check__meta"><span>{explanation.length}/2000</span><span>AI chỉ đưa ra đánh giá tham khảo</span></div>

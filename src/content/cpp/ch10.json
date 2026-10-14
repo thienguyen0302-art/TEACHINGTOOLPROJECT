@@ -27,260 +27,447 @@
       "explanation": "Đoạn vị trí 2..4 là -1+4+3=6.",
       "visualization": {
         "title": "Xây prefix rồi trừ hai mốc",
-        "description": "Hàng p lưu tổng số phần tử đầu; dấu · biểu thị ô chưa tính.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Prefix rỗng",
-            "explanation": "p[0]=0; các ô còn lại chưa được tính.",
+            "line": 1,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 1: #include <iostream>",
             "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 2: #include <string>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 3: #include <vector>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Khai báo không gian tên, chưa chạy thuật toán",
+            "explanation": "Khai báo không gian tên, chưa chạy thuật toán. Dòng 4: using namespace std;",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Khai báo không gian tên, chưa chạy thuật toán",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Bắt đầu thực thi tại main",
+            "explanation": "Bắt đầu thực thi tại main. Dòng 6: int main() {",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Bắt đầu thực thi tại main",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Thiết lập nhập xuất",
+            "explanation": "Thiết lập nhập xuất. Dòng 7: ios::sync_with_stdio(false);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập nhập xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Thiết lập luồng nhập",
+            "explanation": "Thiết lập luồng nhập. Dòng 8: cin.tie(nullptr);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập luồng nhập",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Khởi tạo dãy",
+            "explanation": "Khởi tạo dãy. Dòng 9: vector<int> a = {2, -1, 4, 3};",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                2,
+                -1,
+                4,
+                3
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 10,
+            "title": "Khởi tạo prefix",
+            "explanation": "Khởi tạo prefix. Dòng 10: vector<long long> p(5);",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 0, 0, 0, 0]",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Bắt đầu lượt tính prefix",
+            "explanation": "Bắt đầu lượt tính prefix. Dòng 11: for (int i = 0; i < 4; ++i)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 0, 0, 0, 0]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Cộng phần tử vào prefix",
+            "explanation": "Cộng phần tử vào prefix. Dòng 12: p[i + 1] = p[i] + a[i];",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 2, 0, 0, 0]",
+                "active": true
+              },
               {
                 "label": "i",
                 "value": "0",
                 "active": false
-              },
-              {
-                "label": "tổng",
-                "value": "0",
-                "active": true
               }
             ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "p[i]",
-                  0,
-                  "·",
-                  "·",
-                  "·",
-                  "·"
-                ]
+            "array": {
+              "values": [
+                0,
+                2,
+                0,
+                0,
+                0
               ],
-              "activeCells": [
-                [
-                  1,
-                  1
-                ]
-              ]
-            },
-            "line": 10
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tính p[1]",
-            "explanation": "Cộng phần tử 2 vào prefix trước, được tổng 2.",
+            "line": 11,
+            "title": "Bắt đầu lượt tính prefix",
+            "explanation": "Bắt đầu lượt tính prefix. Dòng 11: for (int i = 0; i < 4; ++i)",
             "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 2, 0, 0, 0]",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "1",
                 "active": true
-              },
-              {
-                "label": "x",
-                "value": "2",
-                "active": true
-              },
-              {
-                "label": "tổng",
-                "value": "2",
-                "active": true
               }
             ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "p[i]",
-                  0,
-                  2,
-                  "·",
-                  "·",
-                  "·"
-                ]
+            "array": {
+              "values": [
+                0,
+                2,
+                0,
+                0,
+                0
               ],
-              "activeCells": [
-                [
-                  1,
-                  2
-                ]
-              ]
-            },
-            "formula": "p[1] = 0 + (2) = 2",
-            "line": 12
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tính p[2]",
-            "explanation": "Cộng phần tử -1 vào prefix trước, được tổng 1.",
+            "line": 12,
+            "title": "Cộng phần tử vào prefix",
+            "explanation": "Cộng phần tử vào prefix. Dòng 12: p[i + 1] = p[i] + a[i];",
             "cells": [
               {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 2, 1, 0, 0]",
+                "active": true
+              },
+              {
                 "label": "i",
-                "value": "2",
-                "active": true
-              },
-              {
-                "label": "x",
-                "value": "-1",
-                "active": true
-              },
-              {
-                "label": "tổng",
                 "value": "1",
-                "active": true
+                "active": false
               }
             ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "p[i]",
-                  0,
-                  2,
-                  1,
-                  "·",
-                  "·"
-                ]
+            "array": {
+              "values": [
+                0,
+                2,
+                1,
+                0,
+                0
               ],
-              "activeCells": [
-                [
-                  1,
-                  3
-                ]
-              ]
-            },
-            "formula": "p[2] = 2 + (-1) = 1",
-            "line": 12
+              "activeIndices": []
+            }
           },
           {
-            "title": "Tính p[3]",
-            "explanation": "Cộng phần tử 4 vào prefix trước, được tổng 5.",
+            "line": 11,
+            "title": "Bắt đầu lượt tính prefix",
+            "explanation": "Bắt đầu lượt tính prefix. Dòng 11: for (int i = 0; i < 4; ++i)",
             "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 2, 1, 0, 0]",
+                "active": false
+              },
               {
                 "label": "i",
-                "value": "3",
-                "active": true
-              },
-              {
-                "label": "x",
-                "value": "4",
-                "active": true
-              },
-              {
-                "label": "tổng",
-                "value": "5",
-                "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "p[i]",
-                  0,
-                  2,
-                  1,
-                  5,
-                  "·"
-                ]
-              ],
-              "activeCells": [
-                [
-                  1,
-                  4
-                ]
-              ]
-            },
-            "formula": "p[3] = 1 + (4) = 5",
-            "line": 12
-          },
-          {
-            "title": "Tính p[4]",
-            "explanation": "Cộng phần tử 3 vào prefix trước, được tổng 8.",
-            "cells": [
-              {
-                "label": "i",
-                "value": "4",
-                "active": true
-              },
-              {
-                "label": "x",
-                "value": "3",
-                "active": true
-              },
-              {
-                "label": "tổng",
-                "value": "8",
-                "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "p[i]",
-                  0,
-                  2,
-                  1,
-                  5,
-                  8
-                ]
-              ],
-              "activeCells": [
-                [
-                  1,
-                  5
-                ]
-              ]
-            },
-            "formula": "p[4] = 5 + (3) = 8",
-            "line": 12
-          },
-          {
-            "title": "Trả lời đoạn 2..4",
-            "explanation": "Tổng 4 phần tử đầu là 8; bỏ phần trước vị trí 2 là 2, còn 6.",
-            "cells": [
-              {
-                "label": "l",
                 "value": "2",
                 "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                2,
+                1,
+                0,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Cộng phần tử vào prefix",
+            "explanation": "Cộng phần tử vào prefix. Dòng 12: p[i + 1] = p[i] + a[i];",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
               },
               {
-                "label": "r",
+                "label": "p",
+                "value": "[0, 2, 1, 5, 0]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                2,
+                1,
+                5,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Bắt đầu lượt tính prefix",
+            "explanation": "Bắt đầu lượt tính prefix. Dòng 11: for (int i = 0; i < 4; ++i)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 2, 1, 5, 0]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                2,
+                1,
+                5,
+                0
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Cộng phần tử vào prefix",
+            "explanation": "Cộng phần tử vào prefix. Dòng 12: p[i + 1] = p[i] + a[i];",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 2, 1, 5, 8]",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                2,
+                1,
+                5,
+                8
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Kết thúc vòng lặp",
+            "explanation": "Kết thúc vòng lặp. Dòng 11: for (int i = 0; i < 4; ++i)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 2, 1, 5, 8]",
+                "active": false
+              },
+              {
+                "label": "i",
                 "value": "4",
                 "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                0,
+                2,
+                1,
+                5,
+                8
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Lấy hiệu hai prefix",
+            "explanation": "Lấy hiệu hai prefix. Dòng 13: cout << p[4] - p[1];",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[2, -1, 4, 3]",
+                "active": false
+              },
+              {
+                "label": "p",
+                "value": "[0, 2, 1, 5, 8]",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "Output",
@@ -288,38 +475,16 @@
                 "active": true
               }
             ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                [
-                  "p[i]",
-                  0,
-                  2,
-                  1,
-                  5,
-                  8
-                ]
+            "array": {
+              "values": [
+                0,
+                2,
+                1,
+                5,
+                8
               ],
-              "activeCells": [
-                [
-                  1,
-                  2
-                ],
-                [
-                  1,
-                  5
-                ]
-              ]
-            },
-            "formula": "p[4] - p[1] = 8 - 2 = 6",
-            "line": 13
+              "activeIndices": []
+            }
           }
         ]
       },
