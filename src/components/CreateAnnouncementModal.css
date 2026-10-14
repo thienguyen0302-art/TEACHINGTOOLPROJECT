@@ -1,0 +1,283 @@
+/* ===== Modal Đăng thông báo (CreateAnnouncementModal) ===== */
+
+.cam-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  background: rgba(16, 35, 71, 0.38);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.cam-modal {
+  width: min(100%, 580px);
+  background: #ffffff;
+  border: 1px solid rgba(214, 225, 243, 0.95);
+  border-radius: 24px;
+  padding: 30px 32px;
+  box-shadow: 0 20px 50px rgba(24, 62, 133, 0.12), 0 4px 14px rgba(24, 62, 133, 0.04);
+  animation: cam-pop 200ms ease-out;
+}
+
+@keyframes cam-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.cam-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.cam-kicker {
+  color: #3978ed;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.cam-header h2 {
+  margin: 0 0 6px;
+  color: #122343;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.cam-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.cam-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 0;
+  background: #f1f4f9;
+  color: #64748b;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 140ms ease;
+}
+
+.cam-close-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.cam-close-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.cam-error-box {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.cam-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cam-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.cam-field label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #36445a;
+  margin-bottom: 7px;
+}
+
+.cam-field label em {
+  color: #ef4444;
+  font-style: normal;
+  margin-left: 2px;
+}
+
+.cam-field input[type="text"],
+.cam-field select,
+.cam-field textarea {
+  width: 100%;
+  padding: 0 14px;
+  border: 1px solid #dce4f0;
+  border-radius: 12px;
+  background: #fbfcff;
+  color: #1e2e49;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.cam-field input[type="text"] {
+  height: 48px;
+}
+
+.cam-field select {
+  height: 48px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+  padding-right: 38px;
+}
+
+.cam-field textarea {
+  padding: 12px 14px;
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.cam-field input[type="text"]:focus,
+.cam-field select:focus,
+.cam-field textarea:focus {
+  border-color: #3978ed;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(57, 120, 237, 0.12);
+}
+
+.cam-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 14px;
+  align-items: flex-end;
+}
+
+.cam-checkbox-field {
+  padding-bottom: 12px;
+}
+
+.cam-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13.5px;
+  color: #36445a;
+  font-weight: 500;
+  user-select: none;
+}
+
+.cam-checkbox-label input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.cam-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px solid #edf1f7;
+}
+
+.cam-btn-cancel {
+  height: 46px;
+  padding: 0 20px;
+  border: 1px solid #dce4f0;
+  border-radius: 11px;
+  background: transparent;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.cam-btn-cancel:hover:not(:disabled) {
+  background: #f1f4f9;
+  color: #1e293b;
+}
+
+.cam-btn-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 11px;
+  background: linear-gradient(100deg, #245ec9, #4d89f5);
+  box-shadow: 0 8px 20px rgba(43, 100, 207, 0.22);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.cam-btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(43, 100, 207, 0.3);
+}
+
+.cam-btn-submit:disabled,
+.cam-btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.cam-btn-submit svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 580px) {
+  .cam-modal {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+  .cam-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .cam-actions {
+    flex-direction: column-reverse;
+  }
+  .cam-btn-cancel,
+  .cam-btn-submit {
+    width: 100%;
+  }
+}

@@ -1,30 +1,48 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
+import Logo from "../components/Logo";
 import { useNotice } from "../hooks/useNotice";
 import { saveProfile } from "../services/progressService";
 import { calcStreak, monthGrid } from "../utils/activity";
 import { displayName, fmtTime, initials, LANG_LABEL } from "../utils/format";
-import { isProfileComplete, PROFILE_FIELDS } from "../utils/profile";
+import { isProfileComplete, PROFILE_FIELDS, validateProfileFields, VIETNAM_PROVINCES } from "../utils/profile";
 import "./Profile.css";
 
 const WEEKDAYS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
-const PLACEHOLDERS = {
-  displayName: "Ví dụ: Nguyễn Minh Anh",
-  school: "Ví dụ: THCS Hạ Long",
-  className: "Ví dụ: 9A2",
-  province: "Ví dụ: Quảng Ninh",
-  district: "Ví dụ: Thành phố Hạ Long",
-};
 
-function ProfileForm({ initial, onCancel, onSave }) {
-  const [form, setForm] = useState(() => Object.fromEntries(PROFILE_FIELDS.map(([k]) => [k, initial[k] ?? ""])));
+export function ProfileForm({ initial = {}, onCancel, onSave, onLogout, isMandatory = false }) {
+  const [form, setForm] = useState(() => ({
+    displayName: initial.displayName ?? "",
+    province: initial.province ?? "",
+    className: initial.className ?? "",
+    school: initial.school ?? "",
+  }));
+  const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+
+  function handleChange(key, val) {
+    setForm((prev) => ({ ...prev, [key]: val }));
+    if (fieldErrors[key]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+    }
+  }
 
   async function submit(event) {
     event.preventDefault();
     setError("");
+
+    const errors = validateProfileFields(form);
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+
     setSaving(true);
     try {
       await onSave(form);
@@ -36,27 +54,145 @@ function ProfileForm({ initial, onCancel, onSave }) {
 
   return (
     <div className="pf-overlay" role="dialog" aria-modal="true" aria-labelledby="pf-title">
-      <form className="pf-modal" onSubmit={submit}>
-        <h2 id="pf-title">Hồ sơ học viên</h2>
-        <p>Thông tin này giúp giáo viên nhận ra bạn trong lớp.</p>
-        <div className="pf-fields">
-          {PROFILE_FIELDS.map(([key, label]) => (
-            <label key={key} className={key === "displayName" || key === "school" ? "full" : ""}>
-              <span>{label[0].toUpperCase() + label.slice(1)} <em>*</em></span>
-              <input
-                required
-                maxLength={80}
-                value={form[key]}
-                placeholder={PLACEHOLDERS[key]}
-                onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-              />
-            </label>
-          ))}
+      <form className="pf-modal" onSubmit={submit} noValidate>
+        <div className="pf-header">
+          <div className="pf-header-top">
+            <div className="pf-brand">
+              <span className="pf-brand-logo"><Logo /></span>
+              <span className="pf-brand-text">Peanut<span>Code</span></span>
+            </div>
+            <div className="pf-kicker">
+              <span className="pf-kicker-dot" />
+              BẮT ĐẦU HÀNH TRÌNH CỦA BẠN
+            </div>
+          </div>
+          <h2 id="pf-title" className="pf-title">
+            {isMandatory ? "Hoàn tất thông tin cá nhân" : "Hồ sơ học viên"}
+          </h2>
+          <p className="pf-desc">
+            {isMandatory
+              ? "Vui lòng nhập đầy đủ thông tin bên dưới để bắt đầu học và ghi nhận kết quả."
+              : "Thông tin này giúp giáo viên nhận ra bạn trong lớp học và trên bảng xếp hạng."}
+          </p>
         </div>
+
+        <div className="pf-fields">
+          {/* Họ và tên: toàn chiều rộng */}
+          <div className="pf-field pf-field-full">
+            <label htmlFor="pf-displayName">
+              Họ và tên <em>*</em>
+            </label>
+            <input
+              id="pf-displayName"
+              name="displayName"
+              autoComplete="name"
+              className={fieldErrors.displayName ? "has-error" : ""}
+              maxLength={80}
+              value={form.displayName}
+              placeholder="Ví dụ: Nguyễn Minh Anh"
+              onChange={(e) => handleChange("displayName", e.target.value)}
+            />
+            {fieldErrors.displayName && (
+              <span className="pf-field-error">{fieldErrors.displayName}</span>
+            )}
+          </div>
+
+          {/* Tỉnh / thành phố: cùng hàng với Lớp */}
+          <div className="pf-field">
+            <label htmlFor="pf-province">
+              Tỉnh / thành phố <em>*</em>
+            </label>
+            <select
+              id="pf-province"
+              name="province"
+              className={fieldErrors.province ? "has-error" : ""}
+              value={form.province}
+              onChange={(e) => handleChange("province", e.target.value)}
+            >
+              <option value="">-- Chọn tỉnh / thành phố --</option>
+              {VIETNAM_PROVINCES.map((prov) => (
+                <option key={prov} value={prov}>{prov}</option>
+              ))}
+            </select>
+            {fieldErrors.province && (
+              <span className="pf-field-error">{fieldErrors.province}</span>
+            )}
+          </div>
+
+          {/* Lớp: cùng hàng với Tỉnh */}
+          <div className="pf-field">
+            <label htmlFor="pf-className">
+              Lớp <em>*</em>
+            </label>
+            <input
+              id="pf-className"
+              name="className"
+              className={fieldErrors.className ? "has-error" : ""}
+              maxLength={80}
+              value={form.className}
+              placeholder="Ví dụ: 9A2"
+              onChange={(e) => handleChange("className", e.target.value)}
+            />
+            {fieldErrors.className && (
+              <span className="pf-field-error">{fieldErrors.className}</span>
+            )}
+          </div>
+
+          {/* Tên trường: toàn chiều rộng */}
+          <div className="pf-field pf-field-full">
+            <label htmlFor="pf-school">
+              Tên trường <em>*</em>
+            </label>
+            <input
+              id="pf-school"
+              name="school"
+              className={fieldErrors.school ? "has-error" : ""}
+              maxLength={80}
+              value={form.school}
+              placeholder="Ví dụ: THCS Chu Văn An"
+              onChange={(e) => handleChange("school", e.target.value)}
+            />
+            {fieldErrors.school && (
+              <span className="pf-field-error">{fieldErrors.school}</span>
+            )}
+          </div>
+        </div>
+
         {error && <p className="pf-error">{error}</p>}
+
         <div className="pf-actions">
-          <button type="button" className="ghost" onClick={onCancel} disabled={saving}>Để sau</button>
-          <button type="submit" disabled={saving}>{saving ? "Đang lưu..." : "Lưu hồ sơ"}</button>
+          {isMandatory && onLogout && (
+            <button
+              type="button"
+              className="pf-btn-secondary"
+              onClick={onLogout}
+              disabled={saving}
+            >
+              Đăng xuất
+            </button>
+          )}
+          {!isMandatory && (
+            <button
+              type="button"
+              className="pf-btn-secondary"
+              onClick={onCancel}
+              disabled={saving}
+            >
+              Hủy
+            </button>
+          )}
+          <button type="submit" className="pf-btn-primary" disabled={saving}>
+            <span>{saving ? "Đang lưu..." : isMandatory ? "Lưu và tiếp tục" : "Lưu hồ sơ"}</span>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M5 12h14m-5-5 5 5-5 5"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
         </div>
       </form>
     </div>
@@ -103,7 +239,7 @@ export default function Profile({ user, uid, lang, data }) {
             <span className="profile-label">Hồ sơ học viên</span>
             <h1>{displayName(user)}</h1>
             <p>{p.school || "Chưa cập nhật trường"}{p.className ? ` · Lớp ${p.className}` : ""}</p>
-            <small><Icon name="globe" /> {[p.district, p.province].filter(Boolean).join(", ") || "Chưa cập nhật địa phương"}</small>
+            <small><Icon name="globe" /> {p.province || "Chưa cập nhật địa phương"}</small>
           </div>
         </div>
         <div className="profile-hero-actions">

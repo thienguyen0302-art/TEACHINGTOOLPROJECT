@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
 import Icon from "../components/Icon";
+import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
+import {
+  subscribeAnnouncements,
+  deleteAnnouncement,
+  ANNOUNCEMENT_TYPES,
+} from "../services/announcementService";
 import "./Teacher.css";
 
 const chapterName = (c) => `${LANG_LABEL[c.language] ?? c.language} · Chương ${Number(c.chapterId.slice(2))}`;
@@ -23,6 +29,28 @@ export default function Teacher() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [studentNote, setStudentNote] = useState("");
   const [notice, setNotice] = useState("");
+
+  // Quản lý thông báo lớp học
+  const [announcements, setAnnouncements] = useState([]);
+  const [isCreateNotifOpen, setIsCreateNotifOpen] = useState(false);
+
+  useEffect(() => {
+    const unsub = subscribeAnnouncements((items) => {
+      setAnnouncements(items);
+    });
+    return () => unsub?.();
+  }, []);
+
+  async function handleDeleteAnnouncement(id, title) {
+    if (window.confirm(`Bạn có chắc chắn muốn xóa thông báo "${title}"?`)) {
+      try {
+        await deleteAnnouncement(id);
+        showNotice("Đã xóa thông báo.");
+      } catch {
+        showNotice("Không thể xóa thông báo lúc này.");
+      }
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -137,42 +165,42 @@ export default function Teacher() {
     return matchSearch && matchLang && matchStatus;
   });
 
-  const countGood = studentsList.filter((s) => s.avgScore >= 75 && s.weakChapters.length === 0).length;
-  const countWarning = studentsList.filter((s) => s.weakChapters.length > 0 || (s.chaptersTried > 0 && s.avgScore < 70)).length;
-  const countInactive = studentsList.filter((s) => !s.lastActive || lastSeenText(s.lastActive).days > 7).length;
-
   const activePercent = o.studentCount > 0 ? Math.round((o.activeLast7d / o.studentCount) * 100) : 0;
 
   return (
     <div className="content teacher-page">
-      {/* 1. Hero Header Quản Trị */}
+
+      {/* ── 1. Banner Hero ─────────────────────────────────── */}
       <section className="teacher-hero">
         <div>
           <span className="teacher-kicker">
             <Icon name="chart" /> TRUNG TÂM QUẢN TRỊ ĐỘI TUYỂN
           </span>
-          <h1>Quản lý & Theo dõi Năng lực Học sinh</h1>
+          <h1>Quản lý và theo dõi năng lực học sinh</h1>
           <p>
             Phân tích điểm số, nắm bắt các chuyên đề yếu và cá nhân hóa lộ trình bồi dưỡng HSG Tin học.
           </p>
+          <button
+            type="button"
+            className="teacher-btn-announce"
+            onClick={() => setIsCreateNotifOpen(true)}
+          >
+            <Icon name="megaphone" /> Đăng thông báo cho lớp
+          </button>
         </div>
         <div className="teacher-hero-stat">
           <div className="teacher-hero-icon">
             <Icon name="fire" />
           </div>
-          <div>
-            <strong>{activePercent}%</strong>
-            <small>Chăm chỉ tuần này</small>
-          </div>
+          <strong>{activePercent}%</strong>
+          <small>Chăm chỉ tuần này</small>
         </div>
       </section>
 
-      {/* 2. Hàng thẻ KPIs Quản lý */}
+      {/* ── 2. KPI Cards ───────────────────────────────────── */}
       <div className="teacher-kpi-grid">
         <article className="teacher-kpi-card">
-          <div className="teacher-kpi-icon blue">
-            <Icon name="user" />
-          </div>
+          <div className="teacher-kpi-icon blue"><Icon name="user" /></div>
           <div className="teacher-kpi-info">
             <strong>{o.studentCount}</strong>
             <small>Học sinh trong đội tuyển</small>
@@ -180,19 +208,15 @@ export default function Teacher() {
         </article>
 
         <article className="teacher-kpi-card">
-          <div className="teacher-kpi-icon orange">
-            <Icon name="fire" />
-          </div>
+          <div className="teacher-kpi-icon orange"><Icon name="fire" /></div>
           <div className="teacher-kpi-info">
             <strong>{o.activeLast7d}</strong>
-            <small>Đang hoạt động (7 ngày qua)</small>
+            <small>Hoạt động 7 ngày qua</small>
           </div>
         </article>
 
         <article className="teacher-kpi-card">
-          <div className="teacher-kpi-icon purple">
-            <Icon name="trophy" />
-          </div>
+          <div className="teacher-kpi-icon purple"><Icon name="trophy" /></div>
           <div className="teacher-kpi-info">
             <strong>{o.avgScore}%</strong>
             <small>Điểm Quiz trung bình</small>
@@ -200,9 +224,7 @@ export default function Teacher() {
         </article>
 
         <article className="teacher-kpi-card">
-          <div className="teacher-kpi-icon red">
-            <Icon name="clock" />
-          </div>
+          <div className="teacher-kpi-icon red"><Icon name="clock" /></div>
           <div className="teacher-kpi-info">
             <strong>{o.weakChapters.length}</strong>
             <small>Chuyên đề cần bồi dưỡng</small>
@@ -210,118 +232,182 @@ export default function Teacher() {
         </article>
       </div>
 
-      {/* 3. Chuyên đề cả lớp đang yếu */}
-      <section className="teacher-weak-section">
-        <div className="teacher-section-title">
-          <div>
-            <h2>Chuyên đề trọng tâm cần bổ trợ cho đội tuyển</h2>
-            <span>Các chuyên đề có học sinh đạt điểm dưới 70 cần tổ chức ôn tập tăng cường</span>
-          </div>
-          <span style={{ color: "#64748b" }}>{o.weakChapters.length} chuyên đề</span>
-        </div>
+      {/* ── 3. Bảng tin + Chuyên đề (2 cột) ──────────────── */}
+      <div className="teacher-board-layout">
 
-        {o.weakChapters.length === 0 ? (
-          <p style={{ color: "#16a34a", margin: 0, fontWeight: 500 }}>
-            🎉 Rất tốt! Tất cả chuyên đề đã học đều đạt từ 70 điểm trở lên.
-          </p>
-        ) : (
-          <div className="teacher-weak-grid">
-            {o.weakChapters.map((c) => {
-              const failRate = Math.round((c.below / c.students) * 100);
-              return (
-                <article className="teacher-weak-card" key={c.key}>
-                  <div className="teacher-weak-card__top">
-                    <h3>{chapterName(c)}</h3>
-                    <span className="teacher-weak-score">TB {c.avgScore}%</span>
-                  </div>
-                  <div className="teacher-weak-bar-wrap">
-                    <div className="teacher-weak-track">
-                      <div className="teacher-weak-fill" style={{ width: `${failRate}%` }} />
-                    </div>
-                    <span>{c.below}/{c.students} HS chưa đạt ({failRate}%)</span>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* 4. Bảng quản lý chi tiết học sinh */}
-      <section className="teacher-table-card">
-        <div className="teacher-table-toolbar">
-          <div className="teacher-section-title" style={{ margin: 0 }}>
+        {/* Cột trái: Bảng tin thông báo */}
+        <section className="teacher-announcements-section">
+          <div className="teacher-announcements-header">
             <div>
-              <h2>Quản lý danh sách học sinh ({filteredStudents.length})</h2>
-              <span>Nhấp vào học sinh để ghi chú hoặc gửi nhắc nhở bồi dưỡng</span>
+              <h2>Bảng tin &amp; Thông báo lớp học</h2>
+              <p>Thông báo đăng tại đây sẽ hiển thị tức thì tới toàn bộ học sinh</p>
             </div>
-          </div>
-
-          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>
-            <div className="teacher-search-box">
-              <Icon name="search" />
-              <input
-                type="search"
-                placeholder="Tìm tên, lớp, trường..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
-            <select
-              className="teacher-filter-select"
-              value={filterLang}
-              onChange={(e) => setFilterLang(e.target.value)}
-              aria-label="Lọc theo ngôn ngữ"
-            >
-              <option value="all">Tất cả ngôn ngữ</option>
-              <option value="cpp">C++</option>
-              <option value="python">Python</option>
-            </select>
-
             <button
               type="button"
-              className="teacher-btn-export"
-              onClick={() => handleExportCSV(filteredStudents)}
-              title="Xuất bảng điểm ra file CSV"
+              className="teacher-btn-announce"
+              onClick={() => setIsCreateNotifOpen(true)}
             >
-              <Icon name="book" /> Xuất báo cáo
+              <Icon name="megaphone" /> Đăng mới
             </button>
           </div>
+
+          {announcements.length === 0 ? (
+            <div className="teacher-announcements-empty">
+              Chưa có thông báo nào. Hãy đăng thông báo đầu tiên cho học sinh!
+            </div>
+          ) : (
+            <div className="teacher-announcements-list">
+              {announcements.map((a) => {
+                const meta = ANNOUNCEMENT_TYPES[a.type] || ANNOUNCEMENT_TYPES.general;
+                return (
+                  <article key={a.id} className={`teacher-announcement-card ${a.pinned ? "is-pinned" : ""}`}>
+                    <div className="tac-header">
+                      <div className="tac-badges">
+                        <span className={`notif-type-badge ${meta.color}`}>
+                          <Icon name={meta.icon} />{meta.badge}
+                        </span>
+                        {a.pinned && <span className="notif-pinned-badge">📌 Đã ghim</span>}
+                      </div>
+                      <button
+                        type="button"
+                        className="tac-delete-btn"
+                        onClick={() => handleDeleteAnnouncement(a.id, a.title)}
+                        title="Xóa thông báo này"
+                        aria-label="Xóa thông báo"
+                      >
+                        <Icon name="trash" />
+                      </button>
+                    </div>
+                    <h3 className="tac-title">{a.title}</h3>
+                    <p className="tac-content">{a.content}</p>
+                    <div className="tac-footer">
+                      <span className="tac-author">👤 {a.authorName || "Giáo viên"}</span>
+                      <span>
+                        {a.createdAt
+                          ? new Date(a.createdAt).toLocaleString("vi-VN", {
+                              hour: "2-digit", minute: "2-digit",
+                              day: "2-digit", month: "2-digit", year: "numeric",
+                            })
+                          : "Vừa xong"}
+                      </span>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Cột phải: Chuyên đề cần bồi dưỡng */}
+        <section className="teacher-weak-section">
+          <h2>Chuyên đề cần bồi dưỡng</h2>
+          <p>Các chuyên đề có học sinh đạt điểm dưới 70 cần ôn tập tăng cường</p>
+
+          {o.weakChapters.length === 0 ? (
+            <div className="teacher-weak-ok">
+              🎉 Tất cả chuyên đề đạt từ 70 điểm trở lên!
+            </div>
+          ) : (
+            <div className="teacher-weak-list">
+              {o.weakChapters.map((c) => {
+                const failRate = Math.round((c.below / c.students) * 100);
+                return (
+                  <article className="teacher-weak-card" key={c.key}>
+                    <div className="teacher-weak-card__top">
+                      <h3>{chapterName(c)}</h3>
+                      <span className="teacher-weak-score">TB {c.avgScore}%</span>
+                    </div>
+                    <div className="teacher-weak-bar-wrap">
+                      <div className="teacher-weak-track">
+                        <div className="teacher-weak-fill" style={{ width: `${failRate}%` }} />
+                      </div>
+                      <span>{c.below}/{c.students} HS ({failRate}%)</span>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+      </div>{/* /teacher-board-layout */}
+
+      {/* ── 4. Bảng quản lý học sinh ───────────────────────── */}
+      <section className="teacher-table-card">
+
+        {/* Toolbar trên */}
+        <div className="teacher-table-toolbar">
+          <div className="teacher-table-toolbar-left">
+            <h2>Quản lý danh sách học sinh</h2>
+            <p>Nhấp vào học sinh để ghi chú hoặc gửi nhắc nhở bồi dưỡng</p>
+          </div>
+          <button
+            type="button"
+            className="teacher-btn-export"
+            onClick={() => handleExportCSV(filteredStudents)}
+            title="Xuất bảng điểm ra file CSV"
+          >
+            <Icon name="book" /> Xuất báo cáo
+          </button>
         </div>
 
-        {/* Bộ lọc nhóm học sinh */}
+        {/* Bộ lọc tìm kiếm + ngôn ngữ */}
+        <div className="teacher-table-filters">
+          <div className="teacher-search-box">
+            <Icon name="search" />
+            <input
+              type="search"
+              placeholder="Tìm tên, lớp, trường..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <select
+            className="teacher-filter-select"
+            value={filterLang}
+            onChange={(e) => setFilterLang(e.target.value)}
+            aria-label="Lọc theo ngôn ngữ"
+          >
+            <option value="all">Tất cả ngôn ngữ</option>
+            <option value="cpp">C++</option>
+            <option value="python">Python</option>
+          </select>
+        </div>
+
+        {/* Pills trạng thái */}
         <div className="teacher-tabs-filter" role="group" aria-label="Lọc theo tình trạng học tập">
           <button
             type="button"
             className={`teacher-tab-btn ${statusFilter === "all" ? "active" : ""}`}
             onClick={() => setStatusFilter("all")}
           >
-            Tất cả ({studentsList.length})
+            Tất cả
           </button>
           <button
             type="button"
             className={`teacher-tab-btn ${statusFilter === "good" ? "active" : ""}`}
             onClick={() => setStatusFilter("good")}
           >
-            Đạt chuẩn ({countGood})
+            Đạt chuẩn
           </button>
           <button
             type="button"
             className={`teacher-tab-btn ${statusFilter === "warning" ? "active" : ""}`}
             onClick={() => setStatusFilter("warning")}
           >
-            Cần bồi dưỡng ({countWarning})
+            Cần bồi dưỡng
           </button>
           <button
             type="button"
             className={`teacher-tab-btn ${statusFilter === "inactive" ? "active" : ""}`}
             onClick={() => setStatusFilter("inactive")}
           >
-            Chưa vào học tuần này ({countInactive})
+            Chưa học tuần này
           </button>
         </div>
 
+        {/* Bảng học sinh */}
         <div className="teacher-table-wrap">
           <table className="teacher-table">
             <thead>
@@ -329,12 +415,12 @@ export default function Teacher() {
                 <th>Học sinh</th>
                 <th>Lớp / Trường</th>
                 <th>Ngôn ngữ</th>
-                <th>Tiến độ chương</th>
+                <th>Tiến độ</th>
                 <th>Điểm TB</th>
                 <th>Thời gian học</th>
                 <th>Hoạt động</th>
                 <th>Chuyên đề cần kèm</th>
-                <th>Quản lý</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -349,7 +435,6 @@ export default function Teacher() {
                     <td>
                       <div
                         className="teacher-student-cell"
-                        style={{ cursor: "pointer" }}
                         onClick={() => openStudentModal(s)}
                       >
                         <div className="teacher-student-avatar">
@@ -381,10 +466,10 @@ export default function Teacher() {
                       )}
                     </td>
                     <td className="teacher-progress-cell">
-                      <div className="progress-track" style={{ height: "6px" }}>
+                      <div className="progress-track">
                         <span style={{ width: `${percentDone}%` }} />
                       </div>
-                      <small>{s.chaptersCompleted}/{s.chaptersTried} chương hoàn thành</small>
+                      <small>{s.chaptersCompleted}/{s.chaptersTried} chương</small>
                     </td>
                     <td>
                       <strong style={{
@@ -393,7 +478,9 @@ export default function Teacher() {
                         {s.avgScore}%
                       </strong>
                     </td>
-                    <td>{fmtTime(s.studySeconds)}</td>
+                    <td style={{ whiteSpace: "nowrap", color: "#475569" }}>
+                      {fmtTime(s.studySeconds)}
+                    </td>
                     <td>
                       <span className="teacher-status-dot">
                         <i className={`teacher-dot ${activity.isRecent ? "active" : "idle"}`} />
@@ -402,7 +489,7 @@ export default function Teacher() {
                     </td>
                     <td>
                       {s.weakChapters.length === 0 ? (
-                        <span style={{ color: "#16a34a", fontSize: "0.825rem" }}>✓ Tốt</span>
+                        <span style={{ color: "#16a34a", fontSize: "12.5px", fontWeight: 600 }}>✓ Tốt</span>
                       ) : (
                         s.weakChapters.slice(0, 2).map((c) => (
                           <span className="teacher-chip" key={c.language + c.chapterId}>
@@ -436,7 +523,7 @@ export default function Teacher() {
         </div>
       </section>
 
-      {/* 5. Modal Quản lý & Ghi chú học sinh */}
+      {/* ── 5. Modal chi tiết học sinh ─────────────────────── */}
       {selectedStudent && (
         <div className="teacher-modal-backdrop" onClick={() => setSelectedStudent(null)}>
           <div className="teacher-modal" onClick={(e) => e.stopPropagation()}>
@@ -444,8 +531,9 @@ export default function Teacher() {
               <div>
                 <span className="teacher-kicker">HỒ SƠ HỌC SINH</span>
                 <h3>{selectedStudent.name}</h3>
-                <span style={{ fontSize: "0.85rem", color: "#64748b" }}>
-                  {selectedStudent.className ? `Lớp ${selectedStudent.className}` : ""} {selectedStudent.school ? `· ${selectedStudent.school}` : ""}
+                <span style={{ fontSize: "13px", color: "#64748b" }}>
+                  {selectedStudent.className ? `Lớp ${selectedStudent.className}` : ""}
+                  {selectedStudent.school ? ` · ${selectedStudent.school}` : ""}
                 </span>
               </div>
               <button
@@ -480,17 +568,17 @@ export default function Teacher() {
             </div>
 
             <div style={{ marginBottom: "1.25rem" }}>
-              <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "0.95rem", color: "#334155" }}>
+              <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "13px", fontWeight: 700, color: "#334155" }}>
                 Các chuyên đề đang cần hỗ trợ:
               </h4>
               {selectedStudent.weakChapters.length === 0 ? (
-                <p style={{ color: "#16a34a", fontSize: "0.875rem", margin: 0 }}>
+                <p style={{ color: "#16a34a", fontSize: "13px", margin: 0 }}>
                   ✓ Học sinh nắm vững tất cả các chương đã học.
                 </p>
               ) : (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                   {selectedStudent.weakChapters.map((c) => (
-                    <span className="teacher-chip" key={c.language + c.chapterId} style={{ fontSize: "0.8rem", padding: "0.3rem 0.65rem" }}>
+                    <span className="teacher-chip" key={c.language + c.chapterId} style={{ fontSize: "12px" }}>
                       {chapterName(c)} — {c.bestScore}%
                     </span>
                   ))}
@@ -499,7 +587,7 @@ export default function Teacher() {
             </div>
 
             <div className="teacher-note-area">
-              <label htmlFor="teacher-note-input">Ghi chú & Kế hoạch bồi dưỡng của giáo viên:</label>
+              <label htmlFor="teacher-note-input">Ghi chú &amp; Kế hoạch bồi dưỡng của giáo viên:</label>
               <textarea
                 id="teacher-note-input"
                 placeholder="Ví dụ: Cần nhắc học sinh làm thêm bài tập mảng 2 chiều và đệ quy trước kỳ thi chọn đội tuyển..."
@@ -527,6 +615,13 @@ export default function Teacher() {
           </div>
         </div>
       )}
+
+      <CreateAnnouncementModal
+        isOpen={isCreateNotifOpen}
+        onClose={() => setIsCreateNotifOpen(false)}
+        currentUser={{ displayName: "Giáo viên phụ trách", role: "teacher" }}
+        onCreated={() => showNotice("Đã gửi thông báo đến toàn bộ học sinh thành công!")}
+      />
 
       {notice && (
         <div className="toast" role="status" style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", zIndex: 200 }}>

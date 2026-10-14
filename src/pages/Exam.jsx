@@ -140,7 +140,7 @@ function ExamRoom({ exam, onFinish }) {
           </div>
 
           <div className="exam-result-actions">
-            <Link className="exam-card button" to="/ranking" style={{ textDecoration: "none", width: "auto" }}>
+            <Link className="exam-btn-primary" to="/ranking">
               <Icon name="trophy" /> Xem Bảng xếp hạng
             </Link>
             <button
@@ -324,6 +324,17 @@ export default function Exam({ lang }) {
   const exams = listExamsByLang(lang || "cpp");
   const activeExam = examId ? getExamById(examId) : null;
 
+  // Tính toán thời gian và số câu động từ danh sách đề
+  const durations = exams.map((e) => e.durationMinutes);
+  const minDuration = durations.length ? Math.min(...durations) : 30;
+  const maxDuration = durations.length ? Math.max(...durations) : 30;
+  const timeText = minDuration === maxDuration ? `${minDuration} phút` : `${minDuration}–${maxDuration} phút`;
+
+  const questionCounts = exams.map((e) => e.questions.length);
+  const minQ = questionCounts.length ? Math.min(...questionCounts) : 15;
+  const maxQ = questionCounts.length ? Math.max(...questionCounts) : 15;
+  const qText = minQ === maxQ ? `${minQ} câu` : `${minQ}–${maxQ} câu`;
+
   // Tải lịch sử thi từ Firestore
   useEffect(() => {
     const uid = auth.currentUser?.uid;
@@ -359,80 +370,151 @@ export default function Exam({ lang }) {
 
   return (
     <div className="content exam-page">
+      {/* 1. Banner đầu trang */}
       <section className="exam-hero">
         <div>
-          <span className="exam-kicker">
-            <Icon name="trophy" /> KHO ĐỀ THI HSG · {LANG_LABEL[lang] || lang?.toUpperCase()}
+          <span>
+            <Icon name="trophy" /> KHO ĐỀ THI HSG · {LANG_LABEL[lang] || lang?.toUpperCase() || "C++"}
           </span>
           <h1>Luyện đề thi thử Học sinh giỏi</h1>
           <p>
-            Rèn luyện kỹ năng làm bài dưới áp lực thời gian. Điểm cao nhất của mỗi đề sẽ được tính vào Bảng xếp hạng.
+            Rèn kỹ năng làm bài dưới áp lực thời gian. Điểm cao nhất của mỗi đề được tính vào bảng xếp hạng.
           </p>
         </div>
-        <Link className="exam-card button" to="/ranking" style={{ textDecoration: "none", width: "auto" }}>
-          <Icon name="trophy" /> Bảng xếp hạng
-        </Link>
+        <div className="exam-hero-stat">
+          <strong>{exams.length}</strong>
+          <span>đề thi có sẵn</span>
+          <button type="button" onClick={() => nav("/ranking")}>
+            Bảng xếp hạng
+          </button>
+        </div>
       </section>
 
-      <h2>Đề thi có sẵn ({exams.length})</h2>
-      <div className="exam-grid">
-        {exams.map((ex) => (
-          <article className="exam-card" key={ex.id}>
-            <div className="exam-card__header">
-              <span className={`exam-tag ${ex.language}`}>{LANG_LABEL[ex.language]}</span>
-              <span className="exam-tag">{ex.level}</span>
-            </div>
-            <h3>{ex.title}</h3>
-            <p>{ex.description}</p>
-            <div className="exam-card__meta">
-              <span><Icon name="clock" /> {ex.durationMinutes} phút</span>
-              <span><Icon name="check" /> {ex.questions.length} câu hỏi</span>
-              <span><Icon name="trophy" /> Thang điểm {ex.maxScore}</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                nav(`/exam/${ex.id}`);
-              }}
-            >
-              <Icon name="play" /> Bắt đầu làm bài
-            </button>
-          </article>
-        ))}
+      {/* 2. Khu vực đề thi */}
+      <div className="exam-section-heading">
+        <h2>Đề thi có sẵn <em>({exams.length})</em></h2>
       </div>
 
-      <section className="exam-history">
-        <h2>Lịch sử thi của bạn</h2>
+      <div className="exam-catalog-layout">
+        {/* Cột chính: danh sách đề thi */}
+        <div className="exam-cards-list">
+          {exams.map((ex) => (
+            <article className="exam-card" key={ex.id}>
+              <div className="exam-card-header">
+                <span className={`exam-tag exam-tag--${ex.language}`}>
+                  {LANG_LABEL[ex.language] || ex.language?.toUpperCase()}
+                </span>
+                <span className="exam-tag exam-tag--level">{ex.level}</span>
+              </div>
+              <h3>{ex.title}</h3>
+              <p>{ex.description}</p>
+              <div className="exam-card-meta">
+                <span><Icon name="clock" /> {ex.durationMinutes} phút</span>
+                <span><Icon name="check" /> {ex.questions.length} câu hỏi</span>
+                <span><Icon name="trophy" /> Thang điểm {ex.maxScore}</span>
+              </div>
+              <button
+                type="button"
+                className="exam-btn-start"
+                onClick={() => nav(`/exam/${ex.id}`)}
+              >
+                <Icon name="play" /> Bắt đầu làm bài
+              </button>
+            </article>
+          ))}
+        </div>
+
+        {/* Cột phụ: Khung Trước khi bắt đầu */}
+        <aside className="exam-guide-card">
+          <div className="exam-guide-header">
+            <span className="exam-guide-kicker">HƯỚNG DẪN ÔN THI</span>
+            <h3>Trước khi bắt đầu</h3>
+          </div>
+          <ul className="exam-guide-list">
+            <li>
+              <span className="guide-icon"><Icon name="clock" /></span>
+              <div>
+                <strong>Thời gian làm bài</strong>
+                <p>Mỗi đề thi kéo dài khoảng <b>{timeText}</b> gồm <b>{qText}</b> trắc nghiệm thuật toán.</p>
+              </div>
+            </li>
+            <li>
+              <span className="guide-icon"><Icon name="user" /></span>
+              <div>
+                <strong>Tập trung cao độ</strong>
+                <p>Dành khoảng thời gian yên tĩnh, làm bài liền mạch để đánh giá đúng năng lực.</p>
+              </div>
+            </li>
+            <li>
+              <span className="guide-icon"><Icon name="code" /></span>
+              <div>
+                <strong>Đọc kỹ yêu cầu</strong>
+                <p>Phân tích kỹ các trường hợp biên (edge cases) và cấu trúc dữ liệu trước khi chọn đáp án.</p>
+              </div>
+            </li>
+          </ul>
+          <div className="exam-guide-note">
+            <Icon name="check" />
+            <p>Điểm cao nhất của mỗi đề sẽ được tính vào bảng xếp hạng.</p>
+          </div>
+        </aside>
+      </div>
+
+      {/* 3. Lịch sử thi */}
+      <section className="exam-history-card">
+        <div className="exam-history-header">
+          <div>
+            <span className="exam-history-kicker">KẾT QUẢ CÁ NHÂN</span>
+            <h2>Lịch sử thi của bạn</h2>
+          </div>
+          {history.length > 0 && (
+            <span className="exam-history-count">{history.length} bài thi</span>
+          )}
+        </div>
+
         {loadingHistory ? (
-          <p>Đang tải lịch sử thi...</p>
+          <div className="exam-history-loading">Đang tải lịch sử thi...</div>
         ) : history.length === 0 ? (
-          <p style={{ color: "#64748b" }}>Bạn chưa hoàn thành bài thi nào. Hãy thử sức với đề thi ở trên nhé!</p>
+          <div className="exam-history-empty">
+            <div className="empty-trophy-icon">
+              <Icon name="trophy" />
+            </div>
+            <h3>Sẵn sàng cho bài thi đầu tiên?</h3>
+            <p>Bạn chưa hoàn thành bài thi nào. Hãy thử sức với đề thi ở trên nhé!</p>
+          </div>
         ) : (
           <div className="exam-table-wrap">
             <table className="exam-table">
               <thead>
                 <tr>
-                  <th>Mã đề thi</th>
-                  <th>Ngôn ngữ</th>
-                  <th>Số câu đúng</th>
-                  <th>Điểm số</th>
-                  <th>Thời gian</th>
-                  <th>Cách nộp</th>
+                  <th scope="col">Mã đề thi</th>
+                  <th scope="col">Ngôn ngữ</th>
+                  <th scope="col">Số câu đúng</th>
+                  <th scope="col">Điểm số</th>
+                  <th scope="col">Thời gian</th>
+                  <th scope="col">Cách nộp</th>
                 </tr>
               </thead>
               <tbody>
                 {history.map((h) => (
                   <tr key={h.id}>
-                    <td><strong>{h.examId}</strong></td>
-                    <td>{LANG_LABEL[h.language] || h.language}</td>
-                    <td>{h.correct} / {h.total}</td>
-                    <td><strong>{h.points ?? h.score} điểm</strong> ({h.score}%)</td>
+                    <td className="col-exam-id"><strong>{h.examId}</strong></td>
+                    <td>
+                      <span className="exam-lang-badge">
+                        {LANG_LABEL[h.language] || h.language}
+                      </span>
+                    </td>
+                    <td><b>{h.correct}</b> / {h.total}</td>
+                    <td className="col-exam-score">
+                      <strong>{h.points ?? h.score} điểm</strong>{" "}
+                      <small>({h.score}%)</small>
+                    </td>
                     <td>{formatTime(h.durationSec)}</td>
                     <td>
                       {h.autoSubmitted ? (
-                        <span style={{ color: "#b45309" }}>Tự động khi hết giờ</span>
+                        <span className="exam-submit-tag tag--auto">Tự động khi hết giờ</span>
                       ) : (
-                        <span style={{ color: "#16a34a" }}>Chủ động nộp</span>
+                        <span className="exam-submit-tag tag--manual">Chủ động nộp</span>
                       )}
                     </td>
                   </tr>

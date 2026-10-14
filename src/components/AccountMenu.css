@@ -1,0 +1,260 @@
+/* ===================================================
+   AccountMenu.css – Menu tài khoản phong cách PeanutCode
+   Nền sáng · Font Nunito · Màu xanh #2563eb · Bo góc 16px
+   =================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+.am-popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 300;
+  width: clamp(280px, 90vw, 320px);
+  max-height: min(560px, calc(100vh - 80px));
+  overflow-y: auto;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 14px 34px -4px rgba(15, 40, 90, 0.12);
+  animation: am-dropdown-in 160ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  padding: 8px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+
+.am-popup::-webkit-scrollbar {
+  width: 4px;
+}
+.am-popup::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+@keyframes am-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Phần đầu: thông tin tài khoản ───────────────────────── */
+.am-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 130ms ease;
+  font-family: inherit;
+}
+
+.am-identity:hover,
+.am-identity:focus-visible {
+  background: #f0f7ff;
+}
+
+.am-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px #bfdbfe;
+}
+
+.am-identity-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.am-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.am-email {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.am-role-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 1px 8px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.am-role--student {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.am-role--teacher {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.am-role--admin {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.am-identity-chevron {
+  color: #94a3b8;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.am-identity-chevron svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ── Đường phân cách giữa các nhóm ──────────────────────── */
+.am-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 6px 0;
+}
+
+/* ── Nhóm mục menu ───────────────────────────────────────── */
+.am-section {
+  padding: 2px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* ── Từng mục menu (height ~40px) ────────────────────────── */
+.am-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 38px;
+  padding: 0 10px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  text-align: left;
+  transition: all 120ms ease;
+  outline: none;
+}
+
+.am-item:hover,
+.am-item:focus-visible {
+  background: #f0f7ff;
+  color: #2563eb;
+}
+
+.am-item-icon {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  flex-shrink: 0;
+  transition: color 120ms ease;
+}
+
+.am-item:hover .am-item-icon,
+.am-item:focus-visible .am-item-icon {
+  color: #2563eb;
+}
+
+.am-item-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.am-item-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mục đăng xuất (danger) */
+.am-item--danger {
+  color: #dc2626;
+}
+
+.am-item--danger .am-item-icon {
+  color: #dc2626;
+}
+
+.am-item--danger:hover,
+.am-item--danger:focus-visible {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.am-item--danger:hover .am-item-icon {
+  color: #b91c1c;
+}
+
+/* ── Toast notice nội bộ ─────────────────────────────────── */
+.am-notice {
+  margin: 6px 12px 2px;
+  padding: 6px 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  animation: am-dropdown-in 140ms ease both;
+}
+
+/* ── Responsive Mobile ───────────────────────────────────── */
+@media (max-width: 520px) {
+  .am-popup {
+    position: fixed;
+    top: auto;
+    bottom: env(safe-area-inset-bottom, 12px);
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: 75vh;
+    border-radius: 16px;
+  }
+}

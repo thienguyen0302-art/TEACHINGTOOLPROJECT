@@ -95,11 +95,12 @@ test('monthGrid: tháng 10/2026 bắt đầu thứ Năm, phân mức học theo 
 });
 
 test('normalizeProfile chuẩn hoá khoảng trắng và từ chối dữ liệu thiếu/quá dài', () => {
-  const ok = normalizeProfile({ displayName: '  Nguyễn   Minh Anh ', school: 'THCS Hạ Long', className: '9A2', province: 'Quảng Ninh', district: 'Hạ Long' });
+  const ok = normalizeProfile({ displayName: '  Nguyễn   Minh Anh ', school: 'THCS Hạ Long', className: '9A2', province: 'Quảng Ninh' });
   assert.equal(ok.displayName, 'Nguyễn Minh Anh');
   assert.equal(isProfileComplete(ok), true);
   assert.equal(isProfileComplete({ displayName: 'A' }), false);
   assert.throws(() => normalizeProfile({ ...ok, school: '' }), /tên trường/);
+  assert.throws(() => normalizeProfile({ ...ok, province: '' }), /tỉnh/);
   assert.throws(() => normalizeProfile({ ...ok, className: 'x'.repeat(81) }), /quá dài/);
 });
 
