@@ -18,7 +18,7 @@ export default function ExamHistory() {
 
   useEffect(() => {
     const uid = auth.currentUser?.uid;
-    if (!uid) { setLoading(false); return; }
+    if (!uid) return;
     let cancelled = false;
     getExamHistory(uid, 50)
       .then((res) => { if (!cancelled) { setHistory(res); setLoading(false); } })

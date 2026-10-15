@@ -1,4 +1,4 @@
-import { TeacherAuthoringNav } from "./TeacherProblems";
+import TeacherAuthoringNav from "../components/TeacherAuthoringNav.jsx";
 import { useEffect, useState } from "react";
 import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";

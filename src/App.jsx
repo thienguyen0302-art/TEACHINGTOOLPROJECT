@@ -1,8 +1,6 @@
 import Contests from "./pages/Contests";
 import Contest from "./pages/Contest";
 import ContestProblem from "./pages/ContestProblem";
-import TeacherProblems, { TeacherProblemEditor } from "./pages/TeacherProblems";
-import TeacherContests, { TeacherContestEditor } from "./pages/TeacherContests";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut, sendEmailVerification } from "firebase/auth";
@@ -31,6 +29,10 @@ import { saveProfile } from "./services/progressService";
 import { isProfileComplete } from "./utils/profile";
 import { weekSummary } from "./utils/activity";
 
+const TeacherProblems = lazy(() => import("./pages/TeacherProblems"));
+const TeacherProblemEditor = lazy(() => import("./pages/TeacherProblems").then((module) => ({ default: module.TeacherProblemEditor })));
+const TeacherContests = lazy(() => import("./pages/TeacherContests"));
+const TeacherContestEditor = lazy(() => import("./pages/TeacherContests").then((module) => ({ default: module.TeacherContestEditor })));
 const Lesson = lazy(() => import("./pages/Lesson"));
 const Practice = lazy(() => import("./pages/Practice"));
 const Problem = lazy(() => import("./pages/Problem"));
@@ -72,7 +74,7 @@ function Learning({ user, lang, onChangeLang }) {
   }, []);
 
   return (
-    <AppShell user={viewUser} isTeacher={isTeacher} weekActive={week.activeCount} onLogout={() => signOut(auth)}>
+    <AppShell key={user.uid} user={viewUser} isTeacher={isTeacher} weekActive={week.activeCount} onLogout={() => signOut(auth)}>
       {data.error && (
         <div className="content"><p className="err">{data.error}</p></div>
       )}

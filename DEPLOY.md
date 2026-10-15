@@ -50,3 +50,21 @@ firebase deploy --only firestore:rules,hosting
 ## Giới hạn còn lại
 
 Giới hạn tốc độ theo từng người dùng, và việc `solution.code` vẫn nằm trong bundle frontend (xem báo cáo Day 13), chưa xử lý.
+
+## Contest backend / Admin Firestore
+
+The Docker image now runs `npm ci --omit=dev` and includes shared server utilities.
+Deploy with an explicit Cloud Run runtime service account that has
+`roles/datastore.user` on the configured Firebase project. Cloud Run uses
+Application Default Credentials; do not upload/commit service-account JSON.
+`FIREBASE_PROJECT_ID` must match frontend Auth/Firestore. Keep the existing Judge0
+and AI secrets in Secret Manager. The Hosting `/api/**` rewrite already covers the
+new authoring and contest APIs; re-deploy both the backend and Firestore rules.
+
+Before production, run the emulator suite documented in
+[Checklist/contest-mode.md](Checklist/contest-mode.md), then test real teacher and
+student accounts against staging: create/import/preview/publish, contest builder,
+Run (no score), repeated WA/partial/AC Submit, leaderboard, private history, and
+student DevTools/rules denials. The cloud task could not download the Firestore
+Emulator (HTTP 403), so it does not claim that additional suite passed. Publishing
+Git commits does not deploy Cloud Run, Hosting or Firestore rules.

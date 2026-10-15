@@ -13,11 +13,14 @@ export function authorizeContest(contest, problemId, language, now) {
   requireValue(['cpp', 'python'].includes(language), 'Ngôn ngữ không hợp lệ.');
   return entry;
 }
-export function safeGrade(grade) {
+export function safeGrade(grade, publicTestCount) {
   const hiddenKeys = ['index', 'hidden', 'passed', 'status', 'time', 'memory'];
   const publicKeys = [...hiddenKeys, 'input', 'expected', 'stdout', 'stderr', 'compileOutput', 'message'];
   return { passed: grade.passed, total: grade.total, score: grade.score, stoppedEarly: grade.stoppedEarly === true,
-    results: grade.results.map((result) => Object.fromEntries((result.hidden ? hiddenKeys : publicKeys).filter((key) => result[key] !== undefined).map((key) => [key, result[key]]))) };
+    results: grade.results.map((raw, index) => {
+      const result = { ...raw, hidden: publicTestCount === undefined ? raw.hidden : index >= publicTestCount };
+      return Object.fromEntries((result.hidden ? hiddenKeys : publicKeys).filter((key) => result[key] !== undefined).map((key) => [key, result[key]]));
+    }) };
 }
 function summarize(graded) {
   const failed = graded.results.find((r) => /Compilation Error|Runtime Error/.test(r.status)) ?? graded.results.find((r) => !r.passed);
@@ -48,7 +51,7 @@ export function createContestService({ repository, execute = executeTest, grade 
       const secrets = await repository.getSecrets(problemId);
       // Revalidate stored teacher data before executing any tests.
       validateProblem({ ...problem, hiddenTests: secrets?.hiddenTests }, { status: 'published' });
-      const graded = safeGrade(await grade({ tests: [...problem.samples, ...secrets.hiddenTests], publicTestCount: problem.samples.length, config }));
+      const graded = safeGrade(await grade({ tests: [...problem.samples, ...secrets.hiddenTests], publicTestCount: problem.samples.length, config }), problem.samples.length);
       // Derive everything from backend Judge totals; ignore all client score/points/uid fields.
       graded.score = Math.round(graded.passed / graded.total * 100);
       const earnedPoints = Math.round(entry.points * graded.score / 100);
@@ -85,12 +88,12 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
       const now = clock();
       if (req.method === 'POST' && req.url === '/api/contest/judge') {
         requireValue(active < 2, 'Máy chấm đang bận. Hãy thử lại.', 429);
-        const body = await readBody(req, 100000);
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 120000);
         active++;
         req.res?.on('close', () => controller.abort());
         try {
+          const body = await readBody(req, 100000);
           const service = createContestService({ repository: repo, execute, grade, clock, judgeConfig });
           return reply(200, await service.judge(body, caller.uid, profile, controller.signal));
         } finally { active--; clearTimeout(timer); }
@@ -109,7 +112,7 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
         }
         requireValue(req.method === (id ? 'PUT' : 'POST'), 'Method không hợp lệ.', 405);
         const body = await readBody(req, 2 * 1024 * 1024);
-        const problem = validateProblem(body, { status: body.status });
+        const problem = validateProblem(body, { status: body?.status });
         return reply(200, { id: await repo.saveProblem(id, problem, caller.uid, now) });
       }
       if (teacherRoute && parts[2] === 'contests') {
@@ -122,7 +125,7 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
         }
         requireValue(req.method === (id ? 'PUT' : 'POST'), 'Method không hợp lệ.', 405);
         const body = await readBody(req, 100000);
-        const contest = validateContest(body, { status: body.status });
+        const contest = validateContest(body, { status: body?.status });
         return reply(200, { id: await repo.saveContest(id, contest, caller.uid, now) });
       }
       if (req.method === 'GET' && parts[1] === 'contests') {

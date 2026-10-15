@@ -65,10 +65,6 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
   const avatarRef = useRef(null); // ref cho nút avatar – dùng để neo popup tài khoản
 
   useEffect(() => {
-    setReadIds(getReadNotificationIds(user?.uid));
-  }, [user?.uid]);
-
-  useEffect(() => {
     const unsub = subscribeAnnouncements((items) => {
       setAnnouncements(items);
     });

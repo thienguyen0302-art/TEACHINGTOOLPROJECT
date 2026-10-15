@@ -3,11 +3,6 @@ import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
 import Icon from "../components/Icon";
 import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
-import {
-  subscribeAnnouncements,
-  deleteAnnouncement,
-  ANNOUNCEMENT_TYPES,
-} from "../services/announcementService";
 import "../styles/pages-shared.css";
 import "./Teacher.css";
 
@@ -29,24 +24,7 @@ export default function TeacherStudents() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [studentNote, setStudentNote] = useState("");
   const [notice, setNotice] = useState("");
-  const [announcements, setAnnouncements] = useState([]);
   const [isCreateNotifOpen, setIsCreateNotifOpen] = useState(false);
-
-  useEffect(() => {
-    const unsub = subscribeAnnouncements((items) => setAnnouncements(items));
-    return () => unsub?.();
-  }, []);
-
-  async function handleDeleteAnnouncement(id, title) {
-    if (window.confirm(`Bạn có chắc chắn muốn xóa thông báo "${title}"?`)) {
-      try {
-        await deleteAnnouncement(id);
-        showNotice("Đã xóa thông báo.");
-      } catch {
-        showNotice("Không thể xóa thông báo lúc này.");
-      }
-    }
-  }
 
   useEffect(() => {
     let cancelled = false;

@@ -161,3 +161,18 @@ Chat vẫn nhận bài, source hiện tại và public Judge snapshot; Submit kh
 UI giữ tối đa 10 lượt để tránh tăng bộ nhớ, chỉ gửi 4 lượt gần nhất cho model. Lịch sử không lưu Firestore/localStorage và mất khi refresh/đóng workspace. Đổi source, ngôn ngữ hoặc Judge result sẽ abort request và reset hội thoại để tránh phân tích code mới bằng context cũ; câu hỏi nháp vẫn giữ. Giới hạn chung AI vẫn là concurrency 2, body 100 KB, source 50 KB, timeout 30 giây. Chat thêm lượt đồng nghĩa thêm requests/quota Gemini. Prompt và bộ chặn full code giữ hint-first nhưng không bảo đảm tuyệt đối chất lượng nội dung của model.
 
 Kiểm tra chat: test:ai gồm 22 cases, bao gồm validate message/history, giữ system policy, không gửi hidden diagnostics/solution, cap chat và frontend allowlist. Các lệnh test:ai, test:judge, test:progress, validate:content, test:content, lint, build đều pass. Browser mock kiểm tra nhiều lượt, history 4 lượt, collapse/open, retry, cancel không gửi lại, reset theo source/language/Judge, hỏi khi chưa có code, mobile và regression quick actions/visualization. Không gọi Gemini thật trong tests.
+
+## Contest Mode + Teacher Authoring
+
+`npm ci` installs the shared Firebase Admin backend dependency. New `/api/teacher/*`,
+`/api/contests/*` and `/api/contest/judge` always require a verified Firebase ID token,
+including development. Set `FIREBASE_PROJECT_ID` and use ADC (`gcloud auth
+application-default login` locally) for the same Firestore project. Never put Admin
+credentials under `VITE_*` or commit a service-account JSON file. Existing Judge0
+configuration is reused. Vite proxies every `/api` route to port 3001.
+
+Teacher accounts (`users/{uid}.role = teacher`) can open **Bài tập tự soạn** and
+**Contest HSG**. Create/import a problem, Preview, save/publish, then build and
+publish a contest. Student **Contest HSG** is separate from Learning/Exam progress.
+See [Checklist/contest-mode.md](Checklist/contest-mode.md) for schemas, locks,
+scoring, APIs, regression commands and the pending Firestore Emulator check.

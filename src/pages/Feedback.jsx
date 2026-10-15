@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import {
   getUserReview,
@@ -18,7 +17,6 @@ const RATING_DESCRIPTIONS = {
 };
 
 export default function Feedback({ user, uid, data }) {
-  const nav = useNavigate();
   const [rating, setRating] = useState(0); // 0 = unselected
   const [hoverRating, setHoverRating] = useState(0);
   const [publicName, setPublicName] = useState(

@@ -1,15 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Icon from "../components/Icon";
 import { difficultyLabels, listProblems, problemChapterIds } from "../services/problemService";
 import "../styles/pages-shared.css";
 import "./Practice.css";
 
-const levelDescriptions = {
-  basic: "Nắm vững nền tảng",
-  intermediate: "Rèn tư duy giải bài",
-  advanced: "Thử sức bài toán HSG",
-};
 
 function ProblemRow({ problem }) {
   const url = `/problem/${problem.slug}`;
@@ -47,7 +42,6 @@ function ProblemRow({ problem }) {
 }
 
 export default function PracticeBank() {
-  const nav = useNavigate();
   const [difficulty, setDifficulty] = useState("");
   const [chapterId, setChapterId]   = useState("");
   const [topic, setTopic]           = useState("");

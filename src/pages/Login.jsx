@@ -65,7 +65,6 @@ const platformHighlights = [
   },
 ];
 
-const feedbackStorageKey = "peanut-code-verified-feedback";
 
 function EyeIcon({ crossed = false }) {
   return (

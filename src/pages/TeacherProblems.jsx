@@ -1,3 +1,4 @@
+import TeacherAuthoringNav from '../components/TeacherAuthoringNav.jsx';
 import { useCallback, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { listTeacherProblems, loadTeacherProblem, saveTeacherProblem } from '../services/contestService.js';
@@ -13,9 +14,7 @@ function downloadTemplate() {
   const link = document.createElement('a'); link.href = url; link.download = 'problem-template.json'; link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-export function TeacherAuthoringNav() {
-  return <nav className="contest-links" aria-label="Quản lý giáo viên"><Link to="/teacher">Tiến độ lớp</Link><Link to="/teacher/problems">Quản lý bài tập</Link><Link to="/teacher/contests">Quản lý contest</Link></nav>;
-}
+
 export default function TeacherProblems() {
   const state = useContestData(listTeacherProblems);
   const [error, setError] = useState('');

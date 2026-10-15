@@ -6,7 +6,7 @@ import { useNotice } from "../hooks/useNotice";
 import { saveProfile } from "../services/progressService";
 import { calcStreak, monthGrid } from "../utils/activity";
 import { displayName, fmtTime, initials, LANG_LABEL } from "../utils/format";
-import { isProfileComplete, PROFILE_FIELDS, validateProfileFields, VIETNAM_PROVINCES } from "../utils/profile";
+import { isProfileComplete, validateProfileFields, VIETNAM_PROVINCES } from "../utils/profile";
 import "./Profile.css";
 
 const WEEKDAYS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];

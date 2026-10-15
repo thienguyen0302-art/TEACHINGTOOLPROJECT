@@ -3,10 +3,8 @@ import {
   addDoc,
   deleteDoc,
   doc,
-  query,
   onSnapshot,
   serverTimestamp,
-  getDocs,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
@@ -67,7 +65,7 @@ export function subscribeAnnouncements(callback) {
         if (items.length > 0) {
           try {
             window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(items));
-          } catch {}
+          } catch { /* Local cache is optional. */ }
           callback(items);
         } else {
           callback(DEFAULT_ANNOUNCEMENTS);
@@ -94,7 +92,7 @@ function loadLocalFallback(callback) {
       callback(cached);
       return;
     }
-  } catch {}
+  } catch { /* Local cache is optional. */ }
   callback(DEFAULT_ANNOUNCEMENTS);
 }
 
@@ -127,7 +125,7 @@ export async function createAnnouncement({ title, content, type = "general", pin
       const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
       const updated = [localItem, ...cached];
       window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(updated));
-    } catch {}
+    } catch { /* Local cache is optional. */ }
     return localItem;
   }
 }
@@ -144,7 +142,7 @@ export async function deleteAnnouncement(id) {
     const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
     const updated = cached.filter((item) => item.id !== id);
     window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(updated));
-  } catch {}
+  } catch { /* Local cache is optional. */ }
 }
 
 // Lấy danh sách ID thông báo đã đọc của học sinh
@@ -168,7 +166,7 @@ export function markNotificationAsRead(uid, announcementId) {
       const next = [...current, announcementId];
       window.localStorage.setItem(key, JSON.stringify(next));
     }
-  } catch {}
+  } catch { /* Local cache is optional. */ }
 }
 
 // Đánh dấu tất cả thông báo hiện tại là đã đọc
@@ -178,5 +176,5 @@ export function markAllNotificationsAsRead(uid, announcementIds = []) {
     const current = getReadNotificationIds(uid);
     const set = new Set([...current, ...announcementIds]);
     window.localStorage.setItem(key, JSON.stringify(Array.from(set)));
-  } catch {}
+  } catch { /* Local cache is optional. */ }
 }
