@@ -1,4 +1,4 @@
-// Gắn Firebase ID token vào request tới backend (/api/judge, /api/ai/tutor).
+// Gắn Firebase ID token vào request tới backend (/api/judge, /api/ai/tutor, /api/ai/self-check).
 // Import động để file này không làm hỏng test chạy bằng Node (firebase.js cần import.meta.env của Vite).
 export async function authHeaders() {
   try {

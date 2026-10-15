@@ -26,12 +26,128 @@
       "explanation": "Giá trị 3 đầu tiên ở chỉ số 1.",
       "visualization": {
         "title": "Miền chưa biết thu nhỏ từng nửa",
-        "description": "Các ô nhạt nằm ngoài miền [l,r) đang xét; mid là ô màu xanh.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Xét mid=2",
-            "explanation": "a[2]=3>=3, giữ bên trái và đặt r=2.",
+            "line": 1,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 1: #include <iostream>",
             "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 2: #include <string>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 3: #include <vector>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Khai báo không gian tên, chưa chạy thuật toán",
+            "explanation": "Khai báo không gian tên, chưa chạy thuật toán. Dòng 4: using namespace std;",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Khai báo không gian tên, chưa chạy thuật toán",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Bắt đầu thực thi tại main",
+            "explanation": "Bắt đầu thực thi tại main. Dòng 6: int main() {",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Bắt đầu thực thi tại main",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Thiết lập nhập xuất",
+            "explanation": "Thiết lập nhập xuất. Dòng 7: ios::sync_with_stdio(false);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập nhập xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Thiết lập luồng nhập",
+            "explanation": "Thiết lập luồng nhập. Dòng 8: cin.tie(nullptr);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập luồng nhập",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Khởi tạo dãy",
+            "explanation": "Khởi tạo dãy. Dòng 9: vector<int> a = {1, 3, 3, 7};",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 10,
+            "title": "Khởi tạo giá trị tìm kiếm",
+            "explanation": "Khởi tạo giá trị tìm kiếm. Dòng 10: int x = 3, l = 0, r = a.size();",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": true
+              },
               {
                 "label": "l",
                 "value": "0",
@@ -41,151 +157,479 @@
                 "label": "r",
                 "value": "4",
                 "active": true
-              },
-              {
-                "label": "mid",
-                "value": "2",
-                "active": true
-              },
-              {
-                "label": "x",
-                "value": "3",
-                "active": false
               }
             ],
             "array": {
               "values": [
-                "1",
-                "3",
-                "3",
-                "7"
-              ],
-              "activeIndices": [
-                2
-              ],
-              "pointers": [
-                {
-                  "index": 0,
-                  "label": "l"
-                },
-                {
-                  "index": 2,
-                  "label": "mid"
-                }
-              ],
-              "discardedIndices": []
-            },
-            "formula": "a[2] = 3"
-          },
-          {
-            "title": "Xét mid=1",
-            "explanation": "a[1]=3>=3, đặt r=1.",
-            "cells": [
-              {
-                "label": "l",
-                "value": "0",
-                "active": true
-              },
-              {
-                "label": "r",
-                "value": "2",
-                "active": true
-              },
-              {
-                "label": "mid",
-                "value": "1",
-                "active": true
-              },
-              {
-                "label": "x",
-                "value": "3",
-                "active": false
-              }
-            ],
-            "array": {
-              "values": [
-                "1",
-                "3",
-                "3",
-                "7"
-              ],
-              "activeIndices": [
-                1
-              ],
-              "pointers": [
-                {
-                  "index": 0,
-                  "label": "l"
-                },
-                {
-                  "index": 1,
-                  "label": "mid"
-                }
-              ],
-              "discardedIndices": [
-                2,
-                3
-              ]
-            },
-            "formula": "a[1] = 3"
-          },
-          {
-            "title": "Xét mid=0",
-            "explanation": "a[0]=1<3, loại vị trí 0 và đặt l=1.",
-            "cells": [
-              {
-                "label": "l",
-                "value": "0",
-                "active": true
-              },
-              {
-                "label": "r",
-                "value": "1",
-                "active": true
-              },
-              {
-                "label": "mid",
-                "value": "0",
-                "active": true
-              },
-              {
-                "label": "x",
-                "value": "3",
-                "active": false
-              }
-            ],
-            "array": {
-              "values": [
-                "1",
-                "3",
-                "3",
-                "7"
-              ],
-              "activeIndices": [
-                0
-              ],
-              "pointers": [
-                {
-                  "index": 0,
-                  "label": "l"
-                },
-                {
-                  "index": 0,
-                  "label": "mid"
-                }
-              ],
-              "discardedIndices": [
                 1,
-                2,
-                3
-              ]
-            },
-            "formula": "a[0] = 1"
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
           },
           {
-            "title": "Hai biên gặp nhau",
-            "explanation": "l=r=1; giá trị đầu >=3 ở chỉ số 1. Không đọc ô chỉ số 4.",
+            "line": 11,
+            "title": "Kiểm tra l < r: đúng",
+            "explanation": "Kiểm tra l < r: đúng. Dòng 11: while (l < r) {",
             "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Tính vị trí giữa",
+            "explanation": "Tính vị trí giữa. Dòng 12: int m = l + (r - l) / 2;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "2",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Kiểm tra a[m] < x: sai",
+            "explanation": "Kiểm tra a[m] < x: sai. Dòng 13: if (a[m] < x)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Cập nhật biên phải",
+            "explanation": "Cập nhật biên phải. Dòng 16: r = m;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "m",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Kiểm tra l < r: đúng",
+            "explanation": "Kiểm tra l < r: đúng. Dòng 11: while (l < r) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "2",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Tính vị trí giữa",
+            "explanation": "Tính vị trí giữa. Dòng 12: int m = l + (r - l) / 2;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Kiểm tra a[m] < x: sai",
+            "explanation": "Kiểm tra a[m] < x: sai. Dòng 13: if (a[m] < x)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 16,
+            "title": "Cập nhật biên phải",
+            "explanation": "Cập nhật biên phải. Dòng 16: r = m;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "m",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Kiểm tra l < r: đúng",
+            "explanation": "Kiểm tra l < r: đúng. Dòng 11: while (l < r) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "1",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 12,
+            "title": "Tính vị trí giữa",
+            "explanation": "Tính vị trí giữa. Dòng 12: int m = l + (r - l) / 2;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "0",
+                "active": true
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 13,
+            "title": "Kiểm tra a[m] < x: đúng",
+            "explanation": "Kiểm tra a[m] < x: đúng. Dòng 13: if (a[m] < x)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 14,
+            "title": "Cập nhật biên trái",
+            "explanation": "Cập nhật biên trái. Dòng 14: l = m + 1;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
               {
                 "label": "l",
                 "value": "1",
@@ -194,7 +638,94 @@
               {
                 "label": "r",
                 "value": "1",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 11,
+            "title": "Kiểm tra l < r: sai",
+            "explanation": "Kiểm tra l < r: sai. Dòng 11: while (l < r) {",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "0",
+                "active": false
+              }
+            ],
+            "array": {
+              "values": [
+                1,
+                3,
+                3,
+                7
+              ],
+              "activeIndices": []
+            }
+          },
+          {
+            "line": 18,
+            "title": "Xuất vị trí",
+            "explanation": "Xuất vị trí. Dòng 18: cout << l;",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[1, 3, 3, 7]",
+                "active": false
+              },
+              {
+                "label": "x",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "l",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "r",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "m",
+                "value": "0",
+                "active": false
               },
               {
                 "label": "Output",
@@ -204,25 +735,13 @@
             ],
             "array": {
               "values": [
-                "1",
-                "3",
-                "3",
-                "7"
+                1,
+                3,
+                3,
+                7
               ],
-              "activeIndices": [
-                1
-              ],
-              "pointers": [
-                {
-                  "index": 1,
-                  "label": "đáp án"
-                }
-              ],
-              "discardedIndices": [
-                0
-              ]
-            },
-            "formula": "lower_bound(3) = 1"
+              "activeIndices": []
+            }
           }
         ]
       },

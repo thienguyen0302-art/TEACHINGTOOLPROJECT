@@ -40,9 +40,33 @@ service cloud.firestore {
       }
     }
 
+    // Bảng xếp hạng đề thi thật: mọi người đã đăng nhập được đọc; chỉ chủ sở hữu ghi dòng của mình.
+    match /leaderboards/{lang}/entries/{uid} {
+      allow read: if signedIn();
+      allow create, update: if isOwner(uid) && lang in ['cpp', 'python']
+        && request.resource.data.uid == uid
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0 && request.resource.data.total <= 100000;
+    }
+
     // Giáo viên đọc tiến độ toàn lớp bằng collectionGroup('progress').
     match /{path=**}/progress/{id} {
       allow read: if isTeacher();
+    }
+
+    // Thông báo lớp học: mọi người đăng nhập đọc được; chỉ giáo viên được tạo, sửa, xóa
+    match /announcements/{id} {
+      allow read: if signedIn();
+      allow create, update, delete: if isTeacher();
+    }
+
+    // Đánh giá người dùng: Công khai đọc đánh giá đã duyệt và đồng ý chia sẻ; người dùng quản lý đánh giá của mình; giáo viên kiểm duyệt.
+    match /reviews/{uid} {
+      allow read: if (resource.data.status == 'approved' && resource.data.isPublicConsent == true)
+                  || isOwner(uid)
+                  || isTeacher();
+      allow create, update: if (isOwner(uid) && request.resource.data.uid == uid) || isTeacher();
+      allow delete: if isOwner(uid) || isTeacher();
     }
     // New authoring uses the authenticated backend so slug/lock checks are atomic.
     function unlocked(problemId) {

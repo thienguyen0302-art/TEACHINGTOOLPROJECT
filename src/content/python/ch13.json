@@ -76,12 +76,84 @@
       "explanation": "Chọn [1,3),[3,4),[4,6). Hai khoảng chạm đầu-cuối được phép.",
       "visualization": {
         "title": "Kết thúc sớm, để chỗ cho lịch tiếp theo",
-        "description": "Thanh xanh đã chọn; thanh nhạt bị bỏ. Các khoảng chạm đầu-cuối không xung đột.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Sau khi sort",
-            "explanation": "Các hoạt động đã được xếp theo mốc kết thúc tăng dần.",
+            "line": 1,
+            "title": "Khởi tạo hoạt động",
+            "explanation": "Khởi tạo hoạt động. Dòng 1: a = [(1, 3), (2, 5), (3, 4), (4, 6)]",
             "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [2, 5], [3, 4], [4, 6]]",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 2,
+            "title": "Sắp theo thời điểm kết thúc",
+            "explanation": "Sắp theo thời điểm kết thúc. Dòng 2: a.sort(key=lambda x: x[1])",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 3,
+            "title": "Khởi tạo lịch",
+            "explanation": "Khởi tạo lịch. Dòng 3: end, count = -1, 0",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
               {
                 "label": "end",
                 "value": "-1",
@@ -93,35 +165,197 @@
                 "active": true
               }
             ],
-            "intervals": {
-              "items": [
-                {
-                  "start": 1,
-                  "end": 3,
-                  "label": "A1"
-                },
-                {
-                  "start": 3,
-                  "end": 4,
-                  "label": "A2"
-                },
-                {
-                  "start": 2,
-                  "end": 5,
-                  "label": "A3"
-                },
-                {
-                  "start": 4,
-                  "end": 6,
-                  "label": "A4"
-                }
-              ]
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
             }
           },
           {
-            "title": "Chọn A1",
-            "explanation": "Khoảng [1,3) bắt đầu không trước end, nên chọn và cập nhật mốc kết thúc.",
+            "line": 4,
+            "title": "Xét hoạt động tiếp theo",
+            "explanation": "Xét hoạt động tiếp theo. Dòng 4: for s, e in a:",
             "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "-1",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "e",
+                "value": "3",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Kiểm tra s >= end: đúng",
+            "explanation": "Kiểm tra s >= end: đúng. Dòng 5: if s >= end:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "-1",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Chọn hoạt động",
+            "explanation": "Chọn hoạt động. Dòng 6: count += 1",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "-1",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": true
+              },
+              {
+                "label": "s",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "3",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 7,
+            "title": "Cập nhật mốc kết thúc",
+            "explanation": "Cập nhật mốc kết thúc. Dòng 7: end = e",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
               {
                 "label": "end",
                 "value": "3",
@@ -130,43 +364,210 @@
               {
                 "label": "count",
                 "value": "1",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "3",
+                "active": false
               }
             ],
-            "intervals": {
-              "items": [
-                {
-                  "start": 1,
-                  "end": 3,
-                  "label": "A1"
-                },
-                {
-                  "start": 3,
-                  "end": 4,
-                  "label": "A2"
-                },
-                {
-                  "start": 2,
-                  "end": 5,
-                  "label": "A3"
-                },
-                {
-                  "start": 4,
-                  "end": 6,
-                  "label": "A4"
-                }
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
               ],
-              "currentIndex": 0,
-              "selectedIndices": [
-                0
-              ],
-              "rejectedIndices": []
+              "activeCells": []
             }
           },
           {
-            "title": "Chọn A2",
-            "explanation": "Khoảng [3,4) bắt đầu không trước end, nên chọn và cập nhật mốc kết thúc.",
+            "line": 4,
+            "title": "Xét hoạt động tiếp theo",
+            "explanation": "Xét hoạt động tiếp theo. Dòng 4: for s, e in a:",
             "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "e",
+                "value": "4",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Kiểm tra s >= end: đúng",
+            "explanation": "Kiểm tra s >= end: đúng. Dòng 5: if s >= end:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Chọn hoạt động",
+            "explanation": "Chọn hoạt động. Dòng 6: count += 1",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "s",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "4",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 7,
+            "title": "Cập nhật mốc kết thúc",
+            "explanation": "Cập nhật mốc kết thúc. Dòng 7: end = e",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
               {
                 "label": "end",
                 "value": "4",
@@ -175,44 +576,51 @@
               {
                 "label": "count",
                 "value": "2",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "4",
+                "active": false
               }
             ],
-            "intervals": {
-              "items": [
-                {
-                  "start": 1,
-                  "end": 3,
-                  "label": "A1"
-                },
-                {
-                  "start": 3,
-                  "end": 4,
-                  "label": "A2"
-                },
-                {
-                  "start": 2,
-                  "end": 5,
-                  "label": "A3"
-                },
-                {
-                  "start": 4,
-                  "end": 6,
-                  "label": "A4"
-                }
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
               ],
-              "currentIndex": 1,
-              "selectedIndices": [
-                0,
-                1
-              ],
-              "rejectedIndices": []
+              "activeCells": []
             }
           },
           {
-            "title": "Bỏ A3",
-            "explanation": "Khoảng [2,5) bắt đầu trước end nên xung đột với lịch đã chọn.",
+            "line": 4,
+            "title": "Xét hoạt động tiếp theo",
+            "explanation": "Xét hoạt động tiếp theo. Dòng 4: for s, e in a:",
             "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
               {
                 "label": "end",
                 "value": "4",
@@ -222,45 +630,262 @@
                 "label": "count",
                 "value": "2",
                 "active": false
+              },
+              {
+                "label": "s",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "e",
+                "value": "5",
+                "active": true
               }
             ],
-            "intervals": {
-              "items": [
-                {
-                  "start": 1,
-                  "end": 3,
-                  "label": "A1"
-                },
-                {
-                  "start": 3,
-                  "end": 4,
-                  "label": "A2"
-                },
-                {
-                  "start": 2,
-                  "end": 5,
-                  "label": "A3"
-                },
-                {
-                  "start": 4,
-                  "end": 6,
-                  "label": "A4"
-                }
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
               ],
-              "currentIndex": 2,
-              "selectedIndices": [
-                0,
-                1
-              ],
-              "rejectedIndices": [
-                2
-              ]
+              "activeCells": []
             }
           },
           {
-            "title": "Chọn A4",
-            "explanation": "Khoảng [4,6) bắt đầu không trước end, nên chọn và cập nhật mốc kết thúc.",
+            "line": 5,
+            "title": "Kiểm tra s >= end: sai",
+            "explanation": "Kiểm tra s >= end: sai. Dòng 5: if s >= end:",
             "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "5",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Xét hoạt động tiếp theo",
+            "explanation": "Xét hoạt động tiếp theo. Dòng 4: for s, e in a:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "e",
+                "value": "6",
+                "active": true
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 5,
+            "title": "Kiểm tra s >= end: đúng",
+            "explanation": "Kiểm tra s >= end: đúng. Dòng 5: if s >= end:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "6",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 6,
+            "title": "Chọn hoạt động",
+            "explanation": "Chọn hoạt động. Dòng 6: count += 1",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": true
+              },
+              {
+                "label": "s",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "6",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 7,
+            "title": "Cập nhật mốc kết thúc",
+            "explanation": "Cập nhật mốc kết thúc. Dòng 7: end = e",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
               {
                 "label": "end",
                 "value": "6",
@@ -269,41 +894,150 @@
               {
                 "label": "count",
                 "value": "3",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "6",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 4,
+            "title": "Hết hoạt động",
+            "explanation": "Hết hoạt động. Dòng 4: for s, e in a:",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "6",
+                "active": false
+              }
+            ],
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
+              ],
+              "activeCells": []
+            }
+          },
+          {
+            "line": 8,
+            "title": "Xuất số hoạt động",
+            "explanation": "Xuất số hoạt động. Dòng 8: print(count)",
+            "cells": [
+              {
+                "label": "a",
+                "value": "[[1, 3], [3, 4], [2, 5], [4, 6]]",
+                "active": false
+              },
+              {
+                "label": "end",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "s",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "e",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "3",
                 "active": true
               }
             ],
-            "intervals": {
-              "items": [
-                {
-                  "start": 1,
-                  "end": 3,
-                  "label": "A1"
-                },
-                {
-                  "start": 3,
-                  "end": 4,
-                  "label": "A2"
-                },
-                {
-                  "start": 2,
-                  "end": 5,
-                  "label": "A3"
-                },
-                {
-                  "start": 4,
-                  "end": 6,
-                  "label": "A4"
-                }
+            "matrix": {
+              "rows": [
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  6
+                ]
               ],
-              "currentIndex": 3,
-              "selectedIndices": [
-                0,
-                1,
-                3
-              ],
-              "rejectedIndices": [
-                2
-              ]
+              "activeCells": []
             }
           }
         ]

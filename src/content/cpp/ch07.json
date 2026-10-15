@@ -74,58 +74,173 @@
       "explanation": "Số lượt là 0+1+2+3=6=n(n-1)/2.",
       "visualization": {
         "title": "Vòng trong chạy bao nhiêu lần?",
-        "description": "Đếm từng cặp (i,j) với j<i; không đo thời gian bằng số dòng code.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Khởi tạo",
-            "explanation": "n=4, chưa có lượt vòng trong.",
+            "line": 1,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 1: #include <iostream>",
             "cells": [
               {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 2,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 2: #include <string>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 3,
+            "title": "Chuẩn bị thư viện trước khi chạy",
+            "explanation": "Chuẩn bị thư viện trước khi chạy. Dòng 3: #include <vector>",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Chuẩn bị thư viện trước khi chạy",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 4,
+            "title": "Khai báo không gian tên, chưa chạy thuật toán",
+            "explanation": "Khai báo không gian tên, chưa chạy thuật toán. Dòng 4: using namespace std;",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Khai báo không gian tên, chưa chạy thuật toán",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 6,
+            "title": "Bắt đầu thực thi tại main",
+            "explanation": "Bắt đầu thực thi tại main. Dòng 6: int main() {",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Bắt đầu thực thi tại main",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Thiết lập nhập xuất",
+            "explanation": "Thiết lập nhập xuất. Dòng 7: ios::sync_with_stdio(false);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập nhập xuất",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 8,
+            "title": "Thiết lập luồng nhập",
+            "explanation": "Thiết lập luồng nhập. Dòng 8: cin.tie(nullptr);",
+            "cells": [
+              {
+                "label": "Chương trình",
+                "value": "Thiết lập luồng nhập",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "title": "Khởi tạo n",
+            "explanation": "Khởi tạo n. Dòng 9: int n = 4, count = 0;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Bắt đầu lượt vòng ngoài",
+            "explanation": "Bắt đầu lượt vòng ngoài. Dòng 10: for (int i = 0; i < n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": false
+              },
+              {
                 "label": "i",
-                "value": "—",
+                "value": "0",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Vòng trong kết thúc",
+            "explanation": "Vòng trong kết thúc. Dòng 11: for (int j = 0; j < i; ++j)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "0",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "0",
                 "active": false
               },
               {
                 "label": "j",
-                "value": "—",
+                "value": "0",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Bắt đầu lượt vòng ngoài",
+            "explanation": "Bắt đầu lượt vòng ngoài. Dòng 10: for (int i = 0; i < n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
                 "active": false
               },
               {
                 "label": "count",
                 "value": "0",
-                "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": []
-            }
-          },
-          {
-            "title": "i=1, j=0",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 1.",
-            "cells": [
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "1",
@@ -134,110 +249,106 @@
               {
                 "label": "j",
                 "value": "0",
-                "active": true
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 11: for (int j = 0; j < i; ++j)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
-                "value": "1",
-                "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  2,
-                  0
-                ],
-                [
-                  2,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
-          },
-          {
-            "title": "i=2, j=0",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 2.",
-            "cells": [
+                "value": "0",
+                "active": false
+              },
               {
                 "label": "i",
-                "value": "2",
-                "active": true
+                "value": "1",
+                "active": false
               },
               {
                 "label": "j",
                 "value": "0",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 12,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 12: ++count;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
-                "value": "2",
+                "value": "1",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
               }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  3,
-                  0
-                ],
-                [
-                  3,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
+            ]
           },
           {
-            "title": "i=2, j=1",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 3.",
+            "line": 11,
+            "title": "Vòng trong kết thúc",
+            "explanation": "Vòng trong kết thúc. Dòng 11: for (int j = 0; j < i; ++j)",
             "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Bắt đầu lượt vòng ngoài",
+            "explanation": "Bắt đầu lượt vòng ngoài. Dòng 10: for (int i = 0; i < n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "2",
@@ -246,54 +357,160 @@
               {
                 "label": "j",
                 "value": "1",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 11: for (int j = 0; j < i; ++j)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "1",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 12,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 12: ++count;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 11: for (int j = 0; j < i; ++j)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 12,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 12: ++count;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "3",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
               }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  3,
-                  0
-                ],
-                [
-                  3,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
+            ]
           },
           {
-            "title": "i=3, j=0",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 4.",
+            "line": 11,
+            "title": "Vòng trong kết thúc",
+            "explanation": "Vòng trong kết thúc. Dòng 11: for (int j = 0; j < i; ++j)",
             "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "2",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Bắt đầu lượt vòng ngoài",
+            "explanation": "Bắt đầu lượt vòng ngoài. Dòng 10: for (int i = 0; i < n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": false
+              },
               {
                 "label": "i",
                 "value": "3",
@@ -301,162 +518,258 @@
               },
               {
                 "label": "j",
+                "value": "2",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 11: for (int j = 0; j < i; ++j)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
                 "value": "0",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 12,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 12: ++count;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "4",
                 "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  4,
-                  0
-                ],
-                [
-                  4,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
-          },
-          {
-            "title": "i=3, j=1",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 5.",
-            "cells": [
+              },
               {
                 "label": "i",
                 "value": "3",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "0",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 11: for (int j = 0; j < i; ++j)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
               },
               {
                 "label": "j",
                 "value": "1",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 12,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 12: ++count;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "5",
                 "active": true
-              }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  4,
-                  0
-                ],
-                [
-                  4,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
-          },
-          {
-            "title": "i=3, j=2",
-            "explanation": "j<i nên thực hiện một lượt, tăng count thành 6.",
-            "cells": [
+              },
               {
                 "label": "i",
                 "value": "3",
-                "active": true
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "1",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Điều kiện vòng trong đúng",
+            "explanation": "Điều kiện vòng trong đúng. Dòng 11: for (int j = 0; j < i; ++j)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "5",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
               },
               {
                 "label": "j",
                 "value": "2",
                 "active": true
+              }
+            ]
+          },
+          {
+            "line": 12,
+            "title": "Tăng bộ đếm",
+            "explanation": "Tăng bộ đếm. Dòng 12: ++count;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
               },
               {
                 "label": "count",
                 "value": "6",
                 "active": true
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "2",
+                "active": false
               }
-            ],
-            "matrix": {
-              "rows": [
-                [
-                  "i",
-                  "Số lượt"
-                ],
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  1
-                ],
-                [
-                  2,
-                  2
-                ],
-                [
-                  3,
-                  3
-                ]
-              ],
-              "activeCells": [
-                [
-                  4,
-                  0
-                ],
-                [
-                  4,
-                  1
-                ]
-              ]
-            },
-            "formula": "count += 1"
+            ]
+          },
+          {
+            "line": 11,
+            "title": "Vòng trong kết thúc",
+            "explanation": "Vòng trong kết thúc. Dòng 11: for (int j = 0; j < i; ++j)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "3",
+                "active": true
+              }
+            ]
+          },
+          {
+            "line": 10,
+            "title": "Vòng ngoài kết thúc",
+            "explanation": "Vòng ngoài kết thúc. Dòng 10: for (int i = 0; i < n; ++i)",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": true
+              },
+              {
+                "label": "j",
+                "value": "3",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 13,
+            "title": "Xuất số lượt",
+            "explanation": "Xuất số lượt. Dòng 13: cout << count;",
+            "cells": [
+              {
+                "label": "n",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "count",
+                "value": "6",
+                "active": false
+              },
+              {
+                "label": "i",
+                "value": "4",
+                "active": false
+              },
+              {
+                "label": "j",
+                "value": "3",
+                "active": false
+              },
+              {
+                "label": "Output",
+                "value": "6",
+                "active": true
+              }
+            ]
           }
         ]
       },

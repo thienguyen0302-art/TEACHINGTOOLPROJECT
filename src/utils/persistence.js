@@ -1,4 +1,5 @@
 // Hàm thuần (không import Firebase) để dễ test bằng `node --test`.
+import { calcPoints, DEFAULT_MAX_SCORE } from "./ranking.js";
 
 // Firestore doc id không được chứa "/", mà slug bài Lesson có dạng lesson/cpp/ch01/practice/x.
 export function submissionDocId({ language, slug }) {
@@ -26,10 +27,11 @@ export function mergeSubmission(prev, contract) {
 }
 
 // Hợp đồng kết quả thi giữa Người 2 (Exam Engine) và Người 1 (lưu Firestore).
-// Người 2 truyền: { examId, language, correct, total, durationSec, autoSubmitted?, chapterIds? }
+// Người 2 truyền: { examId, language, correct, total, durationSec, maxScore?, autoSubmitted?, chapterIds? }
 export function buildExamRecord(result) {
-  const { examId, language, correct, total, durationSec, autoSubmitted = false, chapterIds = [] } = result ?? {};
-  if (typeof examId !== "string" || !examId) throw new Error("Thiếu examId.");
+  const { examId, language, correct, total, durationSec, autoSubmitted = false, chapterIds = [], maxScore = DEFAULT_MAX_SCORE } = result ?? {};
+  if (typeof examId !== "string" || !/^[A-Za-z0-9_-]{1,64}$/.test(examId)) throw new Error("examId không hợp lệ (chỉ gồm chữ, số, - và _).");
+  if (typeof maxScore !== "number" || !(maxScore > 0) || maxScore > 1000) throw new Error("maxScore không hợp lệ.");
   if (!["cpp", "python"].includes(language)) throw new Error("language phải là cpp hoặc python.");
   if (!Number.isInteger(total) || total <= 0) throw new Error("total phải là số nguyên dương.");
   if (!Number.isInteger(correct) || correct < 0 || correct > total) throw new Error("correct không hợp lệ.");
@@ -41,6 +43,8 @@ export function buildExamRecord(result) {
   return {
     examId, language, correct, total,
     score: Math.round((correct / total) * 100),
+    maxScore,
+    points: calcPoints(correct, total, maxScore), // điểm theo thang của đề, dùng cho bảng xếp hạng
     durationSec,
     autoSubmitted: autoSubmitted === true,
     chapterIds,

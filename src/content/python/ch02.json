@@ -27,100 +27,60 @@
       "explanation": "x > 0 sai, x == 0 sai, nên chương trình đi vào else.",
       "visualization": {
         "title": "Một giá trị, một đường đi",
-        "description": "Theo dõi x=-3; một chuỗi if chỉ chạy nhánh đầu tiên đúng.",
+        "description": "Theo dõi từ đầu: khởi tạo, kiểm tra điều kiện, từng lượt lặp và kết quả. Giá trị hiển thị sau thao tác được tô sáng.",
         "steps": [
           {
-            "title": "Đọc dữ liệu",
-            "explanation": "Giá trị ban đầu x=-3; chưa đánh giá điều kiện.",
+            "line": 1,
+            "title": "Khởi tạo x",
+            "explanation": "Khởi tạo x. Dòng 1: x = -3",
             "cells": [
               {
                 "label": "x",
                 "value": "-3",
                 "active": true
-              }
-            ],
-            "flow": [
-              {
-                "label": "x > 0",
-                "value": "Chưa xét"
-              },
-              {
-                "label": "x == 0",
-                "value": "Chưa xét"
-              },
-              {
-                "label": "else",
-                "value": "Chưa xét"
               }
             ]
           },
           {
-            "title": "Kiểm tra dương",
-            "explanation": "-3 không lớn hơn 0. Bỏ nhánh số dương và chuyển sang điều kiện kế.",
+            "line": 2,
+            "title": "Kiểm tra x > 0: sai, bỏ nhánh dương",
+            "explanation": "Kiểm tra x > 0: sai, bỏ nhánh dương. Dòng 2: if x > 0:",
             "cells": [
               {
                 "label": "x",
                 "value": "-3",
                 "active": false
-              },
-              {
-                "label": "x > 0",
-                "value": "Sai",
-                "active": true
               }
-            ],
-            "flow": [
-              {
-                "label": "x > 0",
-                "value": "Sai",
-                "active": true
-              },
-              {
-                "label": "x == 0",
-                "value": "Chưa xét"
-              },
-              {
-                "label": "else",
-                "value": "Chưa xét"
-              }
-            ],
-            "formula": "-3 > 0 → false"
+            ]
           },
           {
-            "title": "Kiểm tra bằng 0",
-            "explanation": "-3 khác 0, nên điều kiện thứ hai cũng sai. Không có điều kiện riêng cho else.",
+            "line": 4,
+            "title": "Kiểm tra x == 0: sai",
+            "explanation": "Kiểm tra x == 0: sai. Dòng 4: elif x == 0:",
             "cells": [
               {
                 "label": "x",
                 "value": "-3",
                 "active": false
-              },
-              {
-                "label": "x == 0",
-                "value": "Sai",
-                "active": true
               }
-            ],
-            "flow": [
-              {
-                "label": "x > 0",
-                "value": "Sai"
-              },
-              {
-                "label": "x == 0",
-                "value": "Sai",
-                "active": true
-              },
-              {
-                "label": "else",
-                "value": "Chưa xét"
-              }
-            ],
-            "formula": "-3 == 0 → false"
+            ]
           },
           {
-            "title": "Chọn nhánh else",
-            "explanation": "Hai nhánh trước đều không phù hợp; xuất AM.",
+            "line": 6,
+            "title": "Đi vào nhánh else",
+            "explanation": "Đi vào nhánh else. Dòng 6: else:",
+            "cells": [
+              {
+                "label": "x",
+                "value": "-3",
+                "active": false
+              }
+            ]
+          },
+          {
+            "line": 7,
+            "title": "Xuất kết quả",
+            "explanation": "Xuất kết quả. Dòng 7: print(\"AM\")",
             "cells": [
               {
                 "label": "x",
@@ -129,21 +89,6 @@
               },
               {
                 "label": "Output",
-                "value": "AM",
-                "active": true
-              }
-            ],
-            "flow": [
-              {
-                "label": "x > 0",
-                "value": "Sai"
-              },
-              {
-                "label": "x == 0",
-                "value": "Sai"
-              },
-              {
-                "label": "else",
                 "value": "AM",
                 "active": true
               }

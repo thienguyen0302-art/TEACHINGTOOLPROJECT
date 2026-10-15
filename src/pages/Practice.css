@@ -1,0 +1,566 @@
+/* ===== Trang Kho bài tập (Practice) đồng bộ với hệ thống thiết kế Schedule ===== */
+.practice-page {
+  padding-top: 40px;
+}
+
+.practice-hero {
+  display: flex;
+  min-height: 170px;
+  padding: 30px 36px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  border-radius: 21px;
+  background: linear-gradient(120deg, #17366e, #2b67ca);
+  color: #fff;
+  box-shadow: 0 18px 42px rgba(23, 54, 110, 0.14);
+}
+
+.practice-hero > div:first-child > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #a8c8ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.practice-hero svg {
+  width: 14px;
+  height: 14px;
+}
+
+.practice-hero h1 {
+  margin: 10px 0 7px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  color: #fff;
+}
+
+.practice-hero p {
+  margin: 0;
+  color: #c3d3ec;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.practice-hero-stat {
+  min-width: 190px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .1);
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.practice-hero-stat strong,
+.practice-hero-stat span {
+  display: block;
+}
+
+.practice-hero-stat strong {
+  color: #ffd276;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.practice-hero-stat span {
+  color: #c0d1ea;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.practice-hero-stat button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  color: #2b62bd;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.practice-hero-stat button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Thẻ 3 độ khó */
+.practice-overview {
+  display: grid;
+  margin-top: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.practice-level-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 24px;
+  border: 1px solid #e2e8f2;
+  border-radius: 18px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.practice-level-card:hover {
+  border-color: #bcd2f8;
+  box-shadow: 0 8px 20px rgba(42, 84, 155, 0.08);
+  transform: translateY(-2px);
+}
+
+.practice-level-card.selected,
+.practice-level-card[aria-pressed="true"] {
+  border-color: #3978ed;
+  box-shadow: 0 0 0 3px #dceaff;
+}
+
+.practice-level-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #263650;
+}
+
+.practice-level-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.practice-level--basic .practice-level-dot { background: #10b981; }
+.practice-level--intermediate .practice-level-dot { background: #f59e0b; }
+.practice-level--advanced .practice-level-dot { background: #ef4444; }
+
+.practice-level-info small {
+  display: block;
+  margin-top: 4px;
+  color: #8793a6;
+  font-size: 12px;
+}
+
+.practice-level-count {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1e2e49;
+  margin-left: auto;
+}
+
+/* Thẻ lớn danh sách bài tập */
+.practice-browser-card {
+  margin-top: 16px;
+  padding: 24px 28px;
+  border: 1px solid #e2e8f2;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(28, 57, 108, .035);
+}
+
+.practice-card-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.practice-card-heading > div > span {
+  color: #3978ed;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.practice-card-heading h2 {
+  margin: 5px 0 0;
+  color: #263650;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.practice-card-heading > strong {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #edf4ff;
+  color: #3978ed;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Bộ lọc & tìm kiếm */
+.practice-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.practice-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 240px;
+  min-width: 0;
+  background: #f8faff;
+  border: 1px solid #dce4f0;
+  border-radius: 11px;
+  padding: 0 14px;
+  height: 44px;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.practice-search:focus-within {
+  border-color: #3978ed;
+  box-shadow: 0 0 0 3px rgba(57, 120, 237, 0.12);
+  background-color: #ffffff;
+}
+
+.practice-search svg {
+  width: 17px;
+  height: 17px;
+  color: #8c98aa;
+  flex: 0 0 auto;
+}
+
+.practice-search input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #1e2e49;
+  font-size: 13.5px;
+  outline: none;
+}
+
+.practice-search input::placeholder {
+  color: #9aa5b6;
+}
+
+.practice-filters select {
+  height: 44px;
+  padding: 0 34px 0 14px;
+  background: #f8faff;
+  border: 1px solid #dce4f0;
+  border-radius: 11px;
+  color: #33425c;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.practice-filters select:focus {
+  border-color: #3978ed;
+  box-shadow: 0 0 0 3px rgba(57, 120, 237, 0.12);
+  background-color: #ffffff;
+}
+
+/* Chủ đề (Chips) */
+.practice-topics {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.practice-topic-chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: #f1f4f9;
+  color: #586579;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.practice-topic-chip:hover {
+  background: #e6ebf3;
+  color: #1e293b;
+}
+
+.practice-topic-chip.active,
+.practice-topic-chip[aria-pressed="true"] {
+  background: #e3efff;
+  color: #2563eb;
+  border-color: #bcd2f8;
+  font-weight: 700;
+}
+
+/* Dòng kết quả */
+.practice-results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 12px 0 10px;
+  border-top: 1px solid #edf1f7;
+  font-size: 12.5px;
+  color: #7f8ba0;
+}
+
+.practice-results-bar b {
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.practice-clear-filters {
+  background: none;
+  border: 0;
+  color: #2563eb;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 4px;
+}
+
+/* Bảng bài tập */
+.practice-table-wrap {
+  overflow-x: auto;
+  margin-top: 8px;
+  border-radius: 12px;
+}
+
+.practice-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+  text-align: left;
+}
+
+.practice-table th {
+  background: #f8fafd;
+  color: #8793a6;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 13px 16px;
+  border-bottom: 1px solid #edf1f7;
+  white-space: nowrap;
+}
+
+.practice-table th:first-child,
+.practice-table td:first-child {
+  padding-left: 18px;
+}
+
+.practice-table th:last-child,
+.practice-table td:last-child {
+  padding-right: 18px;
+  text-align: right;
+}
+
+.practice-table td {
+  padding: 16px;
+  border-bottom: 1px solid #edf1f7;
+  vertical-align: middle;
+}
+
+.practice-table tbody tr {
+  transition: background-color 140ms ease;
+}
+
+.practice-table tbody tr:hover {
+  background: #f3f8ff;
+}
+
+.practice-col-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #7b889b;
+  font-weight: 600;
+  width: 100px;
+}
+
+.practice-prob-title {
+  color: #102956;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1.45;
+  transition: color 140ms ease;
+}
+
+.practice-prob-title:hover {
+  color: #2563eb;
+}
+
+.practice-row-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.practice-row-tags span {
+  font-size: 11px;
+  color: #768396;
+  background: #eef2f8;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+.practice-col-chapter {
+  color: #6f7d92;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.practice-diff-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.practice-diff--basic {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #d1fae5;
+}
+
+.practice-diff--intermediate {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fef3c7;
+}
+
+.practice-diff--advanced {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fee2e2;
+}
+
+.practice-open-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #dce4f0;
+  background: #fff;
+  color: #3978ed;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 140ms ease;
+}
+
+.practice-open-btn:hover {
+  background: #3978ed;
+  color: #fff;
+  border-color: #3978ed;
+  transform: translateX(2px);
+}
+
+.practice-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: #7b8390;
+}
+
+.practice-empty svg {
+  width: 40px;
+  height: 40px;
+  color: #a4b3c8;
+}
+
+.practice-empty h3 {
+  color: #263650;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 12px 0 6px;
+}
+
+.practice-empty p {
+  color: #8793a6;
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+
+.practice-empty button {
+  padding: 9px 18px;
+  background: #edf4ff;
+  border: 1px solid #d5e4fd;
+  border-radius: 8px;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 140ms ease;
+}
+
+.practice-empty button:hover {
+  background: #3978ed;
+  color: #fff;
+}
+
+.practice-footer {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #edf1f7;
+  color: #939aa5;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Responsive trên điện thoại và máy tính bảng */
+@media (max-width: 800px) {
+  .practice-page {
+    padding-top: 24px;
+  }
+  .practice-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+    gap: 20px;
+  }
+  .practice-hero-stat {
+    width: 100%;
+  }
+  .practice-overview {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .practice-browser-card {
+    padding: 20px 16px;
+  }
+  .practice-filters {
+    flex-direction: column;
+  }
+  .practice-search,
+  .practice-filters select {
+    width: 100%;
+    flex-basis: auto;
+  }
+  .practice-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

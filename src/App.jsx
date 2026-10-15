@@ -1,5 +1,10 @@
+import Contests from "./pages/Contests";
+import Contest from "./pages/Contest";
+import ContestProblem from "./pages/ContestProblem";
+import TeacherProblems, { TeacherProblemEditor } from "./pages/TeacherProblems";
+import TeacherContests, { TeacherContestEditor } from "./pages/TeacherContests";
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut, sendEmailVerification } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./services/firebase";
@@ -9,33 +14,56 @@ import Overview from "./pages/Overview";
 import Curriculum from "./pages/Curriculum";
 import Dashboard from "./pages/Dashboard";
 import Teacher from "./pages/Teacher";
-import Contests from "./pages/Contests";
-import Contest from "./pages/Contest";
-import ContestProblem from "./pages/ContestProblem";
-import TeacherProblems, { TeacherProblemEditor } from "./pages/TeacherProblems";
-import TeacherContests, { TeacherContestEditor } from "./pages/TeacherContests";
+import TeacherStudents from "./pages/TeacherStudents";
+import ExamHistory from "./pages/ExamHistory";
+import Feedback from "./pages/Feedback";
+import Profile, { ProfileForm } from "./pages/Profile";
+import Schedule from "./pages/Schedule";
+import Ranking from "./pages/Ranking";
+import Exam from "./pages/Exam";
+import { saveExamResult } from "./services/examService";
 import AppShell from "./components/AppShell";
 import useStudyTimer from "./hooks/useStudyTimer";
 import useLearningData from "./hooks/useLearningData";
 import { setSubmissionPersistenceAdapter } from "./services/submissionProgressService";
 import { persistSubmission } from "./services/submissionPersistence";
+import { saveProfile } from "./services/progressService";
+import { isProfileComplete } from "./utils/profile";
 import { weekSummary } from "./utils/activity";
 
-// Contest routes must not fetch Learning-mode solutions or AI modules.
 const Lesson = lazy(() => import("./pages/Lesson"));
 const Practice = lazy(() => import("./pages/Practice"));
 const Problem = lazy(() => import("./pages/Problem"));
+const PracticeBank = lazy(() => import("./pages/PracticeBank"));
 
 // Phần giao diện sau đăng nhập. Tách riêng để dùng hook dữ liệu (cần uid + lang).
 function Learning({ user, lang, onChangeLang }) {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const inContest = pathname.startsWith("/contest") || pathname.startsWith("/teacher");
   const data = useLearningData(user.uid, lang, !inContest);
   const isTeacher = data.profile.role === "teacher";
   const week = weekSummary(data.daily);
-  const teacherOnly = (element) => data.loading
-    ? <div className="content">Đang tải...</div>
-    : isTeacher ? element : <Navigate to="/" replace />;
+  const teacherOnly = (element) => data.loading ? <div className="content">Đang tải...</div> : isTeacher ? element : <Navigate to="/" replace />;
+  // Tên hiển thị ưu tiên hồ sơ học viên đã nhập, sau đó mới tới tên tài khoản.
+  const viewUser = { displayName: data.profile.displayName || user.displayName, email: user.email, uid: user.uid };
+
+  // Chuyển hướng sau đăng nhập nếu người dùng đã bấm "Chia sẻ trải nghiệm của bạn"
+  useEffect(() => {
+    const redirect = window.sessionStorage.getItem("peanut_redirect_after_login");
+    if (redirect) {
+      window.sessionStorage.removeItem("peanut_redirect_after_login");
+      navigate(redirect);
+    }
+  }, [navigate]);
+
+  // Chỉ khi chạy dev: cho phép thử bảng xếp hạng bằng Console trình duyệt khi Exam chưa xong.
+  // Ví dụ: await peanutDev.saveExamResult({ examId: "HSG-QN-24", language: "cpp", correct: 18, total: 20, durationSec: 3000 })
+  useEffect(() => {
+    if (!import.meta.env.DEV) return undefined;
+    window.peanutDev = { saveExamResult: (result) => saveExamResult(user.uid, result) };
+    return () => { delete window.peanutDev; };
+  }, [user.uid]);
 
   // Nối bài nộp code (Judge) với Firestore; gỡ adapter khi đăng xuất.
   useEffect(() => {
@@ -44,15 +72,21 @@ function Learning({ user, lang, onChangeLang }) {
   }, []);
 
   return (
-    <AppShell user={user} isTeacher={isTeacher} weekActive={week.activeCount} onLogout={() => signOut(auth)}>
+    <AppShell user={viewUser} isTeacher={isTeacher} weekActive={week.activeCount} onLogout={() => signOut(auth)}>
       {data.error && (
         <div className="content"><p className="err">{data.error}</p></div>
       )}
       <Suspense fallback={<div className="content">Đang tải trang…</div>}><Routes>
-        <Route path="/" element={<Overview user={user} lang={lang} data={data} onChangeLang={onChangeLang} />} />
+        <Route
+          path="/"
+          element={isTeacher
+            ? <Navigate to="/teacher" replace />
+            : <Overview user={viewUser} lang={lang} data={data} onChangeLang={onChangeLang} />}
+        />
         <Route path="/curriculum" element={<Curriculum lang={lang} data={data} onChangeLang={onChangeLang} />} />
         <Route path="/lesson/:id" element={<Lesson lang={lang} />} />
         <Route path="/practice" element={<Practice />} />
+        <Route path="/practice-bank" element={<PracticeBank />} />
         <Route path="/problem/:slug" element={<Problem lang={lang} />} />
         <Route path="/contests" element={<Contests />} />
         <Route path="/contest/:contestId" element={<Contest user={user} />} />
@@ -66,14 +100,34 @@ function Learning({ user, lang, onChangeLang }) {
         <Route path="/teacher/contests/new" element={teacherOnly(<TeacherContestEditor />)} />
         <Route path="/teacher/contests/:contestId/edit" element={teacherOnly(<TeacherContestEditor />)} />
         <Route path="/teacher/contests/:contestId/monitor" element={teacherOnly(<Contest user={user} teacher />)} />
-        <Route path="/progress" element={<Dashboard user={user} lang={lang} data={data} />} />
+
+        <Route path="/exam" element={<Exam lang={lang} />} />
+        <Route path="/exam/:examId" element={<Exam lang={lang} />} />
+        <Route path="/exam-history" element={<ExamHistory />} />
+        <Route
+          path="/progress"
+          element={isTeacher ? <Navigate to="/teacher" replace /> : <Dashboard user={viewUser} lang={lang} data={data} />}
+        />
+        <Route path="/ranking" element={<Ranking key={lang} uid={user.uid} lang={lang} />} />
+        <Route
+          path="/calendar"
+          element={isTeacher ? <Navigate to="/teacher" replace /> : <Schedule user={viewUser} data={data} />}
+        />
+        <Route path="/profile" element={<Profile user={viewUser} uid={user.uid} lang={lang} data={data} />} />
+        <Route path="/feedback" element={<Feedback user={viewUser} uid={user.uid} data={data} />} />
         <Route
           path="/teacher"
           element={data.loading
             ? <div className="content">Đang tải...</div>
             : isTeacher ? <Teacher /> : <Navigate to="/" replace />}
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="/teacher/students"
+          element={data.loading
+            ? <div className="content">Đang tải...</div>
+            : isTeacher ? <TeacherStudents /> : <Navigate to="/" replace />}
+        />
+        <Route path="*" element={<Navigate to={isTeacher ? "/teacher" : "/"} replace />} />
       </Routes></Suspense>
     </AppShell>
   );
@@ -81,6 +135,7 @@ function Learning({ user, lang, onChangeLang }) {
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [lang, setLang] = useState(null);
   const [picking, setPicking] = useState(false); // đang mở hộp chọn ngôn ngữ để đổi
   const [ready, setReady] = useState(false);
@@ -90,16 +145,23 @@ export default function App() {
     return onAuthStateChanged(auth, async (u) => {
       setUser(u);
       setLang(null);
+      setProfile(null);
       setPicking(false);
       try {
         if (u && u.emailVerified) {
           const ref = doc(db, "users", u.uid);
           const snap = await getDoc(ref);
-          if (snap.exists()) setLang(snap.data().language ?? null);
+          const userData = snap.exists() ? snap.data() : {};
+          setProfile(userData);
+          if (snap.exists() && userData.language) setLang(userData.language);
           // Lưu tên/email để Teacher Dashboard hiển thị được học sinh.
-          const profile = snap.exists() ? snap.data() : {};
-          if (profile.email !== u.email || profile.displayName !== (u.displayName ?? null)) {
-            setDoc(ref, { email: u.email, displayName: u.displayName ?? null }, { merge: true }).catch(() => {});
+          // Không ghi đè displayName nếu học sinh đã tự nhập tên trong hồ sơ.
+          const patch = {};
+          if (userData.email !== u.email) patch.email = u.email;
+          if (!userData.displayName && u.displayName) patch.displayName = u.displayName;
+          if (Object.keys(patch).length) {
+            setDoc(ref, patch, { merge: true }).catch(() => {});
+            setProfile((prev) => ({ ...(prev || {}), ...patch }));
           }
         }
       } catch (e) {
@@ -132,6 +194,25 @@ export default function App() {
     );
   }
 
+  // Bước 1: Bắt buộc hoàn tất thông tin cá nhân (họ tên, tỉnh, trường, lớp) nếu chưa đủ
+  const isTeacher = profile?.role === "teacher";
+  if (!isTeacher && !isProfileComplete(profile)) {
+    return (
+      <main className="dashboard-shell">
+        <ProfileForm
+          initial={profile || { displayName: user.displayName || "" }}
+          isMandatory={true}
+          onLogout={() => signOut(auth)}
+          onSave={async (formData) => {
+            const saved = await saveProfile(user.uid, formData);
+            setProfile((prev) => ({ ...(prev || {}), ...saved }));
+          }}
+        />
+      </main>
+    );
+  }
+
+  // Bước 2: Sau khi có đầy đủ hồ sơ, bắt buộc chọn ngôn ngữ lập trình nếu chưa chọn
   if (!lang || picking) {
     return (
       <ChooseLang
@@ -143,5 +224,6 @@ export default function App() {
     );
   }
 
+  // Bước 3: Đã đủ thông tin hồ sơ và ngôn ngữ -> Vào trang học tập
   return <Learning user={user} lang={lang} onChangeLang={() => setPicking(true)} />;
 }

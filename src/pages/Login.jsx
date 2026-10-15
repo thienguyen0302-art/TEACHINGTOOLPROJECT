@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
   signInWithPopup, GoogleAuthProvider,
@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../services/firebase";
 import Logo from "../components/Logo";
+import { subscribePublicReviews } from "../services/reviewService";
 
 const ERR = {
   "auth/invalid-credential": "Sai email hoặc mật khẩu.",
@@ -96,6 +97,59 @@ function ArrowIcon() {
   );
 }
 
+function FeedbackPublicCard({ feedback }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = feedback.content && feedback.content.length > 150;
+  const initial = (feedback.displayName || "H")[0].toUpperCase();
+  const dateStr = feedback.createdAt
+    ? new Date(feedback.createdAt).toLocaleDateString("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+    : "";
+
+  return (
+    <article className="feedback-card">
+      <div className="feedback-card-top">
+        <div className="student-avatar" aria-hidden="true">
+          {initial}
+        </div>
+        <div className="student-info">
+          <h3>
+            {feedback.displayName || "Học viên ẩn danh"}
+            {feedback.isVerifiedLearner && (
+              <span className="verified-badge">Đã xác thực</span>
+            )}
+          </h3>
+          <p>Học viên PeanutCode</p>
+        </div>
+        {dateStr && <time>{dateStr}</time>}
+      </div>
+      <div
+        className="feedback-stars"
+        aria-label={`Đánh giá ${feedback.rating} trên 5 sao`}
+      >
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span className={star <= feedback.rating ? "filled" : ""} key={star} />
+        ))}
+      </div>
+      <blockquote className="feedback-card-quote">
+        “{isLong && !expanded ? `${feedback.content.slice(0, 140)}…` : feedback.content}”
+      </blockquote>
+      {isLong && (
+        <button
+          type="button"
+          className="feedback-btn-more"
+          onClick={() => setExpanded((prev) => !prev)}
+        >
+          {expanded ? "Thu gọn" : "Xem thêm"}
+        </button>
+      )}
+    </article>
+  );
+}
+
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [mode, setMode] = useState("login");
@@ -105,12 +159,23 @@ export default function Login() {
   const [isErr, setIsErr] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [feedbacks] = useState(() => {
-    try {
-      const parsed = JSON.parse(window.localStorage.getItem(feedbackStorageKey) || '[]');
-      return Array.isArray(parsed) ? parsed.filter((feedback) => feedback?.verified) : [];
-    } catch { return []; }
-  });
+  const [feedbacks, setFeedbacks] = useState([]);
+
+  useEffect(() => {
+    const unsub = subscribePublicReviews((items) => {
+      setFeedbacks(items);
+    });
+    return () => unsub?.();
+  }, []);
+
+  function handleGoToShare() {
+    window.sessionStorage.setItem("peanut_redirect_after_login", "/feedback");
+    const emailInput = document.getElementById("email") || document.querySelector("input[type=email]");
+    if (emailInput) {
+      emailInput.scrollIntoView({ behavior: "smooth", block: "center" });
+      emailInput.focus();
+    }
+  }
 
   const fail = (e) => {
     setIsErr(true);
@@ -405,41 +470,25 @@ export default function Login() {
 
             {feedbacks.length > 0 ? (
               <div className="feedback-list">
-                {feedbacks.map((feedback) => (
-                  <article className="feedback-card" key={feedback.id}>
-                    <div className="feedback-card-top">
-                      <div className="student-avatar" aria-hidden="true">
-                        {feedback.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="student-info">
-                        <h3>
-                          {feedback.name}
-                          <span className="verified-badge">Đã xác thực</span>
-                        </h3>
-                        <p>{feedback.school || "Học viên PeanutCode"}</p>
-                      </div>
-                      <time>{feedback.createdAt}</time>
-                    </div>
-                    <div
-                      className="feedback-stars"
-                      aria-label={`Đánh giá ${feedback.rating} trên 5 sao`}
-                    >
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <span className={star <= feedback.rating ? "filled" : ""} key={star} />
-                      ))}
-                    </div>
-                    <blockquote>“{feedback.content}”</blockquote>
-                  </article>
+                {feedbacks.map((item) => (
+                  <FeedbackPublicCard key={item.id} feedback={item} />
                 ))}
               </div>
             ) : (
               <div className="feedback-empty">
                 <div className="empty-mark">PC</div>
-                <h3>Chưa có phản hồi đã xác thực</h3>
+                <h3>Chưa có phản hồi nào được công khai</h3>
                 <p>
                   Học viên có thể gửi đánh giá sau khi đăng nhập và tham gia ôn luyện. Phản hồi hợp
-                  lệ sẽ được hiển thị tại đây.
+                  lệ và được kiểm duyệt sẽ xuất hiện tại đây.
                 </p>
+                <button
+                  type="button"
+                  className="feedback-btn-share"
+                  onClick={handleGoToShare}
+                >
+                  Chia sẻ trải nghiệm của bạn
+                </button>
               </div>
             )}
           </div>

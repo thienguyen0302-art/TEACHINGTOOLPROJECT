@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Icon from "../components/Icon";
 import { difficultyLabels, listProblems, problemChapterIds } from "../services/problemService";
-import "./ProblemBank.css";
+import "./Practice.css";
 
 const levelDescriptions = {
   basic: "Nắm vững nền tảng",
@@ -12,28 +13,29 @@ const levelDescriptions = {
 function ProblemRow({ problem }) {
   const url = `/problem/${problem.slug}`;
   return (
-    <tr>
-      <td className="bank-id">{problem.id}</td>
-      <td>
-        <Link className="bank-title" to={url}>{problem.title}</Link>
-        <div className="bank-row-tags">
+    <tr className="practice-table-row">
+      <td className="practice-col-id">{problem.id}</td>
+      <td className="practice-col-main">
+        <Link className="practice-prob-title" to={url}>{problem.title}</Link>
+        <div className="practice-row-tags">
           {problem.tags.map((tag) => <span key={tag}>{tag}</span>)}
         </div>
       </td>
-      <td>
-        <span className={`difficulty-badge difficulty-badge--${problem.difficulty}`}>
+      <td className="practice-col-diff">
+        <span className={`practice-diff-badge practice-diff--${problem.difficulty}`}>
           {difficultyLabels[problem.difficulty]}
         </span>
       </td>
-      <td className="bank-chapter">Chương {Number(problem.chapterId.slice(2))}</td>
-      <td>
-        <Link className="bank-open" aria-label={`Làm bài ${problem.title}`} to={url}>→</Link>
+      <td className="practice-col-chapter">Chương {Number(problem.chapterId.slice(2))}</td>
+      <td className="practice-col-action">
+        <Link className="practice-open-btn" aria-label={`Làm bài ${problem.title}`} to={url}>→</Link>
       </td>
     </tr>
   );
 }
 
 export default function Practice() {
+  const nav = useNavigate();
   const [difficulty, setDifficulty] = useState("");
   const [chapterId, setChapterId] = useState("");
   const [topic, setTopic] = useState("");
@@ -54,39 +56,59 @@ export default function Practice() {
   }
 
   return (
-    <section className="practice-page bank-ui">
-      <header className="bank-header">
+    <div className="content practice-page">
+      <section className="practice-hero">
         <div>
-          <span className="bank-eyebrow">LUYỆN TẬP LẬP TRÌNH</span>
-          <h1>Problem Bank<span className="bank-count">{allProblems.length}</span></h1>
+          <span><Icon name="code" /> LUYỆN TẬP LẬP TRÌNH</span>
+          <h1>Kho bài tập</h1>
           <p>Từng bài một, từng bước tiến bộ. Luyện giải với C++ và Python.</p>
         </div>
-        <Link className="bank-outline-link" to="/">
-          Xem lộ trình <span aria-hidden="true">↗</span>
-        </Link>
-      </header>
-      <div className="bank-overview">
-        {Object.entries(difficultyLabels).map(([value, label]) => (
-          <button
-            key={value}
-            type="button"
-            className={`bank-level bank-level--${value}`}
-            aria-pressed={difficulty === value}
-            onClick={() => setDifficulty(difficulty === value ? "" : value)}
-          >
-            <span className="bank-level__dot" aria-hidden="true" />
-            <span>{label}<small>{levelDescriptions[value]}</small></span>
-            <strong>{allProblems.filter((problem) => problem.difficulty === value).length}</strong>
+        <div className="practice-hero-stat">
+          <strong>{allProblems.length}</strong>
+          <span>tổng số bài tập</span>
+          <button type="button" onClick={() => nav("/curriculum")}>
+            Xem lộ trình
           </button>
-        ))}
-      </div>
-      <div className="bank-browser">
-        <div className="bank-browser__heading">
-          <h2>Danh sách bài tập</h2><span>C++ / Python</span>
         </div>
-        <div className="bank-filters">
-          <label className="bank-search" htmlFor="bank-search">
-            <span aria-hidden="true">⌕</span>
+      </section>
+
+      <div className="practice-overview">
+        {Object.entries(difficultyLabels).map(([value, label]) => {
+          const count = allProblems.filter((p) => p.difficulty === value).length;
+          const isSelected = difficulty === value;
+          return (
+            <button
+              key={value}
+              type="button"
+              className={`practice-level-card practice-level--${value} ${isSelected ? "selected" : ""}`}
+              aria-pressed={isSelected}
+              onClick={() => setDifficulty(isSelected ? "" : value)}
+            >
+              <div className="practice-level-info">
+                <span className="practice-level-title">
+                  <i className="practice-level-dot" aria-hidden="true" />
+                  {label}
+                </span>
+                <small>{levelDescriptions[value]}</small>
+              </div>
+              <strong className="practice-level-count">{count}</strong>
+            </button>
+          );
+        })}
+      </div>
+
+      <section className="practice-browser-card">
+        <div className="practice-card-heading">
+          <div>
+            <span>DANH SÁCH BÀI TẬP</span>
+            <h2>Danh sách bài tập</h2>
+          </div>
+          <strong>C++ / Python</strong>
+        </div>
+
+        <div className="practice-filters">
+          <label className="practice-search" htmlFor="bank-search">
+            <Icon name="search" />
             <span className="bank-sr-only">Tìm bài tập</span>
             <input
               id="bank-search"
@@ -117,27 +139,45 @@ export default function Practice() {
             <option value="title">Tên bài A–Z</option>
           </select>
         </div>
-        <div className="bank-topics" role="group" aria-label="Lọc theo chủ đề">
-          <button type="button" aria-pressed={!topic} onClick={() => setTopic("")}>Tất cả chủ đề</button>
-          {topics.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              aria-pressed={topic === tag}
-              onClick={() => setTopic(topic === tag ? "" : tag)}
-            >
-              {tag}
-            </button>
-          ))}
+
+        <div className="practice-topics" role="group" aria-label="Lọc theo chủ đề">
+          <button
+            type="button"
+            className={`practice-topic-chip ${!topic ? "active" : ""}`}
+            aria-pressed={!topic}
+            onClick={() => setTopic("")}
+          >
+            Tất cả chủ đề
+          </button>
+          {topics.map((tag) => {
+            const isSelected = topic === tag;
+            return (
+              <button
+                key={tag}
+                type="button"
+                className={`practice-topic-chip ${isSelected ? "active" : ""}`}
+                aria-pressed={isSelected}
+                onClick={() => setTopic(isSelected ? "" : tag)}
+              >
+                {tag}
+              </button>
+            );
+          })}
         </div>
-        <div className="bank-results">
+
+        <div className="practice-results-bar">
           <span role="status" aria-live="polite">
             Hiển thị <b>{problems.length}</b> / {allProblems.length} bài tập
           </span>
-          {hasFilters && <button type="button" onClick={resetFilters}>Xóa bộ lọc</button>}
+          {hasFilters && (
+            <button type="button" className="practice-clear-filters" onClick={resetFilters}>
+              Xóa bộ lọc
+            </button>
+          )}
         </div>
-        <div className="bank-table-wrap" tabIndex={0} role="region" aria-label="Bảng bài tập, cuộn ngang trên màn hình nhỏ">
-          <table className="bank-table">
+
+        <div className="practice-table-wrap" tabIndex={0} role="region" aria-label="Bảng bài tập, cuộn ngang trên màn hình nhỏ">
+          <table className="practice-table">
             <caption className="bank-sr-only">Danh sách bài tập lập trình</caption>
             <thead>
               <tr>
@@ -151,16 +191,18 @@ export default function Practice() {
             <tbody>{problems.map((problem) => <ProblemRow key={problem.id} problem={problem} />)}</tbody>
           </table>
         </div>
+
         {problems.length === 0 && (
-          <div className="bank-empty">
-            <span aria-hidden="true">⌕</span>
+          <div className="practice-empty">
+            <Icon name="search" />
             <h3>{emptyChapter ? "Chương này chưa có bài tập" : allProblems.length === 0 ? "Chưa có bài tập" : "Không tìm thấy bài phù hợp"}</h3>
             <p>Thử từ khóa khác hoặc bỏ bớt bộ lọc để xem thêm bài tập.</p>
             <button type="button" onClick={resetFilters}>Xem tất cả bài tập</button>
           </div>
         )}
-        <footer className="bank-footer">Chọn một bài để đọc đề, xem ví dụ và viết lời giải.</footer>
-      </div>
-    </section>
+
+        <footer className="practice-footer">Chọn một bài để đọc đề, xem ví dụ và viết lời giải.</footer>
+      </section>
+    </div>
   );
 }

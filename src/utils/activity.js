@@ -1,5 +1,6 @@
 // Tính chuỗi ngày học và thống kê tuần từ map { "YYYY-MM-DD": số giây }.
 export const MIN_ACTIVE_SECONDS = 60; // học ít nhất 1 phút mới tính là "có học" trong ngày
+export const STRONG_SECONDS = 3600; // trên 60 phút = ngày học tích cực
 const WEEK_LABELS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
 
 export function dateKey(date = new Date()) {
@@ -42,6 +43,30 @@ export function weekSummary(daily = {}, now = new Date()) {
   return {
     days,
     activeCount: days.filter((d) => d.active).length,
+    totalSeconds: days.reduce((sum, d) => sum + d.seconds, 0),
+  };
+}
+
+// Lịch tháng hiện tại: level 0 = chưa học, 1 = đã học, 2 = học trên 60 phút. offset = số ô trống đầu tháng (tuần bắt đầu từ T2).
+export function monthGrid(daily = {}, now = new Date()) {
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const count = new Date(year, month + 1, 0).getDate();
+  const offset = (new Date(year, month, 1).getDay() + 6) % 7;
+  const todayKey = dateKey(now);
+  const days = Array.from({ length: count }, (_, i) => {
+    const key = dateKey(new Date(year, month, i + 1));
+    const seconds = daily[key] ?? 0;
+    const level = seconds >= STRONG_SECONDS ? 2 : seconds >= MIN_ACTIVE_SECONDS ? 1 : 0;
+    return { day: i + 1, key, seconds, level, isToday: key === todayKey, isFuture: key > todayKey };
+  });
+  return {
+    month: month + 1,
+    year,
+    title: `Tháng ${month + 1}, ${year}`,
+    offset,
+    days,
+    studiedDays: days.filter((d) => d.level > 0).length,
     totalSeconds: days.reduce((sum, d) => sum + d.seconds, 0),
   };
 }

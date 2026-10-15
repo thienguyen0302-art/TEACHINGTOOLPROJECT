@@ -59,9 +59,9 @@ export default function LessonCodeExercise({ problem, language, chapterId, secti
     </div>
     <label htmlFor={inputId}>Input chạy thử</label>
     <textarea id={inputId} className="judge-input" rows={4} value={stdin} maxLength={10000} onChange={(event) => setStdin(event.target.value)} spellCheck={false} />
-    <div className="problem-editor__actions">
-      <button type="button" disabled={Boolean(busy) || !source.trim()} onClick={() => execute('run')}>{busy === 'run' ? 'Đang chạy…' : '▷ Chạy code'}</button>
-      <button type="button" className="bank-submit" disabled={Boolean(busy) || !source.trim()} onClick={() => execute('submit')}>{busy === 'submit' ? 'Đang chấm…' : 'Nộp bài ↑'}</button>
+    <div className="lesson-code-actions">
+      <button type="button" className="lesson-code-actions__run" disabled={Boolean(busy) || !source.trim()} onClick={() => execute('run')} aria-busy={busy === 'run'}><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="m9 5 11 7-11 7V5Z" /></svg>{busy === 'run' ? 'Đang chạy…' : 'Chạy code'}</button>
+      <button type="button" className="lesson-code-actions__submit" disabled={Boolean(busy) || !source.trim()} onClick={() => execute('submit')} aria-busy={busy === 'submit'}><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4m-5 5 5-5 5 5M5 16v4h14v-4" /></svg>{busy === 'submit' ? 'Đang chấm…' : 'Nộp bài'}</button>
     </div>
     <SubmissionProgress entry={progress.entry} />
     <JudgeResults busy={busy} error={error} submission={submission} />
