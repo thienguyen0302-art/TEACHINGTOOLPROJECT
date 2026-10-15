@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL } from "../utils/format";
 import "./Teacher.css";
+import { TeacherAuthoringNav } from "./TeacherProblems";
 
 const chapterName = (c) => `${LANG_LABEL[c.language] ?? c.language} · Chương ${Number(c.chapterId.slice(2))}`;
 
@@ -25,12 +26,13 @@ export default function Teacher() {
     return () => { cancelled = true; };
   }, []);
 
-  if (state.loading) return <div className="content">Đang tải dữ liệu lớp...</div>;
-  if (state.error) return <div className="content"><p className="err">{state.error}</p></div>;
+  if (state.loading) return <div className="content"><TeacherAuthoringNav />Đang tải dữ liệu lớp...</div>;
+  if (state.error) return <div className="content"><TeacherAuthoringNav /><p className="err">{state.error}</p></div>;
   const o = state.overview;
 
   return (
     <div className="content">
+      <TeacherAuthoringNav />
       <h1>Bảng điều khiển giáo viên</h1>
       <div className="teacher-stats">
         <div><strong>{o.studentCount}</strong><small>Học sinh</small></div>

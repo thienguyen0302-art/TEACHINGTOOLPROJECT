@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { onAuthStateChanged, signOut, sendEmailVerification } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./services/firebase";
@@ -7,11 +7,13 @@ import Login from "./pages/Login";
 import ChooseLang from "./pages/ChooseLang";
 import Overview from "./pages/Overview";
 import Curriculum from "./pages/Curriculum";
-import Lesson from "./pages/Lesson";
 import Dashboard from "./pages/Dashboard";
-import Practice from "./pages/Practice";
-import Problem from "./pages/Problem";
 import Teacher from "./pages/Teacher";
+import Contests from "./pages/Contests";
+import Contest from "./pages/Contest";
+import ContestProblem from "./pages/ContestProblem";
+import TeacherProblems, { TeacherProblemEditor } from "./pages/TeacherProblems";
+import TeacherContests, { TeacherContestEditor } from "./pages/TeacherContests";
 import AppShell from "./components/AppShell";
 import useStudyTimer from "./hooks/useStudyTimer";
 import useLearningData from "./hooks/useLearningData";
@@ -19,11 +21,21 @@ import { setSubmissionPersistenceAdapter } from "./services/submissionProgressSe
 import { persistSubmission } from "./services/submissionPersistence";
 import { weekSummary } from "./utils/activity";
 
+// Contest routes must not fetch Learning-mode solutions or AI modules.
+const Lesson = lazy(() => import("./pages/Lesson"));
+const Practice = lazy(() => import("./pages/Practice"));
+const Problem = lazy(() => import("./pages/Problem"));
+
 // Phần giao diện sau đăng nhập. Tách riêng để dùng hook dữ liệu (cần uid + lang).
 function Learning({ user, lang, onChangeLang }) {
-  const data = useLearningData(user.uid, lang);
+  const { pathname } = useLocation();
+  const inContest = pathname.startsWith("/contest") || pathname.startsWith("/teacher");
+  const data = useLearningData(user.uid, lang, !inContest);
   const isTeacher = data.profile.role === "teacher";
   const week = weekSummary(data.daily);
+  const teacherOnly = (element) => data.loading
+    ? <div className="content">Đang tải...</div>
+    : isTeacher ? element : <Navigate to="/" replace />;
 
   // Nối bài nộp code (Judge) với Firestore; gỡ adapter khi đăng xuất.
   useEffect(() => {
@@ -36,12 +48,24 @@ function Learning({ user, lang, onChangeLang }) {
       {data.error && (
         <div className="content"><p className="err">{data.error}</p></div>
       )}
-      <Routes>
+      <Suspense fallback={<div className="content">Đang tải trang…</div>}><Routes>
         <Route path="/" element={<Overview user={user} lang={lang} data={data} onChangeLang={onChangeLang} />} />
         <Route path="/curriculum" element={<Curriculum lang={lang} data={data} onChangeLang={onChangeLang} />} />
         <Route path="/lesson/:id" element={<Lesson lang={lang} />} />
         <Route path="/practice" element={<Practice />} />
         <Route path="/problem/:slug" element={<Problem lang={lang} />} />
+        <Route path="/contests" element={<Contests />} />
+        <Route path="/contest/:contestId" element={<Contest user={user} />} />
+        <Route path="/contest/:contestId/problem/:problemId" element={<ContestProblem lang={lang} />} />
+        <Route path="/contest/:contestId/scoreboard" element={<Contest user={user} view="scoreboard" />} />
+        <Route path="/contest/:contestId/submissions" element={<Contest user={user} view="submissions" />} />
+        <Route path="/teacher/problems" element={teacherOnly(<TeacherProblems />)} />
+        <Route path="/teacher/problems/new" element={teacherOnly(<TeacherProblemEditor />)} />
+        <Route path="/teacher/problems/:problemId/edit" element={teacherOnly(<TeacherProblemEditor />)} />
+        <Route path="/teacher/contests" element={teacherOnly(<TeacherContests />)} />
+        <Route path="/teacher/contests/new" element={teacherOnly(<TeacherContestEditor />)} />
+        <Route path="/teacher/contests/:contestId/edit" element={teacherOnly(<TeacherContestEditor />)} />
+        <Route path="/teacher/contests/:contestId/monitor" element={teacherOnly(<Contest user={user} teacher />)} />
         <Route path="/progress" element={<Dashboard user={user} lang={lang} data={data} />} />
         <Route
           path="/teacher"
@@ -50,7 +74,7 @@ function Learning({ user, lang, onChangeLang }) {
             : isTeacher ? <Teacher /> : <Navigate to="/" replace />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      </Routes></Suspense>
     </AppShell>
   );
 }

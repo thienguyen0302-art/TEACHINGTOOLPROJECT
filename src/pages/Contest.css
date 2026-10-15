@@ -1,0 +1,47 @@
+/* Contest/authoring only; Learning and Lesson retain their existing styles. */
+.contest-ui { min-width: 0; color: #23344f; }
+.contest-ui h1 { font-size: clamp(22px, 3vw, 30px); overflow-wrap: anywhere; }
+.contest-ui h2 { font-size: 20px; margin: 24px 0 14px; }
+.contest-ui p { line-height: 1.7; }
+.contest-ui a:hover { text-decoration: underline; }
+.contest-heading, .contest-actions, .contest-links { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 18px 0; }
+.contest-heading { justify-content: space-between; align-items: flex-start; }
+.contest-eyebrow { color: #476b9d; font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+.contest-links a { padding: 9px 13px; border: 1px solid #dce4ef; border-radius: 8px; background: #fff; font-size: 13px; }
+.contest-ui button, .contest-button { border: 1px solid #c8d4e5; border-radius: 7px; background: #fff; color: #25446f; padding: 9px 13px; cursor: pointer; font: inherit; font-size: 13px; }
+.contest-ui button:disabled { opacity: .6; cursor: not-allowed; }
+.contest-ui :is(button,a,input,textarea,select):focus-visible { outline: 3px solid #467adc; outline-offset: 3px; }
+.contest-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 16px; }
+.contest-card { background: #fff; border: 1px solid #dce4ef; border-radius: 12px; padding: 20px; min-width: 0; margin: 16px 0; }
+.contest-card h3 { margin: 16px 0 8px; }
+.contest-badge, .contest-clock { display: inline-flex; padding: 7px 10px; border-radius: 6px; background: #edf2f9; font-size: 12px; font-variant-numeric: tabular-nums; gap: 5px; }
+.contest-badge.running { color: #087b56; background: #e4f5eb; }
+.contest-badge.ended { color: #626d7e; }
+.contest-total { padding: 14px; border-left: 3px solid #4584d6; background: #eef5ff; border-radius: 5px; }
+.contest-table-wrap { overflow-x: auto; max-width: 100%; border: 1px solid #dce4ef; border-radius: 9px; background: #fff; }
+.contest-ui table { width: 100%; border-collapse: collapse; margin: 0; font-size: 13px; }
+.contest-ui th, .contest-ui td { padding: 13px 16px; text-align: left; border-bottom: 1px solid #e6ebf4; }
+.contest-ui th { background: #f0f4fa; color: #546984; white-space: nowrap; }
+.contest-ui td small { display: block; margin-top: 5px; font-size: 11px; color: #687a91; }
+.contest-current-user { background: #eff8ff; }
+.contest-ui pre { overflow: auto; max-width: 100%; background: #20242b; color: #dce6f5; padding: 16px; border-radius: 7px; font: 13px/1.7 ui-monospace,monospace; }
+.contest-form { max-width: 1000px; }
+.contest-form fieldset { border: 1px solid #dce4ef; border-radius: 10px; background: #fff; margin: 20px 0; padding: 20px; min-width: 0; }
+.contest-form legend { font-weight: 700; padding: 0 8px; }
+.contest-form label { display: grid; gap: 7px; margin: 14px 0; font-size: 13px; }
+.contest-form input:not([type=checkbox]), .contest-form select, .contest-form textarea { width: 100%; min-width: 0; border: 1px solid #c7d5e8; border-radius: 6px; padding: 10px; background: #fbfcff; color: #23344f; font: inherit; }
+.contest-form textarea { resize: vertical; }
+.contest-form .contest-source { font: 13px/1.7 ui-monospace,monospace; }
+.contest-form .contest-checkbox { display: flex; align-items: center; }
+.contest-test-editor { padding: 12px 16px; margin: 16px 0; background: #f7f9fc; border: 1px solid #e3eaf4; border-radius: 8px; }
+.contest-builder-row { display: grid; grid-template-columns: 24px minmax(100px,1fr) 90px auto auto auto; align-items: center; gap: 8px; }
+.contest-warning { padding: 12px 15px; background: #fff4d9; color: #795412; border: 1px solid #eddbad; border-radius: 7px; }
+.contest-ui.bank-ui .problem-workspace { min-width: 0; }
+.contest-ui .bank-code-area { min-width: 0; overflow: hidden; }
+.contest-ui .bank-execution .judge-input { width: 100%; max-width: 100%; }
+@media(max-width: 760px) {
+  .contest-builder-row { grid-template-columns: 24px minmax(80px,1fr) 80px; padding-bottom: 16px; }
+  .contest-form fieldset { padding: 12px; }
+  .contest-ui th, .contest-ui td { padding: 10px; }
+  .contest-heading { gap: 8px; }
+}

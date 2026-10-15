@@ -3,7 +3,7 @@ import { getAllProgress, getDailyActivity, getProfile } from "../services/progre
 import { listChapters } from "../services/contentService";
 
 // Gom dữ liệu dùng chung cho Shell, Tổng quan, Chương trình học, Tiến độ.
-export default function useLearningData(uid, lang) {
+export default function useLearningData(uid, lang, includeChapters = true) {
   const [state, setState] = useState({
     loading: true, error: "", profile: {}, rows: [], chapters: [], daily: {},
   });
@@ -11,7 +11,7 @@ export default function useLearningData(uid, lang) {
   const load = useCallback(async () => {
     try {
       const [profile, all, chapters, daily] = await Promise.all([
-        getProfile(uid), getAllProgress(uid), listChapters(lang),
+        getProfile(uid), getAllProgress(uid), includeChapters ? listChapters(lang) : Promise.resolve([]),
         getDailyActivity(uid).catch(() => ({})), // lỗi thống kê ngày không được làm hỏng cả trang
       ]);
       setState({
@@ -24,7 +24,7 @@ export default function useLearningData(uid, lang) {
         error: "Không tải được tiến độ: " + (e.code || e.message),
       }));
     }
-  }, [uid, lang]);
+  }, [uid, lang, includeChapters]);
 
   useEffect(() => {
     load();

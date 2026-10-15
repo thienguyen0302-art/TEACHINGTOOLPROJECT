@@ -44,5 +44,55 @@ service cloud.firestore {
     match /{path=**}/progress/{id} {
       allow read: if isTeacher();
     }
+    // New authoring uses the authenticated backend so slug/lock checks are atomic.
+    function unlocked(problemId) {
+      return !exists(/databases/$(database)/documents/problemLocks/$(problemId)) ||
+        get(/databases/$(database)/documents/problemLocks/$(problemId)).data.until <= request.time;
+    }
+    function validPublicProblem(d, id) {
+      return d.keys().hasOnly(['title','slug','difficulty','tags','statement','inputDescription','outputDescription','constraints','samples','allowedLanguages','starterCode','status','createdBy','createdAt','updatedAt']) &&
+        d.status in ['draft','published'] && d.title is string && d.slug is string &&
+        d.samples is list && d.samples.size() >= 1 && d.samples.size() <= 10 &&
+        d.allowedLanguages is list && d.allowedLanguages.size() > 0 && d.allowedLanguages.hasOnly(['cpp','python']) &&
+        get(/databases/$(database)/documents/problemSlugs/$(d.slug)).data.problemId == id &&
+        (d.status == 'draft' || get(/databases/$(database)/documents/problemSecrets/$(id)).data.hiddenTests.size() > 0);
+    }
+    match /problems/{id} {
+      allow read: if isTeacher() || (signedIn() && resource.data.status == 'published');
+      allow create: if isTeacher() && unlocked(id) && validPublicProblem(request.resource.data, id) && request.resource.data.createdBy == request.auth.uid;
+      allow update: if isTeacher() && unlocked(id) && validPublicProblem(request.resource.data, id) && request.resource.data.createdBy == resource.data.createdBy;
+      allow delete: if false;
+    }
+    match /problemSecrets/{id} {
+      allow read: if isTeacher();
+      allow create, update: if isTeacher() && unlocked(id) &&
+        request.resource.data.keys().hasOnly(['hiddenTests','updatedAt']) &&
+        request.resource.data.hiddenTests is list && request.resource.data.hiddenTests.size() <= 50 &&
+        (get(/databases/$(database)/documents/problems/$(id)).data.status == 'draft' || request.resource.data.hiddenTests.size() > 0);
+      allow delete: if false;
+    }
+    match /problemSlugs/{slug} { allow read, write: if false; }
+    match /problemLocks/{id} { allow read: if isTeacher(); allow write: if false; }
+    match /contests/{contestId} {
+      allow read: if isTeacher() || (signedIn() && resource.data.status == 'published');
+      // Direct client writes can only touch drafts. Publish/configure scheduled
+      // contests through Admin transactions to establish all problem locks.
+      allow create: if isTeacher() && request.resource.data.status == 'draft' &&
+        request.resource.data.createdBy == request.auth.uid &&
+        request.resource.data.keys().hasOnly(['title','description','status','startAt','durationMinutes','scoringMode','problems','createdBy','createdAt','updatedAt']);
+      allow update: if isTeacher() && resource.data.status == 'draft' && request.resource.data.status == 'draft' &&
+        request.resource.data.createdBy == resource.data.createdBy &&
+        request.resource.data.keys().hasOnly(['title','description','status','startAt','durationMinutes','scoringMode','problems','createdBy','createdAt','updatedAt']);
+      allow delete: if false;
+      match /submissions/{submissionId} {
+        allow read: if isTeacher() || (signedIn() && resource.data.uid == request.auth.uid &&
+          get(/databases/$(database)/documents/contests/$(contestId)).data.status == 'published');
+        allow write: if false;
+      }
+      match /scoreboard/{uid} {
+        allow read: if isTeacher() || (signedIn() && get(/databases/$(database)/documents/contests/$(contestId)).data.status == 'published');
+        allow write: if false;
+      }
+    }
   }
 }

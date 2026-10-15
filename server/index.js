@@ -5,6 +5,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { Buffer } from 'node:buffer';
 import { executeTest, gradeSubmission } from './judge.js';
 import { loadLessonProblems } from './lessonProblems.js';
+import { createContestHandler } from './contest.js';
+import { requireValue } from '../src/utils/problemAuthoring.js';
 
 const bankRoot = new URL('../src/content/problems/', import.meta.url);
 const problems = new Map();
@@ -21,12 +23,22 @@ let active = 0;
 const tutorHandler = createTutorHandler();
 // Production: đặt REQUIRE_AUTH=true và FIREBASE_PROJECT_ID để chỉ người đã đăng nhập mới gọi được Judge/AI.
 const authGuard = createAuthGuard({ projectId: process.env.FIREBASE_PROJECT_ID, required: process.env.REQUIRE_AUTH === 'true' });
+const contestHandler = createContestHandler({ judgeConfig: (language) => {
+  requireValue(process.env.JUDGE0_URL, 'Chưa cấu hình JUDGE0_URL cho backend.', 503);
+  const headers = {};
+  if (process.env.JUDGE0_API_KEY) headers['X-RapidAPI-Key'] = process.env.JUDGE0_API_KEY;
+  if (process.env.JUDGE0_API_HOST) headers['X-RapidAPI-Host'] = process.env.JUDGE0_API_HOST;
+  if (process.env.JUDGE0_AUTH_TOKEN) headers['X-Auth-Token'] = process.env.JUDGE0_AUTH_TOKEN;
+  return { languageId: languages[language], baseUrl: process.env.JUDGE0_URL, headers };
+} });
 
 const server = http.createServer(async (req, res) => {
   const reply = (status, data) => { if (!res.destroyed) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); } };
-  if (!['/api/judge', '/api/ai/tutor'].includes(req.url) || req.method !== 'POST') return reply(404, { error: 'Không tìm thấy API.' });
+  const contestRoute = /^\/api\/(teacher|contests|contest)(\/|$)/.test(req.url);
+  if (!contestRoute && (!['/api/judge', '/api/ai/tutor'].includes(req.url) || req.method !== 'POST')) return reply(404, { error: 'Không tìm thấy API.' });
   // The development service is localhost-only; reject cross-origin browser requests.
   if (req.headers.origin && !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(req.headers.origin) && req.headers.origin !== process.env.APP_ORIGIN) return reply(403, { error: 'Origin không được phép.' });
+  if (contestRoute) return contestHandler(req, reply);
   const caller = await authGuard(req);
   if (!caller.ok) return reply(caller.status, { error: caller.error });
   if (req.url === '/api/ai/tutor') return tutorHandler(req, res);

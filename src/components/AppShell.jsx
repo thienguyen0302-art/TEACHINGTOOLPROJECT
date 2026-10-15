@@ -11,6 +11,7 @@ const NAV = [
   { label: "Tổng quan", icon: "grid", path: "/" },
   { label: "Chương trình học", icon: "book", path: "/curriculum" },
   { label: "Kho bài tập", icon: "code", path: "/practice" },
+  { label: "Contest HSG", icon: "trophy", path: "/contests" },
   { label: "Tiến độ của tôi", icon: "chart", path: "/progress" },
   { label: "Bảng xếp hạng", icon: "trophy", path: null },
 ];
@@ -20,6 +21,7 @@ function isActive(item, pathname) {
   if (!item.path) return false;
   if (item.path === "/") return pathname === "/";
   if (item.path === "/curriculum") return pathname.startsWith("/curriculum") || pathname.startsWith("/lesson");
+  if (item.path === "/contests") return pathname.startsWith("/contest");
   return pathname.startsWith(item.path);
 }
 

@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "test:contest": "node --test server/contest.test.js",
+    "test:authoring": "node --test server/problemAuthoring.test.js",
     "dev": "node scripts/dev.js",
     "prebuild": "npm run validate:content",
     "build": "vite build",
@@ -17,11 +19,13 @@
     "dev:web": "vite",
     "test:ai": "node --test server/aiTutor.test.js",
     "test:progress": "node --test server/submissionProgress.test.js",
-    "test:platform": "node --test server/platform.test.js"
+    "test:platform": "node --test server/platform.test.js",
+    "test:rules": "node --test server/contestRules.test.js"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "firebase": "^12.19.0",
+    "firebase-admin": "^14.5.0",
     "monaco-editor": "^0.57.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -29,6 +33,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
