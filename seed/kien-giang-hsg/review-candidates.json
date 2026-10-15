@@ -1,0 +1,2156 @@
+{
+  "2010-2011": [
+    {
+      "id": "kien-giang-hsg-2010-2011-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1011.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Gi ải phương trình bậc 2",
+        "statement": "Xét và biện luận phương trình bậc hai:\n                                           ax² + bx + c = 0\n(Lưu ý: phải xử                  lý đầ    y đủtất cảcác trư             ờng hợ       p a = 0, b = 0, c = 0, a ≠ 0, b ≠ 0, c ≠ 0).\nYêu cầu:\n      -Nhập dữ               liệu: 3 hệsố                a, b, c.\n      -Xuất ra màn hình: kết quảcủa phương trình (chỉlấ                                     y đến 2 chữ          sốth      ập phân).\nVí dụ       :\n                Đầu vào                                           Đầu ra\n    a = 0, b = 0, c = 5                  Phuong trinh vo nghiem\n\n    a = -123, b = 321, c = 213           Phuong trinh co 2 nghiem PB: x1 = 3.16,             x2  = -\n                                         0.5",
+        "slug": "kien-giang-hsg-2010-2011-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2010-2011-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1011.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Tổ ng dãy số",
+        "statement": "Viết chương trình nhậ          p vào dãy số     nguyên theo thứ    tự  tăng hoặc b      ằng. In ra tổng\ncủa các s    ốvừ     a nhập.\nYêu cầu:\n      Nếu nhập sai (sốsau nhỏhơn số                                  trư ớc) thì yêu cầu nhập l               ại.\n      Chương trình dừ   ng và in ra tổng củ                 a các số   vừ  a nhập khi sốnhập vào là-1.\n                Đầu vào                                             Đầu ra\n           Nhap so thu 1: 6\n           Nhap so thu 2: 2\n                                          So khong hop le. Nhap lai!\n           Nhap so thu 2: 7\n           Nhap so thu 3: 8\n           Nhap so thu 4: -1\n                                          Tong 3 so la: 21",
+        "slug": "kien-giang-hsg-2010-2011-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2010-2011-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1011.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Sắ p xếp dãy số",
+        "statement": "Nhập số phần tử n và dãy n số nguyên.Sau đó nhập một số nguyên x cần chèn.\n-In ra dãy ban đầu theo thứ tự đã nhập.\n-Sắp xếp dãy tăng dần và in ra dãy đã sắp xếp.\n-   Chèn x vào dãy đã sắp xếp để vẫn đảm bảo thứ tự tăng; in ra dãy sau khi chèn và in vị\ntrí  của x trong dãy mới.\n-   Nếu x là số chẵn, in \"Tong cac so chan: <giatri>\"; nếu x là số lẻ, in \"Tong cac so le:\n<giatri>\".\n\n\n                                              6\n\f\nVÍ DỤ\n             Đầu vào                                               Đầu ra\n    Cho so phan tu n=5               - Day so ban dau: 2 5 4 1 6\n    So thu 1: 2                      -Day so da sap xep tang dan: 1 2 4 5 6\n    So thu 2: 5                      -Day so da chen them: 1 2 4 4 5 6\n    So thu 3: 4                      -Vi tri so moi chen: 4\n    So thu 4: 1                      -Tong cac so chan: 16\n    So thu 5: 6\n    Nhap so can chen: 4\n    Cho so phan tu n=9               - Day so ban dau: 2 5 4 1 6 15 12 17 16\n    So thu 1: 2                      -Day so da sap xep tang dan: 1 2 4 5 6 12 15 16 17\n    So thu 2: 5                      -Day so da chen them: 1 2 4 5 6 11 12 15 16 17\n    So thu 3: 4                      -Vi tri so moi chen: 6\n    So thu 4: 1                      -Tong cac so le: 49\n    So thu 5: 6\n    So thu 6: 15\n    So thu 7: 12\n    So thu 8: 17\n    So thu 9: 16\n    Nhap so can chen: 11\n    Cho so phan tu n=15              - Day so ban dau: 2 5 4 1 6 15 12 17 16 55 40 45 33 3\n    So thu 1: 2                      60\n    So thu 2: 5                      -Day so da sap xep tang dan: 1 2 3 4 5 6 12 15 16 17\n    So thu 3: 4                      33 40 45 55 60\n    So thu 4: 1                      -Day so da chen them: 1 2 3 4 5 6 12 15 16 17 19 33 40\n    So thu 5: 6                      45 55 60\n    So thu 6: 15                     -Vi tri so moi chen: 11\n    So thu 7: 12                     -Tong cac so le: 193\n    So thu 8: 17\n    So thu 9: 16\n    So thu 10: 55\n    So thu 11: 40\n    So thu 12: 45\n    So thu 13: 33\n    So thu 14: 3\n    So thu 15: 60\n    Nhap so can chen: 19\n                                                     7",
+        "slug": "kien-giang-hsg-2010-2011-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2010-2011-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1011.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Chuẩn hóa văn bản",
+        "statement": "Cho một đoạ      n văn bả n gồ     m các ký tự chữ cái và khoảng trắng, trong đó có thể\nchứa cả   chữ  hoa,  chữ      thường  và  nhiều  kho       ảng  trắng  liên  ti      ếp.  Hãy  viết  chương  trình\nchuẩn hóa chuỗi theo quy tắc sau:\n-Mỗi từ            cách nhau đúng m ột khoả          ng trắng.\n-Chữ        cái đầu c          ủa m  ỗi t  ừ viết hoa, các chữ         cái còn lại viết thư                  ờng.\n-Kết thúc chuỗi không có khoảng trắng.\nVí dụ\n                    Đầu vào                                             Đầu ra\nSO gIAo dUC va DaO TAO kIeN GiAnG                    So Giao Duc Va Dao Tao Kien Giang\n        Giải thích ví dụ: Chương trình bỏ               các khoảng trắng thừ       a, chuyển các ký tự    đầu\nmỗi từ    thành chữ    hoa và các ký tự                 khác thành chữ      thư ờng.",
+        "slug": "kien-giang-hsg-2010-2011-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2011-2012": [
+    {
+      "id": "kien-giang-hsg-2011-2012-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1112.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Trăm trâu trăm bó cỏ",
+        "statement": "Trâu đứ               ng ăn năm\n      Trâu nằ               m ăn ba\n      Trâu già ba con một bó.\n      Hỏi có bao nhiêu con m     ỗi loại?\nYêu cầu:  Liệt kê tất c        ả   các trường hợ  p thỏa đi     ều kiện v       ới mỗi loại trâu phải l              ớn hơn hoặc\nbằng 1.\nVí dụ       :\n              Đầu vào                                             Đầu ra\n(không có)                                4 Trâu đứng   18 Trâu nằm   78 Trâu già\n      Giải thích ví dụ: Các s          ố   (x, y, z) lần lư   ợt là trâu đứ  ng, trâu nằ  m, trâu già. Thỏa x + y\n+ z = 100 và 5x + 3y + z/3 = 100, x, y, z ≥ 1; nghiệ     m nguyên duy nhất là (4, 18, 78).",
+        "slug": "kien-giang-hsg-2011-2012-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2011-2012-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1112.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Tìm các ư ớc chung nguyên tố",
+        "statement": "Cho hai số                   tự  nhiên a, b (1 < a < b ≤ 10^9). Hãy viết chương trình tìm t     ất cả      các số\nnguyên tốlà ư         ớc chung của a và b.\nYêu cầu:\n      -   Nhập dữ          liệu (console): m    ột dòng gồ    m hai số     a, b (cách nhau ít nhất m    ột ký tự\ntrắng).\n      -   Xuất d       ữ liệu (console): liệt kê t        ất cả     các ước chung là số   nguyên tố    (theo thứ   tự\ntăng dần), cách nhau ít nhất m                 ột khoảng tr        ắng. Trư  ờng hợ       p không có, in ra 0.\nVí dụ:\n                   Đầu vào                                              Đầu ra\n12 18                                              2 3\n35 28                                              7\n10 21                                              0\n\n\n                                               14\n\f\nGiải thích ví dụ                :\n      Ví dụ1: gcd(12,18) = 6 = 2 × 3, các ư          ớc chung nguyên tốlà 2, 3.\n      Ví dụ2: gcd(35,28) = 7, các ư          ớc chung nguyên tốlà 7.\n      Ví dụ3: gcd(10,21) = 1 nên không có ư                    ớc chung nguyên tố, in 0.",
+        "slug": "kien-giang-hsg-2011-2012-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2011-2012-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1112.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Dãy sốnguyên dương",
+        "statement": "Viết chương trình nhập vào dãy số                nguyên dương. In ra tổ ng của các s         ố   vừ  a nhập,\nđế  m và tính tổng các s      ốnguyên t   ốcó trong dãy sốvừ          a nhập.\nYêu cầu  : Khi sốnh   ập vào là 1   thì không cho nhập nữ           a và in ra tổ    ng của các s         ố trong dãy,\nsốlư     ợng và tổng các số     nguyên tố          có trong dãy sốvừ     a nhập.\nVí dụ:\n         Đầu vào (theo từng dòng)                                         Đầu ra\n6                                                    Tong cac so trong day la: 23\n2                                                    Co 2 so nguyen to trong day, tong cua\n7                                                    chung la: 9\n8\n1\nGiải thích ví dụ                  :\n      Dãy số(không tính số           1 kết thúc): 6, 2, 7, 8. T       ổng = 23. Các sốnguyên tốtrong\ndãy: 2 và 7 (2 số), t        ổng = 9.\n\n\n\n\n                                                17",
+        "slug": "kien-giang-hsg-2011-2012-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2011-2012-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1112.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Trò chơi đoán s ố",
+        "statement": "Trò chơi đoán số   như sau: Sau bả  y lần đoán hoặc ít hơn, tùy s        ố   (1 ≤ số     ≤ 100) mà\nngười B (người chơi) đang nghĩ trong đầu, ngư  ời A (máy vi tính) phải đoán đúng n      ếu\nkhông là thua (chương trình không đạt yêu cầu).\nMô phỏng lập trình như sau:\n     Lần 1: Khi ngư    ời A trả   lờ i mà người B thấ   y không đúng thì phải cho ngư      ời A biết\nsố     mình đang nghĩ nhỏ         hay lớn hơn sốc        ủa ngư  ời A vừ        a trảl        ời.\n\n                                             20\n\f\n       Lần 2: Khi ngư    ời A trả   lờ i tiếp mà ngư    ời B thấ  y không đúng thì phải cho ngư  ời A\nbiết số            mình đang nghĩ nhỏhay l       ớn hơn sốcủa ngư        ời A vừ        a trảl        ời.\n       ...\n       Lần n (n ≤ 7) thì ngư    ời A phải trả           lời đúng nếu không chương trình không đạt yêu\ncầu.\nYêu cầu\n   Người B trảl           ời bằng cách nhập bàn phím như sau:\n   -Nếu ngư       ời A trảlờ          i sốnhỏhơn sốngư                   ời B nghĩ thì nhậ                  p số0.\n   -Nếu ngư       ời A trảlờ          i sốlớ        n hơn sốngư        ời B nghĩ thì nhậ               p số9.\n   -Nếu ngư       ời A trảlờ          i đúng sốngư            ời B nghĩ thì nhập số1.\n   Không quá 7 lần đ       ối đáp giữ        a người A và người B thì người A phải tr  ảlờ    i đúng số.\nVí dụ\n       Người B nghĩ số15, chươ       ng trình hiển thịnhư sau (7 lần đối đáp):\n       Nguoi A (may vi tinh) tra loi: 50    Nguoi B (nguoi choi) tra loi: 0\n       Nguoi A (may vi tinh) tra loi: 25    Nguoi B (nguoi choi) tra loi: 0\n       Nguoi A (may vi tinh) tra loi: 13    Nguoi B (nguoi choi) tra loi: 9\n       Nguoi A (may vi tinh) tra loi: 16    Nguoi B (nguoi choi) tra loi: 0\n       Nguoi A (may vi tinh) tra loi: 14    Nguoi B (nguoi choi) tra loi: 9\n       Nguoi A (may vi tinh) tra loi: 15    Nguoi B (nguoi choi) tra loi: 1\n\n       Người B nghĩ số40, chương trình hi       ển thịnhư sau (5 lần đối đáp):\n       Nguoi A (may vi tinh) tra loi: 50    Nguoi B (nguoi choi) tra loi: 0\n       Nguoi A (may vi tinh) tra loi: 25    Nguoi B (nguoi choi) tra loi: 9\n       Nguoi A (may vi tinh) tra loi: 37    Nguoi B (nguoi choi) tra loi: 0\n       Nguoi A (may vi tinh) tra loi: 43    Nguoi B (nguoi choi) tra loi: 9\n       Nguoi A (may vi tinh) tra loi: 40    Nguoi B (nguoi choi) tra loi: 1",
+        "slug": "kien-giang-hsg-2011-2012-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2012-2013": [
+    {
+      "id": "kien-giang-hsg-2012-2013-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1213.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Dãy sốliên tiếp có tổng b ằng n",
+        "statement": "Cho sốnguyên dương N (1 < N ≤ 10⁶). Hãy li            ệt kê tất cảcác dãy các s                  ốnguyên\ndương liên tiế              p có tổng b           ằng N, mỗi dãy có ít nhất 2 sốh                      ạng.\nYêu cầu:\n      -Nếu tồn tạ                 i, in ra các dãy thỏa điề           u kiện, mỗi dãy trên một dòng, dạ                      ng: N = a +\n(a+1) + … + b\n      -Nếu không tồn tạ                 i, in ra dòng: Khong ton tai day so.\nVí dụ       :\n                   Đầu vào                                               Đầu ra\n18                                                   18 = 3 + 4 + 5 + 6\n                                                     18 = 5 + 6 + 7",
+        "slug": "kien-giang-hsg-2012-2013-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2012-2013-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1213.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Phân rã theo fibonacci (zeckendorf)",
+        "statement": "Cho số            nguyên dương N (1 ≤ N ≤ 10¹²). Hãy biểu diễn N dư          ới dạng tổng của m              ột số\ncác sốFibonacci không kềnhau (dạ                     ng Zeckendorf).\n      -Dãy Fibonacci dùng trong bài bắt đầu: 1, 2, 3, 5, 8, 13, 21, 34, …\n      -   Kết quả            in một dòng theo định dạng: N=a1+a2+...+ak, trong đó a1 > a2 > ... > ak\nlà các sốFibonacci không kềnhau.\n\nVí dụ:\n\n                Đầu vào                                        Đầu ra\n15                                            15=13+2\n30                                            30=21+8+1\n222                                           222=144+55+21+2\n12345                                         12345=10946+987+377+34+1\n999                                           999=987+8+3+1\n\n\n                                              26",
+        "slug": "kien-giang-hsg-2012-2013-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2012-2013-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1213.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Sốxu ất hiện nhi ều nhất trong mảng",
+        "statement": "Cho dãy sốnguyên A g   ồm N phần tử                   (1 ≤ N ≤ 10⁵).\nYêu cầu\n       -Liệt kê các sốphân bi            ệt xuất hiện trong mảng theo đúng thứ                             tự   xuất hiện lần đầ                        u.\n       -Tìm và in ra sốxu            ất hiện nhiều nhất trong mảng (nếu có nhiều s                                        ốcùng tần suấ                   t lớ   n\nnhất thì in ra sốđầ                u tiên đạt đư       ợc tần suất đó).\nDữ    liệu vào:\n       -Dòng 1: chứ    a sốnguyên N\n       -Dòng 2: chứ    a N sốnguyên A₁, A₂, …, Aₙ (cách nhau ít nhất 1 khoảng trắng)\nDữ    liệu ra:\n       -Dòng 1: in ra các s  ốphân biệt theo thứ                      tự   xu ất hiện.\n       -Dòng 2: in ra dòng 'So xuat hien nhieu nhat trong mang la: X'\nVí dụ\n                  Đầu vào                                                           Đầu ra\n10                                                   Cac so xuat hien trong mang la: 4, 5, 12, 11, 8, 14, 9\n4 5 12 5 4 11 8 14 9 4                               So xuat hien nhieu nhat trong mang la: 4\n6                                                    Cac so xuat hien trong mang la: 11, 22, 33, 44, 55\n11 22 33 44 55 33                                    So xuat hien nhieu nhat trong mang la: 33\n20                                                   Cac so xuat hien trong mang la: 2, 3, 1, 4, 5\n2 2 3 1 4 2 3 1 2 4 1 2 3 3 4 5 1 3 2                So xuat hien nhieu nhat trong mang la: 2\n4",
+        "slug": "kien-giang-hsg-2012-2013-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2012-2013-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1213.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Tính tiền gử i tiết kiệ m theo kỳ h ạn",
+        "statement": "Nhập sốtiề                n gử     i ban đầu P (sốnguyên dương) và sốtháng gử                               i M (số nguyên\ndương).\n      Tiền lãi đư     ợc tính theo quy tắc:\n      -Mỗi trọn 3 tháng (m              ột quý) được lãi gộp 2% (nhân 1.02).\n      -Các tháng lẻcòn lạ              i (0, 1 hoặc 2 tháng) đư             ợc lãi gộp 0.1%/tháng (nhân 1.001 mỗi\ntháng).\n      -Lãi gộp (compound) theo thứ                        tự  : gộp từ          ng quý trước, sau đó các tháng lẻ.\n      -Kết quảin đúng 2 ch                ữ sốthập phân.\nYêu cầu:\n      In ra một dòng:\n      So tien duoc sau sau M thang la: VALUE\n      Trong đó VALUE là số      tiền sau M tháng, làm tròn 2 chữ                    sốth      ập phân.\nVí dụ\n                   Đầu vào                                               Đầu ra\n500000                                               So tien duoc sau sau 8 thang la:\n8                                                    521240.92\n123456789                                            So tien duoc sau sau 1 thang la:\n1                                                    123580245.79\n250000000                                            So tien duoc sau sau 3 thang la:\n3                                                    255000000.00\n2000000000                                           So tien duoc sau sau 34 thang la:\n34                                                   2489235365.41",
+        "slug": "kien-giang-hsg-2012-2013-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2013-2014": [
+    {
+      "id": "kien-giang-hsg-2013-2014-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1314.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Kiể m tra dạng armstrong cho số abc",
+        "statement": "Viết chương trình nhậ                p từ   bàn phím 3 sốnguyên a, b, c (0 < a ≤ 9; 0 ≤ b, c ≤ 9).\nYêu cầu:\n      Kiể    m tra xem ba ch         ữ s ốa, b, c có thểbiểu diễ                n được dưới dạng:\n      abc = a^3 + b^3 + c^3 hay không (vớ   i abc là sốcó ba chữ                 số      lần lư   ợt là a, b, c).\n      -Nếu có, in ra đúng đị          nh dạng: So abc=a^3+b^3+c^3\n      -Nếu không, in: So abc khong bieu dien duoi dang abc=a^3+b^3+c^3.\nVí dụ       :\n                 Đầu vào                                         Đầu ra\na=3, b=7, c=1                                  So 371=3^3+7^3+1^3\na=1, b=2, c=3                                  So 123 khong bieu dien duoi dang\n                                               abc=a^3+b^3+c^3",
+        "slug": "kien-giang-hsg-2013-2014-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2013-2014-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1314.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Mả ng con có tổ ng lớ n nh ất (đ ộ dài m)",
+        "statement": "Cho một mảng số              nguyên A gồ            m n phần tử            . Mảng con B c  ủa A gồ           m m phần tử           (m\n≤ n) là m phần tử               liên tiếp nhau trong A.\nYêu cầu:\n       -Nhập dữ               liệu: m     ảng s  ốnguyên A gồ         m n phầ     n tử    ; sau đó nhập m (ki    ểm tra điều\nkiện m ≤ n).\n       -Tìm và in ra m  ảng con Bcó tổng lớ                    n nhất và in thêm tổ      ng đó.\nVí dụ       :\n                         Đầu vào                                                  Đầu ra\nSo phan tu cua mang so nguyen A, n = 6                          Mang con B co tong lon nhat la: 3\nA[1]=1                                                          5 6\nA[2]=2                                                          Tong = 14.\nA[3]=4\nA[4]=3\nA[5]=5\nA[6]=6\nNhap so phan tu cua mang con B, m = 3",
+        "slug": "kien-giang-hsg-2013-2014-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2013-2014-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1314.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Thứ hạng hoán vị",
+        "statement": "Cho X là một hoán vị của n số nguyên dương đầu tiên (3 ≤ n ≤ 5). Các hoán vị được\nsắp xếp theo thứ tự từ nhỏ đến lớn (thứ tự từ điển).\nYêu cầu:  Viết chương trình nhập số nguyên n và hoán vị X (viết dưới dạng một số có n\nchữ số), kiểm tra và in ra màn hình vị trí (tính từ 1) của hoán vị X trong dãy các hoán vị\nđã sắp xếp.\nVí dụ\n                 Đầu vào                                         Đầu ra\n3                                              3\n213\n\n                                          40\n\f\nGiải thích ví dụ: Với n = 3, các hoán vị theo thứ tự từ nhỏ đến lớn là: 123, 132, 213,\n231, 312, 321; do đó 213 có vị trí là 3.",
+        "slug": "kien-giang-hsg-2013-2014-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2014-2015": [
+    {
+      "id": "kien-giang-hsg-2014-2015-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1415.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Đế m và tính tổ ng các chữ sốlẻtrong dãy m",
+        "statement": "Cho dãy sốM có chiều dài bất k                   ỳ (t ối đa 255 ký tự        ).\nYêu cầu:\n      Đế   m sốlư   ợng và tính tổng cácch             ữ số      lẻcó trong dãy M.\nVí dụ       :\n                   Đầu vào                                            Đầu ra\nNhap day M: 1231                                   So cac chu so le co trong day 1231 la 3,\n                                                  tong bang 5\nNhap day M: 01423123456789                         So cac chu so le co trong day\n                                                  01423123456789 la 7, tong bang 29",
+        "slug": "kien-giang-hsg-2014-2015-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2014-2015-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1415.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Chu ẩn hóa chu ỗi văn bả n",
+        "statement": "Cho chuỗi văn bản S có chiều dài bất k                                        ỳ (t ối đa 255 ký tự                    ).\nYêu cầu:   Chuẩn hóa chuỗi văn bản S sao cho không còn khoảng tr                       ắng đầu, cuối chuỗi,\ngiữ   a các từ trong chuỗi ch     ỉcòn m  ột khoảng tr          ắng.\nVí dụ:\n                   Đầu vào                                              Đầu ra\nNhap chuoi S:  So   Giao   duc   va  Dao            Chuoi da chuan hoa: So Giao duc va Dao\ntao   Kien   Giang                                 tao Kien Giang",
+        "slug": "kien-giang-hsg-2014-2015-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2014-2015-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1415.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Xóa phần tử tại vịtrí i trong m ảng",
+        "statement": "Cho một mảng số              nguyên A gồ            m n phần tử             .\nYêu cầu  : Viết chương       trình xóa phần tử        có vị    trí i trong mảng A. Chương trình phải kiể           m\ntra điều kiện nhập c                         ủa n (n ≤ 100) và i (1 ≤ i ≤ n).\nVí dụ\n                    Đầu vào                                                 Đầu ra\nNhap so phan tu cua mang so nguyen A: 6                Mang A sau khi xoa phan tu tai vi tri 4: 1\nA[1]=1  A[2]=2  A[3]=3  A[4]=4  A[5]=5                 2 3 5 6\nA[6]=6\nNhap vi tri phan tu can xoa: 4",
+        "slug": "kien-giang-hsg-2014-2015-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2014-2015-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1415.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Đóng gói gạo tố i ưu",
+        "statement": "Cho X kg gạo cần vận chuy              ển và các bao chứ               a gạo có trọ            ng lượng khác nhau gồ                 m\ncác loại 20kg, 10kg, 5kg và 1kg.\nYêu cầu     : Hãy tìm cách đóng gói sao cho sốlư     ợng bao cầ              n dùng là ít nhất.\nVí dụ\n                   Đầu vào                                              Đầu ra\nNhap so kg gao: 26                                  So bao can dung de dong goi la 3:\n                                                    Loai 20kg: 1\n                                                    Loai 5kg: 1\n                                                    Loai 1kg: 1",
+        "slug": "kien-giang-hsg-2014-2015-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2015-2016": [
+    {
+      "id": "kien-giang-hsg-2015-2016-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1516.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Chuy ển đ ổi đơn vịthờ i gian",
+        "statement": "Một đồng hồbấ                        m giờ        có 2 màn hình:\n      -Màn hình 1 hiển thịth                ời gian dưới dạng X giây.\n      -Màn hình 2 hiển thịth                ời gian dưới dạng A giờ       , B phút, C giây.\nYêu cầu:   Viết chương trình chuy       ển đổi s    ố   X giây trên màn hình 1 để   hiển thị         ở màn hình\n2 dưới dạng giờ       , phút, giây.\nVí dụ       :\n                   Đầu vào                                               Đầu ra\nMan hinh 1: 5550                                     Man hinh 2: 1 gio: 32 phut: 30 giay\nMan hinh 1: 45                                       Man hinh 2: 45 giay",
+        "slug": "kien-giang-hsg-2015-2016-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2015-2016-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1516.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Th ống kê m ảng s ốnguyên",
+        "statement": "Cho mảng sốnguyên dương A có N phần tử                      (N ≤ 10000).\nYêu cầu:      Hãy viết chương trình xác định:\n       1. Sốphần tử            có giá tr ị  khác nhau trong mảng.\n       2. Giá trịxu               ất hiện nhi         ều nhất trong m           ảng.\n       Nếu có nhiề                  u giá trị            cùng xuất hiệ                 n nhiều nhất, ch                  ọn giá tr  ịnhỏnh         ất trong sốđó.\n\n                                             52\n\f\nVí dụ       :\n                  Đầu vào                                                          Đầu ra\n8                                                   So phan tu co gia tri khac nhau cua mang la: 6\n62 70 11 70 43 24 11 20                             Phan tu xuat hien nhieu nhat co gia tri la: 11\nGiải thích ví dụ                :\n       Các giá trị     khác nhau trong mảng là: 62, 70, 11, 43, 24, 20     nên có 6 giá trị     khác\nnhau.\n       Bảng tần suất xuất hiện:\n       -11 xuất hi             ện 2 lần;\n       -70 xuất hi             ện 2 lần;\n       -62, 43, 24, 20 mỗi số              xuất hiện 1 lần.\n       Số   lần xuất hiện lớ                n nhất là 2,   ứng vớ  i hai giá trị     11 và 70. Trong hai giá trị     này, 11\nnhỏhơn nên kết quảcầ                      n in ralà 11.",
+        "slug": "kien-giang-hsg-2015-2016-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2015-2016-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1516.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Đế m ký tự s ốtrong chuỗ i",
+        "statement": "Cho một chuỗi văn bản S có độdài bất k                                ỳ (tối đa 255 ký tự                      ).\nYêu cầu:\n       Hãy viết chương trình đếm xem trong chuỗi S có bao nhiêu ký tự số và số lượng\ntừng loại chữ số (0–9).\n       Kết quảin ra theo đúng định dạng không dấu như sau:\n       -Dòng 1: \"Trong   chuoi co X ky tu so, so luong tung loai:\".\n       -Sau đó in các dòng \"So d: k\" ứ   ng với từ   ng chữ sốd xuất hiệ                    n ít nhấ          t một lần.\nVí dụ:\n                   Đầu vào                                             Đầu ra\nHoc sinh gioi nam hoc 2015-2016                    Trong chuoi co 8 ky tu so, so luong tung\n                                                   loai:\n                                                   So 0: 2\n                                                   So 1: 2\n                                                   So 2: 2\n                                                   So 5: 1\n                                                   So 6: 1\n\n                                              59",
+        "slug": "kien-giang-hsg-2015-2016-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2015-2016-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1516.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Đế m từ và tìm t ừ dài nh ất",
+        "statement": "Cho chuỗi                  văn bản S có chiều dài bất k                        ỳ (t ối đa 255 ký tự                    ).\nYêu cầu: Hãy viết chương trình đế       m số   lượng các từ trong chuỗi và in ra từ          có chiều dài\nlớ n nhất.\n         Nếu có nhiề                  u từ     có chi ều dài lớ           n nhất bằng nhau thì in ra tất cả, mỗi t                            ừ trên m ột\ndòng.\nDữ    liệu vào:\n         -Một dòng duy nhất ch              ứa chuỗi văn bả                     n S.\nKết quả:\n         -Dòng 1: \"Sốlư        ợng các từ     trong chuỗ                i: X\".\n         -Các dòng tiếp theo: in \"Từ          dài nhất: w1\" và các từ                   khác có cùng độ           dài lớ       n nhất\n(nếu có), mỗi từ              trên một dòng.\nVí dụ:\n                      Đầu vào                                                        Đầu ra\nDao Phu Quoc Kien Giang                                      Số lượng các từ trong chuỗi: 5\n                                                             Từ dài nhất: Giang\nGiải thích ví dụ                :\n         Chuỗi trên có 5 từ                  : Dao, Phu, Quoc, Kien, Giang.\n         Độdài tương ứ           ng: 3, 3, 4, 4, 5. Từ                dài nhất là \"Giang\" nên kết quảnhư trên.",
+        "slug": "kien-giang-hsg-2015-2016-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2016-2017": [
+    {
+      "id": "kien-giang-hsg-2016-2017-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1617.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Số hoàn hảo",
+        "statement": "Số tự nhiên N được gọi là số hoàn hảo nếu tổng các ước số dương của N (không kể\nN) bằng chính nó.\nYêu cầu:   Viết chương trình nhập vào một số nguyên dương N (N ≤ 10000), kiểm tra N\ncó phải là số hoàn hảo hay không.\nVí dụ       :\n                   Đầu vào                                             Đầu ra\n6                                                  So vua nhap la so hoan hao\n10                                                 So vua nhap khong la so hoan hao\n      Giải thích ví dụ: 6 có các ước (không kể 6) là 1, 2, 3 và 1 + 2 + 3 = 6 nên 6 là số\nhoàn hảo.",
+        "slug": "kien-giang-hsg-2016-2017-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2016-2017-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1617.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Xâu bạn bè",
+        "statement": "Hai xâu được gọi là bạn bè nếu chúng được tạo nên từ cùng một số kí tự giống\nnhau (không phân biệt chữ in hoa hay thường).\nYêu cầu:\n           Viết chương trình nhập hai xâu bất kỳ từ bàn phím (không quá 255 ký tự, gồm các\nký tự chữ ['A'..'Z', 'a'..'z']), kiểm tra hai xâu vừa nhập có là bạn bè hay không?\nVí dụ       :\n                    Đầu vào                                              Đầu ra\nhoccgioisinhhoc        hocsinhgioi                   Hai xau la ban be",
+        "slug": "kien-giang-hsg-2016-2017-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2016-2017-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1617.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Xóa phần tử trùng nhau",
+        "statement": "Cho dãy số nguyên A gồm N phần tử (N ≤ 100).\nYêu cầu: Viết chương trình kiểm tra giá trị N khi nhập và xóa các phần tử trùng nhau\ntrong dãy, chỉ giữ lại một phần tử trong số các phần tử trùng nhau.\nDữ liệu vào:dòng 1 là N; dòng 2 gồm N số nguyên của dãy A.\nKết quả:       in dãy sau khi xóa trùng (giữ thứ tự xuất hiện đầu tiên), các phần tử cách nhau\nmột dấu cách.\nVí dụ:\n                   Đầu vào                                            Đầu ra\n5                                                 9 8 4\n9 8 4 8 4\n\nGiải thích ví dụ: xuất các giá trị đầu tiên theo thứ tự gặp; bỏ các lần lặp sau của 8 và 4.",
+        "slug": "kien-giang-hsg-2016-2017-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2016-2017-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1617.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Số nguyên tốghép",
+        "statement": "Số nguyên tố ghép là số nguyên tố thu được bằng cách ghép hai số nguyên tố liên\ntiếp nhautrong dãy số nguyên tố ban đầu.\n      Dãy số nguyên tố ban đầu: 2, 3, 5, 7, 11, 13, 17, 19, ...\n      Dãy số ghép từ hai số nguyên tố liên tiếp: 23, 57, 1113, 1719, ...\n      Dãy số nguyên tố ghép (lọc từ dãy ghép): 23, 3137, 8389, 157163, ...\nYêu cầu:      Nhập số nguyên dương K (K ≤ 50). Hãy tìm số nguyên tố ghép thứ K trong dãy\nsố nguyên tố ghép.\nVí dụ       :\n                    Đầu vào                                                Đầu ra\n2                                                     So nguyen to ghep thu 2 la: 3137\nGiải thích ví dụ: các số ghép lần lượt: 23 (nguyên tố), 35, 57, 711, 1113, 1317, 1719,\n1923, 2329, 2931, 3137 (nguyên tố). Số nguyên tố ghép thứ 2 là 3137.",
+        "slug": "kien-giang-hsg-2016-2017-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2017-2018": [
+    {
+      "id": "kien-giang-hsg-2017-2018-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1728.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Số nguyên tố",
+        "statement": "Viết chương trình nhập vào một số tự nhiên N (1 < N ≤ 65535).\nYêu cầu:\n      Hãy kiểm tra N có phải là số nguyên tố hay không. Nếu đúng, thông báo ra màn\nhình đây là số nguyên tố; ngược lại hãy phân tích N thành tích các thừa số nguyên tố theo\nđịnh dạng ngăn nhau bởi dấu chấm '.'.\nVí dụ       :\n                     Đầu vào                                                    Đầu ra\n17                                                       17 la so nguyen to\n56                                                       2.2.2.7\nGiải thích ví dụ: 17 là số nguyên tố; 56 = 2 × 2 × 2 × 7 nên in '2.2.2.7'.",
+        "slug": "kien-giang-hsg-2017-2018-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2017-2018-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1728.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Sắ p xếp dãy số",
+        "statement": "Cho dãy số nguyên A (gồm cả số nguyên âm và dương) gồm N phần tử (N ≤ 100).\nYêu cầu:\n           In ra màn hình các giá trị của dãy theo quy tắc: các số dương tăng dần, sau đó đến\ncác số âm giảm dần.\nVí dụ:\n                    Đầu vào                                               Đầu ra\n4                                                    5 8 -2 -9\n-2 5 8 -9\n5                                                    2 8 -3 -5 -9\n-5 -9 8 -3 2\nGiải thích ví dụ: lọc các số dương (5, 8) sắp xếp tăng → 5, 8; các số âm (-2, -9) sắp xếp\ngiảm → -2, -9; ghép kết quả được '5 8 -2                  -9'.",
+        "slug": "kien-giang-hsg-2017-2018-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2017-2018-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1728.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Chuy ển đ ổi h ệ cơ số",
+        "statement": "Trong tin học đ    ể   biểu di     ễn thông tin dạ    ng số, ngoài hệ             cơ số   thậ   p phân (hệ      cơ số   10)\nngười ta dùng các hệcơ s            ố: nhị          phân (hệ             cơ s ố2) và hệth                 ập lục phân (hệcơ s                 ố 16).\n       -Hệcơ s        ố   2 chỉdùng 2 ký hiệu 0 và 1.\n       -  Hệ      cơ số   16 sử        dụng các ký hiệu 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F, trong\nđó A, B, C, D, E, F có giá trịtương ứ               ng là 10, 11, 12, 13, 14, 15 trong hệthập phân.\n       Để      đổi m    ột số     nguyên dương ở hệ     cơ số   10 sang hệ                   cơ số   2, người ta chia số     cần\nchuyển cho 2 đư  ợc phần dư (giá tr  ị  đó là 0 hoặc 1), sau đó cũng l      ấy phần nguyên đem\nchia tiếp cho 2 và lấ     y phần dư, lặp lại cho tớ         i khi phần nguyên bằng 0. Sau đó xếp thứ                 tự\nphần dư theo thứ         tự   ngư ợc từ     dư ới lên ta được sốở        hệcơ s      ố2.\n       Tương tự  để     đổi sang hệ         cơ số   16 (thự    c hiện như trên nhưng chia phần nguyên cho\n16).\nVí dụ       :\n       -Đổi số13 từ                   hệcơ s      ố   10 sang hệ                  cơ số   2:\n       13 chia 2 = 6  -> dư 1\n       6  chia 2 = 3  -> dư 0\n       3  chia 2 = 1  -> dư 1\n       1  chia 2 = 0  -> dư 1\n       Vậ     y số13 đổi sang hệ                  cơ s ố2 là: 1101\n       -Đổi số205 từ                     hệcơ s      ố10 sang hệcơ s        ố16:\n       205 chia 16 = 12 -        > dư 13 tứ       c là D\n       12  chia 16 = 0  -> dư 12 tứ               c là C\n       Vậ     y số205 đổi sang h            ệcơ s   ố16 là: CD\nYêu cầu:\n       Viết chương trình nhậ                p vào một s  ốnguyên dương N (N ≤ 10000). Chuy     ển đổi s       ốN\nsang hệcơ s             ố2 và hệcơ s         ố16.\nVí dụ:\n                       Đầu vào                                                       Đầu ra\n113                                                          Bieu dien he co so 2 cua 113: 1110001\n                                                             Bieu dien he co so 16 cua 113: 71\n                                                       77\n\f\nGiải thích ví dụ:\n       -113    10 = 1110001  2 vì 113 = 64 + 32 + 16 + 1.\n       -113    10 = 7×16 + 1 = 71 16.",
+        "slug": "kien-giang-hsg-2017-2018-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2017-2018-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1728.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Mã hoá thông điệp",
+        "statement": "Tập hợp các chữ cái tiếng Anh bao gồm 26 chữ cái được đánh số thứ tự từ 0 đến 25\nnhư sau:\n             STT        0     1    2     3     4     5    6     7     8    9     10     11     12\n            Ký tự       A     B    C     D     E    F     G     H     I    J     K       L      M\n\n          STT       13     14    15    16     17    18    19    20     21    22     23     24     25\n          Ký tự      N     O      P     Q     R     S      T     U     V     W      X      Y       Z\n      Để bảo mật các thông điệp quan trọng gửi cho nhau người ta thường mã hóa các\nthông điệp này theo quy tắc nào đó.\n      Cho quy tắc mã hoá một ký tự như sau (lấy ví dụ mã hoá ký tự X):\n      -Tìm số thứ tự tương ứng của ký tự trong bảng (số thứ tự X là 23).\n      -Tăng giá trị số này lên N=5 (tăng số thứ tự của X lên 5 ta được giá trị 28).\n      -  Tìm số dư trong phép chia số này cho 26 (Lấy 28 chia 26 lấy phần dư được giá trị\nlà 2).\n      -   Lấy kết quả trả vào bảng chữ cái (thứ tự 2 là ký tự C). Như vậy ký tự X mã hoá\nthành C.\n      * Để giải mã theo quy tắc trên ta thay N = M (M = 26 -N).\n      Việc mã hoá và giải mã chuỗi (xâu) người ta phải mã hoá và giải mã từng ký tự.\n      Yêu cầu:\n      Sử dụng quy tắc mã hoá và giải mã trên, viết chương trình thực hiện các       công việc\nsau:\n      -Nhập một chuỗi và in ra chuỗi đã được mã hoá.\n      -Nhập một chuỗi đã được mã hoá và in ra chuỗi giải mã.\nVí dụ:\n\n                     Đầu vào                                                   Đầu ra\nNhap chuoi can ma hoa: YOU                               Chuoi ma hoa: DTZ\nNhap chuoi can giai ma: DTZ                              Chuoi giai ma: YOU",
+        "slug": "kien-giang-hsg-2017-2018-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2018-2019": [
+    {
+      "id": "kien-giang-hsg-2018-2019-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1819.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Số Palindrome",
+        "statement": "Số   Palindrome là số     mà bạn đọc theo chiều t              ừ trái sang phải và chi      ều ngư  ợc lại thì\nđều như nhau. Ví dụ: 131, 151, 34543,48984,…\nYêu cầu:      Viết chương trình nhập vào m                    ột sốt        ự nhiên N (100 ≤ N ≤ 65535).\n      -Hãy kiể      m tra sốN vừ             a nhập có phải là số                     Palindrome hay không.\n      -Nếu đúng thì thông báo ra màn hình: “N là s       ốPalindrome”.\n      -   Nếu không đúng thì thông báo ra màn hình số          Palindrome lớn hơn N và gần N\nnhất.\nVí dụ       :\n         Đầu vào                                             Đầu ra\n131                               131 là số Palindrome\n132                               132 không phải số Palindrome, số Palindrome lớn\n                                  hơn 132 và gần 132 nh       ất là 141\nGiải thích ví dụ                :\n      -131 đọc xuôi và đ             ọc ngư  ợc đều là 131 nên 131 là sốPalindrome.\n      -132 không phải s                  ốPalindrome, s   ốPalindrome nhỏnhất l                      ớn hơn 132 là 141.",
+        "slug": "kien-giang-hsg-2018-2019-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2018-2019-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1819.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Số siêu nguyên tố",
+        "statement": "Sốsiêu nguyên tố            là số       nguyên tố          mà khi bỏ     một chữ       sốbên phải củ                  a nó thì phầ                 n\ncòn lại vẫn tạo thành một sốnguyên tố. Ví dụ                                           số7193 là một số              siêu nguyên tố          4 chữ        số\nvì 719, 71, 7 cũng là các sốnguyên tố.\n      Yêu cầu:      Viết chương trình nhập dữ                       liệu vào là một sốnguyên N (0 < N < 10) và\nđưa ra kết quảlà các số                             siêu nguyên tốcó N ch        ữ sốcùng sốlư                   ợng của chúng.\nVí dụ:\n         Đầu vào                                            Đầu ra\nNhập số N: 2                     23 29 31 37 53 59 71 73 79\n                                 Có tất cả9 sốsiêu nguyên tốcó 2 chữ                                 số\nNhập số N: 4                     2333 2339 2393 2399 2939 3119 3137\n                                 3733 3739 3793 3797 5939 7193 7331\n                                 7333 7393\n                                 Có tất cả16 sốsiêu nguyên tốcó 4 chữ                                    số",
+        "slug": "kien-giang-hsg-2018-2019-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2018-2019-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1819.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Dãy con mặt b ằng",
+        "statement": "Một dãy con gồ        m các phần tử    liên tiếp bằng nhau của dãy đư            ợc gọi là m  ặt bằng\ncủa dãy. Viết chương trình nhập vào s               ố   nguyên N (1 ≤ N ≤ 1000) và N phần tử    của m  ột\ndãy sốnguyên a₁, a₂, …, aₙ.\nYêu cầu:   In ra màn hình dãy số     đã nhập và t      ất cả       các dãy con là mặt bằng lớ          n nhất c      ủa\ndãy (các phầ            n tử     cách nhau m ột khoảng trắng).\nVí dụ       :\n                        Đầu vào                                             Đầu ra\n        Nhập số phần tử của mảng: 5                   Kết quả nhập: 1 2 3 3 5\n        Nhập phần tử                  thứ     1: 1    Kết quả              mặt bằng:\n        Nhập phần tử                  thứ     2: 2    3 3\n        Nhập phần tử                  thứ     3: 3\n        Nhập phần tử                  thứ     4: 3\n        Nhập phần tử                  thứ     5: 5\n        Nhập số phần tử của mảng: 8                   Kết quả nhập: 1 23 2 2 3 3 15 31\n        Nhập phần tử                  thứ     1: 1    Kết quả              mặt bằng:\n        Nhập phần tử                  thứ     2: 23   2 2\n        Nhập phần tử                  thứ     3: 2    3 3\n        Nhập phần tử                  thứ     4: 2\n        Nhập phần tử                  thứ     5: 3\n        Nhập phần tử                  thứ     6: 3\n        Nhập phần tử                  thứ     7: 15\n        Nhập phần tử                  thứ     8: 31\n\n                                                     90",
+        "slug": "kien-giang-hsg-2018-2019-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2018-2019-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1819.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Gi ải mã dãy số",
+        "statement": "Nhân kỷ niệm Ngày Quốc tế Phụ nữ 8/3, bạn An tham gia trò chơi lớn và phải giải\nmã một xâu gồm cả chữ, số và ký tự khác. Nhiệm vụ là loại bỏ tất cả các chữ cái và ký tự\nkhác, chỉ giữ lại các chữ số theo đúng thứ tự ban đầu. Dãy số thu được chính là số điện\nthoại hoặc mật mã của Thầy tổng phụ trách để nhận nhiệm vụ tiếp theo. Em hãy giúp bạn\nAn tìm dãy số đó.\n\n                                          93\n\f\n     Viết chương trình nhập vào một xâu gồm cả chữ, số và các ký tự khác xen kẽ nhau.\nYêu cầu:\n       -Loại bỏtấ                 t cảch       ữ cái, ký tự          khác; ch ỉgiữ      lại ch    ữ sốtheo đúng thứ                 t ự.\n       -Nếu thu đư       ợc đúng 10 chữ        số: in 'Dung     -' + dãy s ố.\n       -Nếu nhiều hơn 10 ch                 ữ số: in 'Thua-' + 10 ch            ữ sốđầu tiên.\n       -Nếu ít hơn 10 chữ                    s ố: in 'Thieu-' + dãy số             bổ   sung các s ố0 bên phải cho đủ10 số.\nVí dụ       :\n                        Đầu vào                                                  Đầu ra\n    abY012QW45_BM<09>?a6f6r6                               Dung-0124509666\n    0KHO89NG902637RTjsz.,90KI738                           Thua-0899026379\n    12A3K                                                  Thieu-1230000000\nGiải thích ví dụ:\n    -     Ví  dụ  1:  Các  chữ  số  trong  xâu  là  0124509666,  đúng  10  chữ  số  nên  in  Dung-\n         0124509666.\n    -     Ví dụ 2: Các chữ số trong xâu là 08990263790738 có 14 chữ số; lấy 10 chữ số đầu\n         0899026379, nên in Thua-0899026379.\n    -     Ví dụ 3: Các chữ số trong xâu là 123 chỉ có 3 chữ số, thiếu 7 chữ số nên bổ sung\n         thêm 7 số 0 bên phải thành 1230000000, in Thieu-1230000000.",
+        "slug": "kien-giang-hsg-2018-2019-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2019-2020": [
+    {
+      "id": "kien-giang-hsg-2019-2020-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1920.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Số nguyên t ốtương đương",
+        "statement": "Hai số   được gọi là số     nguyên tố   tương đương nếu chúng có cùng các     ước số   nguyên\ntố.\nYêu cầu:\n      Viết chương trình nhậ          p vào hai số     tự  nhiên N, M. Hãy kiể   m tra số N, M vừ  a nhập\ncó phải là s           ốnguyên tố        tương đương hay không.\n      Nếu đúng thì thông báo ra màn hình N và M là sốnguyên tốtương đương, ngư                 ợc lại\nthì thông báo ra màn hình N và M không là số             nguyên tốtương đương.\nVí dụ       :\n                        Đầu vào                                                Đầu ra\n    Nhập số tự nhiên N: 15                                15 và 75 là số nguyên tố tương đương\n    Nhập sốtự                nhiên M: 75\n    Nhập số tự nhiên N: 12                                12  và  60  không  là  số     nguyên  tố    tương\n    Nhập sốtự                nhiên M: 60                  đương\nGiải thích vídụ                :\n      Ví dụ: 15 và 75 là số         nguyên tố    tương đương, vì 15 = 3 * 5, 75 = 3 * 5 * 5, cả     hai\nđều có cùng các ư    ớc số nguyên tố          là 3 và 5.\n      12 và 60 không là số     nguyên tố    tương đương vì 12 = 2^2 * 3 còn 60 = 2^2 * 3 * 5,\nsố60 có ư     ớc sốnguyên tố5 trong khi 12 thì không.",
+        "slug": "kien-giang-hsg-2019-2020-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2019-2020-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1920.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Xử lí m ảng",
+        "statement": "Cho  mảng A g  ồm N  phần tử        là các số   nguyên không âm. N được n nhập từ               bàn\nphím\nYêu cầu:\n    -   Nhập và xu       ất giá trị             mảng A ra màn hình.\n    -   Tính tổng giá trịcủ                        a mảng A.\n\n                                          99\n\f\n      -   Tính tổng giá trịcác ph                      ần tử       ở  vịtrí chẵn (0-based).\n      -   Tính tích giá trịcác ph        ần tử       ở  vịtrí l     ẻ.\n      -   Sắp xếp m         ảng A thành mảng có giá trịtăng dầ         n.\n      -   Liệt kê các phần tử              có giá trịlớ             n hơn 10.\nVí dụ       :\n                   Đầu vào                                                Đầu ra\n        Nhập N: 3                            Mảng A vừa nhập: 8 6 5\n        A[1] = 8                             Tổng giá tr    ị  mảng A: 19\n        A[2] = 6                             Tổng giá tr    ịphần tử             ở  vịtrí chẵn là: 6\n        A[3] = 5                             Tích giá trị                   phần tử           ở  vịtrí lẻlà: 40\n                                             Mảng A sau khi sắ                p xế     p: 5 6 8\n                                             Các phần tử                  l ớn hơn 10:\n        Nhập N: 5                            Mảng A vừa nhập: 2 4 6 3 11\n        A[1] = 2                             Tổng giá tr    ị  mảng A: 26\n        A[2] = 4                             Tổng giá tr    ịphần tử             ở  vịtrí chẵn là: 7\n        A[3] = 6                             Tích giá trị                   phần tử           ở  vịtrí lẻlà: 132\n        A[4] = 3                             Mảng A sau khi sắ                p xế     p: 2 3 4 6 11\n        A[5] = 11                            Các giá trịl                  ớn hơn 10: 11",
+        "slug": "kien-giang-hsg-2019-2020-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2019-2020-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1920.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Hai hàng sốkỳ ảo",
+        "statement": "Cho số   nguyên dương n (n ≤ 20). Hãy sắp xế     p các số từ  1 đến n (m  ỗi số       đúng một\nlần) thành hai hàng số       kỳ ảo:\n      A1, A2, …, A(n/2)\n      B1, B2, …, B(n/2)\n      Hai hàng sốđư   ợc gọi là k  ỳ ảo nếu thỏa mãn đ               ồng thờ          i hai điều kiện sau:\n      1. Tổng các cột bằng nhau: A1 + B1 = A2 + B2 = … = A(n/2) + B(n/2).\n      2. Tổng hai hàng b        ằng nhau: A1 + … + A(n/2) = B1 + … + B(n/2).\nYêu cầu:\n      -   Nếu tồn tại hai hàng số               kỳ ảo, hãy in ra lần lư     ợt hai hàng A và B (mỗi hàng trên\nmột dòng).\n      -Nếu n là s       ốlẻ, in ra: \"Khong tim thay hai hang so ky ao\".\nVí dụ:\n                 Đầu vào                                             Đầu ra\n       4                                  1 2\n                                          4 3\n       6                                  1 2 3\n                                          6 5 4",
+        "slug": "kien-giang-hsg-2019-2020-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2019-2020-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1920.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Mã hóa xâu kí t ự",
+        "statement": "Để      mã hóa một xâu ký tự  ta thường thự   c hiện hoán đổi ký tự                 này thành ký tự  khác.\nVớ   i phương án mã hóa thự   c hiện hoán đ        ổi vị      trí các ký tự theo từ ng nhóm n ký tự, ta chia\nxâu thành từ ng nhóm n ký tự  (nếu nhóm cuố         i cùng không đủ     n ký tự thì ta có thể      thêm\nkhoảng trắng vào phía sau cho đủ                 n ký tự  trước   khi mã hóa) rồi hoán vị        các ký tự trong\ntừ ng nhóm.\nYêu cầu   Cho khóa là một hoán vị    củ  a n gồm n số     1, 2, …, n. Hãy viết chương trình mã\nhóa một xâu ký tự            đư ợc nhập từ              bàn phím.\nVí dụ\n                    Đầu vào                                         Đầu ra\n       Nhập xâu: english                      gnlehs i\n       Nhập n: 4\n       Khóa hoán vị: 3 2 4 1\n       Nhập xâu: KIENGIANG                    GNIEN GANG\n       Nhập n: 5\n       Khóa hoán vị: 5 4 3 2 1",
+        "slug": "kien-giang-hsg-2019-2020-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2020-2021": [
+    {
+      "id": "kien-giang-hsg-2020-2021-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2021.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Cặ p sốsinh đôi",
+        "statement": "Hai số   được gọi là cặp số          sinh đôi nếu chúng là     các số nguyên tố  và có hiệu số         bằ  ng\n2. Ví dụ: Hai s    ố   nguyên tố     7 và 5 là cặp s    ố nguyên tố     sinh đôi (vì số     7 và 5 là các số\nnguyên tố         và có hiệ             u sốbằng 2).\nYêu cầu:      Viết chương trình nhập vào m                    ột số        nguyên dương n (1 ≤ n ≤ 30). Đế           m trong\ndãy sốA1, A2, …, An có bao nhiêu cặp số                   sinh đôi, nếu không tìm th              ấy thì in ra \"khong\nco cap so nao\".\nVí dụ       :\n                         Đầu vào                                                Đầu ra\n      Nhap n: 5                                            Co 2 cap so sinh doi\n      A[1]=6                                               (7 5) (13 11)\n      A[2]=5\n      A[3]=7\n      A[4]=11\n      A[5]=13\n      Nhap so tu nhien n: 6                                Ket qua: khong co cap so nao\n      A[1]=5\n      A[2]=5\n      A[3]=6\n      A[4]=8\n      A[5]=15\n      A[6]=6",
+        "slug": "kien-giang-hsg-2020-2021-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2020-2021-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2021.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Liệt kê cách ch ọn hoa h ồng",
+        "statement": "Nhân dịp ngày Nhà giáo Việt Nam, Hà đế        n cử     a hàng bán hoa để     mua hoa tặng cô\ngiáo. Cử   a hàng hiện có n (1 ≤ n ≤ 20) đoá hoa h       ồng đư  ợc đánh số     từ  1 đến n. Hà muốn\nmua tặng cô giáo k (k ≤ n) đoá hoa hồng.\nYêu cầu:      Nhập n, k từ            bàn phím và liệt kê tất cảcác cách có th              ểch   ọn k đoá hoa hồng.\nVí dụ       :\n                         Đầu vào                                               Đầu ra\n      Nhap n: 4                                            Tong so cach chon: 6\n      Nhap k: 2                                            1 2\n                                                           1 3\n                                                           1 4\n                                                           2 3\n                                                           2 4\n                                                           3 4\n\n      Nhap n: 3                                            Tong so cach chon: 3\n      Nhap k: 2                                            1 2\n                                                           1 3\n                                                           2 3",
+        "slug": "kien-giang-hsg-2020-2021-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2020-2021-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2021.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Mả ng số nguyên",
+        "statement": "Mảng A gồ                 m N phần t      ử (gồm c     ả   số     nguyên âm và số     nguyên dương), N ≤ 100, N\nđược nhập từ              bàn phím.\nYêu cầu:\n       Viết chương trình thự                   c hiện các yêu c        ầu sau:\n       -  Nhập vào m       ột số       nguyên x từ  bàn phím và đếm s  ố   lượng phần tử        có giá trị     bằng x\ntrong mảng A.\n       -In ra màn hình các ph  ần tử       có giá trịch                ẵn ở      vịtrí lẻtrong m             ảng A.\n       -Đế     m các phần tử       là s ốhoàn hảo trong mảng A. Ví dụ: 6 =                                    1 + 2 + 3.\n       -  Tính tích các phần tử        nằ  m trong đoạ    n từ  vị    trí giá trị   nhỏ       nhất đế        n vị    trí giá trị     lớn\nnhất trong mảng A (lưu ý thứ                   tự   phần tử            không đổi).\nVí dụ       :\n                         Đầu vào                                                            Đầu ra\nN = 8                                                             So phan tu x la:2\nA: 1 6 -2 4 8 4 6 7                                               Phan tu co gia tri chan o vi tri le:-                2 8 6\nx = 4                                                             Phan tu la so hoan hao:2\n                                                                  Tich cac phan tu:-64\nN = 6                                                             So phan tu x la:2\nA: 3 4 -3 10 3 28                                                 Phan tu co gia tri chan o vi tri le:\nx = 3                                                             Phan tu la so hoan hao:1\n                                                                  Tich cac phan tu:-2520\nGiải thích ví dụ                :\n       Ví dụ1:\n       -Trong m  ảng có 2 phầ    n tử     bằng 4 nên kết quả                           đế   m là 2.\n       -  Các vị  trí lẻ: 1, 3, 5, 7 có giá trị      lần lư   ợt: 1, -2, 8, 6; trong đó các s ố   chẵn là   -2, 8,\n6.\n       -Các sốhoàn hảo trong m                       ảng là 6 (ở     vịtrí 2) và 6 (ở               vị     trí 7) nên có 2 sốhoàn hảo.\n       -  Giá trị     nhỏ   nhất là       -2 (vị       trí 3), giá trị     lớn nhất là 8 (vị       trí 5) nên tích các phần tử        từ\nvịtrí 3 đến 5 là: -2 × 4 × 8 = -64.\n       Ví dụ2:\n       -Trong m  ảng có 2 phầ    n tử     bằng 3 (ở               vịtrí 1 và 5).\n       -   Các vị trí lẻ: 1, 3, 5 có giá trị      3, -3, 3; không có số    chẵn nên sau dấu ':' không có\nphần tử           nào.\n       -Sốhoàn hảo trong m              ảng là 28 nên có 1 sốhoàn hảo.\n       -  Giá trị     nhỏ       nhất là       -3 (vị       trí 3), giá trị     lớ n nhất là 28 (vị       trí 6) nên tích các phần tử\ntừ  vịtrí 3 đến 6 là: -3 × 10 × 3 × 28 = -2520.\n\n\n                                                           114",
+        "slug": "kien-giang-hsg-2020-2021-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2020-2021-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2021.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Tính tu ổi",
+        "statement": "Tuổi của b             ố   hiệ   n nay là x tuổi, tuổi c          ủa con là y tu  ổi (x   -   y > 20 và x, y là các s  ố\nnguyên dương).\nYêu cầu:   Hãy viết chương trình nhập x, y và kiể              m tra xem tuổi c     ủa con có bằng 1/2 tuổi\ncủa bốhay không.\n      -Nếu bằng thì đưa ra màn hình thông báo \"Hien nay tuoi con bang 1/2 tuoi bo\".\n      -   Trường hợ       p ngược lại, hãy tính số   năm n (trước đó hoặc sau đó) mà khi đó tu      ổi\ncon bằng 1/2 tuổi b         ố   và đưa ra màn hình thông báo \"n nam truoc day tuoi con bang 1/2\ntuoi bo\" hoặc \"Sau n nam tuoi con bang 1/2 tuoi bo\".\n\n\n\n\n\n                                              121\n\f\nVí dụ       :\n                       Đầu vào                                                         Đầu ra\nx = 42                                                        Hien nay tuoi con bang 1/2 tuoi bo\ny = 21\nx = 45                                                        Sau 5 nam tuoi con bang 1/2 tuoi bo\ny = 20\n\nGiải thích ví dụ                :\n       Ví dụ     1: x = 42, y = 21 nên 2*y = 42     = x, do đó hiện nay tu     ổi con b  ằng 1/2 tuổi b       ố,\nchương trình in thông báo tương ứ     ng.\n       Ví dụ     2: x = 45, y = 20, ta có 2*y = 40 < x. Gọi n là số          năm sau nữa để   tuổi con\nbằng 1/2 tu    ổi bố:\n       Khi đó tuổ               i bốlà x + n, tuổi con là y + n và ta có y + n = 1/2 * (x + n).\n       Giải ra ta đư      ợc n = x -   2*y = 45 - 40 = 5, nghĩa là sau 5 năm nữ  a tuổi con sẽ      bằng\n1/2 tuổi bố               .",
+        "slug": "kien-giang-hsg-2020-2021-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2021-2022": [
+    {
+      "id": "kien-giang-hsg-2021-2022-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2122.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Xâu Palindrome",
+        "statement": "Một xâu đư      ợc gọi là   Palindrome nếu sau khi đảo ngư        ợc các ký tự của nó, ta nhận\nđược xâu mới giống xâu ban đầu.\nYêu cầu:\n      Viết chương trình nhậ          p vào một xâu bất k      ỳ  (tối đa 255 ký tự      ). Kiểm tra xâu vừ    a\nnhập có ph      ải là xâu Palindrome hay không, nế    u đúng xuất ra màn hình câu thông     báo \"la\nxau Palindrome\", ngược lại xuất ra màn hình \"khong phai xau Palindrome\".\n      Trong chương trình, hãy in theo đúng mẫu: nếu là Palindrome thì in \"Xau <s> la\nxau Palindrome\", ngược lại in \"Xau <s> khong phai xau Palindrome\" vớ    i <s> là xâu đã\nnhập.\nVí dụ       :\n                      Đầu vào                                                     Đầu ra\nNhap xau: ABcBA                                            Xau ABcBA la xau Palindrome\nNhap xau: ABDdBA                                           Xau ABDdBA khong phai xau Palindrome\nGiải thích ví dụ                :\n      Ví dụ     1: Xâu \"ABcBA\" khi đọ  c xuôi và đọc ngư    ợc đều cho cùng một dãy ký tự        , do\nđó là xâu Palindrome.\n      Ví dụ   2: Xâu \"ABDdBA\" khi đảo ngư    ợc ta được \"ABdDBA\" khác vớ  i xâu ban đầu\ndo khác biệt vềch                        ữ hoa -ch      ữ thư ờng ở      cặp ký tự         D/d, nên không ph ải xâu Palindrome.",
+        "slug": "kien-giang-hsg-2021-2022-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2021-2022-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2122.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Dãy sốnguyên",
+        "statement": "Cho  mảng A gồ              m  N  phần  tử         thuộc  kiểu  nguyên  (N  ≤  100),  N              được nhập  từ            bàn\nphím.\nYêu cầu:\n      Viết chương trình thự              c hiện các yêu c        ầu sau:\n      -Đế     m sốlư   ợng phần t           ử k có trong mảng A v      ới k được nhập từ       bàn phím.\n      -In ra màn hình các ph  ần tử       có giá trị                lẻở     vị     trí chẵn trong m         ảng A.\n      -  Tính trung bình cộ  ng (TBC) của các s    ố   lớn hơn k (kết qu    ả   làm tròn 2 chữ     số   thập\nphân).  Nếu  trong  m     ảng  A  không  có  số       nào  lớ n  hơn  k  thì  in  ra  màn  hình  thông  báo\n\"Khong co so nao lon hon k.\".\n\n\n\n\n\n\n                                                 127\n\f\nVí dụ       :\n                       Đầu vào                                                       Đầu ra\nNhap N:4                                                     Nhap N:4\nA[1]=2                                                       Nhap day:\nA[2]=5                                                       A[1]=-1\nA[3]=8                                                       A[2]=-5\nA[4]=9                                                       A[3]=2\nNhap k:5                                                     A[4]=3\nSo phan tu k la:1                                            Nhap k:5\nPhan tu co giatri le o vi tri chan:5 9                       So phan tu k la:0\nTBC:8.50                                                     Phan tu co gia tri le o vi tri chan:-5 3\n                                                             Khong co so nao lon hon k.\nGiải thích ví dụ                :\n       Ví dụ1: N = 4, A = [2, 5, 8, 9], k = 5.\n       -Trong m  ảng chỉcó một phần tử                             bằng 5 nên \"So phan tu k la:1\".\n       -Các v  ịtrí chẵn là 2 và 4, giá trị             tương ứ      ng là 5 và 9; cả     hai đ ều là số       lẻnên in \"5 9\"\nsau câu \"Phan tu co gia tri le o vi tri chan:\".\n       -   Các phần tử        lớ n hơn k = 5 là 8 và 9, trung bình cộng là (8 + 9) / 2     = 8,5 nên in\n\"TBC:8.50\".\n       Ví dụ2: N = 4, A = [          -1, -5, 2, 3], k = 5.\n       -Không có phần tử              nào bằng 5 nên \"So phan tu k la:0\".\n       -  Các vị    trí chẵn là 2 và 4, giá trị       tương ứng là -5 và 3; cả    hai đều là s    ố   lẻ    nên in \"-5\n3\".\n       -   Không có phần tử        nào lớ n hơn 5 nên in   thông báo \"Khong co so nao lon hon k.\"\nthay vì giá trịTBC.",
+        "slug": "kien-giang-hsg-2021-2022-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2021-2022-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2122.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Đế m sốkí t ự trong chuỗ i",
+        "statement": "Cho chuỗi văn bản S có chiều dài bất k                                        ỳ (t ối đa 255 ký tự                    ).\nYêu cầu:\n      Viết chương trình đế              m xem trong chuỗi S vừ         a nhập có bao nhiêu ký t         ự in thư ờng\n(ký tự        viết thư      ờng) và sốlư   ợng từ      ng ký tự .\nVí dụ       :\n\n                     Đầu vào                                                  Đầu ra\nNhap chuoi:Nam Hoc 2021-2022                            Trong chuoi co:4 ky tu in thuong\n                                                        So luong nhu sau:\n                                                        Ky tu a:1\n                                                        Ky tu m:1\n                                                        Ky tu o:1\n                                                        Ky tu c:1\nNhap chuoi:#Chao Lop 8A#                                Trong chuoi co:5 ky tu in thuong\n                                                        So luong nhu sau:\n                                                        Ky tu h:1\n                                                        Ky tu a:1\n                                                        Ky tu o:2\n                                                        Ky tu p:1\nGiải thích ví dụ                :\nVí dụ1: Chuỗi “Nam Hoc 2021-                                2022” có các kýtự          viết thư      ờng: a, m, o, c (4 ký tự    ).\nVí dụ2: Chuỗi “#Chao Lop 8A#” có các ký tự                   viết thư      ờng: h, a, o, o, p (5 ký tự              ).\n\n\n                                                  132",
+        "slug": "kien-giang-hsg-2021-2022-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2021-2022-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2122.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Tìm sốnh ỏnh ất",
+        "statement": "Cho dãy số     nguyên A (bao gồ  m cả   số     nguyên âm và số   nguyên dương) gồ  m N phần\ntử  (N ≤ 100), N đư ợc nhập từ       bàn phím.\nYêu cầu:\n      Viết chương trình thự              c hiện các yêu c        ầu sau:\n      -   Tìm số   nhỏ     nhất cùng vị         trí của nó trong dãy số         (Nếu có nhiều số               có cùng giá trị\nnhỏnhất thì in giá trịvà vịtrí của s                                 ốnhỏ          nhất đầu tiên).\n      -Xóa sốnh               ỏnhất đầu tiên tìm thấ                 y và in ra dãy s ốsau khi đã xóa.\n                                              134\n\f\nVí dụ       :\n                     Đầu vào                                                    Đầu ra\nNhap N:5                                                 Ket qua:\nA[1]=1                                                   So nho nhat la:1, vi tri so nho nhat la:1\nA[2]=4                                                   Day so sau khi xoa la:4 5 1 6\nA[3]=5\nA[4]=1\nA[5]=6\nNhap N:5                                                 Ket qua:\nA[1]=7                                                   So nho nhat la:-5, vi tri so nho nhat la:4\nA[2]=-1                                                  Day so sau khi xoa la:7 -1 9 8\nA[3]=9\nA[4]=-5\nA[5]=8\nGiải thích ví dụ                :\n      Ví dụ     1: Giá trị    nhỏ     nhất là 1 xu  ất hi  ện t  ại vị      trí 1 đầ  u tiên. Sau khi xóa phần t  ử này,\ndãy còn lại: 4 5 1 6.\n      Ví dụ2: Giá trịnh                  ỏnh   ất là -5 tại v               ịtrí 4. Sau khi xóa, dãy còn: 7 -1 9 8.",
+        "slug": "kien-giang-hsg-2021-2022-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2022-2023": [
+    {
+      "id": "kien-giang-hsg-2022-2023-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2223.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Ma trận đ ều",
+        "statement": "Một ma trận n × n g          ọi là ma tr  ận đều theo hàng, cột nếu tổng các số                   hạng theo từ     ng\nhàng hoặc từ                  ng cột đều bằng nhau.\nYêu cầu:\n       Viết chương trình kiể         m tra xem một ma trậ    n có phải là ma trậ        n đều theo hàng, c       ột\nhay không?\n       Dữ    liệu vào: Nhập vào từ             bàn phím một số       nguyên dương n và giá trị    từ ng phần tử\ncủa ma trận.\n       Dữ    liệu ra: Xuấ                  t ra màn hình:\n       -Dòng thứ                nh ất cho bi  ết \"Dung ma tran deu\" hoặc \"Khong phai ma tran deu\".\n       -   Nếu đúng là ma trậ       n đều thì ghi thêm dòng \"vi tong cac so hang theo tung hang\nhoac tung cot deu bang X\" vớ  i X là giá trị    tổng chung; nế     u không phải là ma trận đ      ều thì\nghi dòng \"vi tong cac so hang theo tung hang hoac tung cot khong bang nhau\".\nVí dụ       :\n                     Dữ liệu vào                                                   Dữ liệu ra\n3                                                            Dung ma tran deu\n1 6 7                                                        vi tong cac so hang theo tung hang hoac\n2 7 5                                                        tung cot deu bang 14\n11 1 2\n3                                                            Khong phai ma tran deu\n4 5 8                                                        vi tong cac so hang theo tung hang hoac\n2 7 9                                                        tung cot khong bang nhau\n8 3 1\nGiải thích ví dụ                :\n       Ví dụ1: Các tổng theo từ                   ng hàng đều bằng 14 (1+6+7, 2+7+5, 11+1+2) và các tổng\ntheo từ         ng cột cũng đều b                    ằng 14, nên ma trậ       n là ma trận đều.\n       Ví dụ2: Các tổng theo từ                   ng hàng và từ                    ng cột không cho cùng một giá trị, nên\nkhông phải là ma tr                 ận đều.",
+        "slug": "kien-giang-hsg-2022-2023-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2022-2023-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2223.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Phân tích số",
+        "statement": "Cho trước số   tự  nhiên n, lập thuật toán cho biết n có thể                   biểu diễn thành tổng của\nhai hay nhiều s       ố   tự  nhiên liên tiếp hay không? Trong trư    ờng hợp phân tích đư  ợc, hãy liệ  t\nkê tất cảcác cách có th              ểchia sốn vừ                 a nhập.\n\n                                          142\n\f\nYêu cầu: Viết chương trình trên để       biểu diễn n thành tổng của hai hay nhi                      ều số      tự  nhiên\nliên tiếp.\nDữ    liệu vào:Nhập vào từ                 bàn phím s ốtự     nhiên n (0 < n ≤ 32000).\nDữ    liệu ra     : Xuất ra màn hình:\n       -Liệt kê tất cảcác cách s                      ốtự     nhiên liên tiếp v        ừa nhập;\n       -Tổng sốcách chia c                ủa sốtự     nhiên n vừ    a nhậ       p;\n       -  Nếu không biểu diễn đư            ợc thành tổng của hai hay nhiều số                        tự  nhiên liên tiếp thì in\nra màn hình thông báo \"Khong co cach chia nao\".\nVí dụ       :\nDữ liệu vào                                                    Dữ liệu ra\n20                                                             2 3 4 5 6\n                                                               Co 1 cach chia so 20\n99                                                             49 50\n                                                               32 33 34\n                                                               14 15 16 17 18 19\n                                                               7 8 9 10 11 12 13 14 15\n                                                               4 5 6 7 8 9 10 11 12 13 14\n                                                               Co 5 cach chia so 99\nGiải thích ví dụ                :\n       Ví dụ     1: n = 20 có thểviết thành tổng của 2 + 3 + 4 + 5 + 6 = 20, và không còn                        cách\nnào khác nên có 1 cách chia.\n       Ví dụ     2: n = 99 có 5 cách biểu diễn thành t          ổng các số   tự  nhiên liên tiếp như trong\nbảng, nên k    ết luận \"Co 5 cach chia so 99\".",
+        "slug": "kien-giang-hsg-2022-2023-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2022-2023-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2223.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Gi ải mã tin nh ắn",
+        "statement": "Trong một trò chơi nhân ngày 26/3, h  ọc sinh có nhiệ       m vụ   tìm và giải mã tin nhắn\nđược giấu trong m        ột văn bản. Biết r           ằng khi mã hóa tin nh  ắn là sử    dụ  ng phương pháp thay\ncác chữ cái trong tin nhắn thành m    ột ch  ữ cái đứng cách nó k vị     trí trong bảng chữ            cái\ntiếng Anh theo quy tắc xoay vòng, các ký tự         không phả              i chữ       cái thì không thay đổi (nghĩa\nlà không cần giải mã). Trong xâu có thể              có nhiều tin nhắn, giữ              a các tin nhắn đư      ợc ngăn\ncách nhau bởi dấu # và tin nhắn có độdài lớ                        n nhất là tin nhắn cần tìm.\n      Nếu có nhiều tin nhắn có cùng chiều dài thì tin nhắn đầu tiên tìm thấ                                    y là tin nhắ    n\ncần giải mã. Hãy tìm và giải mã tin nhắn đư                            ợc giấu trong xâu S.\nYêu cầu:      Viết chương trình đểtìm ra tin nhắn trong xâu văn bản vừ                                   a nhập.\nDữ    liệu vào     : Nhập vào từ            bàn phím xâu S (1 ≤ S ≤ 255) và một số           nguyên dương k.\nDữ    liệu ra     : Xuất ra màn hình:\n-Sốlư        ợng tin nhắn;\n-Tin nhắn đã đư               ợc giả      i mã;\n                                                 146\n\f\nVí dụ       :\n                     Dữ liệu vào                                                    Dữ liệu ra\nABC#QBTDBM#123HG                                              3\n1                                                             PASCAL\nqbt123#qbtdbm                                                 2\n1                                                             PAS\nGiải thích ví dụ                :\n       Trong xâu S, các tin nhắn là các đoạ                   n con được ngăn cách bở  i dấu '#'.\n       Ví  dụ      1:  S  =  \"ABC#QBTDBM#123HG\"  có  3  tin  nhắn:  \"ABC\",  \"QBTDBM\",\n\"123HG\" nên dòng đầu tiên c    ủa k  ết qu  ả là 3. Tin nhắn có đ      ộ   dài lớn nhất        là \"QBTDBM\".\nKhi giải mã v            ới k = 1, mỗi chữ       cái được dịch lùi 1 vịtrí trong bả            ng chữ   cái: Q→P, B→A,\nT→S, D→C, B→A, M→L, thu được \"PASCAL\".\n       Ví dụ     2: S = \"qbt123#qbtdbm\" có 2 tin nhắn nên in ra 2 ở                          dòng thứ nhất. Hai tin\nnhắn đều có cùng chiề              u dài nên ta chọn tin nhắn đầu tiên là \"qbt123\". Giải mã v                   ới k = 1\nta được \"pas123\", chỉl  ấy phần chữ          cái và in in hoa thành \"PAS\".",
+        "slug": "kien-giang-hsg-2022-2023-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2022-2023-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2223.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Tiề n khách sạn",
+        "statement": "Trong một dị    p nghỉ        lễ, do lư   ợng khách du lị ch đến thành phố           Phú Quốc tham quan\ntăngk        ỷ lục, dẫn đế              n tình trạng các khách sạn ở                       đây “cháy phòng”.\n      Khách sạn Best Western chỉcòn một phòng nên quy                             ết đị      nh cho thuê phòng này theo\nhình thứ   c thỏa thuận v           ề   giá cả. Sau khi tổng hợ          p các đơn đặt hàng, khách sạn nhận đư           ợc\nn đơn đặt hàng, trong đó đơ    n đặt hàng thứ        i đăng ký ngày bắt đầu là a_i, ngày trả           phòng\nlà b_i và chấ                   p nhận trả              sốtiền thuê phòng là c_i.\n      Do có nhiều đơn đ       ặt hàng, thờ     i gian đặ  t phòng lại chồng chéo nhau, số                tiền khách\nhàng chấp nhận trả           cho khách sạn càng l   ớn thì nhân viên bán quan lý khách sạn càng r         ất\nkhó khăn khi không biế      t nên lấ          y lịch hẹn củ             a khách hàng nào.\nYêu cầu: Viết chương trình giúp khách sạn Best Western nhận đơn đặt phòng sao cho lợ                i\nnhuận thu đư        ợc là lớ        n nhất.\n      Lưu ý: Theo điều lệ       của khách sạ    n, khách hàng phải trả         phòng trư    ớc 12 giờ trưa,\nkhách hàng khác có thể    nhận phòng từ            12 gi ờ trưa cùng m ột ngày.\n      Dữ    liệu vào: Nhập từ              bàn phím bao gồ      m:\n      -Dòng thứ                nh ất là số            nguyên n (1 ≤ n ≤ 12000) thểhiện s             ốđơn đặt hàng;\n                                                  152\n\f\n       -  n dòng tiếp theo, m    ỗi dòng gồ    m 3 số nguyên a_i, b_i, c_i (1 ≤ a_i ≤ b_i ≤ 1000, 0\n≤ c_i ≤ 1000), mỗi số          cách nhau một khoả              ng trắng.\n       Dữ    liệu ra: Một số            nguyên duy nhất là số          tiền thuê phòng lớ     n nhất mà khách sạ          n có\nthểthu đư      ợc.\nVí dụ       :\n                      Dữ liệu vào                                                      Dữ liệu ra\n3                                                               20\n1 2 8\n2 5 12\n4 7 6\n4                                                               17\n1 4 8\n3 5 3\n6 8 6\n7 9 9\nGiải thích ví dụ                :\n       Ví dụ1: Có 3 đơn đặt phòng:\n       -Đơn 1: từ            ngày 1 đế       n 2, giá 8;\n       -Đơn 2: từ            ngày 2 đế       n 5, giá 12;\n       -Đơn 3: từ            ngày 4 đế       n 7, giá 6.\n       Theo quy định trả        phòng trước 12 giờ     trưa, đơn 1 và đơn 2 không chồng lên nhau (2\n≤ 2), có thể      nhận cả          hai vớ  i tổng ti   ền 8 + 12 = 20. Nếu nhận đơn 3 thì sẽ                 bị    trùng với đơn\n2, nên phương án tốt nh           ất là nhận đơn 1 và đơn 2, thu đư              ợc 20.\n       Ví dụ2: Các đơn đặt phòng:\n       -(1,4) vớ             i giá 8; (3,5) vớ  i giá 3; (6,8) với giá 6; (7,9) vớ               i giá 9.\n       Phương án tốt nhất là nhận đơn (1,4) và (7,9) vì không chồng nhau, tổng tiền là 8 +\n9 = 17.",
+        "slug": "kien-giang-hsg-2022-2023-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2023-2024": [
+    {
+      "id": "kien-giang-hsg-2023-2024-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2324.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Gi ải nén xâu",
+        "statement": "Bạn Tuấn và bạn An cùng tham gia một trò chơi. Trong quá trình diễn biến trò chơi\nbạn Tuấn đố bạn An tìm cách giải nén xâu ký tự theo phương pháp được mô tả như sau:\n    •    Với xâu ký tự \"aaabbbbc\"  sẽ được nén lại thành xâu \"3a5bc\".\n    •    Với xâu ký tự \"aaaaaabbbbc\"  sẽ được nén lại thành xâu \"6a4b2c\".\nDữ liệu:        biết xâu ký tự St gồm N (1 ≤ N ≤ 255)  ký tự thuộc tập các ký tự ‘a’..‘z’, ‘0’..‘9’\nvà xâu ký tự St1gồm các ký tự thuộc tập các ký tự ‘a’..‘z’.\nYêu cầu:\n      Viết chương trình giúp bạn An giải nén xâu Stđể được xâu St1.\nDữ    liệu vào:\n      Một dòng nhập vào từ bàn phím xâu ký tự St .\nDữ    liệu ra:\n      Xuất ra màn hình xâu St1 là xâu ký tự sau khi đã được giải nén.\nVí dụ       :\n                   Dữ liệu vào                                              Dữ liệu ra\n3a5bc                                                   aaabbbbc\n6a4b2c                                                  aaaaaabbbbc",
+        "slug": "kien-giang-hsg-2023-2024-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2023-2024-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2324.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Bộ ba số nguyên tố",
+        "statement": "Cho sốtự              nhiên n (0 ≤ n ≤ 10^5).\nYêu cầu:\n      Viết chương trình tìm t      ất cảbộba s             ốnguyên t   ốx, y, z th   ỏa mãn hai điều kiện:\n      x < y < z ≤ n\n      x² + y² = z\nDữ    liệu vào\n      Nhập vào từ                   bàn phím m ột sốtự         nhiên n (0 ≤ n ≤ 10^5).\nDữ    liệu ra\n                                             161\n\f\n       Xuất ra màn hình g       ồm các nội dung:\n       -Nếu tìm đư       ợc bộba s        ốnguyên t   ốx, y, z thỏa mãn điều kiện trên thì:\n       + In ra các bộ                   ba x y z theo thứ            tự   tăng dầ           n của z; nếu trùng z thì tăng dần theo x, y.\n       + Đồng th      ời in số         lư ợng các bộba sốnguyê                   n tốtìm đư   ợc.\n       -Nếu không tìm đư       ợc bộba nào thì in ra: 'Khong ton tai bo ba so nguyen to nao\nthoa man dieu kien'.\nVí dụ       :\nDữ liệu vào                                                   Dữ liệu ra\n40                                                            2 3 13\n                                                              5 2 29\n                                                              Co 2 bo ba so nguyen to tim duoc\n10                                                            Khong ton tai bo ba so nguyen to nao thoa\n                                                              man dieu kien",
+        "slug": "kien-giang-hsg-2023-2024-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2023-2024-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2324.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Cho thuê hội trư ờng",
+        "statement": "Trung tâm hộ  i nghị        XYZ thường cho thuê Hội trư  ờng để     tổ    chức các sự kiện.  Hội\ntrường 500 chỗ     có thể     cho Công ty thuê vớ  i mức giá tốt hơn H  ội trư   ờng 300 chỗ,  nhưng\nchỉ  được chọn một Công ty duy nhất để             thuê Hội trư     ờng 500 chỗ     sao cho doanh thu thu\nđược là lớ        n nhất.\n      Mỗi Công ty i cung cấ            p ba sốnguyên a[i], b[i], c[i] trong đó:\n      -a[i]: thờ          i điể     m bắt đầ    u thuê\n      -b[i]: thờ          i điể     m kết thúc thuê\n      -c[i]: đơn giá (ngàn đồ          ng / giờ          )\n\n      Tiền thuê củ                  a công ty i là: (b[i] –a[i]) × c[i].\nYêu cầu: Viết chương trình lự       a chọn Công ty thuê Hội trư       ờng 500 chỗ   để     tổng doanh thu\ncủa trung tâm là lớ             n nhất.\nDữ    liệu vào\n      -Dòng đầu: sốn (n ≤ 10^4).\n      -n dòng tiế                 p theo: mỗi       dòng gồ           m ba sốnguyên a[i], b[i], c[i].\nDữ    liệu ra\n      Xuất ra màn hình:\n      -Dòng đầu: tổng s                     ốtiề     n thu được.\n      -Dòng tiếp theo: chỉsố                       Công ty thuê Hội trư             ờng 500 chỗ                .\n      -Các dòng tiếp theo: chỉsốcác Công ty còn l               ại theo đúng thứ         tự   nhậ     p.\n                                                   165\n\f\nVí dụ       :\n                   Dữ liệu vào                                               Dữ liệu ra\n3                                                        199\n1 3 99                                                   2\n1 4 100                                                  1\n3 5 100                                                  3\n5                                                        66\n1 3 20                                                   2\n2 4 45                                                   5\n1 6 18\n3 5 9\n7 9 21",
+        "slug": "kien-giang-hsg-2023-2024-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2023-2024-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2324.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Kho an toàn",
+        "statement": "Trong khuôn viên một công ty      giao hàng nhanh có nhiều kho hàng. Các kho hàng\nvà nhân viên bảo vệ         được thể      hiện trên ma trận m dòng và n cột. Kho hàng là \"kho an\ntoàn\" nếu xung quanh kho toàn là nhân viên b     ảo vệ.\nYêu cầu:      Viết chương trình đưa ra tổng sốkho an toàn và vịtrí các kho an toàn.\nDữ    liệu vào\n       -Nhập từ              bàn phím hai số       m, n nguyên dương (m, n ≤ 100).\n       -   Nhập các ph       ần t  ử của ma trận m dòng và n cột ch      ỉ  chứa hai số 0 hoặc 1 th       ể hiện\nkho hàng và bảo vệ              (quy ước: kho hàng = 0; bảo vệ= 1).\nDữ    liệu ra\n       Xuất ra màn hình g       ồm các nội dung:\n       -Nếu có kho an toàn thì:\n       + Mỗi dòng in vịtrí một kho an toàn (chỉ                                sốdòng, chỉsố                     cột).\n       + Dòng cuố               i cùng in tổ    ng sốkho an toàn.\n       -Nếu không có kho an toàn thì in        -1.\nVí dụ\n                     Dữ liệu vào                                                    Dữ liệu ra\n4 5                                                           2 2\n1 1 1 0 1                                                     3 4\n1 0 1 1 1                                                     2\n1 1 1 0 1\n0 0 1 1 1\n3 3                                                           -1\n0 0 0\n1 1 1\n0 0 0",
+        "slug": "kien-giang-hsg-2023-2024-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2024-2025": [
+    {
+      "id": "kien-giang-hsg-2024-2025-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2425.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Rút tiền",
+        "statement": "Mình là sinh viên năm nhất c      ủa m  ột trư  ờng đại học, khi đi học gia đình đã m            ở một\ntài khoản ngân hàng cho Minh để             thuận tiệ     n gửi và rút tiền qua máy ATM. Nguyên tắc\nrút tiền c    ủa máy ATM là cho phép ngư  ời dùng rút tiền không quá 5.000.000đ cho m       ột\nlần, sốtiền rút phải là b                           ội của 50.000đ và s        ốtờ     tiền máy tr     ảra là ít nh   ất có thể.\nYêu  cầu  :  Em  hãy  viế   t  chương  trình  xử    lý  tương  tự   máy  ATM  để     tính  tổng số            tờ   tiền\nMinh rút được và số   tờ tiền tương     ứng vớ  i từng loại m     ệnh giá cho m  ỗi l  ần   rút. Quy ước\nmáy ATM chỉcó 4 loại m           ệnh giá là: 500.000đ, 200.000đ, 100.000đ, 50.000đ.\nDữ    liệu vào:\nNhập từ            bàn phím sốtiền cần rút.\nDữ    liệu ra:\nXuất ra màn hình dòng 1 tổng số                    tờ  tiền và 4 dòng tiếp theo là số             tờ tiền từ    ng loại m          ệnh\ngiá theo thứ                  tự   500.000đ, 200.000đ, 100.000đ, 50.000đ.\nVí dụ       :\nRút tiền\n       Mình là sinh viên năm nhất c      ủa m  ột trư  ờng đại học, khi đi học gia đình đã m            ở một\ntài khoản ngân hàng cho Minh để             thuận tiệ     n gửi và rút tiền qua máy ATM. Nguyên tắc\nrút tiền c    ủa máy ATM là cho phép ngư  ời dùng rút tiền không quá 5.000.000đ cho m    ột\nlần, sốtiền rút phải là b                           ội của 50.000đ và s        ốtờ     tiền máy tr     ảra là ít nh   ất có thể.\nYêu cầu: Em hãy viết chương trình xử           lý tương tự  máy ATM để     tính tổng số             tờ  tiền Minh\nrút được và số   tờ  tiền tương     ứng vớ  i từ ng loại m  ệnh giá cho m  ỗi lần rút. Quy ư       ớc máy\nATM chỉcó 4 loại mệnh giá là: 500.000đ, 200.000đ, 100.000đ, 50.000đ.\nDữ    liệu vào:\nNhập từ            bàn phím sốtiền cần rút.\nDữ    liệu ra:\nXuất ra màn hình dòng 1 tổng số                    tờ  tiền và 4 dòng tiếp theo là số             tờ tiền từ    ng loại           mệnh\ngiá theo thứ                  tự   500.000đ, 200.000đ, 100.000đ, 50.000đ.\nVÍ DỤ\n                     Dữ liệu vào                                                   Dữ liệu ra\n1350000                                                      5\n                                                             2\n                                                             1\n                                                             1\n                                                             1\n\n                                                       173",
+        "slug": "kien-giang-hsg-2024-2025-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2024-2025-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2425.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Số nguyên tố",
+        "statement": "Sốnguyên tốlà s        ốtự     nhiên chỉcó các ư               ớc sốlà 1 vàchính nó.\nYêu cầu: Viết chương trình tìm và tính tổng các s             ố   nguyên tố  trong dãy số     nguyên từ  A\nđến B.\nDữ    liệu vào:\n       Nhập vào từ                   bàn phím 02 sốnguyên A, B (0 < A < B).\nDữ    liệu ra:\n       Xuất ra màn hình:\n       -Sốlư        ợng các sốnguyên tốvừ                  a tìm được;\n       -Các sốnguyên               tố     tìm được;\n       -Tổng các s       ốnguyên t   ố.\nVí dụ:\n                    Dữ liệu vào                                                   Dữ liệu ra\n6                                                            5\n22                                                           7 11 13 17 19\n                                                             67",
+        "slug": "kien-giang-hsg-2024-2025-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2024-2025-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2425.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Mã hóa văn bả n",
+        "statement": "Tập hợ      p các chữ cái tiếng Anh bao gồ  m 26 chữ cái được đánh số     thứ tự  từ  0 đến 25\nnhư sau:\n   TT        0     1    2     3     4    5     6    7     8    9    10    11    12\n Chữ cái     A     B    C     D    E     F    G     H     I    J     K    L     M\n\n   TT        13   14    15   16    17   18     19     20    21    22    23   24    25\n Chữ cái     N     O    P     Q    R     S     T      U      V    W     X     Y     Z\n\n\n                                          178\n\f\nPhương pháp mã hóa ký tự     đơn gi ản đư  ợc thực hiện theo các bư  ớc sau:\n      Bước 1: Tìm T là số            thứ tự   tương ứ      ng của ký t         ự cần mã hóa trong bảng.\n      Bước 2: Tăng giá trịs          ố T này lên K (khóa) đơn vịta đư        ợc TT = T + K.\n      Bước 3: Tìm sốdư trong phép chia TT cho 26 ta đư     ợc TTT = TT mod 26.\n      Bước 4: Tìm sốthứ         tự   TTT trong bảng chữ              cái ta thu đư ợc ký tự       mới.\nYêu cầu:\n      Viết chương trình mã hóa chuỗi ký tự                     theo phương pháp trên.\nDữ    liệu vào:\n      Nhập vào một chuỗ                    i ký tự   và m ột khóa K (K > 0).\nDữ    liệu ra:\n      Chuỗi ký tự                  sau mã hóa.\nVí dụ       :\nDữ liệu vào                                              Dữ liệu ra\n@ TIN HOC 2025 @                                         @ APU OVJ 2025 @\n7",
+        "slug": "kien-giang-hsg-2024-2025-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2024-2025-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_2425.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true
+      },
+      "problem": {
+        "title": "Số may mắn",
+        "statement": "Một số          tự  nhiên được gọi là \"may m  ắn\" n  ếu các ch  ữ số     của nó đư    ợc chia thành hai\nnhóm mà tổng các chữ     sốcủa nhóm 1 bằng tổ                        ng các chữ                sốc      ủa nhóm 2.\nYêu cầu:\n      Viết chương trình kiể         m tra xem một s  ố N được nhập vào t         ừ bàn phím có phải là s  ố\nmay mắn hay không.\nDữ    liệu vào:\n      Nhập vào s       ốtự     nhiên N < 10000 từ   bàn phím.\nDữ    liệu ra:In kết quả                          ra màn hình:\n      -Dòng 1: \"La so may man\" hoặc \"Khong la so may man\".\n      -Dòng 2: Thểhiện biể                  u thứ      c nếu N là số       may mắ   n (dạng a + b + … = c + d + …).\nVí dụ\n                   Dữ liệu vào                                             Dữ liệu ra\n55                                                     La so may man\n                                                       5 = 5\n123                                                    La so may man\n                                                       1 + 2 = 3\n1982                                                   La so may man\n                                                       1 + 9 = 8 + 2\n2024                                                   Khong la so may man\n\n                                                 181",
+        "slug": "kien-giang-hsg-2024-2025-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,684 @@
+{
+  "series": "kien-giang-hsg",
+  "source": "official-archive",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "firstContestStart": "2026-10-16T19:00:00+07:00",
+  "releaseIntervalDays": 2,
+  "sourceDirectory": "Đề Thi HSG tin học/Đề Thi HSG tin học",
+  "compilation": {
+    "source": "15_DE_HSG_KG.pdf",
+    "sha256": "24b366f33e9a2f667238e6f4433a6879d13547940e002d7ee9c77c2477c64da6",
+    "role": "cross-check-only",
+    "createsContest": false
+  },
+  "ignoredExtensions": [
+    ".pptx"
+  ],
+  "seasons": [
+    {
+      "id": "kien-giang-hsg-2006-2007",
+      "series": "kien-giang-hsg",
+      "source": "Tinhoc_0607.pdf",
+      "sha256": "5036e9f15591c7d18133f25563a140fe687a8386345b7546d8d9e80611052448",
+      "season": "2006-2007",
+      "startAt": "2026-10-16T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2006-2007",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2006-2007"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "Tinhoc_0607.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 3,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 3
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2007-2008",
+      "series": "kien-giang-hsg",
+      "source": "Tin_0708.pdf",
+      "sha256": "df63daf168b5dd6ce0511f4ba7c452fea0720d08dd7d4006d4fc597f2cdf3989",
+      "season": "2007-2008",
+      "startAt": "2026-10-18T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2007-2008",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2007-2008"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "Tin_0708.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 3,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 3
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2008-2009",
+      "series": "kien-giang-hsg",
+      "source": "tin_0809.pdf",
+      "sha256": "21752269c7f03c5a203b1b00088dc36f6f5d121294a2e915046dedff57d4ccdb",
+      "season": "2008-2009",
+      "startAt": "2026-10-20T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2008-2009",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2008-2009"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_0809.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 3,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 3
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2009-2010",
+      "series": "kien-giang-hsg",
+      "source": "tin_0910.pdf",
+      "sha256": "5035fbd4d2a0a7c4b3fa1d74101fc5ffa7634ad211a4c45ce42f40af15f9e224",
+      "season": "2009-2010",
+      "startAt": "2026-10-22T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2009-2010",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2009-2010"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_0910.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2010-2011",
+      "series": "kien-giang-hsg",
+      "source": "tin_1011.pdf",
+      "sha256": "d292d11055bbcfa1d43940f2b921307fd3ee4a56a91fa15dfe7cf9cbccc52563",
+      "season": "2010-2011",
+      "startAt": "2026-10-24T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2010-2011",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2010-2011"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1011.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2011-2012",
+      "series": "kien-giang-hsg",
+      "source": "tin_1112.pdf",
+      "sha256": "badd4bdb3ffaea8a6bc4f3a5583f158202518a5f7434c70fd4e494766a7de6e4",
+      "season": "2011-2012",
+      "startAt": "2026-10-26T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2011-2012",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2011-2012"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1112.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2012-2013",
+      "series": "kien-giang-hsg",
+      "source": "tin_1213.pdf",
+      "sha256": "6dd27d68fe603603d577309e493fc106c0c6e427fdb4bd3611c627d71e917650",
+      "season": "2012-2013",
+      "startAt": "2026-10-28T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2012-2013",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2012-2013"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1213.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2013-2014",
+      "series": "kien-giang-hsg",
+      "source": "tin_1314.pdf",
+      "sha256": "0949fefdb8bf820b6b5225855f302d2fe63fec0caa270e9c214dc2adfa8a9135",
+      "season": "2013-2014",
+      "startAt": "2026-10-30T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2013-2014",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2013-2014"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1314.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2014-2015",
+      "series": "kien-giang-hsg",
+      "source": "tin_1415.pdf",
+      "sha256": "2ddd453e66313bba08a4fb1b75b66540ec931e80de64c91b1a567652d96c0476",
+      "season": "2014-2015",
+      "startAt": "2026-11-01T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2014-2015",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2014-2015"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1415.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2015-2016",
+      "series": "kien-giang-hsg",
+      "source": "tin_1516.pdf",
+      "sha256": "bbe44d731011d5529225bdb580f3d8e48ea607c744b17b32f78e5823fb3ea28f",
+      "season": "2015-2016",
+      "startAt": "2026-11-03T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2015-2016",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2015-2016"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1516.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2016-2017",
+      "series": "kien-giang-hsg",
+      "source": "tin_1617.pdf",
+      "sha256": "ad38d59b9f2c2cd62f955eddc99f983c894d15d345384141f7cad90b7d6c7f68",
+      "season": "2016-2017",
+      "startAt": "2026-11-05T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2016-2017",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2016-2017"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1617.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2017-2018",
+      "series": "kien-giang-hsg",
+      "source": "tin_1728.pdf",
+      "sha256": "ae10a5a1aa9d15aefb95d40921c22f42acd9aa8ccb4e9e7c10743b3e113b445b",
+      "season": "2017-2018",
+      "startAt": "2026-11-07T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2017-2018",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2017-2018"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1728.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2018-2019",
+      "series": "kien-giang-hsg",
+      "source": "tin_1819.pdf",
+      "sha256": "60a0ac45f942d11cf33e671c987e0ddd793b2ce459d4b38ed9585797eb752bd6",
+      "season": "2018-2019",
+      "startAt": "2026-11-09T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2018-2019",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2018-2019"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1819.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2019-2020",
+      "series": "kien-giang-hsg",
+      "source": "tin_1920.pdf",
+      "sha256": "9417ab0a9fc00599944b62e87af5266842bebb0f547d1f52e5f7f24ab37b2bdd",
+      "season": "2019-2020",
+      "startAt": "2026-11-11T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2019-2020",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2019-2020"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_1920.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2020-2021",
+      "series": "kien-giang-hsg",
+      "source": "tin_2021.pdf",
+      "sha256": "7e6c026320ba1ca77b6e8460c648fdbefe611d8ba7a6ddbaa0bac2d6df88f014",
+      "season": "2020-2021",
+      "startAt": "2026-11-13T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2020-2021",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2020-2021"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_2021.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2021-2022",
+      "series": "kien-giang-hsg",
+      "source": "tin_2122.pdf",
+      "sha256": "1caf2136222a0bcc8dcab79b9a76ba83f41dd3cb5ff67c1e37532d99c4e3711b",
+      "season": "2021-2022",
+      "startAt": "2026-11-15T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2021-2022",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2021-2022"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_2122.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2022-2023",
+      "series": "kien-giang-hsg",
+      "source": "tin_2223.pdf",
+      "sha256": "6b087a3bf4e457dbb37d218f71b362aeb309778aee7cb365eacf7e05571393dc",
+      "season": "2022-2023",
+      "startAt": "2026-11-17T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2022-2023",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2022-2023"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_2223.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2023-2024",
+      "series": "kien-giang-hsg",
+      "source": "tin_2324.pdf",
+      "sha256": "973fb6d7c136c27ea435061f4c8e3b3a37740d0632ee90037c7332d081051a4f",
+      "season": "2023-2024",
+      "startAt": "2026-11-19T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2023-2024",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2023-2024"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_2324.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2024-2025",
+      "series": "kien-giang-hsg",
+      "source": "tin_2425.pdf",
+      "sha256": "ada308ee134da1d3ead9524c653a16868039191738c81477726ccd7db17b2939",
+      "season": "2024-2025",
+      "startAt": "2026-11-21T19:00:00+07:00",
+      "headerVerification": {
+        "verified": true,
+        "season": "2024-2025",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "NĂM HỌC 2024-2025"
+      },
+      "duration": {
+        "minutes": 150,
+        "verified": true,
+        "source": "tin_2425.pdf",
+        "page": 1,
+        "method": "visual inspection of original embedded scan",
+        "quote": "150 phút"
+      },
+      "extractionVerified": false,
+      "expectedProblemCount": 4,
+      "needsReview": true,
+      "reviewReasons": [
+        "Unverified OCR: math, tables, sample formatting, titles and boundaries require manual comparison.",
+        "No validated private reference tests."
+      ],
+      "pointScale": 100,
+      "extractionEvidence": {
+        "method": "Vietnamese OCR of annual statement pages; unverified",
+        "candidateCount": 4
+      }
+    }
+  ]
+}

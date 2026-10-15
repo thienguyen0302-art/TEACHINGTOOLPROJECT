@@ -1,3 +1,4 @@
+import { createGlobalChatHandler } from './globalChat.js';
 import { createTutorHandler } from './aiTutor.js';
 import { createSelfCheckHandler } from './lessonSelfCheck.js';
 import { createAuthGuard } from './auth.js';
@@ -22,6 +23,7 @@ const hiddenTests = JSON.parse(readFileSync(new URL('./testcases.json', import.m
 const languages = { cpp: Number(process.env.JUDGE0_CPP_ID || 2), python: Number(process.env.JUDGE0_PYTHON_ID || 28) };
 let active = 0;
 const tutorHandler = createTutorHandler();
+const globalChatHandler = createGlobalChatHandler();
 const selfCheckHandler = createSelfCheckHandler();
 // Production: đặt REQUIRE_AUTH=true và FIREBASE_PROJECT_ID để chỉ người đã đăng nhập mới gọi được Judge/AI.
 const authGuard = createAuthGuard({ projectId: process.env.FIREBASE_PROJECT_ID, required: process.env.REQUIRE_AUTH === 'true' });
@@ -38,10 +40,11 @@ const contestHandler = createContestHandler({ judgeConfig: (language) => {
 const server = http.createServer(async (req, res) => {
   const reply = (status, data) => { if (!res.destroyed) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); } };
   const contestRoute = /^\/api\/(teacher|contests|contest)(\/|$)/.test(req.url);
-  if (!contestRoute && (!['/api/judge', '/api/ai/tutor', '/api/ai/self-check'].includes(req.url) || req.method !== 'POST')) return reply(404, { error: 'Không tìm thấy API.' });
+  if (!contestRoute && (!['/api/judge', '/api/ai/tutor', '/api/ai/self-check', '/api/ai/global-chat'].includes(req.url) || req.method !== 'POST')) return reply(404, { error: 'Không tìm thấy API.' });
   // The development service is localhost-only; reject cross-origin browser requests.
   if (req.headers.origin && !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(req.headers.origin) && req.headers.origin !== process.env.APP_ORIGIN) return reply(403, { error: 'Origin không được phép.' });
   if (contestRoute) return contestHandler(req, reply);
+  if (req.url === '/api/ai/global-chat') return globalChatHandler(req, res);
   const caller = await authGuard(req);
   if (!caller.ok) return reply(caller.status, { error: caller.error });
   if (req.url === '/api/ai/tutor') return tutorHandler(req, res);

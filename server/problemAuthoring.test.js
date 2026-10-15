@@ -78,3 +78,9 @@ test('publish checks actual stored problem status and hidden tests inside transa
   store.put('problems/p1',authoredProblem({status:'draft'}));
   await assert.rejects(store.repository.saveContest(null,contestFixture(),'t1',1000000),/published/);
 });
+
+test('incomplete imported drafts may omit samples; publication still requires samples and private tests', () => {
+  const draft = validateProblem(authoredProblem({samples: [], hiddenTests: []}), {status:'draft'});
+  assert.equal(draft.status,'draft');
+  assert.throws(() => validateProblem(draft, {status:'published'}));
+});

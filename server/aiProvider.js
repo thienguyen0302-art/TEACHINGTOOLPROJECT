@@ -54,7 +54,7 @@ export function normalizeFeedback(raw, action, visualizationContext = {}) {
     ...(action === 'visualize' ? { visualization: normalizeVisualization(data.visualization, visualizationContext) } : {}) };
 }
 
-export const outputTokenLimits = Object.freeze({ chat: 600, hint: 350, explain_error: 450, explain_failure: 450, complexity: 450, visualize: 1200, self_check: 550 });
+export const outputTokenLimits = Object.freeze({ chat: 600, global_chat: 700, hint: 350, explain_error: 450, explain_failure: 450, complexity: 450, visualize: 1200, self_check: 550 });
 export function providerRequest({ url, model, system, context, action }) {
   if (!Object.hasOwn(outputTokenLimits, action)) throw new TutorError(400, 'AI action không hợp lệ.');
   return {
@@ -86,9 +86,13 @@ function providerError(status) {
   return `Gemini provider không khả dụng (HTTP ${status}). Hãy thử lại.`;
 }
 
+let activeProviderRequests = 0;
+
 // One-shot compatible adapter. Provider transport stays out of UI.
 export async function requestProvider({ system, context, action, signal, env = process.env, fetchImpl = fetch }) {
   if (!env.AI_API_KEY?.trim()) throw new TutorError(503, 'AI Tutor chưa được cấu hình.');
+  if (activeProviderRequests >= 2) throw new TutorError(429, 'Peanut AI đang bận. Hãy thử lại.');
+  activeProviderRequests++;
   try {
     if ((env.AI_PROVIDER || 'gemini').trim() !== 'gemini') throw new TutorError(503, 'AI_PROVIDER phải là gemini.');
     const request = providerRequest({ url: (env.AI_API_URL || 'https://generativelanguage.googleapis.com/v1beta').trim(), model: (env.AI_MODEL || 'gemini-3.5-flash-lite').trim(), system, context, action });
@@ -104,7 +108,9 @@ export async function requestProvider({ system, context, action, signal, env = p
     if (!response.ok) throw new TutorError(502, providerError(response.status, payload));
     const content = providerText(payload);
     if (typeof content !== 'string' || !content.trim()) throw new TutorError(502, 'AI provider trả về phản hồi không hợp lệ. Hãy thử lại.');
-    const feedback = action === 'self_check'
+    const feedback = action === 'global_chat'
+      ? { message: normalizeFeedback(content, 'chat').message, suggestedActions: [] }
+      : action === 'self_check'
       ? normalizeSelfCheckFeedback(content)
       : normalizeFeedback(content, action, { source: context?.student?.source, samples: context?.problem?.samples });
     // Redact credentials from all nested strings, including visualization cells.
@@ -120,5 +126,5 @@ export async function requestProvider({ system, context, action, signal, env = p
     if (signal?.aborted) throw new TutorError(504, 'AI Tutor hết thời gian chờ. Hãy thử lại.');
     if (error instanceof TutorError) throw error;
     throw new TutorError(502, 'Không kết nối được AI provider. Hãy thử lại.');
-  }
+  } finally { activeProviderRequests--; }
 }

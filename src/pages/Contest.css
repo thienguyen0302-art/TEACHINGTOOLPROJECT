@@ -45,3 +45,6 @@
   .contest-ui th, .contest-ui td { padding: 10px; }
   .contest-heading { gap: 8px; }
 }
+
+.contest-series-badge { display:inline-block; color:#6941a5; background:#f1e9fb; border-radius:6px; padding:5px 8px; font-size:10px; font-weight:750; letter-spacing:.04em; margin:0 8px 8px 0; }
+.contest-series-next { line-height:1.8; padding:14px; background:#faf7fe; border:1px solid #eee5f8; border-radius:12px; }

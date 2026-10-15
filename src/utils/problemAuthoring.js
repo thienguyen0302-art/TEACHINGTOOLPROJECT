@@ -44,7 +44,7 @@ export function validateProblem(input, { status = 'draft', existingSlugs = [], c
       if (name === 'Samples') requireValue(test.explanation === undefined || typeof test.explanation === 'string' && bytes(test.explanation) <= 20000, 'Giải thích sample không hợp lệ.');
     }
   }
-  tests(input.samples, 'Samples', 1, 10);
+  tests(input.samples, 'Samples', status === 'published' ? 1 : 0, 10);
   tests(input.hiddenTests ?? [], 'Hidden tests', status === 'published' ? 1 : 0, 50);
   const publicData = serializePublicProblem({ ...input, status });
   // Firestore documents have a 1 MiB ceiling, including overhead.

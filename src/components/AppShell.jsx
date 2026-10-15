@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Icon from "./Icon";
+import GlobalPeanutChat from "./GlobalPeanutChat.jsx";
+import TutorIcon from "./TutorIcon.jsx";
 import Logo from "./Logo";
 import { displayName, initials } from "../utils/format";
 import NotificationDrawer from "./NotificationDrawer";
@@ -50,10 +52,13 @@ function isActive(item, pathname) {
 
 export default function AppShell({ user, isTeacher = false, weekActive = 0, onLogout, children }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [peanutOpen, setPeanutOpen] = useState(false);
+  const peanutTriggerRef = useRef(null);
   const [notice, setNotice] = useState("");
   const timer = useRef(null);
   const { pathname } = useLocation();
   const nav = useNavigate();
+  const peanutBlocked = /^\/contests?(\/|$)/.test(pathname);
 
   // Trạng thái hệ thống thông báo
   const [notifOpen, setNotifOpen] = useState(false);
@@ -179,9 +184,9 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
               />
             </div>
             <div className="top-actions">
-              <button className="language-button" onClick={() => showNotice("Phiên bản tiếng Anh sẽ sớm có mặt")}>
-                <Icon name="globe" /><span>VI</span>
-              </button>
+              {!peanutBlocked && <button ref={peanutTriggerRef} className="peanut-chat-button" title="Trò chuyện với Peanut AI" aria-label="Trò chuyện với Peanut AI" aria-expanded={peanutOpen} aria-controls="global-peanut-chat" onClick={() => setPeanutOpen(value => !value)}>
+                <TutorIcon /><span>Peanut AI</span>
+              </button>}
               {/* Nút chuông + popup neo bên dưới */}
               <div style={{ position: "relative" }}>
                 <button
@@ -234,6 +239,8 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
           </header>
           {children}
         </section>
+
+        {!peanutBlocked && <GlobalPeanutChat key={user?.uid} open={peanutOpen} onClose={() => setPeanutOpen(false)} triggerRef={peanutTriggerRef} pathname={pathname} />}
 
         {menuOpen && <button className="menu-backdrop" onClick={() => setMenuOpen(false)} aria-label="Đóng menu" />}
         {notice && (
