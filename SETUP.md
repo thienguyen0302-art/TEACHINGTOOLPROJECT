@@ -171,6 +171,13 @@ application-default login` locally) for the same Firestore project. Never put Ad
 credentials under `VITE_*` or commit a service-account JSON file. Existing Judge0
 configuration is reused. Vite proxies every `/api` route to port 3001.
 
+Local setup: add `FIREBASE_PROJECT_ID` to `.env.local` with the same value as
+`VITE_FB_PROJECT_ID`; the frontend variable alone does not configure the backend.
+Run `gcloud auth application-default login` using an account with Firestore access.
+From the project root (where `package.json` is located), restart `npm run dev`
+after changing `.env.local`. Set `JUDGE_PORT` in `.env.local` to use a different
+backend port; Vite proxies all `/api` routes to that port as well.
+
 Teacher accounts (`users/{uid}.role = teacher`) can open **Bài tập tự soạn** and
 **Contest HSG**. Create/import a problem, Preview, save/publish, then build and
 publish a contest. Student **Contest HSG** is separate from Learning/Exam progress.
