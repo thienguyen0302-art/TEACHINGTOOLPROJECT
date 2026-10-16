@@ -79,9 +79,12 @@ export function isProfileComplete(profile = {}) {
 }
 
 // Kiểm tra từng trường và trả về object các lỗi tương ứng
-export function validateProfileFields(input = {}) {
+export function validateProfileFields(input = {}, isTeacher = false) {
   const errors = {};
-  for (const [key, label] of PROFILE_FIELDS) {
+  const fields = isTeacher
+    ? PROFILE_FIELDS.filter(([k]) => k !== "className")
+    : PROFILE_FIELDS;
+  for (const [key, label] of fields) {
     const value = String(input[key] ?? "").trim();
     if (!value) {
       errors[key] = key === "province" ? "Vui lòng chọn tỉnh / thành phố." : `Vui lòng nhập ${label}.`;

@@ -9,6 +9,7 @@ import {
   deleteAnnouncement,
   ANNOUNCEMENT_TYPES,
 } from "../services/announcementService";
+import { auth } from "../services/firebase";
 import "./Teacher.css";
 
 const chapterName = (c) => `${LANG_LABEL[c.language] ?? c.language} · Chương ${Number(c.chapterId.slice(2))}`;
@@ -623,7 +624,7 @@ export default function Teacher() {
       <CreateAnnouncementModal
         isOpen={isCreateNotifOpen}
         onClose={() => setIsCreateNotifOpen(false)}
-        currentUser={{ displayName: "Giáo viên phụ trách", role: "teacher" }}
+        currentUser={auth.currentUser}
         onCreated={() => showNotice("Đã gửi thông báo đến toàn bộ học sinh thành công!")}
       />
 

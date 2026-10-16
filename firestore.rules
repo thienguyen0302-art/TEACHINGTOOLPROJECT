@@ -38,6 +38,24 @@ service cloud.firestore {
         allow read: if isOwner(uid) || isTeacher();
         allow create, update: if isOwner(uid);
       }
+
+      match /goals/{id} {
+        allow read, write: if isOwner(uid) || isTeacher();
+      }
+
+      match /contestHistory/{contestId} {
+        allow read, write: if isOwner(uid) || isTeacher();
+      }
+
+      match /contestSubmissions/{subId} {
+        allow read, write: if isOwner(uid) || isTeacher();
+      }
+    }
+
+    // Bảng xếp hạng Contest HSG: Đồng bộ giữa tất cả tài khoản dựa trên tổng điểm thi contest
+    match /contestLeaderboard/{uid} {
+      allow read: if signedIn();
+      allow write: if signedIn();
     }
 
     // Bảng xếp hạng đề thi thật: mọi người đã đăng nhập được đọc; chỉ chủ sở hữu ghi dòng của mình.
@@ -54,10 +72,10 @@ service cloud.firestore {
       allow read: if isTeacher();
     }
 
-    // Thông báo lớp học: mọi người đăng nhập đọc được; chỉ giáo viên được tạo, sửa, xóa
+    // Thông báo lớp học: công khai đọc (để realtime listener không bị lỗi khi auth pending); người dùng đăng nhập được đăng/quản lý
     match /announcements/{id} {
-      allow read: if signedIn();
-      allow create, update, delete: if isTeacher();
+      allow read: if true;
+      allow create, update, delete: if signedIn();
     }
 
     // Đánh giá người dùng: Công khai đọc đánh giá đã duyệt và đồng ý chia sẻ; người dùng quản lý đánh giá của mình; giáo viên kiểm duyệt.
@@ -67,6 +85,13 @@ service cloud.firestore {
                   || isTeacher();
       allow create, update: if (isOwner(uid) && request.resource.data.uid == uid) || isTeacher();
       allow delete: if isOwner(uid) || isTeacher();
+    }
+
+    // Góp ý báo lỗi: Người dùng đăng nhập gửi và đọc báo cáo của mình; Giáo viên/Admin đọc và xử lý tất cả
+    match /bugReports/{id} {
+      allow read: if isTeacher() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create: if signedIn();
+      allow update, delete: if isTeacher();
     }
     // New authoring uses the authenticated backend so slug/lock checks are atomic.
     function unlocked(problemId) {

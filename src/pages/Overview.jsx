@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import { useNotice } from "../hooks/useNotice";
@@ -5,6 +6,14 @@ import { languageCourses, LANG_BY_KEY } from "../data/curriculum";
 import { firstName, fmtTime, todayText } from "../utils/format";
 import { calcStreak, weekSummary } from "../utils/activity";
 import { isProfileComplete } from "../utils/profile";
+import AllAnnouncementsModal from "../components/AllAnnouncementsModal";
+import {
+  subscribeAnnouncements,
+  ANNOUNCEMENT_TYPES,
+  getReadNotificationIds,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+} from "../services/announcementService";
 
 // Các khối chưa có dữ liệu thật (chuỗi ngày học, XP, nhật ký, bài tập…) giữ số liệu mẫu của bản thiết kế.
 export default function Overview({ user, lang, data, onChangeLang }) {
@@ -15,6 +24,33 @@ export default function Overview({ user, lang, data, onChangeLang }) {
   const firstChapter = data.chapters[0];
   const week = weekSummary(data.daily);
   const streak = calcStreak(data.daily);
+
+  // Thông báo lớp học
+  const [announcements, setAnnouncements] = useState([]);
+  const [readIds, setReadIds] = useState(() => getReadNotificationIds(user?.uid));
+  const [isAllNotifOpen, setIsAllNotifOpen] = useState(false);
+
+  useEffect(() => {
+    setReadIds(getReadNotificationIds(user?.uid));
+  }, [user?.uid]);
+
+  useEffect(() => {
+    const unsub = subscribeAnnouncements((items) => {
+      setAnnouncements(items);
+    });
+    return () => unsub?.();
+  }, []);
+
+  const handleMarkRead = (id) => {
+    markNotificationAsRead(user?.uid, id);
+    setReadIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+  };
+
+  const handleMarkAllRead = () => {
+    const allIds = announcements.map((a) => a.id);
+    markAllNotificationsAsRead(user?.uid, allIds);
+    setReadIds(allIds);
+  };
 
   const openFirst = () => {
     if (firstChapter) nav(`/lesson/${firstChapter.id}`);
@@ -84,6 +120,62 @@ export default function Overview({ user, lang, data, onChangeLang }) {
         <div><span>Sau đó</span><strong>Rẽ nhánh tư duy</strong></div>
       </section>
 
+      {/* ── BẢNG TIN THÔNG BÁO TỪ GIÁO VIÊN ───────────────── */}
+      {announcements.length > 0 && (
+        <section className="overview-announcements-section">
+          <div className="oas-header">
+            <div className="oas-title-wrap">
+              <span className="oas-kicker"><Icon name="megaphone" /> BẢNG TIN LỚP HỌC</span>
+              <h2>Thông báo từ Giáo viên &amp; Nhà trường</h2>
+            </div>
+            <button
+              type="button"
+              className="oas-view-all-btn"
+              onClick={() => setIsAllNotifOpen(true)}
+            >
+              Xem tất cả ({announcements.length}) <Icon name="chevron" />
+            </button>
+          </div>
+
+          <div className="oas-cards-grid">
+            {announcements.slice(0, 2).map((item) => {
+              const meta = ANNOUNCEMENT_TYPES[item.type] || ANNOUNCEMENT_TYPES.general;
+              const isUnread = !readIds.includes(item.id);
+              return (
+                <article
+                  key={item.id}
+                  className={`oas-card ${item.pinned ? "is-pinned" : ""} ${isUnread ? "is-unread" : ""}`}
+                  onClick={() => {
+                    if (isUnread) handleMarkRead(item.id);
+                    setIsAllNotifOpen(true);
+                  }}
+                >
+                  <div className="oas-card-top">
+                    <span className={`oas-badge oas-badge--${meta.color}`}>
+                      <Icon name={meta.icon} /> {meta.badge}
+                    </span>
+                    {item.pinned && <span className="oas-pin-badge">📌 Đã ghim</span>}
+                    {isUnread && <span className="oas-new-dot" title="Chưa đọc" />}
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.content}</p>
+                  <div className="oas-card-foot">
+                    <span>👤 {item.authorName || "Giáo viên phụ trách"}</span>
+                    <span>
+                      {item.createdAt
+                        ? new Date(item.createdAt).toLocaleDateString("vi-VN", {
+                            day: "2-digit", month: "2-digit", year: "numeric",
+                          })
+                        : "Vừa xong"}
+                    </span>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       <section className="learning-hub">
         <div className="learning-hub-heading">
           <div>
@@ -116,10 +208,14 @@ export default function Overview({ user, lang, data, onChangeLang }) {
             <button onClick={() => nav("/curriculum")}>Tiếp tục học lý thuyết <Icon name="chevron" /></button>
           </article>
 
-          <article className="learning-section-card practice-card">
+          <article
+            className="learning-section-card practice-card"
+            onClick={() => nav("/practice")}
+            style={{ cursor: "pointer" }}
+          >
             <div className="learning-card-top">
               <span className="learning-card-icon"><Icon name="code" /></span>
-              <span className="learning-status">40 bài tập</span>
+              <span className="learning-status">Kho bài tập</span>
             </div>
             <span className="learning-index">Phần 02</span>
             <h3>Thực hành</h3>
@@ -131,7 +227,9 @@ export default function Overview({ user, lang, data, onChangeLang }) {
             <div className="learning-levels">
               <span>Cơ bản</span><span>Vận dụng</span><span>Nâng cao</span>
             </div>
-            <button onClick={() => notice("Khu thực hành đang được cập nhật")}>Vào khu thực hành <Icon name="chevron" /></button>
+            <button onClick={(e) => { e.stopPropagation(); nav("/practice"); }}>
+              Vào kho bài tập <Icon name="chevron" />
+            </button>
           </article>
 
           <article className="learning-section-card review-card">
@@ -149,7 +247,11 @@ export default function Overview({ user, lang, data, onChangeLang }) {
             <button onClick={() => nav("/curriculum")}>Xem nội dung ôn tập <Icon name="chevron" /></button>
           </article>
 
-          <article className="learning-section-card contest-card">
+          <article
+            className="learning-section-card contest-card"
+            onClick={() => nav("/exam")}
+            style={{ cursor: "pointer" }}
+          >
             <div className="contest-glow" />
             <div className="learning-card-top">
               <span className="learning-card-icon"><Icon name="trophy" /></span>
@@ -163,7 +265,9 @@ export default function Overview({ user, lang, data, onChangeLang }) {
               <div><strong>120'</strong><span>Mỗi đề</span></div>
               <div><strong>AI</strong><span>Phân tích</span></div>
             </div>
-            <button onClick={() => notice("Kho đề HSG Tin học đang được cập nhật")}>Bắt đầu luyện đề <Icon name="chevron" /></button>
+            <button onClick={(e) => { e.stopPropagation(); nav("/exam"); }}>
+              Bắt đầu luyện đề <Icon name="chevron" />
+            </button>
           </article>
         </div>
       </section>
@@ -253,6 +357,17 @@ export default function Overview({ user, lang, data, onChangeLang }) {
           </article>
         </div>
       </section>
+
+      <AllAnnouncementsModal
+        isOpen={isAllNotifOpen}
+        onClose={() => setIsAllNotifOpen(false)}
+        announcements={announcements}
+        readIds={readIds}
+        onMarkRead={handleMarkRead}
+        onMarkAllRead={handleMarkAllRead}
+        isTeacher={false}
+      />
     </div>
   );
 }
+

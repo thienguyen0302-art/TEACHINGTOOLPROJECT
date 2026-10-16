@@ -33,56 +33,94 @@ export const DEFAULT_ANNOUNCEMENTS = [
 
 // Lắng nghe realtime danh sách thông báo
 export function subscribeAnnouncements(callback) {
-  try {
-    const colRef = collection(db, "announcements");
-    // Thử lắng nghe realtime
-    const unsubscribe = onSnapshot(
-      colRef,
-      (snapshot) => {
-        const items = snapshot.docs.map((docSnap) => {
-          const data = docSnap.data();
-          let createdAt = new Date().toISOString();
-          if (data.createdAt?.toDate) {
-            createdAt = data.createdAt.toDate().toISOString();
-          } else if (typeof data.createdAt === "string") {
-            createdAt = data.createdAt;
+  let isCancelled = false;
+  let retryTimer = null;
+  let unsubscribeFirestore = () => {};
+
+  function connect() {
+    if (isCancelled) return;
+    try {
+      const colRef = collection(db, "announcements");
+      unsubscribeFirestore = onSnapshot(
+        colRef,
+        (snapshot) => {
+          const items = snapshot.docs.map((docSnap) => {
+            const data = docSnap.data();
+            let createdAt = new Date().toISOString();
+            if (data.createdAt?.toDate) {
+              createdAt = data.createdAt.toDate().toISOString();
+            } else if (data.createdAt?.seconds) {
+              createdAt = new Date(data.createdAt.seconds * 1000).toISOString();
+            } else if (typeof data.createdAt === "string") {
+              createdAt = data.createdAt;
+            }
+            return {
+              id: docSnap.id,
+              ...data,
+              createdAt,
+            };
+          });
+
+          // Sắp xếp: thông báo ghim lên đầu, sau đó theo thời gian TỪ MỚI ĐẾN CŨ
+          items.sort((a, b) => {
+            if (a.pinned && !b.pinned) return -1;
+            if (!a.pinned && b.pinned) return 1;
+            const timeA = new Date(a.createdAt || 0).getTime();
+            const timeB = new Date(b.createdAt || 0).getTime();
+            return timeB - timeA;
+          });
+
+          if (items.length > 0) {
+            try {
+              window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(items));
+            } catch { /* Local cache is optional. */ }
+            callback(items);
+          } else {
+            // Nếu Firestore trống: kiểm tra cache local trước, nếu không thì dùng mặc định
+            try {
+              const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
+              if (Array.isArray(cached) && cached.length > 0) {
+                callback(cached);
+                return;
+              }
+            } catch { /* Local cache is optional. */ }
+            callback(DEFAULT_ANNOUNCEMENTS);
           }
-          return {
-            id: docSnap.id,
-            ...data,
-            createdAt,
-          };
-        });
-
-        // Sắp xếp: ghim lên đầu, sau đó theo thời gian giảm dần
-        items.sort((a, b) => {
-          if (a.pinned && !b.pinned) return -1;
-          if (!a.pinned && b.pinned) return 1;
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-
-        // Lưu cache cục bộ
-        if (items.length > 0) {
-          try {
-            window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(items));
-          } catch { /* Local cache is optional. */ }
-          callback(items);
-        } else {
-          callback(DEFAULT_ANNOUNCEMENTS);
+        },
+        (error) => {
+          console.warn("[Announcement] Không thể tải realtime Firestore, dùng dữ liệu cache:", error);
+          loadLocalFallback(callback);
+          // Tự động thử kết nối lại sau 3s nếu bị gián đoạn mạng
+          if (!isCancelled) {
+            retryTimer = setTimeout(connect, 3000);
+          }
         }
-      },
-      (error) => {
-        console.warn("Không thể tải realtime thông báo Firestore, dùng dữ liệu cache:", error);
-        loadLocalFallback(callback);
+      );
+    } catch (err) {
+      console.warn("[Announcement] Lỗi khởi tạo lắng nghe Firestore:", err);
+      loadLocalFallback(callback);
+      if (!isCancelled) {
+        retryTimer = setTimeout(connect, 3000);
       }
-    );
-
-    return unsubscribe;
-  } catch (err) {
-    console.warn("Lỗi khởi tạo lắng nghe thông báo:", err);
-    loadLocalFallback(callback);
-    return () => {};
+    }
   }
+
+  connect();
+
+  // Lắng nghe sự kiện local cập nhật tức thì trên cùng tab/browser
+  function onLocalUpdate(e) {
+    if (Array.isArray(e.detail) && e.detail.length > 0) {
+      callback(e.detail);
+    }
+  }
+  window.addEventListener("peanut:announcements:updated", onLocalUpdate);
+
+  return () => {
+    isCancelled = true;
+    if (retryTimer) clearTimeout(retryTimer);
+    try { unsubscribeFirestore(); } catch {}
+    window.removeEventListener("peanut:announcements:updated", onLocalUpdate);
+  };
 }
 
 function loadLocalFallback(callback) {
@@ -103,32 +141,56 @@ export async function createAnnouncement({ title, content, type = "general", pin
   if (!cleanTitle) throw new Error("Tiêu đề thông báo không được để trống.");
   if (!cleanContent) throw new Error("Nội dung thông báo không được để trống.");
 
+  const currentUid = authorUid || (typeof db !== "undefined" && db?.app?.auth ? db.app.auth().currentUser?.uid : "");
   const payload = {
     title: cleanTitle,
     content: cleanContent,
     type,
     pinned: Boolean(pinned),
     authorName: authorName || "Giáo viên",
-    authorUid: authorUid || "",
+    authorUid: currentUid || "",
     createdAt: serverTimestamp(),
   };
 
   try {
     const docRef = await addDoc(collection(db, "announcements"), payload);
-    return { id: docRef.id, ...payload, createdAt: new Date().toISOString() };
+    console.log("[Announcement] Đã đăng thành công lên Firestore:", docRef.id);
+    const resultItem = {
+      id: docRef.id,
+      ...payload,
+      createdAt: new Date().toISOString(),
+    };
+    // Đồng thời cập nhật cache và phát event để hiển thị tức thì
+    try {
+      const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
+      const updated = [resultItem, ...cached.filter((x) => x.id !== resultItem.id)].sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+      });
+      window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent("peanut:announcements:updated", { detail: updated }));
+    } catch {}
+    return resultItem;
   } catch (err) {
-    console.error("Lỗi khi thêm thông báo vào Firestore:", err);
-    // Nếu gặp lỗi mạng hoặc rules, lưu tạm vào local cache để test
+    console.error("[Announcement] Lỗi khi thêm vào Firestore:", err.code, err.message);
+    // Nếu gặp lỗi mạng hoặc rules, lưu tạm vào local cache để vẫn hiển thị được
     const newId = "local-" + Date.now();
     const localItem = { ...payload, id: newId, createdAt: new Date().toISOString() };
     try {
       const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
-      const updated = [localItem, ...cached];
+      const updated = [localItem, ...cached].sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+      });
       window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent("peanut:announcements:updated", { detail: updated }));
     } catch { /* Local cache is optional. */ }
     return localItem;
   }
 }
+
 
 // Giáo viên xóa thông báo
 export async function deleteAnnouncement(id) {

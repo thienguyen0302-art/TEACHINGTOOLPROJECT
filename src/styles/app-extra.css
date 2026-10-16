@@ -49,3 +49,173 @@
 
 .profile-banner { display: flex; margin-bottom: 14px; padding: 12px 16px; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid #f3d9a8; border-radius: 12px; background: #fff8ea; color: #7a5a1d; font-size: 13px; }
 .profile-banner button { flex: 0 0 auto; padding: 7px 12px; border: 0; border-radius: 8px; background: #3978ed; color: #fff; font-size: 12px; font-weight: 700; }
+
+/* ── Section Bảng tin thông báo lớp học (Overview) ─── */
+.overview-announcements-section {
+  margin: 36px 0 20px;
+  padding: 24px 28px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
+}
+
+.oas-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.oas-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.oas-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2563eb;
+}
+.oas-kicker svg { width: 14px; height: 14px; }
+
+.oas-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.oas-view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid #dbeafe;
+  background: #eff6ff;
+  color: #2563eb;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 130ms ease;
+}
+.oas-view-all-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+.oas-view-all-btn svg { width: 14px; height: 14px; }
+
+.oas-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.oas-card {
+  padding: 18px 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fafbfd;
+  cursor: pointer;
+  transition: all 160ms ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.oas-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+.oas-card.is-pinned {
+  border-left: 4px solid #f59e0b;
+  background: #fffdf8;
+}
+.oas-card.is-unread {
+  border-left: 4px solid #2563eb;
+  background: #f7faff;
+}
+
+.oas-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.oas-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.oas-badge svg { width: 11px; height: 11px; }
+
+.oas-badge--blue   { background: #dbeafe; color: #1d4ed8; }
+.oas-badge--purple { background: #ede9fe; color: #6d28d9; }
+.oas-badge--orange { background: #ffedd5; color: #c2410c; }
+.oas-badge--red    { background: #fee2e2; color: #b91c1c; }
+
+.oas-pin-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.oas-new-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2563eb;
+  margin-left: auto;
+  box-shadow: 0 0 0 2px #dbeafe;
+}
+
+.oas-card h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+.oas-card p {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.oas-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 11.5px;
+  color: #94a3b8;
+  font-weight: 600;
+}

@@ -228,8 +228,7 @@ export default function Login() {
             Trang chủ
           </a>
           <a href="#path">Lộ trình</a>
-          <a href="#practice">Kho bài tập</a>
-          <a href="#community">Xếp hạng</a>
+          <a href="#community">Chia sẻ</a>
         </div>
 
         <a className="nav-cta" href="#login">

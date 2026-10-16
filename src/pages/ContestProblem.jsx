@@ -1,6 +1,8 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { loadContest, loadContestProblem, judgeContest } from '../services/contestService.js';
+import { auth } from '../services/firebase.js';
+import { recordStudentContestHistory, syncAllContestScores } from '../services/contestRankingService.js';
 import useContestData from '../hooks/useContestData.js';
 import useContestClock from '../hooks/useContestClock.js';
 import { contestPhase } from '../utils/contest.js';
@@ -27,7 +29,20 @@ function Workspace({ contest, problem, lang }) {
     setBusy(mode); setError(''); setSubmission(null);
     try {
       const result = await judgeContest({ contestId: contest.id, problemId: problem.id, language, source: drafts[language], mode, stdin, signal: controller.signal });
-      if (!controller.signal.aborted) setSubmission({ ...result, language });
+      if (!controller.signal.aborted) {
+        setSubmission({ ...result, language });
+        if (mode === 'submit') {
+          const user = auth.currentUser;
+          if (user) {
+            recordStudentContestHistory(user.uid, contest.id, {
+              contestTitle: contest.title,
+              maxScore: (contest.problems || []).reduce((s, p) => s + (p.points || 0), 0),
+              lastSubmissionAt: Date.now(),
+            }).catch(() => {});
+            syncAllContestScores().catch(() => {});
+          }
+        }
+      }
     } catch (e) { if (!controller.signal.aborted) setError(e.message); }
     finally { if (request.current === controller) request.current = null; if (!controller.signal.aborted) setBusy(''); }
   }

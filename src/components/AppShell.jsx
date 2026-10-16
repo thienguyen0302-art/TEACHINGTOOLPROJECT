@@ -5,6 +5,8 @@ import Logo from "./Logo";
 import { displayName, initials } from "../utils/format";
 import NotificationDrawer from "./NotificationDrawer";
 import CreateAnnouncementModal from "./CreateAnnouncementModal";
+import AllAnnouncementsModal from "./AllAnnouncementsModal";
+import HelpCenterModal from "./HelpCenterModal";
 import AccountMenu from "./AccountMenu";
 import {
   subscribeAnnouncements,
@@ -15,6 +17,7 @@ import {
 
 // Thông báo nhỏ ở góc dưới (toast) dùng chung cho mọi trang
 import { NoticeContext } from "../hooks/useNotice";
+import { useTheme } from "../hooks/useTheme";
 
 const STUDENT_NAV = [
   { label: "Tổng quan", icon: "grid", path: "/" },
@@ -22,20 +25,20 @@ const STUDENT_NAV = [
   { label: "Kho bài tập", icon: "code", path: "/practice" },
   { label: "Contest HSG", icon: "trophy", path: "/contests" },
   { label: "Luyện đề HSG", icon: "clock", path: "/exam" },
+  { label: "Lịch sử nộp bài", icon: "check", path: "/exam-history" },
   { label: "Lịch học", icon: "calendar", path: "/calendar" },
   { label: "Tiến độ của tôi", icon: "chart", path: "/progress" },
   { label: "Bảng xếp hạng", icon: "trophy", path: "/ranking" },
 ];
 
 const TEACHER_NAV = [
+  { label: "Quản trị lớp học", icon: "chart", path: "/teacher" },
+  { label: "Quản lý học sinh", icon: "user", path: "/teacher/students" },
+  { label: "Tổng hợp Contest", icon: "trophy", path: "/teacher/contest-history" },
+  { label: "Tổ chức Contest", icon: "trophy", path: "/teacher/contests" },
   { label: "Bài tập tự soạn", icon: "code", path: "/teacher/problems" },
-  { label: "Contest HSG", icon: "trophy", path: "/teacher/contests" },
-  { label: "Quản trị lớp học", icon: "chart",   path: "/teacher" },
-  { label: "Quản lý học sinh", icon: "user",    path: "/teacher/students" },
-  { label: "Kho bài tập",      icon: "code",    path: "/practice-bank" },
-  { label: "Đề thi HSG",       icon: "clock",   path: "/exam" },
-  { label: "Lịch sử thi",      icon: "trophy",  path: "/exam-history" },
-  { label: "Bảng xếp hạng",    icon: "trophy",  path: "/ranking" },
+  { label: "Bảng xếp hạng Contest", icon: "trophy", path: "/ranking" },
+  { label: "Duyệt đánh giá & Báo lỗi", icon: "message", path: "/teacher/reviews" },
 ];
 
 function isActive(item, pathname) {
@@ -54,11 +57,14 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
   const timer = useRef(null);
   const { pathname } = useLocation();
   const nav = useNavigate();
+  const { theme, isDark, toggleTheme } = useTheme();
 
   // Trạng thái hệ thống thông báo
   const [notifOpen, setNotifOpen] = useState(false);
+  const [allNotifOpen, setAllNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [createNotifOpen, setCreateNotifOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [announcements, setAnnouncements] = useState([]);
   const [readIds, setReadIds] = useState(() => getReadNotificationIds(user?.uid));
   const bellRef = useRef(null); // ref cho nút chuông – dùng để neo popup
@@ -158,7 +164,7 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
           )}
 
           <div className="sidebar-bottom">
-            <button onClick={() => showNotice("Trung tâm trợ giúp sẽ sớm có mặt")}>
+            <button onClick={() => setHelpOpen(true)}>
               <Icon name="help" />Trợ giúp
             </button>
             <button onClick={onLogout}><Icon name="logout" />Đăng xuất</button>
@@ -182,6 +188,18 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
               <button className="language-button" onClick={() => showNotice("Phiên bản tiếng Anh sẽ sớm có mặt")}>
                 <Icon name="globe" /><span>VI</span>
               </button>
+
+              {/* Nút chuyển đổi giao diện Sáng / Tối */}
+              <button
+                type="button"
+                className="theme-toggle-btn"
+                onClick={toggleTheme}
+                aria-label={isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
+                title={isDark ? "Chuyển sang giao diện sáng (Light Mode)" : "Chuyển sang giao diện tối (Dark Mode)"}
+              >
+                {isDark ? "☀️" : "🌙"}
+              </button>
+
               {/* Nút chuông + popup neo bên dưới */}
               <div style={{ position: "relative" }}>
                 <button
@@ -206,6 +224,8 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
                   onMarkAllRead={handleMarkAllRead}
                   isTeacher={isTeacher}
                   onOpenCreateModal={() => setCreateNotifOpen(true)}
+                  onOpenAllModal={() => setAllNotifOpen(true)}
+                  uid={user?.uid}
                 />
               </div>
               {/* Nút avatar + popup menu tài khoản neo bên dưới */}
@@ -250,6 +270,22 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
             onCreated={() => showNotice("Đã đăng thông báo thành công!")}
           />
         )}
+
+        <AllAnnouncementsModal
+          isOpen={allNotifOpen}
+          onClose={() => setAllNotifOpen(false)}
+          announcements={announcements}
+          readIds={readIds}
+          onMarkRead={handleMarkRead}
+          onMarkAllRead={handleMarkAllRead}
+          isTeacher={isTeacher}
+          onOpenCreateModal={() => setCreateNotifOpen(true)}
+        />
+
+        <HelpCenterModal
+          isOpen={helpOpen}
+          onClose={() => setHelpOpen(false)}
+        />
       </main>
     </NoticeContext.Provider>
   );
