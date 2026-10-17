@@ -1,4 +1,3 @@
-import TeacherAuthoringNav from "../components/TeacherAuthoringNav.jsx";
 import { useEffect, useState } from "react";
 import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
@@ -131,7 +130,6 @@ export default function Teacher() {
   if (state.loading) {
     return (
       <div className="content teacher-page">
-        <TeacherAuthoringNav />
         <p>Đang tải dữ liệu lớp học...</p>
       </div>
     );
@@ -140,7 +138,6 @@ export default function Teacher() {
   if (state.error) {
     return (
       <div className="content teacher-page">
-        <TeacherAuthoringNav />
         <p className="err">{state.error}</p>
       </div>
     );
@@ -173,8 +170,6 @@ export default function Teacher() {
 
   return (
     <div className="content teacher-page">
-        <TeacherAuthoringNav />
-
       {/* ── 1. Banner Hero ─────────────────────────────────── */}
       <section className="teacher-hero">
         <div>

@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Icon from "../components/Icon";
-import TeacherAuthoringNav from "../components/TeacherAuthoringNav";
 import {
   listTeacherContests,
   loadScoreboard,
@@ -474,7 +473,6 @@ export default function TeacherContestHistory() {
   if (error) {
     return (
       <div className="content ps-page">
-        <TeacherAuthoringNav />
         <div className="ps-card">
           <p className="err">{error}</p>
         </div>
@@ -484,8 +482,6 @@ export default function TeacherContestHistory() {
 
   return (
     <div className="content ps-page">
-      <TeacherAuthoringNav />
-
       {/* ── Page Header ── */}
       <div className="ps-page-header">
         <h1>Tracking Lịch sử Contest HSG</h1>

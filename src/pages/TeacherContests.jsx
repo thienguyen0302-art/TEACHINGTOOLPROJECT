@@ -5,11 +5,10 @@ import useContestData from '../hooks/useContestData.js';
 import useContestClock from '../hooks/useContestClock.js';
 import { validateContest } from '../utils/contest.js';
 import { ContestError } from '../components/ContestUI.jsx';
-import TeacherAuthoringNav from '../components/TeacherAuthoringNav.jsx';
 import './Contest.css';
 export default function TeacherContests() {
   const state = useContestData(listTeacherContests);
-  return <div className="content contest-ui"><TeacherAuthoringNav /><header className="contest-heading"><h1>Quản lý contest</h1><Link className="contest-button" to="/teacher/contests/new">+ Tạo contest</Link></header>{!state.value ? <ContestError state={state} /> : <div className="contest-table-wrap"><table><thead><tr><th>Contest</th><th>Trạng thái</th><th>Bắt đầu</th><th>Thời lượng</th><th>Bài</th><th>Actions</th></tr></thead><tbody>{state.value.map((c) => <tr key={c.id}><td>{c.title}</td><td>{c.status}</td><td>{new Date(c.startAt).toLocaleString('vi-VN')}</td><td>{c.durationMinutes} phút</td><td>{c.problems.length}</td><td><Link to={`/teacher/contests/${c.id}/edit`}>Edit</Link> · <Link to={`/teacher/contests/${c.id}/monitor`}>Theo dõi</Link></td></tr>)}{!state.value.length && <tr><td colSpan="6">Chưa có contest.</td></tr>}</tbody></table></div>}</div>;
+  return <div className="content contest-ui"><header className="contest-heading"><h1>Quản lý contest</h1><Link className="contest-button" to="/teacher/contests/new">+ Tạo contest</Link></header>{!state.value ? <ContestError state={state} /> : <div className="contest-table-wrap"><table><thead><tr><th>Contest</th><th>Trạng thái</th><th>Bắt đầu</th><th>Thời lượng</th><th>Bài</th><th>Actions</th></tr></thead><tbody>{state.value.map((c) => <tr key={c.id}><td>{c.title}</td><td>{c.status}</td><td>{new Date(c.startAt).toLocaleString('vi-VN')}</td><td>{c.durationMinutes} phút</td><td>{c.problems.length}</td><td><Link to={`/teacher/contests/${c.id}/edit`}>Edit</Link> · <Link to={`/teacher/contests/${c.id}/monitor`}>Theo dõi</Link></td></tr>)}{!state.value.length && <tr><td colSpan="6">Chưa có contest.</td></tr>}</tbody></table></div>}</div>;
 }
 function localDate(ms) { const d = new Date(ms); return new Date(ms - d.getTimezoneOffset()*60000).toISOString().slice(0,16); }
 function ContestForm({ initial, problems, contestId }) {
@@ -37,5 +36,5 @@ export function TeacherContestEditor() {
   const loader=useCallback(async () => ({contest:contestId ? await loadTeacherContest(contestId) : null,problems:await listTeacherProblems()}),[contestId]);
   const state=useContestData(loader);
   if (!state.value) return <ContestError state={state} />;
-  return <div className="content contest-ui"><TeacherAuthoringNav /><ContestForm key={contestId ?? 'new'} contestId={contestId} initial={state.value.contest} problems={state.value.problems} /></div>;
+  return <div className="content contest-ui"><ContestForm key={contestId ?? 'new'} contestId={contestId} initial={state.value.contest} problems={state.value.problems} /></div>;
 }

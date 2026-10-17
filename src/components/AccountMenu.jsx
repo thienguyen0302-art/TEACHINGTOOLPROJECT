@@ -177,7 +177,6 @@ export default function AccountMenu({
         <MenuSection>
           <MenuItem icon="shield"   label="Tài khoản & bảo mật"    onClick={() => soon("Tài khoản & bảo mật")} />
           <MenuItem icon="bell"     label="Cài đặt thông báo"       onClick={() => go("/profile")} />
-          <MenuItem icon="palette"  label="Giao diện (Sáng / Tối)"  onClick={() => go("/profile")} />
           <MenuItem icon="globe"    label="Ngôn ngữ"                onClick={() => soon("Chọn ngôn ngữ")} />
         </MenuSection>
 

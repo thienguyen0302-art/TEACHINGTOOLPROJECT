@@ -1,4 +1,3 @@
-import TeacherAuthoringNav from '../components/TeacherAuthoringNav.jsx';
 import { useCallback, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { listTeacherProblems, loadTeacherProblem, saveTeacherProblem } from '../services/contestService.js';
@@ -27,7 +26,7 @@ export default function TeacherProblems() {
       navigate('/teacher/problems/new', { state: { imported } });
     } catch (e) { setError(e.message); event.target.value = ''; }
   }
-  return <div className="content contest-ui"><TeacherAuthoringNav /><h1>Quản lý bài tập</h1><div className="contest-actions"><Link className="contest-button" to="/teacher/problems/new">+ Tạo bài mới</Link><label className="contest-button">Import JSON<input aria-label="Import JSON" type="file" accept=".json,application/json" onChange={importFile} /></label><button onClick={downloadTemplate}>Tải mẫu JSON</button></div>{error && <p role="alert" className="err">{error}</p>}{!state.value ? <ContestError state={state} /> : <div className="contest-table-wrap"><table><thead><tr><th>Tên bài</th><th>Difficulty / Tags</th><th>Trạng thái</th><th>Samples</th><th>Hidden</th><th>Cập nhật</th><th>Sửa</th></tr></thead><tbody>{state.value.map((p) => <tr key={p.id}><td>{p.title}</td><td>{p.difficulty}<small>{p.tags.join(', ')}</small></td><td>{p.status}</td><td>{p.samples.length}</td><td>{p.hiddenTestCount}</td><td>{new Date(p.updatedAt).toLocaleString('vi-VN')}</td><td><Link to={`/teacher/problems/${p.id}/edit`}>Edit</Link></td></tr>)}{!state.value.length && <tr><td colSpan="7">Chưa có bài tập. Tạo bài đầu tiên hoặc import JSON.</td></tr>}</tbody></table></div>}</div>;
+  return <div className="content contest-ui"><h1>Quản lý bài tập</h1><div className="contest-actions"><Link className="contest-button" to="/teacher/problems/new">+ Tạo bài mới</Link><label className="contest-button">Import JSON<input aria-label="Import JSON" type="file" accept=".json,application/json" onChange={importFile} /></label><button onClick={downloadTemplate}>Tải mẫu JSON</button></div>{error && <p role="alert" className="err">{error}</p>}{!state.value ? <ContestError state={state} /> : <div className="contest-table-wrap"><table><thead><tr><th>Tên bài</th><th>Difficulty / Tags</th><th>Trạng thái</th><th>Samples</th><th>Hidden</th><th>Cập nhật</th><th>Sửa</th></tr></thead><tbody>{state.value.map((p) => <tr key={p.id}><td>{p.title}</td><td>{p.difficulty}<small>{p.tags.join(', ')}</small></td><td>{p.status}</td><td>{p.samples.length}</td><td>{p.hiddenTestCount}</td><td>{new Date(p.updatedAt).toLocaleString('vi-VN')}</td><td><Link to={`/teacher/problems/${p.id}/edit`}>Edit</Link></td></tr>)}{!state.value.length && <tr><td colSpan="7">Chưa có bài tập. Tạo bài đầu tiên hoặc import JSON.</td></tr>}</tbody></table></div>}</div>;
 }
 function ProblemForm({ initial, problemId }) {
   const [form, setForm] = useState(() => structuredClone(initial ?? problemTemplate));
@@ -73,5 +72,5 @@ export function TeacherProblemEditor() {
   const loader = useCallback(() => problemId ? loadTeacherProblem(problemId) : Promise.resolve(locationState?.imported ?? null), [problemId, locationState]);
   const state = useContestData(loader);
   if (state.loading || state.error) return <ContestError state={state} />;
-  return <div className="content contest-ui"><TeacherAuthoringNav /><ProblemForm key={problemId ?? 'new'} problemId={problemId} initial={state.value} /></div>;
+  return <div className="content contest-ui"><ProblemForm key={problemId ?? 'new'} problemId={problemId} initial={state.value} /></div>;
 }

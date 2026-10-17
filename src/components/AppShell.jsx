@@ -17,7 +17,6 @@ import {
 
 // Thông báo nhỏ ở góc dưới (toast) dùng chung cho mọi trang
 import { NoticeContext } from "../hooks/useNotice";
-import { useTheme } from "../hooks/useTheme";
 
 const STUDENT_NAV = [
   { label: "Tổng quan", icon: "grid", path: "/" },
@@ -57,7 +56,6 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
   const timer = useRef(null);
   const { pathname } = useLocation();
   const nav = useNavigate();
-  const { theme, isDark, toggleTheme } = useTheme();
 
   // Trạng thái hệ thống thông báo
   const [notifOpen, setNotifOpen] = useState(false);
@@ -187,17 +185,6 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
             <div className="top-actions">
               <button className="language-button" onClick={() => showNotice("Phiên bản tiếng Anh sẽ sớm có mặt")}>
                 <Icon name="globe" /><span>VI</span>
-              </button>
-
-              {/* Nút chuyển đổi giao diện Sáng / Tối */}
-              <button
-                type="button"
-                className="theme-toggle-btn"
-                onClick={toggleTheme}
-                aria-label={isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
-                title={isDark ? "Chuyển sang giao diện sáng (Light Mode)" : "Chuyển sang giao diện tối (Dark Mode)"}
-              >
-                {isDark ? "☀️" : "🌙"}
               </button>
 
               {/* Nút chuông + popup neo bên dưới */}

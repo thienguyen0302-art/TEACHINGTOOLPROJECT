@@ -7,7 +7,6 @@ import { saveProfile } from "../services/progressService";
 import { calcStreak, monthGrid } from "../utils/activity";
 import { displayName, fmtTime, initials, LANG_LABEL } from "../utils/format";
 import { isProfileComplete, validateProfileFields, VIETNAM_PROVINCES } from "../utils/profile";
-import { useTheme } from "../hooks/useTheme";
 import {
   getNotificationSettings,
   saveNotificationSettings,
@@ -214,7 +213,6 @@ export default function Profile({ user, uid, lang, data }) {
   const notice = useNotice();
   const [editing, setEditing] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const { theme, isDark, toggleTheme } = useTheme();
   const [notifSettings, setNotifSettings] = useState(() => getNotificationSettings(uid));
 
   function updateNotif(key, val) {
@@ -368,32 +366,16 @@ export default function Profile({ user, uid, lang, data }) {
         </>
       )}
 
-      {/* ── Cài đặt Giao diện & Thông báo ── */}
+      {/* ── Cài đặt Thông báo ── */}
       <section className="profile-card" style={{ marginTop: "24px", padding: "24px", borderRadius: "16px", background: "var(--ps-surface, #fff)", border: "1px solid var(--ps-border, #e2e8f0)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
           <div>
-            <h2 style={{ fontSize: "18px", margin: "0 0 4px", fontWeight: 800 }}>Cài đặt Giao diện &amp; Thông báo</h2>
-            <p style={{ margin: 0, fontSize: "13px", color: "var(--ps-text-sub, #64748b)" }}>Tùy chỉnh chế độ hiển thị và quyền nhận thông báo trên PeanutCode</p>
+            <h2 style={{ fontSize: "18px", margin: "0 0 4px", fontWeight: 800 }}>Cài đặt Thông báo</h2>
+            <p style={{ margin: 0, fontSize: "13px", color: "var(--ps-text-sub, #64748b)" }}>Tùy chỉnh quyền nhận thông báo trên PeanutCode</p>
           </div>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px" }}>
-          {/* Chế độ sáng / tối */}
-          <div style={{ padding: "16px", borderRadius: "12px", background: "var(--ps-bg, #f8fafc)", border: "1px solid var(--ps-border, #e2e8f0)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div>
-              <strong style={{ display: "block", fontSize: "14px", marginBottom: "2px" }}>Chế độ hiển thị</strong>
-              <small style={{ color: "var(--ps-text-sub, #64748b)" }}>{isDark ? "Giao diện tối (Dark Mode)" : "Giao diện sáng (Light Mode)"}</small>
-            </div>
-            <button
-              type="button"
-              className="theme-toggle-btn"
-              onClick={toggleTheme}
-              style={{ width: "auto", padding: "8px 14px", gap: "6px" }}
-            >
-              <span>{isDark ? "☀️" : "🌙"}</span>
-              <span style={{ fontSize: "12px", fontWeight: 700 }}>{isDark ? "Sáng" : "Tối"}</span>
-            </button>
-          </div>
 
           {/* Nhận thông báo chung */}
           <div style={{ padding: "16px", borderRadius: "12px", background: "var(--ps-bg, #f8fafc)", border: "1px solid var(--ps-border, #e2e8f0)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>

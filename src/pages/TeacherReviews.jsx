@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import Icon from "../components/Icon";
-import TeacherAuthoringNav from "../components/TeacherAuthoringNav";
 import {
   subscribeAllReviews,
   moderateReview,
@@ -130,8 +129,6 @@ export default function TeacherReviews() {
 
   return (
     <div className="content ps-page">
-      <TeacherAuthoringNav />
-
       {/* ── Page Header ── */}
       <div className="ps-page-header">
         <h1>Quản lý Đánh giá &amp; Báo lỗi Người dùng</h1>
