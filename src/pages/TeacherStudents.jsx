@@ -4,7 +4,6 @@ import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
 import Icon from "../components/Icon";
 import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
-import TeacherAuthoringNav from "../components/TeacherAuthoringNav";
 import { auth } from "../services/firebase";
 import "../styles/pages-shared.css";
 import "./Teacher.css";
@@ -117,8 +116,6 @@ export default function TeacherStudents() {
 
   return (
     <div className="content ps-page">
-      <TeacherAuthoringNav />
-
       {/* ── Header ── */}
       <div className="ps-page-header">
         <h1>Quản lý học sinh</h1>

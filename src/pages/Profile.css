@@ -11,7 +11,55 @@
 .profile-hero-actions div { display: flex; align-items: center; justify-content: space-between; }
 .profile-hero-actions span { color: #c0d1ea; font-size: 12px; }
 .profile-hero-actions strong { font-size: 15px; }
-.profile-hero-actions button { width: 100%; margin-top: 12px; padding: 9px; border: 0; border-radius: 8px; background: #fff; color: #2a62bd; font-size: 12px; font-weight: 800; }
+.profile-hero-actions button { width: 100%; margin-top: 12px; padding: 9px; border: 0; border-radius: 8px; background: #fff; color: #2a62bd; font-size: 12px; font-weight: 800; cursor: pointer; }
+
+/* ── Profile sub-navigation tabs ─────────────── */
+.profile-nav-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+  margin-bottom: 20px;
+  background: #f1f5f9;
+  padding: 5px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  max-width: 600px;
+}
+
+.profile-nav-tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 140ms ease;
+  white-space: nowrap;
+}
+
+.profile-nav-tab svg {
+  width: 16px;
+  height: 16px;
+}
+
+.profile-nav-tab:hover {
+  color: #0f172a;
+}
+
+.profile-nav-tab.active {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
 
 .profile-stat-grid { display: grid; margin-top: 16px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
 .profile-stat-grid article { display: flex; min-width: 0; padding: 16px; align-items: center; gap: 12px; border: 1px solid #e2e8f2; border-radius: 15px; background: #fff; }

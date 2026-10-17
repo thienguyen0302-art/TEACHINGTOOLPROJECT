@@ -175,9 +175,8 @@ export default function AccountMenu({
 
         {/* ── Nhóm 2: Cài đặt ── */}
         <MenuSection>
-          <MenuItem icon="shield"   label="Tài khoản & bảo mật"    onClick={() => soon("Tài khoản & bảo mật")} />
-          <MenuItem icon="bell"     label="Cài đặt thông báo"       onClick={() => go("/profile")} />
-          <MenuItem icon="palette"  label="Giao diện (Sáng / Tối)"  onClick={() => go("/profile")} />
+          <MenuItem icon="shield"   label="Tài khoản & bảo mật"    onClick={() => go("/profile?tab=security")} />
+          <MenuItem icon="bell"     label="Cài đặt thông báo"       onClick={() => go("/profile?tab=notifications")} />
           <MenuItem icon="globe"    label="Ngôn ngữ"                onClick={() => soon("Chọn ngôn ngữ")} />
         </MenuSection>
 

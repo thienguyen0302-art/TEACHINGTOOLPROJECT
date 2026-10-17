@@ -8,6 +8,8 @@ import CreateAnnouncementModal from "./CreateAnnouncementModal";
 import AllAnnouncementsModal from "./AllAnnouncementsModal";
 import HelpCenterModal from "./HelpCenterModal";
 import AccountMenu from "./AccountMenu";
+import QuickGoalModal from "./QuickGoalModal";
+import useGoalShortcut from "../hooks/useGoalShortcut";
 import {
   subscribeAnnouncements,
   getReadNotificationIds,
@@ -17,7 +19,6 @@ import {
 
 // Thông báo nhỏ ở góc dưới (toast) dùng chung cho mọi trang
 import { NoticeContext } from "../hooks/useNotice";
-import { useTheme } from "../hooks/useTheme";
 
 const STUDENT_NAV = [
   { label: "Tổng quan", icon: "grid", path: "/" },
@@ -57,7 +58,6 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
   const timer = useRef(null);
   const { pathname } = useLocation();
   const nav = useNavigate();
-  const { theme, isDark, toggleTheme } = useTheme();
 
   // Trạng thái hệ thống thông báo
   const [notifOpen, setNotifOpen] = useState(false);
@@ -65,10 +65,18 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
   const [accountOpen, setAccountOpen] = useState(false);
   const [createNotifOpen, setCreateNotifOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [announcements, setAnnouncements] = useState([]);
   const [readIds, setReadIds] = useState(() => getReadNotificationIds(user?.uid));
   const bellRef = useRef(null); // ref cho nút chuông – dùng để neo popup
   const avatarRef = useRef(null); // ref cho nút avatar – dùng để neo popup tài khoản
+
+  // Lắng nghe phím tắt 'G' để bật/tắt nhanh modal mục tiêu
+  useGoalShortcut(useCallback(() => {
+    if (!isTeacher) {
+      setGoalModalOpen((prev) => !prev);
+    }
+  }, [isTeacher]));
 
   useEffect(() => {
     const unsub = subscribeAnnouncements((items) => {
@@ -185,19 +193,22 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
               />
             </div>
             <div className="top-actions">
+              {!isTeacher && (
+                <button
+                  type="button"
+                  className="topbar-goal-btn"
+                  onClick={() => setGoalModalOpen(true)}
+                  title="Mục tiêu học tập (Bấm phím G)"
+                  aria-label="Mục tiêu học tập (Phím tắt G)"
+                >
+                  <Icon name="target" />
+                  <span>Mục tiêu</span>
+                  <kbd>G</kbd>
+                </button>
+              )}
+
               <button className="language-button" onClick={() => showNotice("Phiên bản tiếng Anh sẽ sớm có mặt")}>
                 <Icon name="globe" /><span>VI</span>
-              </button>
-
-              {/* Nút chuyển đổi giao diện Sáng / Tối */}
-              <button
-                type="button"
-                className="theme-toggle-btn"
-                onClick={toggleTheme}
-                aria-label={isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
-                title={isDark ? "Chuyển sang giao diện sáng (Light Mode)" : "Chuyển sang giao diện tối (Dark Mode)"}
-              >
-                {isDark ? "☀️" : "🌙"}
               </button>
 
               {/* Nút chuông + popup neo bên dưới */}
@@ -286,6 +297,14 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
           isOpen={helpOpen}
           onClose={() => setHelpOpen(false)}
         />
+
+        {!isTeacher && (
+          <QuickGoalModal
+            isOpen={goalModalOpen}
+            onClose={() => setGoalModalOpen(false)}
+            user={user}
+          />
+        )}
       </main>
     </NoticeContext.Provider>
   );

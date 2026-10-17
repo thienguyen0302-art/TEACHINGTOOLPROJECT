@@ -61,8 +61,7 @@ export default function Schedule({ user, data }) {
 
   // Subscribe to personal goals
   useEffect(() => {
-    if (!user?.uid) return;
-    const unsub = subscribeGoals(user.uid, (list) => {
+    const unsub = subscribeGoals(user?.uid, (list) => {
       setGoals(list || []);
     });
     return () => unsub?.();
@@ -115,7 +114,7 @@ export default function Schedule({ user, data }) {
     setSaving(true);
     setFormError("");
     try {
-      await saveGoal(user.uid, {
+      const savedGoal = await saveGoal(user?.uid, {
         id: editingGoal?.id,
         title: formTitle,
         targetType: formType,
@@ -124,6 +123,22 @@ export default function Schedule({ user, data }) {
         notes: formNotes,
         completed: editingGoal?.completed || false,
       });
+
+      // Cập nhật state trực tiếp ngay lập tức
+      setGoals((prev) => {
+        const idx = prev.findIndex((g) => g.id === savedGoal.id);
+        const next = idx >= 0 ? prev.map((g) => (g.id === savedGoal.id ? savedGoal : g)) : [savedGoal, ...prev];
+        return next.sort((a, b) => {
+          if (a.completed !== b.completed) return a.completed ? 1 : -1;
+          return (a.targetDate || "").localeCompare(b.targetDate || "");
+        });
+      });
+
+      // Nếu đang ở tab "Đã hoàn thành", chuyển về "Tất cả" để mục tiêu mới thêm hiện ngay
+      if (goalFilter === "completed") {
+        setGoalFilter("all");
+      }
+
       setIsModalOpen(false);
       notice(editingGoal ? "Đã cập nhật mục tiêu" : "Đã thêm mục tiêu học tập mới");
     } catch (err) {
@@ -135,13 +150,19 @@ export default function Schedule({ user, data }) {
 
   async function handleToggle(goal) {
     const next = !goal.completed;
-    await toggleGoalCompleted(user.uid, goal.id, next);
+    // Cập nhật UI ngay lập tức
+    setGoals((prev) =>
+      prev.map((g) => (g.id === goal.id ? { ...g, completed: next } : g))
+    );
+    await toggleGoalCompleted(user?.uid, goal.id, next);
     notice(next ? `🎉 Xuất sắc! Bạn đã hoàn thành: ${goal.title}` : "Đã mở lại mục tiêu");
   }
 
   async function handleDelete(goalId) {
     if (window.confirm("Bạn có chắc chắn muốn xóa mục tiêu này?")) {
-      await deleteGoal(user.uid, goalId);
+      // Cập nhật UI ngay lập tức
+      setGoals((prev) => prev.filter((g) => g.id !== goalId));
+      await deleteGoal(user?.uid, goalId);
       notice("Đã xóa mục tiêu");
     }
   }

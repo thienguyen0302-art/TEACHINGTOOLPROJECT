@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import Icon from "../components/Icon";
-import TeacherAuthoringNav from "../components/TeacherAuthoringNav";
 import {
   subscribeAllReviews,
   moderateReview,
@@ -130,8 +129,6 @@ export default function TeacherReviews() {
 
   return (
     <div className="content ps-page">
-      <TeacherAuthoringNav />
-
       {/* ── Page Header ── */}
       <div className="ps-page-header">
         <h1>Quản lý Đánh giá &amp; Báo lỗi Người dùng</h1>
@@ -316,7 +313,7 @@ export default function TeacherReviews() {
                     {/* Actions and Footer */}
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid var(--ps-border, #e2e8f0)", paddingTop: 12, marginTop: 4 }}>
                       <span style={{ fontSize: 12, color: "#94a3b8" }}>
-                        Thời gian: {new Date(r.createdAt || r.updatedAt || Date.now()).toLocaleString("vi-VN")}
+                        Thời gian: {r.createdAt || r.updatedAt ? new Date(r.createdAt || r.updatedAt).toLocaleString("vi-VN") : "—"}
                       </span>
 
                       <div style={{ display: "flex", gap: 8 }}>
@@ -390,7 +387,6 @@ export default function TeacherReviews() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {filteredBugs.map((b) => {
-                const isNew = b.status === "new";
                 const isInvestigating = b.status === "investigating";
                 const isResolved = b.status === "resolved";
 

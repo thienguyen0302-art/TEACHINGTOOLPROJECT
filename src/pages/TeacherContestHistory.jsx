@@ -52,7 +52,7 @@ function getVerdictInfo(status, passed, total) {
 }
 
 export default function TeacherContestHistory() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // Navigation & Tabs
   const [activeTab, setActiveTab] = useState(() => searchParams.get("tab") || "leaderboard");
@@ -152,6 +152,7 @@ export default function TeacherContestHistory() {
     return () => {
       cancelled = true;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- chỉ chạy một lần khi mở trang
   }, []);
 
   function showToast(msg) {
@@ -474,7 +475,6 @@ export default function TeacherContestHistory() {
   if (error) {
     return (
       <div className="content ps-page">
-        <TeacherAuthoringNav />
         <div className="ps-card">
           <p className="err">{error}</p>
         </div>
@@ -484,8 +484,6 @@ export default function TeacherContestHistory() {
 
   return (
     <div className="content ps-page">
-      <TeacherAuthoringNav />
-
       {/* ── Page Header ── */}
       <div className="ps-page-header">
         <h1>Tracking Lịch sử Contest HSG</h1>

@@ -159,9 +159,10 @@
   transform: scale(1.18);
 }
 
+.fb-star-btn.active,
 .fb-star-btn.lit {
-  color: #f59e0b;
-  text-shadow: 0 1px 4px rgba(245, 158, 11, 0.35);
+  color: #f59e0b !important;
+  text-shadow: 0 1px 6px rgba(245, 158, 11, 0.45);
 }
 
 .fb-rating-desc {
@@ -449,7 +450,8 @@
 }
 
 .fb-star-static.active {
-  color: #f59e0b;
+  color: #f59e0b !important;
+  text-shadow: 0 1px 4px rgba(245, 158, 11, 0.35);
 }
 
 .fb-existing-stars strong {

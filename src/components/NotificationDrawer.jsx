@@ -18,10 +18,6 @@ function formatRelativeTime(isoString) {
   return date.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
-function isNew(isoString) {
-  if (!isoString) return false;
-  return Date.now() - new Date(isoString) < 86400 * 1000; // trong 24h
-}
 
 // Icon tròn theo loại thông báo
 function NotifIcon({ typeConfig }) {
@@ -53,7 +49,7 @@ export default function NotificationDrawer({
   const menuRef   = useRef(null);
 
   useEffect(() => {
-    setNotifSettings(getNotificationSettings(uid));
+    queueMicrotask(() => setNotifSettings(getNotificationSettings(uid)));
     function handleSettingsChange(e) {
       if (e.detail) setNotifSettings(e.detail);
     }

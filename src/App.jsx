@@ -28,6 +28,7 @@ import { persistSubmission } from "./services/submissionPersistence";
 import { saveProfile } from "./services/progressService";
 import { isProfileComplete } from "./utils/profile";
 import { weekSummary } from "./utils/activity";
+import { isTeacherUser } from "./services/authSecurityService";
 
 const TeacherProblems = lazy(() => import("./pages/TeacherProblems"));
 const TeacherProblemEditor = lazy(() => import("./pages/TeacherProblems").then((module) => ({ default: module.TeacherProblemEditor })));
@@ -46,7 +47,7 @@ function Learning({ user, lang, onChangeLang }) {
   const { pathname } = useLocation();
   const inContest = pathname.startsWith("/contest") || pathname.startsWith("/teacher");
   const data = useLearningData(user.uid, lang, !inContest);
-  const isTeacher = data.profile.role === "teacher";
+  const isTeacher = isTeacherUser(user, data.profile);
   const week = weekSummary(data.daily);
   const teacherOnly = (element) => data.loading ? <div className="content">Đang tải...</div> : isTeacher ? element : <Navigate to="/" replace />;
   // Tên hiển thị ưu tiên hồ sơ học viên đã nhập, sau đó mới tới tên tài khoản.
@@ -187,7 +188,7 @@ export default function App() {
     });
   }, []);
 
-  const isTeacher = profile?.role === "teacher";
+  const isTeacher = isTeacherUser(user, profile);
   const activeLang = lang || (isTeacher ? "cpp" : null);
 
   useStudyTimer(user && user.emailVerified && !isTeacher && activeLang ? user.uid : null);
