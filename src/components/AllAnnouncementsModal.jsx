@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import Icon from "./Icon";
-import { ANNOUNCEMENT_TYPES, deleteAnnouncement } from "../services/announcementService";
+import { ANNOUNCEMENT_TYPES, deleteAnnouncement, togglePinAnnouncement } from "../services/announcementService";
+import CreateAnnouncementModal from "./CreateAnnouncementModal";
 import "./AllAnnouncementsModal.css";
 
 function formatFullTime(isoString) {
@@ -38,6 +39,8 @@ export default function AllAnnouncementsModal({
   const [filterType, setFilterType] = useState("all"); // "all" | "unread" | "pinned" | type
   const [searchQuery, setSearchQuery] = useState("");
   const [deletingId, setDeletingId] = useState(null);
+  const [pinningId, setPinningId] = useState(null);
+  const [editingItem, setEditingItem] = useState(null);
 
   // Sắp xếp TẤT CẢ thông báo từ MỚI NHẤT ĐẾN CŨ NHẤT
   const sortedAll = useMemo(() => {
@@ -88,6 +91,15 @@ export default function AllAnnouncementsModal({
       await deleteAnnouncement(id);
     } finally {
       setDeletingId(null);
+    }
+  }
+
+  async function handleTogglePin(id, currentPinned) {
+    setPinningId(id);
+    try {
+      await togglePinAnnouncement(id, currentPinned);
+    } finally {
+      setPinningId(null);
     }
   }
 
@@ -261,19 +273,46 @@ export default function AllAnnouncementsModal({
                     <div className="aam-card-meta-right">
                       <span className="aam-order-num">#{index + 1}</span>
                       {isTeacher && (
-                        <button
-                          type="button"
-                          className="aam-card-delete-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(item.id, item.title);
-                          }}
-                          disabled={deletingId === item.id}
-                          title="Xóa thông báo này"
-                          aria-label="Xóa thông báo"
-                        >
-                          <Icon name="trash" />
-                        </button>
+                        <>
+                          <button
+                            type="button"
+                            className={`aam-card-pin-btn ${item.pinned ? "is-pinned" : ""}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleTogglePin(item.id, item.pinned);
+                            }}
+                            disabled={pinningId === item.id}
+                            title={item.pinned ? "Bỏ ghim thông báo" : "Ghim thông báo lên đầu"}
+                            aria-label="Ghim thông báo"
+                          >
+                            <Icon name="pin" />
+                          </button>
+                          <button
+                            type="button"
+                            className="aam-card-edit-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingItem(item);
+                            }}
+                            title="Chỉnh sửa thông báo"
+                            aria-label="Chỉnh sửa thông báo"
+                          >
+                            <Icon name="edit" />
+                          </button>
+                          <button
+                            type="button"
+                            className="aam-card-delete-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(item.id, item.title);
+                            }}
+                            disabled={deletingId === item.id}
+                            title="Xóa thông báo này"
+                            aria-label="Xóa thông báo"
+                          >
+                            <Icon name="trash" />
+                          </button>
+                        </>
                       )}
                     </div>
                   </div>
@@ -326,6 +365,14 @@ export default function AllAnnouncementsModal({
           </button>
         </div>
       </div>
+
+      {editingItem && (
+        <CreateAnnouncementModal
+          isOpen={!!editingItem}
+          editItem={editingItem}
+          onClose={() => setEditingItem(null)}
+        />
+      )}
     </div>
   );
 }

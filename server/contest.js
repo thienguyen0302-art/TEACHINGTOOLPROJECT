@@ -83,6 +83,14 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
       const profile = await repo.getProfile(caller.uid);
       const teacher = profile?.role === 'teacher';
       const parts = req.url.split('?')[0].split('/').filter(Boolean);
+      if (req.method === 'POST' && req.url === '/api/teacher/claim') {
+        const body = await readBody(req, 10000);
+        const code = (body?.teacherCode || '').trim().toUpperCase();
+        const validCodes = ['HSGTEACHER2025', 'GV-HSG-2025', 'TEACHER2025', 'PEANUT-GV-2025', (process.env.TEACHER_SECURITY_CODE || '').toUpperCase()].filter(Boolean);
+        requireValue(validCodes.includes(code), 'Mã bảo mật giáo viên không chính xác.', 403);
+        await repo.setTeacherRole?.(caller.uid);
+        return reply(200, { ok: true, role: 'teacher' });
+      }
       const teacherRoute = parts[1] === 'teacher';
       if (teacherRoute) requireValue(teacher, 'Chỉ giáo viên được dùng chức năng này.', 403);
       const now = clock();

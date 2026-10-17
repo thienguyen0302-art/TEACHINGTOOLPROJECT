@@ -7,6 +7,7 @@ import {
 import { auth } from "../services/firebase";
 import Logo from "../components/Logo";
 import { subscribePublicReviews } from "../services/reviewService";
+import { verifyTeacherCode, claimTeacherRole } from "../services/authSecurityService";
 
 const ERR = {
   "auth/invalid-credential": "Sai email hoặc mật khẩu.",
@@ -150,10 +151,13 @@ function FeedbackPublicCard({ feedback }) {
 }
 
 export default function Login() {
+  const [targetRole, setTargetRole] = useState("student"); // "student" | "teacher"
   const [showPassword, setShowPassword] = useState(false);
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
+  const [teacherCode, setTeacherCode] = useState("");
+  const [showTeacherClaim, setShowTeacherClaim] = useState(false);
   const [msg, setMsg] = useState("");
   const [isErr, setIsErr] = useState(false);
   const [showReset, setShowReset] = useState(false);
@@ -178,27 +182,56 @@ export default function Login() {
 
   const fail = (e) => {
     setIsErr(true);
-    setMsg(ERR[e.code] || "Có lỗi xảy ra: " + e.code);
+    setMsg(e.customMessage || ERR[e.code] || "Có lỗi xảy ra: " + (e.message || e.code));
     if (RESET_ON.includes(e.code)) setShowReset(true);
   };
 
   async function submit(ev) {
     ev.preventDefault();
-    setBusy(true); setMsg(""); setShowReset(false);
+    setBusy(true); setMsg(""); setShowReset(false); setIsErr(false);
+
+    if (targetRole === "teacher" && mode === "register") {
+      if (!teacherCode.trim()) {
+        fail({ customMessage: "Vui lòng nhập Mã bảo mật Giáo viên để kích hoạt quyền Giáo viên." });
+        setBusy(false);
+        return;
+      }
+      if (!verifyTeacherCode(teacherCode)) {
+        fail({ customMessage: "Mã bảo mật Giáo viên không hợp lệ. Vui lòng kiểm tra lại hoặc liên hệ Quản trị viên." });
+        setBusy(false);
+        return;
+      }
+    }
+
     try {
       if (mode === "register") {
         const cred = await createUserWithEmailAndPassword(auth, email, pw);
+        if (targetRole === "teacher" && teacherCode.trim()) {
+          await claimTeacherRole(cred.user, teacherCode);
+        }
         await sendEmailVerification(cred.user);
       } else {
-        await signInWithEmailAndPassword(auth, email, pw);
+        const cred = await signInWithEmailAndPassword(auth, email, pw);
+        if (targetRole === "teacher" && teacherCode.trim()) {
+          await claimTeacherRole(cred.user, teacherCode);
+        }
       }
     } catch (e) { fail(e); }
     setBusy(false);
   }
 
   async function google() {
-    setMsg("");
-    try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+    setMsg(""); setIsErr(false);
+    if (targetRole === "teacher" && mode === "register" && !verifyTeacherCode(teacherCode)) {
+      fail({ customMessage: "Vui lòng nhập Mã bảo mật Giáo viên trước khi đăng ký bằng Google." });
+      return;
+    }
+    try {
+      const res = await signInWithPopup(auth, new GoogleAuthProvider());
+      if (targetRole === "teacher" && teacherCode.trim()) {
+        await claimTeacherRole(res.user, teacherCode);
+      }
+    }
     catch (e) { fail(e); }
   }
 
@@ -290,15 +323,56 @@ export default function Login() {
           </div>
 
           <div className="login-card">
+            {/* Tabs chọn đối tượng: Học sinh vs Giáo viên */}
+            <div className="login-role-tabs" role="tablist">
+              <button
+                type="button"
+                className={`login-role-tab ${targetRole === "student" ? "active" : ""}`}
+                onClick={() => { setTargetRole("student"); setMsg(""); setIsErr(false); }}
+                role="tab"
+                aria-selected={targetRole === "student"}
+              >
+                🎓 Học sinh HSG
+              </button>
+              <button
+                type="button"
+                className={`login-role-tab ${targetRole === "teacher" ? "active" : ""}`}
+                onClick={() => { setTargetRole("teacher"); setMsg(""); setIsErr(false); }}
+                role="tab"
+                aria-selected={targetRole === "teacher"}
+              >
+                👨‍🏫 Giáo viên / Admin
+              </button>
+            </div>
+
             <div className="card-heading">
               <div>
-                <p>Bắt đầu hành trình của bạn</p>
-                <h2>{mode === "login" ? "Đăng nhập để ôn luyện" : "Tạo tài khoản miễn phí"}</h2>
+                <p>
+                  {targetRole === "teacher"
+                    ? "Cổng Giáo viên & Ban giám khảo"
+                    : "Bắt đầu hành trình của bạn"}
+                </p>
+                <h2>
+                  {targetRole === "teacher"
+                    ? mode === "login"
+                      ? "Đăng nhập Giáo viên"
+                      : "Đăng ký tài khoản Giáo viên"
+                    : mode === "login"
+                    ? "Đăng nhập để ôn luyện"
+                    : "Tạo tài khoản miễn phí"}
+                </h2>
               </div>
               <div className="peanut-stamp">
                 <Logo />
               </div>
             </div>
+
+            {targetRole === "teacher" && (
+              <div className="login-teacher-notice">
+                <span>Cổng thông tin dành cho Giáo viên</span>
+                <small>Tài khoản giáo viên được cấp quyền quản trị bài tập, contest, test ẩn và theo dõi học sinh.</small>
+              </div>
+            )}
 
             <form onSubmit={submit}>
               <label htmlFor="email">Email</label>
@@ -307,6 +381,27 @@ export default function Login() {
                 autoComplete="email" value={email}
                 onChange={(e) => setEmail(e.target.value)} required
               />
+
+              {targetRole === "teacher" && mode === "register" && (
+                <div style={{ marginTop: 14 }}>
+                  <label htmlFor="teacherCode">
+                    Mã bảo mật Giáo viên <em>*</em>
+                  </label>
+                  <input
+                    id="teacherCode"
+                    name="teacherCode"
+                    type="text"
+                    placeholder="Nhập mã bảo mật (VD: GV-HSG-2025)"
+                    value={teacherCode}
+                    onChange={(e) => setTeacherCode(e.target.value)}
+                    autoComplete="off"
+                    required
+                  />
+                  <span className="field-hint">
+                    Mã cấp quyền do Nhà trường hoặc Ban quản trị PeanutCode cung cấp để xác thực quyền quản trị.
+                  </span>
+                </div>
+              )}
 
               <div className="password-label">
                 <label htmlFor="password">Mật khẩu</label>
@@ -330,8 +425,36 @@ export default function Login() {
                 </button>
               </div>
 
+              {targetRole === "teacher" && mode === "login" && (
+                <div className="teacher-claim-toggle">
+                  <button
+                    type="button"
+                    className="btn-text-claim"
+                    onClick={() => setShowTeacherClaim(!showTeacherClaim)}
+                  >
+                    {showTeacherClaim ? "Ẩn mã bảo mật" : "Lần đầu đăng nhập bằng tài khoản này? Nhập mã kích hoạt Giáo viên"}
+                  </button>
+                  {showTeacherClaim && (
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Nhập mã bảo mật (VD: GV-HSG-2025)"
+                        value={teacherCode}
+                        onChange={(e) => setTeacherCode(e.target.value)}
+                        className="teacher-claim-input"
+                      />
+                      <span className="field-hint">
+                        Nhập mã để nâng cấp tài khoản của thầy cô lên quyền Giáo viên ngay khi đăng nhập.
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <button className="submit-button" type="submit" disabled={busy}>
-                {mode === "login" ? "Đăng nhập" : "Đăng ký"}
+                {targetRole === "teacher"
+                  ? mode === "login" ? "Đăng nhập Giáo viên" : "Đăng ký Giáo viên"
+                  : mode === "login" ? "Đăng nhập Học sinh" : "Tạo tài khoản Học sinh"}
                 <ArrowIcon />
               </button>
               {msg && (
@@ -368,9 +491,13 @@ export default function Login() {
             </div>
 
             <p className="signup-copy">
-              {mode === "login" ? "Chưa có tài khoản? " : "Đã có tài khoản? "}
+              {mode === "login"
+                ? (targetRole === "teacher" ? "Chưa có tài khoản Giáo viên? " : "Chưa có tài khoản? ")
+                : (targetRole === "teacher" ? "Đã có tài khoản Giáo viên? " : "Đã có tài khoản? ")}
               <a href="#login" onClick={(e) => { e.preventDefault(); setMode(mode === "login" ? "register" : "login"); setMsg(""); setShowReset(false); }}>
-                {mode === "login" ? "Tạo tài khoản miễn phí" : "Đăng nhập"}
+                {mode === "login"
+                  ? (targetRole === "teacher" ? "Đăng ký quyền Giáo viên" : "Tạo tài khoản miễn phí")
+                  : "Đăng nhập"}
               </a>
             </p>
           </div>

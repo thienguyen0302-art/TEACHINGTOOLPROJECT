@@ -5,10 +5,91 @@ import useContestData from '../hooks/useContestData.js';
 import useContestClock from '../hooks/useContestClock.js';
 import { validateContest } from '../utils/contest.js';
 import { ContestError } from '../components/ContestUI.jsx';
+import { PlusIcon } from '../components/hsg-admin/HsgIcons.jsx';
+import '../components/hsg-admin/HsgAdmin.css';
 import './Contest.css';
+
 export default function TeacherContests() {
   const state = useContestData(listTeacherContests);
-  return <div className="content contest-ui"><header className="contest-heading"><h1>Quản lý contest</h1><Link className="contest-button" to="/teacher/contests/new">+ Tạo contest</Link></header>{!state.value ? <ContestError state={state} /> : <div className="contest-table-wrap"><table><thead><tr><th>Contest</th><th>Trạng thái</th><th>Bắt đầu</th><th>Thời lượng</th><th>Bài</th><th>Actions</th></tr></thead><tbody>{state.value.map((c) => <tr key={c.id}><td>{c.title}</td><td>{c.status}</td><td>{new Date(c.startAt).toLocaleString('vi-VN')}</td><td>{c.durationMinutes} phút</td><td>{c.problems.length}</td><td><Link to={`/teacher/contests/${c.id}/edit`}>Edit</Link> · <Link to={`/teacher/contests/${c.id}/monitor`}>Theo dõi</Link></td></tr>)}{!state.value.length && <tr><td colSpan="6">Chưa có contest.</td></tr>}</tbody></table></div>}</div>;
+  return (
+    <div className="content hsg-page">
+      <div className="hsg-frame-inner">
+        <header className="hsg-page-header">
+        <div className="hsg-header-text">
+          <h1 className="hsg-page-title">Quản lý contest</h1>
+          <p className="hsg-page-desc">Tổ chức kỳ thi và theo dõi các contest trong một không gian.</p>
+        </div>
+        <div className="hsg-btn-group">
+          <Link className="hsg-btn hsg-btn-primary" to="/teacher/contests/new">
+            <PlusIcon size={16} />
+            <span>Tạo contest</span>
+          </Link>
+        </div>
+      </header>
+
+      {!state.value ? (
+        <ContestError state={state} />
+      ) : (
+        <div className="hsg-table-card">
+          <div className="hsg-table-wrapper">
+            <table className="hsg-table">
+              <thead>
+                <tr>
+                  <th>Tên contest</th>
+                  <th>Trạng thái</th>
+                  <th>Bắt đầu</th>
+                  <th>Thời lượng</th>
+                  <th>Số bài</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                {state.value.map((c) => (
+                  <tr key={c.id}>
+                    <td style={{ fontWeight: 600 }}>{c.title}</td>
+                    <td>
+                      <span style={{
+                        display: 'inline-block',
+                        padding: '2px 8px',
+                        borderRadius: 6,
+                        fontSize: 12,
+                        fontWeight: 600,
+                        backgroundColor: c.status === 'published' ? '#dcfce7' : '#f1f5f9',
+                        color: c.status === 'published' ? '#166534' : '#475569'
+                      }}>
+                        {c.status}
+                      </span>
+                    </td>
+                    <td>{new Date(c.startAt).toLocaleString('vi-VN')}</td>
+                    <td>{c.durationMinutes} phút</td>
+                    <td>{c.problems.length}</td>
+                    <td>
+                      <Link to={`/teacher/contests/${c.id}/edit`} style={{ color: 'var(--hsg-blue-primary)', fontWeight: 600, textDecoration: 'none', marginRight: 8 }}>
+                        Sửa
+                      </Link>
+                      ·
+                      <Link to={`/teacher/contests/${c.id}/monitor`} style={{ color: 'var(--hsg-text-secondary)', fontWeight: 600, textDecoration: 'none', marginLeft: 8 }}>
+                        Theo dõi
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+                {!state.value.length && (
+                  <tr>
+                    <td colSpan={6} className="hsg-empty-state">
+                      <div className="hsg-empty-title">Sẵn sàng cho kỳ thi đầu tiên?</div>
+                      <div className="hsg-empty-desc">Tạo contest, thêm bài tập và thiết lập thời gian để bắt đầu.</div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      </div>
+    </div>
+  );
 }
 function localDate(ms) { const d = new Date(ms); return new Date(ms - d.getTimezoneOffset()*60000).toISOString().slice(0,16); }
 function ContestForm({ initial, problems, contestId }) {

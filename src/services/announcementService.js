@@ -2,6 +2,7 @@ import {
   collection,
   addDoc,
   deleteDoc,
+  updateDoc,
   doc,
   onSnapshot,
   serverTimestamp,
@@ -118,7 +119,7 @@ export function subscribeAnnouncements(callback) {
   return () => {
     isCancelled = true;
     if (retryTimer) clearTimeout(retryTimer);
-    try { unsubscribeFirestore(); } catch {}
+    try { unsubscribeFirestore(); } catch (e) { console.warn(e); }
     window.removeEventListener("peanut:announcements:updated", onLocalUpdate);
   };
 }
@@ -170,7 +171,7 @@ export async function createAnnouncement({ title, content, type = "general", pin
       });
       window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(updated));
       window.dispatchEvent(new CustomEvent("peanut:announcements:updated", { detail: updated }));
-    } catch {}
+    } catch (e) { console.warn(e); }
     return resultItem;
   } catch (err) {
     console.error("[Announcement] Lỗi khi thêm vào Firestore:", err.code, err.message);
@@ -192,6 +193,40 @@ export async function createAnnouncement({ title, content, type = "general", pin
 }
 
 
+// Giáo viên cập nhật nội dung thông báo
+export async function updateAnnouncement(id, updates) {
+  if (!id || !updates) return;
+  const payload = {
+    updatedAt: new Date().toISOString(),
+  };
+  if (typeof updates.title === "string") payload.title = updates.title.trim();
+  if (typeof updates.content === "string") payload.content = updates.content.trim();
+  if (updates.type) payload.type = updates.type;
+  if (typeof updates.pinned === "boolean") payload.pinned = updates.pinned;
+
+  try {
+    await updateDoc(doc(db, "announcements", id), payload);
+  } catch (err) {
+    console.warn("Không cập nhật được trên Firestore, cập nhật cache local:", err);
+  }
+
+  try {
+    const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
+    const updated = cached.map((item) => (item.id === id ? { ...item, ...payload } : item)).sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+    });
+    window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new CustomEvent("peanut:announcements:updated", { detail: updated }));
+  } catch { /* Local cache is optional. */ }
+}
+
+// Giáo viên ghim / bỏ ghim thông báo nhanh
+export async function togglePinAnnouncement(id, currentPinned) {
+  return updateAnnouncement(id, { pinned: !currentPinned });
+}
+
 // Giáo viên xóa thông báo
 export async function deleteAnnouncement(id) {
   if (!id) return;
@@ -204,6 +239,7 @@ export async function deleteAnnouncement(id) {
     const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
     const updated = cached.filter((item) => item.id !== id);
     window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new CustomEvent("peanut:announcements:updated", { detail: updated }));
   } catch { /* Local cache is optional. */ }
 }
 

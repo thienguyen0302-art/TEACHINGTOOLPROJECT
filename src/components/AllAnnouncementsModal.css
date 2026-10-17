@@ -383,6 +383,34 @@
 }
 .aam-card-delete-btn svg { width: 14px; height: 14px; }
 
+.aam-card-pin-btn,
+.aam-card-edit-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 120ms;
+}
+.aam-card-pin-btn:hover {
+  background: #fef3c7;
+  color: #b45309;
+}
+.aam-card-pin-btn.is-pinned {
+  color: #d97706;
+  background: #fef3c7;
+}
+.aam-card-edit-btn:hover {
+  background: #dbeafe;
+  color: #2563eb;
+}
+.aam-card-pin-btn svg,
+.aam-card-edit-btn svg { width: 14px; height: 14px; }
+
 .aam-card-title {
   margin: 0 0 8px;
   font-size: 16px;

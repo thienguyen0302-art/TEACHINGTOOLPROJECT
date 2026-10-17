@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Icon from "../components/Icon";
+import TeacherAuthoringNav from "../components/TeacherAuthoringNav";
 import {
   listTeacherContests,
   loadScoreboard,
@@ -51,7 +52,7 @@ function getVerdictInfo(status, passed, total) {
 }
 
 export default function TeacherContestHistory() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // Navigation & Tabs
   const [activeTab, setActiveTab] = useState(() => searchParams.get("tab") || "leaderboard");
@@ -151,6 +152,7 @@ export default function TeacherContestHistory() {
     return () => {
       cancelled = true;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- chỉ chạy một lần khi mở trang
   }, []);
 
   function showToast(msg) {

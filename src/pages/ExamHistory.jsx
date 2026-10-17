@@ -36,7 +36,7 @@ export default function ExamHistory() {
 
   useEffect(() => {
     if (!uid) {
-      setLoading(false);
+      queueMicrotask(() => setLoading(false));
       return;
     }
     let cancelled = false;

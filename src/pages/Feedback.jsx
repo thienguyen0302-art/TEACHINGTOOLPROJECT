@@ -369,7 +369,7 @@ export default function Feedback({ user, uid, data }) {
                         <button
                           key={star}
                           type="button"
-                          className={`fb-star-btn ${star <= activeRating ? "active" : ""}`}
+                          className={`fb-star-btn ${star <= activeRating ? "active lit" : ""}`}
                           onMouseEnter={() => setHoverRating(star)}
                           onClick={() => setRating(star)}
                           aria-label={`${star} sao`}
@@ -378,7 +378,7 @@ export default function Feedback({ user, uid, data }) {
                         </button>
                       ))}
                     </div>
-                    <span className="fb-rating-desc">
+                    <span className={`fb-rating-desc ${activeRating > 0 ? "visible" : ""}`}>
                       {RATING_DESCRIPTIONS[activeRating] || "Nhấp vào sao để đánh giá"}
                     </span>
                   </div>
