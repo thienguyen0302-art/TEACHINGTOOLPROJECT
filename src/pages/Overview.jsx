@@ -375,164 +375,172 @@ export default function Overview({ user, lang, data, onChangeLang }) {
         <div><span>Sau đó</span><strong>Rẽ nhánh tư duy</strong></div>
       </section>
 
-      {/* ── KHỐI KẾ HOẠCH ÔN LUYỆN ─────────────────────────── */}
-      <section className="dash-block dash-goals-block">
-        <div className="dash-block-header">
-          <div>
-            <div className="dash-title-row">
-              <h2 className="dash-block-title">Kế hoạch ôn luyện</h2>
-              {goals.length > 0 && <span className="dash-count-pill">{goals.length}</span>}
+      {/* ── BẢNG ĐIỀU KHIỂN: KẾ HOẠCH ÔN LUYỆN & THÔNG BÁO MỚI (ĐẶT CẠNH NHAU) ── */}
+      <div className="dash-two-col-grid">
+        <section className="dash-block dash-goals-block">
+          <div className="dash-block-header">
+            <div>
+              <div className="dash-title-row">
+                <h2 className="dash-block-title">Kế hoạch ôn luyện</h2>
+                {goals.length > 0 && <span className="dash-count-pill">{goals.length}</span>}
+              </div>
+              <p className="dash-block-desc">Theo dõi nhiệm vụ và mục tiêu chuẩn bị cho kỳ thi HSG.</p>
             </div>
-            <p className="dash-block-desc">Theo dõi nhiệm vụ và mục tiêu chuẩn bị cho kỳ thi HSG.</p>
+            <div className="dash-block-actions">
+              <span className="dash-shortcut-hint" title="Bấm phím G trên bàn phím để mở nhanh">
+                Phím tắt <kbd>G</kbd>
+              </span>
+              <button
+                type="button"
+                className="dash-action-btn"
+                onClick={() => setIsGoalModalOpen(true)}
+              >
+                Xem kế hoạch
+              </button>
+            </div>
           </div>
-          <div className="dash-block-actions">
-            <span className="dash-shortcut-hint" title="Bấm phím G trên bàn phím để mở nhanh">
-              Phím tắt <kbd>G</kbd>
-            </span>
-            <button
-              type="button"
-              className="dash-action-btn"
-              onClick={() => setIsGoalModalOpen(true)}
-            >
-              Xem kế hoạch
-            </button>
-          </div>
-        </div>
 
-        {dueGoals.length > 0 && (
-          <div className="dash-due-alert">
-            <Icon name="clock" />
-            <span>Bạn có {dueGoals.length} nhiệm vụ đến hạn hôm nay hoặc đã quá hạn.</span>
-          </div>
-        )}
+          {dueGoals.length > 0 && (
+            <div className="dash-due-alert">
+              <Icon name="clock" />
+              <span>Bạn có {dueGoals.length} nhiệm vụ đến hạn hôm nay hoặc đã quá hạn.</span>
+            </div>
+          )}
 
-        {activeGoals.length > 0 ? (
-          <div className="dash-tasks-list">
-            {activeGoals.slice(0, 4).map((g) => {
-              const typeCfg = GOAL_TYPES[g.targetType] || GOAL_TYPES.custom;
-              const dateInfo = formatGoalDate(g.targetDate);
-              return (
-                <article key={g.id} className="dash-task-item">
-                  <input
-                    type="checkbox"
-                    className="dash-task-checkbox"
-                    checked={g.completed}
-                    onChange={() => handleToggleGoal(g)}
-                    title={g.completed ? "Đánh dấu chưa xong" : "Đánh dấu hoàn thành"}
-                    aria-label={g.title}
-                  />
-                  <div className="dash-task-body">
-                    <h3 className="dash-task-title">{g.title}</h3>
-                    <div className="dash-task-meta">
-                      <span className="dash-meta-badge">{typeCfg.label}</span>
-                      {g.targetValue && <span className="dash-meta-value">{g.targetValue}</span>}
-                      {dateInfo && (
-                        <span className={`dash-meta-due ${dateInfo.isToday ? "is-today" : dateInfo.isOverdue ? "is-overdue" : ""}`}>
-                          <Icon name="calendar" />
-                          <span>{dateInfo.text}</span>
+          {activeGoals.length > 0 ? (
+            <div className="dash-tasks-list">
+              {activeGoals.slice(0, 4).map((g) => {
+                const typeCfg = GOAL_TYPES[g.targetType] || GOAL_TYPES.custom;
+                const dateInfo = formatGoalDate(g.targetDate);
+                return (
+                  <article key={g.id} className="dash-task-item">
+                    <input
+                      type="checkbox"
+                      className="dash-task-checkbox"
+                      checked={g.completed}
+                      onChange={() => handleToggleGoal(g)}
+                      title={g.completed ? "Đánh dấu chưa xong" : "Đánh dấu hoàn thành"}
+                      aria-label={g.title}
+                    />
+                    <div className="dash-task-body">
+                      <h3 className="dash-task-title">{g.title}</h3>
+                      <div className="dash-task-meta">
+                        <span className="dash-meta-badge">{typeCfg.label}</span>
+                        {g.targetValue && <span className="dash-meta-value">{g.targetValue}</span>}
+                        {dateInfo && (
+                          <span className={`dash-meta-due ${dateInfo.isToday ? "is-today" : dateInfo.isOverdue ? "is-overdue" : ""}`}>
+                            <Icon name="calendar" />
+                            <span>{dateInfo.text}</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          ) : goals.length > 0 ? (
+            <div className="dash-empty-content">
+              <p>🎉 Bạn đã hoàn thành tất cả mục tiêu đặt ra.</p>
+            </div>
+          ) : (
+            <div className="dash-empty-content">
+              <p>Chưa có mục tiêu nào trong kế hoạch.</p>
+            </div>
+          )}
+        </section>
+
+        {/* ── KHỐI THÔNG BÁO MỚI ─────────────────────────────── */}
+        <section className="dash-block dash-announcements-block">
+          <div className="dash-block-header">
+            <div>
+              <div className="dash-title-row">
+                <h2 className="dash-block-title">
+                  Thông báo mới
+                </h2>
+                {announcements.length > 0 && (
+                  <span className="dash-count-pill">{announcements.length}</span>
+                )}
+              </div>
+              <p className="dash-block-desc">Cập nhật từ giáo viên và nhà trường.</p>
+            </div>
+            <div className="dash-block-actions">
+              {isTeacher && (
+                <button
+                  type="button"
+                  className="dash-action-btn"
+                  onClick={() => setIsCreateNotifOpen(true)}
+                  title="Đăng thông báo mới"
+                >
+                  + Đăng mới
+                </button>
+              )}
+              {announcements.length > 0 && (
+                <button
+                  type="button"
+                  className="dash-action-btn"
+                  onClick={() => setIsAllNotifOpen(true)}
+                >
+                  Xem tất cả
+                </button>
+              )}
+            </div>
+          </div>
+
+          {announcements.length === 0 ? (
+            <div style={{ padding: "28px 16px", textAlign: "center", color: "#64748b" }}>
+              <div style={{ width: 38, height: 38, margin: "0 auto 10px", borderRadius: "50%", background: "#f1f5f9", display: "grid", placeItems: "center", color: "#94a3b8" }}>
+                <Icon name="bell" />
+              </div>
+              <p style={{ margin: "0 0 4px", fontWeight: 700, fontSize: "13.5px", color: "#14294d" }}>Chưa có thông báo mới nào</p>
+              <p style={{ margin: 0, fontSize: "12px" }}>Các thông báo, dặn dò và lịch thi từ giáo viên sẽ hiển thị tại đây.</p>
+            </div>
+          ) : (
+            <div className="dash-announcements-grid">
+              {announcements.slice(0, 3).map((item) => {
+                const meta = ANNOUNCEMENT_TYPES[item.type] || ANNOUNCEMENT_TYPES.general;
+                const isUnread = !readIds.includes(item.id);
+                return (
+                  <article
+                    key={item.id}
+                    className={`dash-announcement-card ${isUnread ? "is-unread" : ""}`}
+                    onClick={() => {
+                      if (isUnread) handleMarkRead(item.id);
+                      setIsAllNotifOpen(true);
+                    }}
+                  >
+                    <div className="dash-announcement-top">
+                      <span className="dash-meta-badge">
+                        {meta.badge}
+                      </span>
+                      {item.pinned && (
+                        <span className="dash-pinned-badge">
+                          <Icon name="pin" /> Đã ghim
+                        </span>
+                      )}
+                      {isUnread && (
+                        <span className="dash-unread-badge">
+                          <span className="dash-unread-dot" /> Chưa đọc
                         </span>
                       )}
                     </div>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        ) : goals.length > 0 ? (
-          <div className="dash-empty-content">
-            <p>🎉 Bạn đã hoàn thành tất cả mục tiêu đặt ra.</p>
-          </div>
-        ) : (
-          <div className="dash-empty-content">
-            <p>Chưa có mục tiêu nào trong kế hoạch.</p>
-          </div>
-        )}
-      </section>
-
-      {/* ── KHỐI THÔNG BÁO MỚI ─────────────────────────────── */}
-      <section className="dash-block dash-announcements-block">
-        <div className="dash-block-header">
-          <div>
-            <h2 className="dash-block-title">
-              Thông báo mới
-              {announcements.length > 0 && (
-                <span className="dash-count-pill">{announcements.length}</span>
-              )}
-            </h2>
-            <p className="dash-block-desc">Cập nhật từ giáo viên và nhà trường.</p>
-          </div>
-          <div className="dash-block-actions">
-            {isTeacher && (
-              <button
-                type="button"
-                className="dash-action-btn"
-                onClick={() => setIsCreateNotifOpen(true)}
-                title="Đăng thông báo mới"
-              >
-                + Đăng mới
-              </button>
-            )}
-            {announcements.length > 0 && (
-              <button
-                type="button"
-                className="dash-action-btn"
-                onClick={() => setIsAllNotifOpen(true)}
-              >
-                Xem tất cả
-              </button>
-            )}
-          </div>
-        </div>
-
-        {announcements.length === 0 ? (
-          <div style={{ padding: "36px 16px", textAlign: "center", color: "#64748b" }}>
-            <div style={{ width: 44, height: 44, margin: "0 auto 12px", borderRadius: "50%", background: "#f1f5f9", display: "grid", placeItems: "center", color: "#94a3b8" }}>
-              <Icon name="bell" />
-            </div>
-            <p style={{ margin: "0 0 4px", fontWeight: 700, fontSize: "15px", color: "#1e293b" }}>Chưa có thông báo mới nào</p>
-            <p style={{ margin: 0, fontSize: "13px" }}>Các thông báo, dặn dò và lịch thi từ giáo viên sẽ hiển thị tại đây.</p>
-          </div>
-        ) : (
-          <div className="dash-announcements-grid">
-            {announcements.slice(0, 2).map((item) => {
-              const meta = ANNOUNCEMENT_TYPES[item.type] || ANNOUNCEMENT_TYPES.general;
-              const isUnread = !readIds.includes(item.id);
-              return (
-                <article
-                  key={item.id}
-                  className={`dash-announcement-card ${isUnread ? "is-unread" : ""}`}
-                  onClick={() => {
-                    if (isUnread) handleMarkRead(item.id);
-                    setIsAllNotifOpen(true);
-                  }}
-                >
-                  <div className="dash-announcement-top">
-                    <span className="dash-meta-badge">
-                      {meta.badge}
-                    </span>
-                    {item.pinned && (
-                      <span className="dash-pinned-badge">
-                        <Icon name="pin" /> Đã ghim
+                    <h3 className="dash-announcement-title">{item.title}</h3>
+                    <p className="dash-announcement-content">{item.content}</p>
+                    <div className="dash-announcement-foot">
+                      <span>
+                        <Icon name="user" /> {item.authorName || "Giáo viên"}
                       </span>
-                    )}
-                    {isUnread && <span className="dash-unread-dot" title="Chưa đọc" />}
-                  </div>
-                  <h3 className="dash-announcement-title">{item.title}</h3>
-                  <p className="dash-announcement-content">{item.content}</p>
-                  <div className="dash-announcement-foot">
-                    <span>
-                      <Icon name="user" /> {item.authorName || "Giáo viên"}
-                    </span>
-                    <span>
-                      <Icon name="calendar" /> {item.createdAt ? new Date(item.createdAt).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" }) : "Vừa xong"}
-                    </span>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-      </section>
+                      <span>
+                        <Icon name="calendar" /> {item.createdAt ? new Date(item.createdAt).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" }) : "Vừa xong"}
+                      </span>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
 
       <section className="learning-hub">
         <div className="learning-hub-heading">
@@ -618,7 +626,6 @@ export default function Overview({ user, lang, data, onChangeLang }) {
             onClick={() => nav("/contests")}
             style={{ cursor: "pointer" }}
           >
-            <div className="contest-glow" />
             <div className="learning-card-top">
               <span className="learning-card-icon"><Icon name="trophy" /></span>
               <span className="learning-status">Thử thách</span>
@@ -757,6 +764,7 @@ export default function Overview({ user, lang, data, onChangeLang }) {
             <div className="mentor-top">
               <span className="mentor-icon">AI</span>
               <span>Gợi ý dành cho bạn</span>
+              <span className="mentor-ai-badge">{smartRec.badge}</span>
             </div>
             <button
               type="button"
@@ -768,10 +776,6 @@ export default function Overview({ user, lang, data, onChangeLang }) {
               <Icon name="sparkles" />
               <span>{loadingAiAdvice ? "Đang hỏi AI..." : "Hỏi Peanut AI"}</span>
             </button>
-          </div>
-
-          <div style={{ marginTop: "12px" }}>
-            <span className="mentor-ai-badge">{smartRec.badge}</span>
           </div>
 
           <h2>{smartRec.title}</h2>
