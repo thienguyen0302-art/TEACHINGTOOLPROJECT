@@ -848,9 +848,11 @@
   border-radius: 12px;
   background: #fff0e6;
   color: #ee7937;
+  line-height: 0;
 }
 
 .streak-card svg {
+  display: block;
   width: 18px;
   height: 18px;
   color: #ee7937;

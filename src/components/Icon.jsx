@@ -6,7 +6,7 @@ const PATHS = {
   chevron: <path d="m9 18 6-6-6-6" />,
   clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
   code: <path d="m8 9-3 3 3 3m8-6 3 3-3 3m-3-8-2 10" />,
-  fire: <path d="M13 2s1 4-2 7c-2-3-5-1-5 3a6 6 0 0 0 12 0c0-3-2-6-5-10Z" />,
+  fire: <path d="M13 4s1 4-2 7c-2-3-5-1-5 3a6 6 0 0 0 12 0c0-3-2-6-5-10Z" />,
   globe: <><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" /></>,
   grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
   help: <><circle cx="12" cy="12" r="9" /><path d="M9.8 9a2.3 2.3 0 1 1 3.1 2.2c-.9.4-.9 1.1-.9 1.8m0 3h.01" /></>,
