@@ -1,5 +1,4 @@
 import { getCodeSubmissionHistory } from "./submissionPersistence";
-import { getExamHistory } from "./examService";
 import { getProblemBySlug } from "./problemService";
 
 export function formatActivityTime(ts) {
@@ -42,10 +41,7 @@ export function formatActivityTime(ts) {
 export async function fetchRecentActivities(uid, { lang, chapters = [], rows = [], goals = [] } = {}) {
   if (!uid) return [];
 
-  const [codeSubs, exams] = await Promise.all([
-    getCodeSubmissionHistory(uid).catch(() => []),
-    getExamHistory(uid, 15).catch(() => []),
-  ]);
+  const codeSubs = await getCodeSubmissionHistory(uid).catch(() => []);
 
   const activities = [];
 
@@ -73,29 +69,6 @@ export async function fetchRecentActivities(uid, { lang, chapters = [], rows = [
       badge,
       timestamp: ts,
       link: sub.slug ? `/practice` : `/practice`,
-    });
-  }
-
-  // 2. Luyện đề thi thử HSG
-  for (const ex of (exams || [])) {
-    const ts = ex.takenAt ? new Date(ex.takenAt).getTime() : 0;
-    if (!ts) continue;
-
-    const examName = ex.examId === "all" ? "Luyện đề tổng hợp HSG" : (ex.examTitle || `Đề thi ${ex.examId || "HSG"}`);
-    const correct = ex.correct ?? 0;
-    const total = ex.total ?? 0;
-    const score = ex.score ?? (total > 0 ? Math.round((correct / total) * 100) : 0);
-
-    activities.push({
-      id: `exam_${ex.id}_${ts}`,
-      type: "exam",
-      icon: "clock",
-      iconClass: "done",
-      title: `Luyện đề “${examName}”`,
-      subtitle: `${formatActivityTime(ts)} · Đúng ${correct}/${total} câu`,
-      badge: `${score}%`,
-      timestamp: ts,
-      link: "/exam-history",
     });
   }
 
