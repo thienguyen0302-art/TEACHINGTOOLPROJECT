@@ -14,7 +14,6 @@ import {
 import {
   sendResetPassword,
   updateUserAccountPassword,
-  claimTeacherRole,
   isTeacherUser,
 } from "../services/authSecurityService";
 import "./Profile.css";
@@ -248,11 +247,7 @@ export default function Profile({ user, uid, lang, data }) {
   const [resetErr, setResetErr] = useState("");
   const [pwMsg, setPwMsg] = useState("");
   const [pwErr, setPwErr] = useState("");
-  const [claimMsg, setClaimMsg] = useState("");
-  const [claimErr, setClaimErr] = useState("");
   const [sendingReset, setSendingReset] = useState(false);
-  const [teacherCodeInput, setTeacherCodeInput] = useState("");
-  const [claimingTeacher, setClaimingTeacher] = useState(false);
   const [showPwForm, setShowPwForm] = useState(false);
   const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
@@ -317,25 +312,6 @@ export default function Profile({ user, uid, lang, data }) {
       );
     } finally {
       setUpdatingPw(false);
-    }
-  }
-
-  async function handleClaimTeacher(e) {
-    e.preventDefault();
-    setClaimMsg("");
-    setClaimErr("");
-    setClaimingTeacher(true);
-    try {
-      await claimTeacherRole(user, teacherCodeInput);
-      setClaimMsg("Chúc mừng! Đã kích hoạt quyền Giáo viên thành công. Đang tải lại hệ thống...");
-      notice("Đã kích hoạt quyền Giáo viên!");
-      setTimeout(() => {
-        window.location.href = "/teacher";
-      }, 1000);
-    } catch (e) {
-      setClaimErr(e.message || "Mã bảo mật Giáo viên không hợp lệ.");
-    } finally {
-      setClaimingTeacher(false);
     }
   }
 
@@ -844,45 +820,6 @@ export default function Profile({ user, uid, lang, data }) {
                     {updatingPw ? "Đang xác thực & cập nhật..." : "Lưu mật khẩu mới"}
                   </button>
                 </form>
-              )}
-
-              {/* Dành cho học sinh muốn kích hoạt quyền Giáo viên */}
-              {!isTeacher && (
-                <div style={{ borderTop: "1px solid #e2e8f0", paddingTop: "14px", marginTop: "4px" }}>
-                  <span style={{ fontSize: "12px", fontWeight: 700, color: "#2563eb", display: "block", marginBottom: "2px" }}>
-                    Kích hoạt quyền Giáo viên &amp; Ban giám khảo
-                  </span>
-                  <p style={{ margin: "0 0 8px", fontSize: "12px", color: "#64748b" }}>
-                    Nếu thầy cô đang dùng tài khoản này, vui lòng nhập mã bảo mật được cấp để mở quyền quản trị.
-                  </p>
-                  <form onSubmit={handleClaimTeacher} style={{ display: "flex", gap: "8px" }}>
-                    <input
-                      type="text"
-                      placeholder="Mã bảo mật (VD: GV-HSG-2025)"
-                      value={teacherCodeInput}
-                      onChange={(e) => setTeacherCodeInput(e.target.value)}
-                      required
-                      style={{ flex: 1, height: "36px", padding: "0 10px", borderRadius: "8px", border: "1px solid #cbd5e1", fontSize: "12.5px" }}
-                    />
-                    <button
-                      type="submit"
-                      disabled={claimingTeacher}
-                      style={{ height: "36px", padding: "0 14px", borderRadius: "8px", border: "none", background: "#1e40af", color: "#fff", fontSize: "12.5px", fontWeight: 700, cursor: "pointer" }}
-                    >
-                      {claimingTeacher ? "Đang kiểm tra..." : "Kích hoạt"}
-                    </button>
-                  </form>
-                  {claimErr && (
-                    <div style={{ marginTop: "6px", fontSize: "12px", color: "#dc2626" }}>
-                      ⚠️ {claimErr}
-                    </div>
-                  )}
-                  {claimMsg && (
-                    <div style={{ marginTop: "6px", fontSize: "12px", color: "#16a34a", fontWeight: 600 }}>
-                      ✓ {claimMsg}
-                    </div>
-                  )}
-                </div>
               )}
             </div>
           </div>
