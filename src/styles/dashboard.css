@@ -157,18 +157,19 @@
   flex-direction: column;
   min-height: 350px;
   height: 100%;
+  margin: 0 !important;
   overflow: hidden;
-  padding: 26px 28px;
-  border: 1px solid #dfe7f4;
-  border-radius: 22px;
-  background: #ffffff;
+  padding: 26px 28px !important;
+  border: 1px solid #dfe7f4 !important;
+  border-radius: 22px !important;
+  background: #ffffff !important;
   box-shadow: 0 8px 24px rgba(28, 48, 78, 0.05);
   transition: all 0.2s ease;
   box-sizing: border-box;
 }
 
 .learning-section-card:hover {
-  border-color: #bfd4f5;
+  border-color: #bfd4f5 !important;
   box-shadow: 0 16px 36px rgba(28, 48, 78, 0.09);
   transform: translateY(-2px);
 }
@@ -196,7 +197,8 @@
 .theory-card .learning-card-icon { background: #eaf2ff; color: #3975f8; }
 .practice-card .learning-card-icon { background: #e8f8f4; color: #28a785; }
 .review-card .learning-card-icon { background: #f1edff; color: #755dde; }
-.contest-card .learning-card-icon { background: #fff8eb; color: #d97706; }
+.contest-card .learning-card-icon,
+.learning-contest-card .learning-card-icon { background: #fff8eb; color: #d97706; }
 
 .learning-status {
   padding: 4px 10px;
@@ -224,10 +226,10 @@
 }
 
 .learning-section-card h3 {
-  margin: 6px 0 8px;
-  color: #1c304e;
-  font-size: 23px;
-  font-weight: 800;
+  margin: 6px 0 8px !important;
+  color: #1c304e !important;
+  font-size: 23px !important;
+  font-weight: 800 !important;
   letter-spacing: -0.02em;
 }
 

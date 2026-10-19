@@ -12,8 +12,8 @@
 .contest-ui button:disabled { opacity: .6; cursor: not-allowed; }
 .contest-ui :is(button,a,input,textarea,select):focus-visible { outline: 3px solid #467adc; outline-offset: 3px; }
 .contest-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 16px; }
-.contest-card { background: #fff; border: 1px solid #dce4ef; border-radius: 12px; padding: 20px; min-width: 0; margin: 16px 0; }
-.contest-card h3 { margin: 16px 0 8px; }
+.contest-ui .contest-card { background: #fff; border: 1px solid #dce4ef; border-radius: 12px; padding: 20px; min-width: 0; margin: 16px 0; }
+.contest-ui .contest-card h3 { margin: 16px 0 8px; }
 .contest-badge, .contest-clock { display: inline-flex; padding: 7px 10px; border-radius: 6px; background: #edf2f9; font-size: 12px; font-variant-numeric: tabular-nums; gap: 5px; }
 .contest-badge.running { color: #087b56; background: #e4f5eb; }
 .contest-badge.ended { color: #626d7e; }

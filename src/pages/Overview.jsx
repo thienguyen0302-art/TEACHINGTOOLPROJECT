@@ -622,7 +622,7 @@ export default function Overview({ user, lang, data, onChangeLang }) {
           </article>
 
           <article
-            className="learning-section-card contest-card"
+            className="learning-section-card learning-contest-card contest-card"
             onClick={() => nav("/contests")}
             style={{ cursor: "pointer" }}
           >
