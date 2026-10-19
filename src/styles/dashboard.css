@@ -54,6 +54,111 @@
 .search-box input { width: 100%; border: 0; background: transparent; color: #33425c; font-size: 12px; }
 .search-box input::placeholder { color: #aab3c2; }
 .top-actions { display: flex; align-items: center; gap: 12px; }
+
+/* Nút Peanut AI (Brief 2) */
+.peanut-chat-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid #dfe7f4;
+  border-radius: 12px;
+  background: #edf4ff;
+  color: #3975f8;
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.peanut-chat-button svg {
+  width: 18px;
+  height: 18px;
+  color: #3975f8;
+  flex-shrink: 0;
+}
+
+.peanut-chat-button:hover {
+  background: #e0ecff;
+  border-color: #cbdcf8;
+}
+
+.peanut-chat-button:active {
+  transform: scale(0.98);
+}
+
+.peanut-chat-button:focus-visible {
+  outline: 2px solid #3975f8;
+  outline-offset: 2px;
+}
+
+/* Nút Mục tiêu (Brief 2) */
+.topbar-goal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid #dfe7f4;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1c304e;
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.topbar-goal-btn svg {
+  width: 18px;
+  height: 18px;
+  color: #7d8eaa;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.topbar-goal-btn kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  background: #edf4ff;
+  border: 1px solid #dfe7f4;
+  border-radius: 5px;
+  color: #3975f8;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 800;
+  margin-left: 2px;
+}
+
+.topbar-goal-btn:hover {
+  background: #f4f8fe;
+  border-color: #cbdcf8;
+}
+
+.topbar-goal-btn:hover svg {
+  color: #3975f8;
+}
+
+.topbar-goal-btn:active {
+  transform: scale(0.98);
+}
+
+.topbar-goal-btn:focus-visible {
+  outline: 2px solid #3975f8;
+  outline-offset: 2px;
+}
+
 .language-button { display: flex; height: 38px; padding: 0 12px; align-items: center; gap: 7px; border: 1px solid #e2e8f2; border-radius: 11px; background: #fff; color: #59667c; font-size: 10px; font-weight: 700; }
 .language-button svg { width: 16px; }
 .notification-button { position: relative; width: 38px; height: 38px; border: 1px solid #e2e8f2; border-radius: 11px; background: #fff; display: flex; align-items: center; justify-content: center; color: #59667c; cursor: pointer; transition: all 0.15s ease; }
@@ -827,7 +932,7 @@
   .curriculum-hero { padding: 35px 30px; }.curriculum-card { grid-template-columns: 1fr; }.curriculum-action { display: flex; align-items: center; gap: 15px; }.curriculum-progress { margin: 0; flex: 1; }.curriculum-action > button { width: 170px; }
 }
 @media (max-width: 560px) {
-  .topbar { height: 66px; }.search-box { display: none; }.top-actions { margin-left: auto; }.language-button span { display: none; }
+  .topbar { height: 66px; }.search-box { display: none; }.top-actions { margin-left: auto; }.language-button span { display: none; } .topbar-goal-btn kbd { display: none; }
   .welcome { align-items: flex-start; flex-direction: column; gap: 18px; }.streak-card { min-width: 0; }
   .resume-card { grid-template-columns: 1fr; }.resume-art { display: none; }.resume-copy { padding: 29px 23px; }
   .resume-copy h2 { font-size: 20px; }.section-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
