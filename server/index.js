@@ -98,4 +98,10 @@ const server = http.createServer(async (req, res) => {
 });
 const port = Number(process.env.PORT || process.env.JUDGE_PORT || 3001);
 const host = process.env.HOST || '127.0.0.1'; // Cloud Run/Docker đặt HOST=0.0.0.0
+server.on('error', (error) => {
+  console.error(error.code === 'EADDRINUSE'
+    ? `Cổng ${port} đang được sử dụng. Dừng backend cũ trước khi khởi động lại npm run dev.`
+    : `Không thể khởi động API tại ${host}:${port}: ${error.message}`);
+  process.exitCode = 1;
+});
 server.listen(port, host, () => console.log(`Judge API: http://${host}:${server.address().port}`));
