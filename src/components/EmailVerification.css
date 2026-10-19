@@ -1,0 +1,254 @@
+/* Giao diện Xác minh Email theo đúng tiêu chuẩn thiết kế */
+.email-verify-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #F5F8FF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 68px 16px 48px;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #14294D;
+}
+
+.email-verify-card {
+  width: 100%;
+  max-width: 460px;
+  background-color: #FFFFFF;
+  border: 1px solid #DCE3F6;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 10px 32px rgba(20, 41, 77, 0.05);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  animation: emailVerifyFadeIn 250ms ease-out;
+}
+
+@keyframes emailVerifyFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.email-verify-header {
+  margin-bottom: 14px;
+}
+
+.email-verify-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2859B8;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.email-verify-desc {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #14294D;
+}
+
+.email-verify-email {
+  font-weight: 700;
+  color: #14294D;
+  word-break: break-all;
+}
+
+/* Khung thông báo phản hồi (thành công / lỗi / cảnh báo) */
+.email-verify-alert {
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.email-verify-alert.alert-success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.email-verify-alert.alert-warning {
+  background-color: #fffbeb;
+  border: 1px solid #fef3c7;
+  color: #b45309;
+}
+
+.email-verify-alert.alert-error {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #b91c1c;
+}
+
+.email-verify-alert-icon {
+  flex-shrink: 0;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+/* Khu vực các nút bấm */
+.email-verify-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Nút chính "Tôi đã xác minh": nền xanh, chữ trắng */
+.email-verify-btn-primary {
+  width: 100%;
+  height: 48px;
+  background-color: #2859B8;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 160ms ease, transform 120ms ease, opacity 160ms ease;
+  box-sizing: border-box;
+  text-decoration: none;
+  user-select: none;
+}
+
+.email-verify-btn-primary:hover:not(:disabled) {
+  background-color: #1e4594;
+}
+
+.email-verify-btn-primary:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.email-verify-btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Nút phụ "Gửi lại thư": nền trắng, chữ xanh, viền nhạt */
+.email-verify-btn-secondary {
+  width: 100%;
+  height: 48px;
+  background-color: #FFFFFF;
+  color: #2859B8;
+  border: 1px solid #DCE3F6;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+  box-sizing: border-box;
+  text-decoration: none;
+  user-select: none;
+}
+
+.email-verify-btn-secondary:hover:not(:disabled) {
+  background-color: #F5F8FF;
+  border-color: #2859B8;
+}
+
+.email-verify-btn-secondary:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.email-verify-btn-secondary:disabled {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Nút "Đăng xuất": nền trắng, chữ xanh đậm, đặt ở hàng bên dưới */
+.email-verify-logout-row {
+  margin-top: 6px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.email-verify-btn-logout {
+  width: 100%;
+  height: 44px;
+  background-color: #FFFFFF;
+  color: #14294D;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 160ms ease, color 160ms ease;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.email-verify-btn-logout:hover {
+  background-color: #edf2f9;
+  color: #2859B8;
+}
+
+.email-verify-btn-logout:active {
+  transform: scale(0.99);
+}
+
+/* Spinner khi đang xử lý */
+.email-verify-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: emailVerifySpin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes emailVerifySpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive trên điện thoại */
+@media (max-width: 480px) {
+  .email-verify-page {
+    padding-top: 48px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .email-verify-card {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+  .email-verify-title {
+    font-size: 19px;
+  }
+  .email-verify-desc {
+    font-size: 13.5px;
+  }
+}

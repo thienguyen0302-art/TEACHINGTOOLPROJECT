@@ -20,7 +20,7 @@ const STATUS_LABELS = {
 };
 
 const BUG_CATEGORIES = {
-  judge: "Hệ thống chấm (Judge)",
+  judge: "Hệ thống chấm tự động",
   ui: "Giao diện (UI/UX)",
   content: "Nội dung / Typo",
   account: "Tài khoản / Đăng nhập",

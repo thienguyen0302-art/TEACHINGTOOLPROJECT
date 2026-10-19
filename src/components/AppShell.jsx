@@ -16,6 +16,7 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead,
 } from "../services/announcementService";
+import { getProblemCount } from "../services/problemService";
 
 // Thông báo nhỏ ở góc dưới (toast) dùng chung cho mọi trang
 import { NoticeContext } from "../hooks/useNotice";
@@ -81,9 +82,9 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
   useEffect(() => {
     const unsub = subscribeAnnouncements((items) => {
       setAnnouncements(items);
-    });
+    }, { uid: user?.uid, isTeacher });
     return () => unsub?.();
-  }, []);
+  }, [user?.uid, isTeacher]);
 
   const handleMarkRead = (id) => {
     markNotificationAsRead(user?.uid, id);
@@ -145,7 +146,7 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
                 onClick={() => choose(item)}
               >
                 <Icon name={item.icon} /><span>{item.label}</span>
-                {item.label === "Kho bài tập" && <em>24</em>}
+                {item.label === "Kho bài tập" && <em>{getProblemCount()}</em>}
               </button>
             ))}
           </nav>

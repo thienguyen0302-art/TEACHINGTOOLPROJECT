@@ -1,71 +1,41 @@
 import { sendPasswordResetEmail, updatePassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { auth } from "./firebase";
 import { authHeaders } from "./authHeader";
 
-export const TEACHER_SECURITY_CODES = [
-  "HSGTEACHER2025",
-  "GV-HSG-2025",
-  "TEACHER2025",
-  "PEANUT-GV-2025",
-];
+// Mã giáo viên KHÔNG được lưu trong mã nguồn trình duyệt: ai mở DevTools cũng đọc được.
+// Việc kiểm tra mã và gán vai trò chỉ diễn ra ở server (POST /api/teacher/claim).
 
-const LOCAL_ROLE_PREFIX = "peanut_teacher_role_";
-
+/** Chỉ kiểm tra hình thức để báo lỗi sớm; đúng/sai do server quyết định. */
 export function verifyTeacherCode(code) {
-  if (!code || typeof code !== "string") return false;
-  const clean = code.trim().toUpperCase();
-  return TEACHER_SECURITY_CODES.includes(clean);
+  return typeof code === "string" && code.trim().length >= 8;
 }
 
+/** Vai trò giáo viên chỉ lấy từ hồ sơ Firestore (do server ghi), không tin localStorage. */
 export function isTeacherUser(user, profile) {
-  if (profile?.role === "teacher") return true;
-  if (!user?.uid) return false;
-  try {
-    return window.localStorage.getItem(LOCAL_ROLE_PREFIX + user.uid) === "teacher";
-  } catch {
-    return false;
-  }
+  return Boolean(user?.uid) && profile?.role === "teacher";
 }
 
 export async function claimTeacherRole(user, teacherCode) {
   if (!user?.uid) throw new Error("Chưa đăng nhập.");
-  const cleanCode = (teacherCode || "").trim().toUpperCase();
-  if (!verifyTeacherCode(cleanCode)) {
-    throw new Error("Mã bảo mật Giáo viên không hợp lệ. Vui lòng kiểm tra lại hoặc liên hệ Quản trị viên.");
+  const code = String(teacherCode || "").trim();
+  if (!verifyTeacherCode(code)) {
+    throw new Error("Hãy nhập mã bảo mật giáo viên do quản trị viên cấp.");
   }
-
-  // 1. Lưu local cache trước để giao diện lập tức nhận diện
+  const headers = await authHeaders();
+  let res;
   try {
-    window.localStorage.setItem(LOCAL_ROLE_PREFIX + user.uid, "teacher");
-  } catch { /* optional */ }
-
-  // 2. Gọi backend API để gán quyền chính thức trên server Admin
-  try {
-    const headers = await authHeaders();
-    const res = await fetch("/api/teacher/claim", {
+    res = await fetch("/api/teacher/claim", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...headers,
-      },
-      body: JSON.stringify({ teacherCode: cleanCode }),
+      headers: { "Content-Type": "application/json", ...headers },
+      body: JSON.stringify({ teacherCode: code }),
     });
-    if (res.ok) {
-      console.log("[AuthSecurity] Server đã gán quyền giáo viên thành công.");
-    }
-  } catch (err) {
-    console.warn("[AuthSecurity] Backend không khả dụng, giữ quyền local:", err);
-  }
-
-  // 3. Cố gắng ghi vào Firestore nếu rules cho phép
-  try {
-    const userRef = doc(db, "users", user.uid);
-    await setDoc(userRef, { role: "teacher" }, { merge: true });
   } catch {
-    // Nếu rules chặn ghi trực tiếp, local cache và backend claim đã bảo đảm quyền
+    throw new Error("Không kết nối được máy chủ. Hãy thử lại sau.");
   }
-
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Mã bảo mật giáo viên không chính xác.");
+  }
   return { ok: true, role: "teacher" };
 }
 

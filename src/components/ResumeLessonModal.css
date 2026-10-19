@@ -1,0 +1,234 @@
+.rlm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  padding: 16px;
+  animation: rlmFadeIn 0.2s ease-out;
+}
+
+@keyframes rlmFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.rlm-modal {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border: 1px solid #DCE3F6;
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  box-shadow: 0 20px 45px rgba(20, 41, 77, 0.15);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+  animation: rlmScaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes rlmScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.rlm-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rlm-close:hover {
+  background: #EDF2F7;
+  color: #1E293B;
+  border-color: #CBD5E1;
+}
+
+.rlm-badge-wrap {
+  margin-bottom: 12px;
+}
+
+.rlm-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: #2859B8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.rlm-title {
+  margin: 0 0 10px;
+  font-size: 21px;
+  font-weight: 700;
+  color: #14294D;
+  line-height: 1.35;
+}
+
+.rlm-desc {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.rlm-progress-box {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 24px;
+}
+
+.rlm-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  color: #475569;
+}
+
+.rlm-progress-header strong {
+  color: #2859B8;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.rlm-progress-track {
+  height: 8px;
+  background: #E2E8F0;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.rlm-progress-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #2859B8, #3B82F6);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.rlm-position-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  padding-top: 10px;
+  border-top: 1px solid #EDF2F7;
+}
+
+.rlm-pos-label {
+  color: #64748B;
+  flex-shrink: 0;
+}
+
+.rlm-pos-val {
+  color: #1E293B;
+  font-weight: 600;
+  text-align: right;
+}
+
+.rlm-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rlm-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.rlm-btn-title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.rlm-btn-sub {
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 3px;
+  opacity: 0.85;
+}
+
+.rlm-btn-continue {
+  background: #2859B8;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(40, 89, 184, 0.28);
+}
+
+.rlm-btn-continue:hover {
+  background: #1e4594;
+  box-shadow: 0 6px 18px rgba(40, 89, 184, 0.38);
+  transform: translateY(-1px);
+}
+
+.rlm-btn-restart {
+  background: #ffffff;
+  color: #14294D;
+  border: 1px solid #DCE3F6;
+}
+
+.rlm-btn-restart:hover {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #0F172A;
+}
+
+@media (max-width: 480px) {
+  .rlm-modal {
+    padding: 24px 20px 20px;
+    border-radius: 20px;
+  }
+  .rlm-title {
+    font-size: 19px;
+  }
+  .rlm-position-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .rlm-pos-val {
+    text-align: left;
+  }
+}

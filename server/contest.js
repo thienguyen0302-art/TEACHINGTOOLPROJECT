@@ -1,9 +1,14 @@
 import { Buffer } from 'node:buffer';
+import { timingSafeEqual } from 'node:crypto';
 import { createAuthGuard } from './auth.js';
 import { executeTest, gradeSubmission } from './judge.js';
 import { getContestRepository } from './contestRepository.js';
 import { AuthoringError, bytes, requireValue, serializePublicProblem, validId, validateProblem } from '../src/utils/problemAuthoring.js';
 import { contestPhase, rankScoreboard, validateContest } from '../src/utils/contest.js';
+
+const CLAIM_WINDOW_MS = 15 * 60 * 1000;
+const CLAIM_MAX_ATTEMPTS = 5;
+const claimAttempts = new Map();
 
 export function authorizeContest(contest, problemId, language, now) {
   requireValue(contest?.status === 'published', 'Không tìm thấy contest.', 404);
@@ -84,11 +89,22 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
       const teacher = profile?.role === 'teacher';
       const parts = req.url.split('?')[0].split('/').filter(Boolean);
       if (req.method === 'POST' && req.url === '/api/teacher/claim') {
+        // Mã giáo viên CHỈ nằm trong biến môi trường của server, không có trong mã nguồn.
+        const secret = (process.env.TEACHER_SECURITY_CODE || '').trim();
+        requireValue(secret.length >= 8, 'Máy chủ chưa cấu hình mã giáo viên.', 503);
+        const now = Date.now();
+        const record = claimAttempts.get(caller.uid) ?? { count: 0, since: now };
+        if (now - record.since > CLAIM_WINDOW_MS) { record.count = 0; record.since = now; }
+        requireValue(record.count < CLAIM_MAX_ATTEMPTS, 'Thử quá nhiều lần. Hãy chờ 15 phút.', 429);
+        record.count += 1;
+        claimAttempts.set(caller.uid, record);
         const body = await readBody(req, 10000);
-        const code = (body?.teacherCode || '').trim().toUpperCase();
-        const validCodes = ['HSGTEACHER2025', 'GV-HSG-2025', 'TEACHER2025', 'PEANUT-GV-2025', (process.env.TEACHER_SECURITY_CODE || '').toUpperCase()].filter(Boolean);
-        requireValue(validCodes.includes(code), 'Mã bảo mật giáo viên không chính xác.', 403);
-        await repo.setTeacherRole?.(caller.uid);
+        const given = Buffer.from(String(body?.teacherCode ?? '').trim());
+        const expected = Buffer.from(secret);
+        const match = given.length === expected.length && timingSafeEqual(given, expected);
+        requireValue(match, 'Mã bảo mật giáo viên không chính xác.', 403);
+        await repo.setTeacherRole(caller.uid);
+        claimAttempts.delete(caller.uid);
         return reply(200, { ok: true, role: 'teacher' });
       }
       const teacherRoute = parts[1] === 'teacher';

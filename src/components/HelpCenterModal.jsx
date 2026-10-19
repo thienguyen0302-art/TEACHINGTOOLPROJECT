@@ -186,7 +186,7 @@ export default function HelpCenterModal({ isOpen, onClose }) {
                   <div className="hcm-step-card">
                     <span className="hcm-step-num">03</span>
                     <h4>Thực hành nộp code tự động</h4>
-                    <p>Luyện tập tại Kho bài tập, viết code trực tiếp trên trình soạn thảo và nhận kết quả chấm từ máy chấm Judge0 trong vài giây.</p>
+                    <p>Luyện tập tại Kho bài tập, viết code trực tiếp trên trình soạn thảo và nhận kết quả từ hệ thống chấm tự động trong vài giây.</p>
                   </div>
 
                   <div className="hcm-step-card">
@@ -209,7 +209,7 @@ export default function HelpCenterModal({ isOpen, onClose }) {
             {/* 2. QUY TẮC CHẤM BÀI */}
             {activeTab === "judge" && (
               <div className="hcm-pane">
-                <h3>Các trạng thái phản hồi của Máy chấm (Judge)</h3>
+                <h3>Các trạng thái phản hồi của Hệ thống chấm tự động</h3>
                 <p>
                   Khi bạn bấm <strong>"Nộp bài"</strong>, hệ thống sẽ biên dịch và chạy code với hàng chục bộ test ẩn (hidden testcases) để kiểm tra độ chính xác, tốc độ và bộ nhớ.
                 </p>

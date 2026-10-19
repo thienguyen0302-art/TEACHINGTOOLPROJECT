@@ -16,19 +16,61 @@ export async function saveProgress(uid, chapterId, progressData) {
   const ref = doc(db, "users", uid, "progress", `${language}_${chapterId}`);
   const old = await getDoc(ref);
   const prev = old.exists() ? old.data() : {};
-  const quizScore = Number(progressData.quizScore ?? 0);
+  const quizScore = Number(progressData.quizScore ?? prev.quizScore ?? 0);
+  const isCompleted = prev.completed === true || progressData.completed === true || quizScore >= PASS_SCORE;
+  const progressPercent = isCompleted
+    ? 100
+    : Math.max(prev.progressPercent ?? 0, progressData.progressPercent ?? 0);
 
   await setDoc(ref, {
     language,
     chapterId,
     quizScore,
-    correct: progressData.correct ?? 0,
-    total: progressData.total ?? 0,
+    correct: progressData.correct ?? prev.correct ?? 0,
+    total: progressData.total ?? prev.total ?? 0,
     bestScore: Math.max(prev.bestScore ?? 0, quizScore),
-    attempts: (prev.attempts ?? 0) + 1,
-    completed: prev.completed === true || quizScore >= PASS_SCORE,
+    attempts: (prev.attempts ?? 0) + (progressData.isQuizSubmit ? 1 : 0),
+    completed: isCompleted,
+    progressPercent,
+    lastTab: progressData.lastTab ?? prev.lastTab ?? "overview",
+    lastPracticeMode: progressData.lastPracticeMode ?? prev.lastPracticeMode ?? "quiz",
+    overviewRead: progressData.overviewRead ?? prev.overviewRead ?? false,
+    reflections: progressData.reflections ?? prev.reflections ?? {},
+    answers: progressData.answers ?? prev.answers ?? {},
+    quizSubmitted: progressData.quizSubmitted ?? prev.quizSubmitted ?? false,
     updatedAt: serverTimestamp(),
   }, { merge: true });
+}
+
+export async function getChapterProgress(uid, language, chapterId) {
+  if (!uid) return null;
+  const ref = doc(db, "users", uid, "progress", `${language}_${chapterId}`);
+  const snap = await getDoc(ref);
+  return snap.exists() ? snap.data() : null;
+}
+
+export function getLocalChapterState(uid, language, chapterId) {
+  try {
+    const raw = localStorage.getItem(`lesson_state_${uid || "guest"}_${language}_${chapterId}`);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveLocalChapterState(uid, language, chapterId, state) {
+  try {
+    localStorage.setItem(
+      `lesson_state_${uid || "guest"}_${language}_${chapterId}`,
+      JSON.stringify({ ...state, updatedAt: Date.now() })
+    );
+  } catch {}
+}
+
+export function clearLocalChapterState(uid, language, chapterId) {
+  try {
+    localStorage.removeItem(`lesson_state_${uid || "guest"}_${language}_${chapterId}`);
+  } catch {}
 }
 
 export async function getAllProgress(uid) {

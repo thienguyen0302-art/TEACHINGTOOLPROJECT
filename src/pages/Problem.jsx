@@ -12,22 +12,20 @@ import { judgeCode } from "../services/judgeService";
 
 const CodeEditor = lazy(() => import("../components/CodeEditor"));
 
-const tabs = [
-  { id: "statement", label: "Đề bài", icon: "≡" },
-  { id: "hints", label: "Gợi ý", icon: "✧" },
-];
-
-
 function ProblemHints({ hints }) {
+  if (!hints || hints.length === 0) return null;
   return (
     <div className="bank-hints">
-      <p>Thử tự giải trước khi mở từng gợi ý nhé.</p>
-      {hints.length > 0 ? hints.map((hint, index) => (
-        <details key={index}>
+      <h2>Gợi ý giải bài</h2>
+      <p className="bank-hints__tip">Thử tự giải trước khi mở từng gợi ý nhé.</p>
+      {hints.map((hint, index) => (
+        <details key={index} className="bank-hint-item">
           <summary>Gợi ý {index + 1}</summary>
-          <p>{hint}</p>
+          <div className="bank-hint-content">
+            <p>{hint}</p>
+          </div>
         </details>
-      )) : <p>Bài này chưa có gợi ý.</p>}
+      ))}
     </div>
   );
 }
@@ -35,7 +33,6 @@ function ProblemHints({ hints }) {
 function ProblemWorkspace({ problem, initialLang }) {
   const [language, setLanguage] = useState(initialLang === "python" ? "python" : "cpp");
   const [drafts, setDrafts] = useState({ ...problem.starterCode });
-  const [activeTab, setActiveTab] = useState("statement");
   const [stdin, setStdin] = useState(problem.samples[0]?.input ?? "");
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
@@ -67,25 +64,10 @@ function ProblemWorkspace({ problem, initialLang }) {
       if (!controller.signal.aborted) setBusy("");
     }
   }
-  const tabRefs = useRef([]);
   const prefix = useId();
   const lineCount = (drafts[language] ?? "").split("\n").length;
   const languageId = `${prefix}-language`;
   const noteId = `${prefix}-note`;
-
-  function handleTabKeyDown(event, index) {
-    let nextIndex;
-    switch (event.key) {
-      case "ArrowRight": nextIndex = (index + 1) % tabs.length; break;
-      case "ArrowLeft": nextIndex = (index + tabs.length - 1) % tabs.length; break;
-      case "Home": nextIndex = 0; break;
-      case "End": nextIndex = tabs.length - 1; break;
-      default: return;
-    }
-    event.preventDefault();
-    setActiveTab(tabs[nextIndex].id);
-    tabRefs.current[nextIndex]?.focus();
-  }
 
   return (
     <div className="problem-page bank-ui">
@@ -96,24 +78,11 @@ function ProblemWorkspace({ problem, initialLang }) {
       </nav>
       <div className="problem-workspace">
         <article className="problem-statement bank-panel">
-          <div className="bank-panel__bar" role="tablist" aria-label="Nội dung bài tập">
-            {tabs.map((tab, index) => (
-              <button
-                key={tab.id}
-                type="button"
-                ref={(element) => { tabRefs.current[index] = element; }}
-                id={`${prefix}-${tab.id}-tab`}
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                aria-controls={`${prefix}-${tab.id}-panel`}
-                tabIndex={activeTab === tab.id ? 0 : -1}
-                onClick={() => setActiveTab(tab.id)}
-                onKeyDown={(event) => handleTabKeyDown(event, index)}
-              >
-                <span className="bank-tab-icon" aria-hidden="true">{tab.icon}</span> {tab.label}
-                {tab.id === "hints" && <> <span>{problem.hints.length}</span></>}
-              </button>
-            ))}
+          <div className="bank-panel__bar">
+            <span className="bank-code-heading"><span aria-hidden="true">≡</span> Đề bài</span>
+            {problem.hints?.length > 0 && (
+              <span className="bank-draft-badge">{problem.hints.length} gợi ý bên dưới</span>
+            )}
           </div>
           <div className="bank-statement-body">
             <h1>{problem.title}</h1>
@@ -128,20 +97,10 @@ function ProblemWorkspace({ problem, initialLang }) {
             <div className="bank-row-tags">
               {problem.tags.map((tag) => <span key={tag}>{tag}</span>)}
             </div>
-            {tabs.map((tab) => (
-              <div
-                key={tab.id}
-                id={`${prefix}-${tab.id}-panel`}
-                role="tabpanel"
-                aria-labelledby={`${prefix}-${tab.id}-tab`}
-                hidden={activeTab !== tab.id}
-                tabIndex={0}
-              >
-                {tab.id === "statement"
-                  ? <ProblemStatement problem={problem} />
-                  : <ProblemHints hints={problem.hints} />}
-              </div>
-            ))}
+
+            <ProblemStatement problem={problem} />
+
+            <ProblemHints hints={problem.hints} />
           </div>
         </article>
         <section className="problem-editor bank-panel" aria-label="Khu vực viết code">

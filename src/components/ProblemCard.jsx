@@ -15,13 +15,6 @@ export default function ProblemCard({ problem, variant = "lesson", language, cha
       <h4>Output mẫu</h4><pre><code>{problem.sampleOutput}</code></pre>
       {language && chapterId && section && problem.runnable && <LessonCodeExercise problem={problem} language={language} chapterId={chapterId} section={section} />}
       {problem.hint && <details><summary>Gợi ý</summary><p>{problem.hint}</p></details>}
-      <details>
-        <summary>Xem lời giải sau khi tự làm</summary>
-        <p>{problem.explanation}</p>
-        {problem.solutionCode && <pre><code>{problem.solutionCode}</code></pre>}
-        {problem.betterApproach && <div className="callout"><b>Hướng cải thiện:</b> {problem.betterApproach}</div>}
-        {problem.complexity && <p><b>Độ phức tạp:</b> thời gian {problem.complexity.time}, bộ nhớ {problem.complexity.space}.</p>}
-      </details>
     </article>
   );
 }

@@ -21,6 +21,8 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead,
 } from "../services/announcementService";
+import { fetchRecentActivities } from "../services/activityService";
+import { getProblemCount } from "../services/problemService";
 
 const GOAL_TYPES = {
   practice: { label: "Bài tập Code", cls: "practice" },
@@ -86,12 +88,51 @@ export default function Overview({ user, lang, data, onChangeLang }) {
     notice(nextVal ? `🎉 Xuất sắc! Bạn đã hoàn thành: ${goal.title}` : "Đã mở lại mục tiêu");
   };
 
+  // Nhật ký hoạt động thực tế của cá nhân học viên
+  const [activities, setActivities] = useState([]);
+  const [loadingActivities, setLoadingActivities] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadActivities() {
+      setLoadingActivities(true);
+      try {
+        const list = await fetchRecentActivities(user?.uid, {
+          lang,
+          chapters: data.chapters,
+          rows: data.rows,
+          goals,
+        });
+        if (!cancelled) {
+          setActivities(list);
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải hoạt động gần đây:", err);
+      } finally {
+        if (!cancelled) {
+          setLoadingActivities(false);
+        }
+      }
+    }
+
+    if (user?.uid) {
+      loadActivities();
+    } else {
+      setActivities([]);
+      setLoadingActivities(false);
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.uid, lang, data.rows, data.chapters, goals]);
+
   useEffect(() => {
     const unsub = subscribeAnnouncements((items) => {
       setAnnouncements(items);
-    });
+    }, { uid: user?.uid, isTeacher: false });
     return () => unsub?.();
-  }, []);
+  }, [user?.uid]);
 
   const handleMarkRead = (id) => {
     markNotificationAsRead(user?.uid, id);
@@ -376,8 +417,8 @@ export default function Overview({ user, lang, data, onChangeLang }) {
             <h3>Thực hành</h3>
             <p>Viết code trực tiếp, nhận kết quả chấm bài và gợi ý để cải thiện từng lời giải.</p>
             <div className="learning-meta">
+              <span><Icon name="code" /> {getProblemCount()} bài tập</span>
               <span><Icon name="check" /> Chấm tự động</span>
-              <span><Icon name="chart" /> Theo dõi kết quả</span>
             </div>
             <div className="learning-levels">
               <span>Cơ bản</span><span>Vận dụng</span><span>Nâng cao</span>
@@ -491,26 +532,103 @@ export default function Overview({ user, lang, data, onChangeLang }) {
 
       <section className="recent-learning">
         <div className="recent-heading">
-          <div><span>Nhật ký học tập</span><h2>Hoạt động gần đây</h2></div>
-          <button onClick={() => nav("/progress")}>Xem tất cả <Icon name="chevron" /></button>
+          <div>
+            <span>Nhật ký học tập</span>
+            <h2>Hoạt động gần đây</h2>
+          </div>
+          <button type="button" onClick={() => nav("/exam-history")}>
+            Xem tất cả <Icon name="chevron" />
+          </button>
         </div>
-        <div className="recent-list">
-          <article>
-            <span className="recent-icon done"><Icon name="check" /></span>
-            <div><strong>Hoàn thành bài “Biến và kiểu dữ liệu”</strong><small>Hôm nay, 09:30 · Điểm số 9/10</small></div>
-            <em>+30 XP</em>
-          </article>
-          <article>
-            <span className="recent-icon code"><Icon name="code" /></span>
-            <div><strong>Nộp bài “Tính tổng hai số”</strong><small>Hôm qua, 20:15 · Accepted</small></div>
-            <em>Đúng 100%</em>
-          </article>
-          <article>
-            <span className="recent-icon badge"><Icon name="trophy" /></span>
-            <div><strong>Nhận huy hiệu “Khởi đầu thuận lợi”</strong><small>18 tháng 5 · Hoàn thành 10 bài đầu tiên</small></div>
-            <em>Huy hiệu mới</em>
-          </article>
-        </div>
+
+        {loadingActivities ? (
+          <div style={{ padding: "28px 16px", textAlign: "center", color: "#64748b", fontSize: "13px" }}>
+            Đang tải nhật ký hoạt động gần đây...
+          </div>
+        ) : activities.length === 0 ? (
+          <div style={{
+            padding: "28px 16px",
+            textAlign: "center",
+            color: "#64748b",
+            background: "#f8fafc",
+            borderRadius: "14px",
+            border: "1px dashed #cbd5e1",
+            marginTop: "16px"
+          }}>
+            <div style={{
+              width: 40,
+              height: 40,
+              margin: "0 auto 10px",
+              borderRadius: "50%",
+              background: "#e2e8f0",
+              display: "grid",
+              placeItems: "center",
+              color: "#64748b"
+            }}>
+              <Icon name="clock" />
+            </div>
+            <p style={{ margin: "0 0 4px", fontWeight: 700, fontSize: "13px", color: "#1e293b" }}>
+              Chưa có hoạt động học tập nào
+            </p>
+            <p style={{ margin: "0 0 14px", fontSize: "12px", color: "#64748b" }}>
+              Hãy bắt đầu làm bài học lý thuyết hoặc giải bài tập code để ghi nhận nhật ký học tập tại đây.
+            </p>
+            <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+              <button
+                type="button"
+                onClick={() => nav("/curriculum")}
+                style={{
+                  padding: "7px 14px",
+                  background: "#3978ed",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  cursor: "pointer"
+                }}
+              >
+                Vào học ngay
+              </button>
+              <button
+                type="button"
+                onClick={() => nav("/practice")}
+                style={{
+                  padding: "7px 14px",
+                  background: "#fff",
+                  color: "#3978ed",
+                  border: "1px solid #3978ed",
+                  borderRadius: "8px",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  cursor: "pointer"
+                }}
+              >
+                Luyện tập code
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="recent-list">
+            {activities.slice(0, 5).map((item) => (
+              <article
+                key={item.id}
+                onClick={() => item.link && nav(item.link)}
+                style={{ cursor: item.link ? "pointer" : "default" }}
+                title={item.link ? "Nhấp để xem chi tiết" : ""}
+              >
+                <span className={`recent-icon ${item.iconClass}`}>
+                  <Icon name={item.icon} />
+                </span>
+                <div>
+                  <strong>{item.title}</strong>
+                  <small>{item.subtitle}</small>
+                </div>
+                <em>{item.badge}</em>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       <AllAnnouncementsModal

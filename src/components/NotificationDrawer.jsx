@@ -139,7 +139,13 @@ export default function NotificationDrawer({
           {isExpanded && item.authorName && (
             <span className="nd-item-author">👤 {item.authorName}</span>
           )}
-          <time className="nd-item-time">{formatRelativeTime(item.createdAt)}</time>
+          <time
+            className="nd-item-time"
+            dateTime={item.createdAt}
+            title={item.createdAt ? new Date(item.createdAt).toLocaleString("vi-VN") : ""}
+          >
+            {formatRelativeTime(item.createdAt)}
+          </time>
         </div>
 
         {/* Chấm xanh bên phải */}

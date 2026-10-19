@@ -21,6 +21,7 @@ import Ranking from "./pages/Ranking";
 import Exam from "./pages/Exam";
 import { saveExamResult } from "./services/examService";
 import AppShell from "./components/AppShell";
+import EmailVerification from "./components/EmailVerification";
 import useStudyTimer from "./hooks/useStudyTimer";
 import useLearningData from "./hooks/useLearningData";
 import { setSubmissionPersistenceAdapter } from "./services/submissionProgressService";
@@ -29,6 +30,7 @@ import { saveProfile } from "./services/progressService";
 import { isProfileComplete } from "./utils/profile";
 import { weekSummary } from "./utils/activity";
 import { isTeacherUser } from "./services/authSecurityService";
+import { setStudentFirstLoginAt } from "./services/announcementService";
 
 const TeacherProblems = lazy(() => import("./pages/TeacherProblems"));
 const TeacherProblemEditor = lazy(() => import("./pages/TeacherProblems").then((module) => ({ default: module.TeacherProblemEditor })));
@@ -171,9 +173,18 @@ export default function App() {
           const userData = snap.exists() ? snap.data() : {};
           setProfile(userData);
           if (snap.exists() && userData.language) setLang(userData.language);
+          // Ghi nhận chính xác ngày đăng nhập / tạo tài khoản lần đầu của học viên
+          const creationIso = u.metadata?.creationTime
+            ? new Date(u.metadata.creationTime).toISOString()
+            : new Date().toISOString();
+          const firstLoginAt = userData.firstLoginAt || userData.createdAt || creationIso;
+          setStudentFirstLoginAt(u.uid, firstLoginAt);
+
           // Lưu tên/email để Teacher Dashboard hiển thị được học sinh.
           // Không ghi đè displayName nếu học sinh đã tự nhập tên trong hồ sơ.
           const patch = {};
+          if (!userData.firstLoginAt) patch.firstLoginAt = firstLoginAt;
+          if (!userData.createdAt) patch.createdAt = firstLoginAt;
           if (userData.email !== u.email) patch.email = u.email;
           if (!userData.displayName && u.displayName) patch.displayName = u.displayName;
           if (Object.keys(patch).length) {
@@ -198,19 +209,11 @@ export default function App() {
 
   if (!user.emailVerified) {
     return (
-      <div className="box">
-        <h2>Hãy xác minh email</h2>
-        <p>Chúng tôi đã gửi thư xác minh tới <b>{user.email}</b>. Bấm vào link trong thư (xem cả mục Spam), rồi bấm nút bên dưới.</p>
-        <button onClick={async () => { await auth.currentUser.reload(); window.location.reload(); }}>
-          Tôi đã xác minh
-        </button>
-        <button onClick={async () => {
-          try { await sendEmailVerification(auth.currentUser); setMsg("Đã gửi lại thư."); }
-          catch { setMsg("Gửi quá nhiều lần, hãy chờ vài phút."); }
-        }}>Gửi lại thư</button>
-        <button onClick={() => signOut(auth)}>Đăng xuất</button>
-        {msg && <p>{msg}</p>}
-      </div>
+      <EmailVerification
+        user={user}
+        onVerified={() => window.location.reload()}
+        onLogout={() => signOut(auth)}
+      />
     );
   }
 

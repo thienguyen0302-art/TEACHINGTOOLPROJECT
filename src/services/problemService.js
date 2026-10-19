@@ -72,3 +72,7 @@ export function listProblems({ difficulty, chapterId, topic, query = "", sort = 
 export function getProblemBySlug(slug) {
   return problems.find((problem) => problem.slug === slug) ?? null;
 }
+
+export function getProblemCount() {
+  return problems.length;
+}

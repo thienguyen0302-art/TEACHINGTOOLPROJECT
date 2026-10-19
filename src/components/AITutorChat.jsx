@@ -46,7 +46,7 @@ export default function AITutorChat({ slug, language, source, judgeResult, judge
   return <details className="ai-tutor-chat">
     <summary><TutorIcon /><span>Trò chuyện với AI<small>Hỏi thêm về bài toán và code của em</small></span></summary>
     <div className="ai-tutor-chat__toolbar"><span>Peanut AI · Hội thoại trong phiên</span><button type="button" onClick={() => { cancel(); update({ messages: [], error: '', draft: '' }); }}>Cuộc trò chuyện mới</button></div>
-    <p className="ai-tutor-chat__note">AI dùng bài và code hiện tại. Đổi code, ngôn ngữ hoặc kết quả Judge sẽ bắt đầu hội thoại mới.</p>
+    <p className="ai-tutor-chat__note">AI dùng bài và code hiện tại. Đổi code, ngôn ngữ hoặc kết quả chấm sẽ bắt đầu hội thoại mới.</p>
     <div className="ai-tutor-chat__messages" ref={conversationRef} role="log" aria-label="Hội thoại AI Tutor" aria-live="polite" aria-busy={pending}>
       {!messages.length && !pending && <p className="ai-tutor-chat__empty">Em đang vướng ở đâu? Hỏi về một khái niệm hoặc dòng code trong bài.</p>}
       {messages.map((item, index) => <div className={`ai-tutor-chat__bubble is-${item.role}`} key={index}><strong>{item.role === 'user' ? 'Em' : 'Peanut AI'}</strong><p>{item.text}</p></div>)}

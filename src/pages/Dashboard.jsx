@@ -4,6 +4,7 @@ import { useNotice } from "../hooks/useNotice";
 import { curriculum, LANG_BY_KEY } from "../data/curriculum";
 import { firstName, greeting, todayText } from "../utils/format";
 import { calcStreak, weekSummary } from "../utils/activity";
+import { getLocalChapterState } from "../services/progressService";
 
 const TONES = ["blue", "purple", "cyan", "orange"];
 const ICONS = ["code", "check", "clock", "grid"];
@@ -20,8 +21,14 @@ export default function Dashboard({ user, lang, data }) {
 
   const all = list.map((c, i) => {
     const id = contentByOrder[i + 1];
-    const p = id ? progressById[id] : undefined;
-    const progress = p?.completed ? 100 : p ? Math.min(99, Math.round(p.bestScore || 0)) : 0;
+    let p = id ? progressById[id] : undefined;
+    if (id && (!p || !p.completed)) {
+      const local = getLocalChapterState(data?.profile?.uid, lang, id);
+      if (local && (!p || (local.progressPercent ?? 0) > (p.progressPercent ?? 0) || local.completed)) {
+        p = { ...p, ...local };
+      }
+    }
+    const progress = p?.completed ? 100 : p ? Math.max(0, Math.min(99, Math.round(p.progressPercent ?? p.bestScore ?? 0))) : 0;
     return { ...c, n: i + 1, id, progress };
   });
   // Hiển thị 4 chương bắt đầu từ chương chưa hoàn thành đầu tiên (không cố định 4 chương đầu).

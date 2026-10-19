@@ -1,0 +1,410 @@
+/* Phong cách thẻ câu hỏi thống nhất theo màn hình xác minh: font Inter, nền xanh nhạt, viền mảnh DCE3F6 */
+.qc-card {
+  background-color: #FFFFFF;
+  border: 1px solid #DCE3F6;
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(20, 41, 77, 0.04);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #14294D;
+  box-sizing: border-box;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.qc-card:hover {
+  border-color: #BACBEE;
+  box-shadow: 0 6px 20px rgba(20, 41, 77, 0.06);
+}
+
+/* Hàng đầu thẻ: Số câu cùng hàng với độ khó và chủ đề */
+.qc-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.qc-number-badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2859B8;
+  background-color: #EEF3FD;
+  padding: 4px 12px;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+}
+
+.qc-tags-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Nhãn độ khó */
+.qc-difficulty-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.qc-difficulty-badge.diff-basic {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+}
+
+.qc-difficulty-badge.diff-intermediate {
+  background-color: #FFF8E1;
+  color: #B78103;
+}
+
+.qc-difficulty-badge.diff-advanced {
+  background-color: #F3E8FF;
+  color: #7E22CE;
+}
+
+/* Nhãn chủ đề (tag) */
+.qc-tag-pill {
+  font-size: 11px;
+  font-weight: 600;
+  color: #5A6D8C;
+  background-color: #F1F4F9;
+  padding: 3px 9px;
+  border-radius: 6px;
+}
+
+/* Nội dung câu hỏi: 18px, đậm 700, màu xanh đậm */
+.qc-question-title {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #14294D;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+}
+
+/* Đoạn code (nếu có) */
+.qc-code-block {
+  margin: 0 0 16px 0;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 14px 18px;
+  border-radius: 10px;
+  overflow-x: auto;
+  border: 1px solid #1e293b;
+}
+
+.qc-code-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.qc-code-block pre {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+/* Danh sách các lựa chọn đáp án */
+.qc-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qc-option-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1.5px solid #DCE3F6;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  transition: all 150ms ease;
+  user-select: none;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.qc-option-label:hover:not(.qc-option-disabled) {
+  border-color: #BACBEE;
+  background-color: #F9FBFF;
+}
+
+/* Trạng thái được chọn */
+.qc-option-label.qc-option-selected {
+  border-color: #2859B8;
+  background-color: #F0F4FC;
+}
+
+/* Trạng thái sau nộp bài: đúng / sai */
+.qc-option-label.qc-option-correct {
+  border-color: #10B981;
+  background-color: #ECFDF5;
+}
+
+.qc-option-label.qc-option-wrong {
+  border-color: #EF4444;
+  background-color: #FEF2F2;
+}
+
+.qc-option-label.qc-option-disabled {
+  cursor: default;
+}
+
+.qc-option-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Ký hiệu A, B, C, D tách riêng rõ ràng */
+.qc-option-letter {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  background-color: #F1F4F9;
+  color: #14294D;
+  flex-shrink: 0;
+  transition: all 150ms ease;
+}
+
+.qc-option-selected .qc-option-letter {
+  background-color: #2859B8;
+  color: #FFFFFF;
+}
+
+.qc-option-correct .qc-option-letter {
+  background-color: #10B981;
+  color: #FFFFFF;
+}
+
+.qc-option-wrong .qc-option-letter {
+  background-color: #EF4444;
+  color: #FFFFFF;
+}
+
+/* Nội dung văn bản của đáp án */
+.qc-option-text {
+  flex: 1;
+  font-size: 15px;
+  color: #14294D;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.qc-option-correct .qc-option-text {
+  font-weight: 600;
+  color: #065F46;
+}
+
+.qc-option-wrong .qc-option-text {
+  color: #991B1B;
+}
+
+/* Dấu chọn tròn rõ ràng bên phải */
+.qc-option-radio-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #CBD5E1;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: all 150ms ease;
+}
+
+.qc-option-selected .qc-option-radio-dot {
+  border-color: #2859B8;
+}
+
+.qc-option-selected .qc-option-radio-dot::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2859B8;
+}
+
+.qc-option-correct .qc-option-radio-dot {
+  border-color: #10B981;
+  background-color: #10B981;
+  color: #FFFFFF;
+}
+
+.qc-option-correct .qc-option-radio-dot::after {
+  content: "✓";
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: transparent;
+}
+
+.qc-option-wrong .qc-option-radio-dot {
+  border-color: #EF4444;
+  background-color: #EF4444;
+}
+
+.qc-option-wrong .qc-option-radio-dot::after {
+  content: "✕";
+  font-size: 10px;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: transparent;
+}
+
+/* Phần chân thẻ & kết quả sau khi nộp */
+.qc-card-footer {
+  margin-top: 18px;
+  border-top: 1px dashed #E2E8F0;
+  padding-top: 14px;
+}
+
+.qc-hint-unsubmitted {
+  margin: 0;
+  font-size: 13px;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qc-hint-unsubmitted strong {
+  color: #2859B8;
+}
+
+/* Khối kết quả câu hỏi */
+.qc-result-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qc-result-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.qc-status-pill {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qc-status-pill.status-correct {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.qc-status-pill.status-wrong {
+  background-color: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.qc-correct-answer-text {
+  font-size: 14px;
+  color: #14294D;
+  margin: 0;
+}
+
+.qc-correct-answer-text strong {
+  color: #065F46;
+}
+
+.qc-explanation-box {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #334155;
+}
+
+.qc-explanation-box strong {
+  display: block;
+  font-size: 12.5px;
+  color: #1E293B;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.qc-explanation-box p {
+  margin: 0;
+}
+
+.qc-better-approach-box {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: #F0F4FC;
+  border: 1px solid #DCE3F6;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #1E3A8A;
+}
+
+.qc-better-approach-box strong {
+  display: block;
+  font-size: 12.5px;
+  color: #2859B8;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.qc-better-approach-box p {
+  margin: 0;
+}
+
+/* Đáp ứng trên màn hình nhỏ (Mobile) */
+@media (max-width: 600px) {
+  .qc-card {
+    padding: 18px 16px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+  }
+  .qc-question-title {
+    font-size: 16.5px;
+  }
+  .qc-option-label {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .qc-option-letter {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+  .qc-option-text {
+    font-size: 14px;
+  }
+}

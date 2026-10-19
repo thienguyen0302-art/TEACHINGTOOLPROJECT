@@ -22,7 +22,7 @@ export default function CodeStepVisualizer({ visualization, source }) {
   function move(next) { setPlaying(false); setIndex(next); }
   return <section className="code-trace" aria-label="Trực quan hóa code từng bước">
     <header className="code-trace__header"><div><span className="code-trace__eyebrow">KHÁM PHÁ CODE</span><h4>{visualization.title}</h4></div><span className="code-trace__counter">{index + 1}<small> / {steps.length}</small></span></header>
-    <p className="code-trace__note">Minh họa do AI suy luận từ code và ví dụ công khai, không phải trace thực thi của Judge0.</p>
+    <p className="code-trace__note">Minh họa do AI suy luận từ code và ví dụ công khai, không phải trace thực thi thực tế.</p>
     {visualization.input !== null && <details className="code-trace__sample"><summary>Ví dụ dùng để minh họa</summary><div><section><span>INPUT</span><pre>{visualization.input || '(Rỗng)'}</pre></section><section><span>OUTPUT MẪU</span><pre>{visualization.expectedOutput || '(Rỗng)'}</pre></section></div></details>}
     <div className="code-trace__progress" aria-hidden="true"><span style={{ width: `${(index + 1) / steps.length * 100}%` }} /></div>
     <div className="code-trace__source" tabIndex={0} role="region" aria-label={`Code của em, đang xem dòng ${step.line}`}>

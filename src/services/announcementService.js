@@ -7,7 +7,7 @@ import {
   onSnapshot,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { db, auth } from "./firebase";
 
 const LOCAL_STORAGE_KEY_PREFIX = "peanut_read_announcements_";
 const LOCAL_ANNOUNCEMENTS_KEY = "peanut_local_announcements_cache";
@@ -19,24 +19,128 @@ export const ANNOUNCEMENT_TYPES = {
   urgent: { label: "Tin quan trọng", badge: "Quan trọng", color: "red", icon: "fire" },
 };
 
-// Mẫu thông báo mặc định ban đầu nếu hệ thống chưa có thông báo nào
-export const DEFAULT_ANNOUNCEMENTS = [
-  {
+// Lấy ngày học viên đăng nhập lần đầu tiên (hoặc tạo tài khoản) để hiển thị thông báo chào mừng chính xác
+export function getFirstLoginDate(uid) {
+  const currentUid = uid || (typeof auth !== "undefined" && auth?.currentUser?.uid);
+  const storageKey = "peanut_first_login_" + (currentUid || "guest");
+
+  // 1. Kiểm tra cache localStorage của tài khoản
+  try {
+    const cached = window.localStorage.getItem(storageKey);
+    if (cached) {
+      const d = new Date(cached);
+      if (!isNaN(d.getTime())) return d.toISOString();
+    }
+  } catch { /* Local storage is optional */ }
+
+  // 2. Kiểm tra creationTime từ Firebase Auth metadata
+  try {
+    const currentAuthUser = auth?.currentUser;
+    if (currentAuthUser && (!currentUid || currentAuthUser.uid === currentUid) && currentAuthUser.metadata?.creationTime) {
+      const creationDate = new Date(currentAuthUser.metadata.creationTime);
+      if (!isNaN(creationDate.getTime())) {
+        const iso = creationDate.toISOString();
+        try {
+          window.localStorage.setItem(storageKey, iso);
+        } catch { /* Local storage is optional */ }
+        return iso;
+      }
+    }
+  } catch { /* Auth check fallback */ }
+
+  // 3. Kiểm tra key fallback chung
+  try {
+    const fallbackCurrent = window.localStorage.getItem("peanut_first_login_current");
+    if (fallbackCurrent) {
+      const d = new Date(fallbackCurrent);
+      if (!isNaN(d.getTime())) return d.toISOString();
+    }
+  } catch { /* Local storage is optional */ }
+
+  // 4. Mặc định là thời điểm hiện tại (lần đầu đăng nhập) và lưu lại để dùng cho các phiên sau
+  const nowIso = new Date().toISOString();
+  try {
+    window.localStorage.setItem(storageKey, nowIso);
+    window.localStorage.setItem("peanut_first_login_current", nowIso);
+  } catch { /* Local storage is optional */ }
+  return nowIso;
+}
+
+// Lưu trữ ngày đăng nhập lần đầu của học viên từ hồ sơ Firestore / Auth
+export function setStudentFirstLoginAt(uid, isoString) {
+  if (!isoString) return;
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return;
+  const validIso = d.toISOString();
+  const currentUid = uid || (typeof auth !== "undefined" && auth?.currentUser?.uid);
+  const storageKey = "peanut_first_login_" + (currentUid || "guest");
+  try {
+    window.localStorage.setItem(storageKey, validIso);
+    window.localStorage.setItem("peanut_first_login_current", validIso);
+  } catch { /* Local storage is optional */ }
+}
+
+// Tạo thông báo chào mừng mặc định với ngày tạo khớp chính xác ngày học viên đăng nhập lần đầu
+export function getWelcomeAnnouncement(uid) {
+  return {
     id: "welcome-system",
     title: "Chào mừng đến với nền tảng ôn thi HSG PeanutCode!",
     content: "Các em hãy chủ động hoàn thành các chuyên đề theo lộ trình và luyện tập tại Kho bài tập. Giáo viên sẽ thường xuyên gửi thông báo lịch kiểm tra và đề thi thử mới tại đây.",
     type: "general",
     authorName: "Ban quản trị PeanutCode",
-    createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+    createdAt: getFirstLoginDate(uid),
     pinned: true,
-  },
+  };
+}
+
+// Mẫu thông báo mặc định ban đầu nếu hệ thống chưa có thông báo nào
+export const DEFAULT_ANNOUNCEMENTS = [
+  getWelcomeAnnouncement(),
 ];
 
 // Lắng nghe realtime danh sách thông báo
-export function subscribeAnnouncements(callback) {
+export function subscribeAnnouncements(callback, options = {}) {
+  let uid = "";
+  let isTeacher = false;
+  if (typeof options === "string") {
+    uid = options;
+  } else if (options && typeof options === "object") {
+    uid = options.uid || "";
+    isTeacher = Boolean(options.isTeacher);
+  }
+
   let isCancelled = false;
   let retryTimer = null;
   let unsubscribeFirestore = () => {};
+
+  function normalizeAnnouncements(items) {
+    const welcomeDate = getFirstLoginDate(uid);
+    let normalized = items.map((item) => {
+      if (item.id === "welcome-system" || item.title?.includes("Chào mừng đến với nền tảng ôn thi HSG")) {
+        return {
+          ...item,
+          createdAt: welcomeDate,
+        };
+      }
+      return item;
+    });
+
+    // Đối với học viên, luôn đảm bảo có thông báo chào mừng ngày đăng nhập lần đầu
+    if (!isTeacher && !normalized.some((x) => x.id === "welcome-system" || x.title?.includes("Chào mừng đến với nền tảng ôn thi HSG"))) {
+      normalized = [getWelcomeAnnouncement(uid), ...normalized];
+    }
+
+    // Sắp xếp: thông báo ghim lên đầu, sau đó theo thời gian TỪ MỚI ĐẾN CŨ
+    normalized.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      const timeA = new Date(a.createdAt || 0).getTime();
+      const timeB = new Date(b.createdAt || 0).getTime();
+      return timeB - timeA;
+    });
+
+    return normalized;
+  }
 
   function connect() {
     if (isCancelled) return;
@@ -45,7 +149,7 @@ export function subscribeAnnouncements(callback) {
       unsubscribeFirestore = onSnapshot(
         colRef,
         (snapshot) => {
-          const items = snapshot.docs.map((docSnap) => {
+          const rawItems = snapshot.docs.map((docSnap) => {
             const data = docSnap.data();
             let createdAt = new Date().toISOString();
             if (data.createdAt?.toDate) {
@@ -62,35 +166,32 @@ export function subscribeAnnouncements(callback) {
             };
           });
 
-          // Sắp xếp: thông báo ghim lên đầu, sau đó theo thời gian TỪ MỚI ĐẾN CŨ
-          items.sort((a, b) => {
-            if (a.pinned && !b.pinned) return -1;
-            if (!a.pinned && b.pinned) return 1;
-            const timeA = new Date(a.createdAt || 0).getTime();
-            const timeB = new Date(b.createdAt || 0).getTime();
-            return timeB - timeA;
-          });
-
-          if (items.length > 0) {
+          if (rawItems.length > 0) {
+            const finalItems = normalizeAnnouncements(rawItems);
             try {
-              window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(items));
+              window.localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(finalItems));
             } catch { /* Local cache is optional. */ }
-            callback(items);
+            callback(finalItems);
           } else {
             // Nếu Firestore trống: kiểm tra cache local trước, nếu không thì dùng mặc định
             try {
-              const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
-              if (Array.isArray(cached) && cached.length > 0) {
-                callback(cached);
-                return;
+              const raw = window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY);
+              if (raw) {
+                const cached = JSON.parse(raw);
+                if (Array.isArray(cached) && cached.length > 0) {
+                  const finalCached = normalizeAnnouncements(cached);
+                  callback(finalCached);
+                  return;
+                }
               }
             } catch { /* Local cache is optional. */ }
-            callback(DEFAULT_ANNOUNCEMENTS);
+            const defaultList = isTeacher ? [] : [getWelcomeAnnouncement(uid)];
+            callback(defaultList);
           }
         },
         (error) => {
           console.warn("[Announcement] Không thể tải realtime Firestore, dùng dữ liệu cache:", error);
-          loadLocalFallback(callback);
+          loadLocalFallback(callback, uid, isTeacher);
           // Tự động thử kết nối lại sau 3s nếu bị gián đoạn mạng
           if (!isCancelled) {
             retryTimer = setTimeout(connect, 3000);
@@ -99,7 +200,7 @@ export function subscribeAnnouncements(callback) {
       );
     } catch (err) {
       console.warn("[Announcement] Lỗi khởi tạo lắng nghe Firestore:", err);
-      loadLocalFallback(callback);
+      loadLocalFallback(callback, uid, isTeacher);
       if (!isCancelled) {
         retryTimer = setTimeout(connect, 3000);
       }
@@ -111,7 +212,7 @@ export function subscribeAnnouncements(callback) {
   // Lắng nghe sự kiện local cập nhật tức thì trên cùng tab/browser
   function onLocalUpdate(e) {
     if (Array.isArray(e.detail) && e.detail.length > 0) {
-      callback(e.detail);
+      callback(normalizeAnnouncements(e.detail));
     }
   }
   window.addEventListener("peanut:announcements:updated", onLocalUpdate);
@@ -124,15 +225,34 @@ export function subscribeAnnouncements(callback) {
   };
 }
 
-function loadLocalFallback(callback) {
+function loadLocalFallback(callback, uid, isTeacher) {
   try {
-    const cached = JSON.parse(window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || "[]");
-    if (Array.isArray(cached) && cached.length > 0) {
-      callback(cached);
-      return;
+    const raw = window.localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY);
+    if (raw) {
+      const cached = JSON.parse(raw);
+      if (Array.isArray(cached) && cached.length > 0) {
+        const welcomeDate = getFirstLoginDate(uid);
+        let normalized = cached.map((item) => {
+          if (item.id === "welcome-system" || item.title?.includes("Chào mừng đến với nền tảng ôn thi HSG")) {
+            return { ...item, createdAt: welcomeDate };
+          }
+          return item;
+        });
+        if (!isTeacher && !normalized.some((x) => x.id === "welcome-system" || x.title?.includes("Chào mừng đến với nền tảng ôn thi HSG"))) {
+          normalized = [getWelcomeAnnouncement(uid), ...normalized];
+        }
+        normalized.sort((a, b) => {
+          if (a.pinned && !b.pinned) return -1;
+          if (!a.pinned && b.pinned) return 1;
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+        });
+        callback(normalized);
+        return;
+      }
     }
   } catch { /* Local cache is optional. */ }
-  callback(DEFAULT_ANNOUNCEMENTS);
+  const defaultList = isTeacher ? [] : [getWelcomeAnnouncement(uid)];
+  callback(defaultList);
 }
 
 // Giáo viên đăng thông báo mới

@@ -40,7 +40,7 @@ export default function Teacher() {
   useEffect(() => {
     const unsub = subscribeAnnouncements((items) => {
       setAnnouncements(items);
-    });
+    }, { isTeacher: true });
     return () => unsub?.();
   }, []);
 

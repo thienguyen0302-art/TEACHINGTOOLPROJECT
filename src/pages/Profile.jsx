@@ -601,7 +601,7 @@ export default function Profile({ user, uid, lang, data }) {
                 <p style={{ margin: 0, fontSize: "12.5px", color: "#64748b", lineHeight: 1.5 }}>
                   {isTeacher
                     ? "Toàn quyền quản lý ngân hàng bài tập, cấu hình test ẩn, tổ chức kỳ thi Contest HSG, theo dõi tiến độ toàn lớp và duyệt góp ý."
-                    : "Luyện tập các chuyên đề theo lộ trình, nộp bài chấm tự động qua Judge0, tham gia thi đấu Đấu trường HSG và nhận hỗ trợ từ AI Tutor."}
+                    : "Luyện tập các chuyên đề theo lộ trình, nộp bài chấm tự động, tham gia thi đấu Đấu trường HSG và nhận hỗ trợ từ AI Tutor."}
                 </p>
               </div>
             </div>

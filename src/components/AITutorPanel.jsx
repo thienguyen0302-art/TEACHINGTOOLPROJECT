@@ -23,7 +23,7 @@ export default function AITutorPanel({ slug, language, source, judgeResult, judg
     return () => { controllerRef.current?.abort(); controllerRef.current = null; };
   }, [slug, language, source, judgeResult]);
   const disabled = Boolean(pending || judgeBusy || !source?.trim());
-  const status = judgeBusy ? 'Judge đang chạy' : !judgeResult ? 'Chưa chạy code' : judgeResult.mode === 'submit' ? `${judgeResult.passed}/${judgeResult.total} test đạt` : judgeResult.result.status;
+  const status = judgeBusy ? 'Đang chấm bài…' : !judgeResult ? 'Chưa chạy code' : judgeResult.mode === 'submit' ? `${judgeResult.passed}/${judgeResult.total} test đạt` : judgeResult.result.status;
 
   async function request(action) {
     if (controllerRef.current || disabled) return;
@@ -59,6 +59,6 @@ export default function AITutorPanel({ slug, language, source, judgeResult, judg
       </article>}
     </div>
     <AITutorChat slug={slug} language={language} source={source} judgeResult={judgeResult} judgeBusy={judgeBusy} />
-    <p className="ai-tutor-disclaimer"><TutorIcon name="spark" />AI gợi ý, em tự khám phá. Judge0 xác nhận kết quả.</p>
+    <p className="ai-tutor-disclaimer"><TutorIcon name="spark" />AI gợi ý, em tự khám phá. Hệ thống chấm tự động xác nhận kết quả.</p>
   </aside>;
 }

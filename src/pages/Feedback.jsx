@@ -21,7 +21,7 @@ const RATING_DESCRIPTIONS = {
 };
 
 const BUG_CATEGORIES = {
-  judge: "Hệ thống chấm bài (Judge)",
+  judge: "Hệ thống chấm tự động",
   ui: "Giao diện người dùng (UI/UX)",
   content: "Nội dung bài học / Đề thi / Typo",
   account: "Tài khoản / Đăng nhập (Auth)",
