@@ -244,8 +244,12 @@ export default function Profile({ user, uid, lang, data }) {
   const showForm = editing || (!isTeacher && !data.loading && !complete && !dismissed);
 
   // Trạng thái Bảo mật & Quyền hạn
-  const [securityMsg, setSecurityMsg] = useState("");
-  const [securityErr, setSecurityErr] = useState("");
+  const [resetMsg, setResetMsg] = useState("");
+  const [resetErr, setResetErr] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwErr, setPwErr] = useState("");
+  const [claimMsg, setClaimMsg] = useState("");
+  const [claimErr, setClaimErr] = useState("");
   const [sendingReset, setSendingReset] = useState(false);
   const [teacherCodeInput, setTeacherCodeInput] = useState("");
   const [claimingTeacher, setClaimingTeacher] = useState(false);
@@ -256,14 +260,17 @@ export default function Profile({ user, uid, lang, data }) {
   const [updatingPw, setUpdatingPw] = useState(false);
 
   async function handleSendResetEmail() {
-    setSecurityMsg("");
-    setSecurityErr("");
+    setResetMsg("");
+    setResetErr("");
+    setPwMsg("");
+    setPwErr("");
     setSendingReset(true);
     try {
       await sendResetPassword(user?.email);
-      setSecurityMsg(`Đã gửi liên kết đổi mật khẩu an toàn tới: ${user?.email}. Vui lòng kiểm tra cả thư mục Spam.`);
+      setResetMsg(user?.email || "email của bạn");
+      notice("Đã gửi email đổi mật khẩu!");
     } catch (e) {
-      setSecurityErr(e.message || "Không thể gửi thư đổi mật khẩu.");
+      setResetErr(e.message || "Không thể gửi thư đổi mật khẩu.");
     } finally {
       setSendingReset(false);
     }
@@ -271,34 +278,35 @@ export default function Profile({ user, uid, lang, data }) {
 
   async function handleUpdatePassword(e) {
     e.preventDefault();
-    setSecurityMsg("");
-    setSecurityErr("");
+    setPwMsg("");
+    setPwErr("");
     if (!oldPw.trim()) {
-      setSecurityErr("Vui lòng nhập mật khẩu hiện tại (mật khẩu cũ).");
+      setPwErr("Vui lòng nhập mật khẩu hiện tại (mật khẩu cũ).");
       return;
     }
     if (newPw.length < 6) {
-      setSecurityErr("Mật khẩu mới phải có ít nhất 6 ký tự.");
+      setPwErr("Mật khẩu mới phải có ít nhất 6 ký tự.");
       return;
     }
     if (newPw !== confirmPw) {
-      setSecurityErr("Mật khẩu xác nhận không trùng khớp.");
+      setPwErr("Mật khẩu xác nhận không trùng khớp.");
       return;
     }
     if (oldPw === newPw) {
-      setSecurityErr("Mật khẩu mới không được trùng với mật khẩu cũ.");
+      setPwErr("Mật khẩu mới không được trùng với mật khẩu cũ.");
       return;
     }
     setUpdatingPw(true);
     try {
       await updateUserAccountPassword(oldPw, newPw);
-      setSecurityMsg("Đã cập nhật mật khẩu tài khoản thành công!");
+      setPwMsg("Đã cập nhật mật khẩu tài khoản thành công!");
+      notice("Đã đổi mật khẩu thành công!");
       setOldPw("");
       setNewPw("");
       setConfirmPw("");
       setShowPwForm(false);
     } catch (e) {
-      setSecurityErr(
+      setPwErr(
         e.code === "auth/wrong-password" ||
         e.code === "auth/invalid-credential" ||
         e.code === "auth/invalid-login-credentials"
@@ -314,18 +322,18 @@ export default function Profile({ user, uid, lang, data }) {
 
   async function handleClaimTeacher(e) {
     e.preventDefault();
-    setSecurityMsg("");
-    setSecurityErr("");
+    setClaimMsg("");
+    setClaimErr("");
     setClaimingTeacher(true);
     try {
       await claimTeacherRole(user, teacherCodeInput);
-      setSecurityMsg("Chúc mừng! Đã kích hoạt quyền Giáo viên thành công. Đang tải lại hệ thống...");
+      setClaimMsg("Chúc mừng! Đã kích hoạt quyền Giáo viên thành công. Đang tải lại hệ thống...");
       notice("Đã kích hoạt quyền Giáo viên!");
       setTimeout(() => {
         window.location.href = "/teacher";
       }, 1000);
     } catch (e) {
-      setSecurityErr(e.message || "Mã bảo mật Giáo viên không hợp lệ.");
+      setClaimErr(e.message || "Mã bảo mật Giáo viên không hợp lệ.");
     } finally {
       setClaimingTeacher(false);
     }
@@ -579,17 +587,6 @@ export default function Profile({ user, uid, lang, data }) {
             </div>
           </div>
 
-          {securityMsg && (
-            <div style={{ padding: "12px 16px", borderRadius: "10px", background: "#f0fdf4", border: "1px solid #bbf7d0", color: "#166534", fontSize: "13.5px", marginBottom: "16px", lineHeight: 1.5 }}>
-              {securityMsg}
-            </div>
-          )}
-          {securityErr && (
-            <div style={{ padding: "12px 16px", borderRadius: "10px", background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", fontSize: "13.5px", marginBottom: "16px", lineHeight: 1.5 }}>
-              {securityErr}
-            </div>
-          )}
-
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "18px" }}>
             {/* Cột 1: Thông tin xác thực & Vai trò */}
             <div style={{ padding: "20px", borderRadius: "14px", background: "var(--ps-bg, #f8fafc)", border: "1px solid var(--ps-border, #e2e8f0)", display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -641,15 +638,162 @@ export default function Profile({ user, uid, lang, data }) {
 
                 <button
                   type="button"
-                  onClick={() => setShowPwForm(!showPwForm)}
+                  onClick={() => {
+                    setShowPwForm(!showPwForm);
+                    setPwErr("");
+                  }}
                   style={{ height: "38px", padding: "0 14px", borderRadius: "8px", border: "1px solid #2563eb", background: "#2563eb", color: "#ffffff", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}
                 >
                   {showPwForm ? "Đóng form" : "Đổi mật khẩu trực tiếp"}
                 </button>
               </div>
 
+              {/* Thông báo gửi email reset mật khẩu - đặt vị trí hợp lý ngay dưới nút bấm */}
+              {resetMsg && (
+                <div
+                  style={{
+                    padding: "14px 16px",
+                    borderRadius: "12px",
+                    background: "#f0fdf4",
+                    border: "1px solid #bbf7d0",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "12px",
+                    boxShadow: "0 2px 8px rgba(22, 101, 52, 0.05)",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      borderRadius: "50%",
+                      background: "#dcfce7",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                      color: "#15803d",
+                    }}
+                  >
+                    <Icon name="check" />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: "13.5px", color: "#15803d", marginBottom: "4px" }}>
+                      Đã gửi email khôi phục mật khẩu!
+                    </div>
+                    <div style={{ fontSize: "12.5px", color: "#166534", lineHeight: 1.5 }}>
+                      Đã gửi liên kết đổi mật khẩu an toàn tới:
+                      <div
+                        style={{
+                          margin: "6px 0",
+                          display: "inline-block",
+                          maxWidth: "100%",
+                          fontWeight: 700,
+                          fontSize: "12.5px",
+                          background: "#dcfce7",
+                          color: "#14532d",
+                          padding: "3px 10px",
+                          borderRadius: "6px",
+                          wordBreak: "break-all",
+                          border: "1px solid #86efac",
+                        }}
+                      >
+                        ✉️ {resetMsg}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: "12px", color: "#166534", marginTop: "2px", opacity: 0.9 }}>
+                      💡 Vui lòng kiểm tra cả thư mục <strong>Hộp thư đến</strong> và <strong>Spam / Thư rác</strong>.
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setResetMsg("")}
+                    aria-label="Đóng thông báo"
+                    style={{
+                      border: "none",
+                      background: "transparent",
+                      color: "#166534",
+                      cursor: "pointer",
+                      padding: "4px",
+                      borderRadius: "4px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      opacity: 0.7,
+                    }}
+                    title="Đóng"
+                  >
+                    <Icon name="x" />
+                  </button>
+                </div>
+              )}
+
+              {resetErr && (
+                <div
+                  style={{
+                    padding: "12px 14px",
+                    borderRadius: "10px",
+                    background: "#fef2f2",
+                    border: "1px solid #fecaca",
+                    color: "#991b1b",
+                    fontSize: "13px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "10px",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span>⚠️</span>
+                    <span>{resetErr}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setResetErr("")}
+                    style={{ border: "none", background: "transparent", color: "#991b1b", cursor: "pointer", padding: "2px" }}
+                  >
+                    <Icon name="x" />
+                  </button>
+                </div>
+              )}
+
+              {/* Thông báo đổi mật khẩu trực tiếp thành công */}
+              {pwMsg && (
+                <div
+                  style={{
+                    padding: "12px 16px",
+                    borderRadius: "10px",
+                    background: "#f0fdf4",
+                    border: "1px solid #bbf7d0",
+                    color: "#166534",
+                    fontSize: "13px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "10px",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <Icon name="check" />
+                    <span>{pwMsg}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPwMsg("")}
+                    style={{ border: "none", background: "transparent", color: "#166534", cursor: "pointer", padding: "2px" }}
+                  >
+                    <Icon name="x" />
+                  </button>
+                </div>
+              )}
+
               {showPwForm && (
                 <form onSubmit={handleUpdatePassword} style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {pwErr && (
+                    <div style={{ padding: "10px 12px", borderRadius: "8px", background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", fontSize: "12.5px" }}>
+                      ⚠️ {pwErr}
+                    </div>
+                  )}
                   <div>
                     <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>
                       Mật khẩu hiện tại (mật khẩu cũ) <span style={{ color: "#dc2626" }}>*</span>
@@ -728,6 +872,16 @@ export default function Profile({ user, uid, lang, data }) {
                       {claimingTeacher ? "Đang kiểm tra..." : "Kích hoạt"}
                     </button>
                   </form>
+                  {claimErr && (
+                    <div style={{ marginTop: "6px", fontSize: "12px", color: "#dc2626" }}>
+                      ⚠️ {claimErr}
+                    </div>
+                  )}
+                  {claimMsg && (
+                    <div style={{ marginTop: "6px", fontSize: "12px", color: "#16a34a", fontWeight: 600 }}>
+                      ✓ {claimMsg}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
