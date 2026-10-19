@@ -1,4 +1,3 @@
-import React from 'react';
 import './HsgAdmin.css';
 import { PlusIcon, UploadIcon, DownloadIcon, TrophyOutlineIcon } from './HsgIcons';
 

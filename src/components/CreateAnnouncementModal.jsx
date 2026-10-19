@@ -1,40 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Icon from "./Icon";
 import { ANNOUNCEMENT_TYPES, createAnnouncement, updateAnnouncement } from "../services/announcementService";
 import "./CreateAnnouncementModal.css";
 
-export default function CreateAnnouncementModal({
-  isOpen,
-  onClose,
-  currentUser,
-  onCreated,
-  onUpdated,
-  editItem = null,
-}) {
+export default function CreateAnnouncementModal(props) {
+  if (!props.isOpen) return null;
+  return <AnnouncementForm key={props.editItem?.id ?? 'new'} {...props} />;
+}
+
+function AnnouncementForm({ onClose, currentUser, onCreated, onUpdated, editItem = null }) {
   const isEditing = Boolean(editItem);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [type, setType] = useState("general");
-  const [pinned, setPinned] = useState(false);
+  const [title, setTitle] = useState(editItem?.title || "");
+  const [content, setContent] = useState(editItem?.content || "");
+  const [type, setType] = useState(editItem?.type || "general");
+  const [pinned, setPinned] = useState(Boolean(editItem?.pinned));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (editItem) {
-      setTitle(editItem.title || "");
-      setContent(editItem.content || "");
-      setType(editItem.type || "general");
-      setPinned(Boolean(editItem.pinned));
-    } else {
-      setTitle("");
-      setContent("");
-      setType("general");
-      setPinned(false);
-    }
-    setError("");
-  }, [editItem, isOpen]);
-
-  if (!isOpen) return null;
 
   async function handleSubmit(e) {
     e.preventDefault();

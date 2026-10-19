@@ -48,3 +48,63 @@
 
 .contest-series-badge { display:inline-block; color:#6941a5; background:#f1e9fb; border-radius:6px; padding:5px 8px; font-size:10px; font-weight:750; letter-spacing:.04em; margin:0 8px 8px 0; }
 .contest-series-next { line-height:1.8; padding:14px; background:#faf7fe; border:1px solid #eee5f8; border-radius:12px; }
+
+/* Shared PeanutCode palette and round layout. */
+.contest-page { padding-top: 32px; }
+.contest-ui .contest-hero { display:flex; justify-content:space-between; align-items:center; gap:28px; padding:32px 36px; margin:0 0 20px; border-radius:22px; background:linear-gradient(120deg,#162e60,#234d96); color:#fff; box-shadow:0 18px 42px #1e428429; }
+.contest-hero h1 { margin:10px 0; color:#fff; letter-spacing:-.03em; line-height:1.3; }
+.contest-hero p { max-width:680px; color:#c3d3ec; margin:0; font-size:14px; }
+.contest-hero .contest-eyebrow { color:#f4cd7a; font-size:11px; }
+.contest-hero-mark { flex-shrink:0; text-align:center; color:#f4cd7a; font:bold 58px/1.2 ui-monospace,monospace; }
+.contest-hero-mark span { display:block; margin-top:12px; font-family:inherit; font-weight:700; font-size:9px; line-height:1.5; letter-spacing:.12em; }
+.contest-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+.contest-stats > div { display:flex; align-items:center; gap:14px; padding:18px 22px; background:#fff; border:1px solid #e2e8f2; border-radius:14px; }
+.contest-stats strong { display:block; font-size:24px; color:#263650; }
+.contest-stats div span { color:#7f8ba0; font-size:12px; }
+.contest-status-dot { width:12px; height:12px; border-radius:50%; background:#a5afbf; flex-shrink:0; }
+.contest-status-dot.running { background:#16a374; box-shadow:0 0 0 5px #e5f7ef; }
+.contest-status-dot.upcoming { background:#3978ed; box-shadow:0 0 0 5px #edf3ff; }
+.contest-list-panel { border:1px solid #e1e7f0; border-radius:19px; background:#fff; overflow:hidden; }
+.contest-list-heading { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:22px 24px 12px; }
+.contest-list-heading h2 { margin:4px 0 0; font-size:20px; }
+.contest-list-heading .contest-eyebrow { margin:0; color:#3978ed; }
+.contest-search { display:grid; gap:5px; font-size:11px; color:#7f8ba0; }
+.contest-search input { width:240px; max-width:100%; background:#f8fafd; border:1px solid #e1e7ef; border-radius:9px; padding:10px 12px; font:inherit; font-size:13px; color:#34435b; }
+.contest-filters { display:flex; flex-wrap:wrap; gap:7px; padding:12px 24px 20px; }
+.contest-filters button { border:0; background:#f3f6fb; color:#6f7d93; border-radius:8px; font-weight:600; }
+.contest-filters button[aria-pressed=true] { color:#fff; background:#3978ed; }
+.contest-list-panel .contest-table-wrap { border:0; border-radius:0; }
+.contest-ui th { background:#f8fafd; font-size:11px; color:#8290a5; font-weight:700; }
+.contest-ui td { padding:18px 20px; color:#52617a; }
+.contest-ui tbody tr:last-child td { border-bottom:0; }
+.contest-ui tbody tr:hover { background:#f8fbff; }
+.contest-list-table { min-width:720px; }
+.contest-title-link { display:block; font-size:14px; font-weight:700; color:#263650; margin-top:8px; max-width:400px; }
+.contest-problem-count { background:#edf3fd; color:#3978ed; border-radius:7px; padding:5px 9px; white-space:nowrap; font-weight:600; }
+.contest-ui .contest-button { display:inline-flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap; border-radius:9px; text-decoration:none; transition:background .15s,box-shadow .15s; }
+.contest-ui .contest-primary { background:#3978ed; border-color:#3978ed; color:#fff; }
+.contest-ui .contest-primary:hover { background:#2866db; box-shadow:0 4px 12px #3978ed30; }
+.contest-ui .contest-empty { text-align:center; padding:48px 20px; color:#8793a6; }
+.contest-round-meta { display:flex; flex-wrap:wrap; gap:12px 24px; margin:20px 0; padding:16px 20px; border:1px solid #e2e8f2; border-radius:14px; background:#fff; color:#6f7d93; font-size:13px; }
+.contest-links { gap:4px; border-bottom:1px solid #e1e7f0; padding-bottom:0; margin:24px 0; }
+.contest-links a { padding:13px 18px; border:0; border-radius:0; background:transparent; color:#7f8ba0; border-bottom:3px solid transparent; font-weight:600; text-decoration:none; }
+.contest-links a.active { color:#3978ed; border-bottom-color:#3978ed; }
+.contest-links a:hover { color:#3978ed; text-decoration:none; background:#edf3fd; }
+.contest-letter { display:grid; place-items:center; width:34px; height:34px; border-radius:10px; background:#edf3fd; color:#3978ed; font-weight:800; }
+.contest-hero .contest-clock { background:#ffffff18; border:1px solid #ffffff30; color:#fff; padding:12px 16px; flex-shrink:0; }
+.contest-badge { border-radius:6px; font-size:10px; font-weight:700; padding:4px 8px; }
+.contest-badge.upcoming { color:#3978ed; background:#edf3fd; }
+.contest-ui .contest-total { background:#edf3fd; border-left-color:#3978ed; padding:16px 20px; border-radius:10px; color:#34435b; }
+@media(max-width:760px) {
+ .contest-ui .contest-hero { padding:24px; flex-direction:column; align-items:flex-start; gap:18px; }
+ .contest-hero-mark { display:none; }
+ .contest-stats { gap:8px; }
+ .contest-stats > div { padding:14px 10px; gap:10px; }
+ .contest-stats strong { font-size:20px; }
+ .contest-list-heading { align-items:flex-start; flex-direction:column; padding:20px 16px 10px; }
+ .contest-search, .contest-search input { width:100%; }
+ .contest-filters { padding:10px 16px 16px; }
+ .contest-links { gap:0; }
+ .contest-links a { padding:12px 10px; font-size:12px; }
+ .contest-round-meta { gap:10px 16px; }
+}

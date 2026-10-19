@@ -1,3 +1,4 @@
+import { createPdfContestHandler } from './pdfContest.js';
 import { createGlobalChatHandler } from './globalChat.js';
 import { createTutorHandler } from './aiTutor.js';
 import { createSelfCheckHandler } from './lessonSelfCheck.js';
@@ -28,21 +29,25 @@ const selfCheckHandler = createSelfCheckHandler();
 // Production: đặt REQUIRE_AUTH=true và FIREBASE_PROJECT_ID để chỉ người đã đăng nhập mới gọi được Judge/AI.
 const authGuard = createAuthGuard({ projectId: process.env.FIREBASE_PROJECT_ID, required: process.env.REQUIRE_AUTH === 'true' });
 
-const contestHandler = createContestHandler({ judgeConfig: (language) => {
+const judgeConfig = (language) => {
   requireValue(process.env.JUDGE0_URL, 'Chưa cấu hình JUDGE0_URL cho backend.', 503);
   const headers = {};
   if (process.env.JUDGE0_API_KEY) headers['X-RapidAPI-Key'] = process.env.JUDGE0_API_KEY;
   if (process.env.JUDGE0_API_HOST) headers['X-RapidAPI-Host'] = process.env.JUDGE0_API_HOST;
   if (process.env.JUDGE0_AUTH_TOKEN) headers['X-Auth-Token'] = process.env.JUDGE0_AUTH_TOKEN;
   return { languageId: languages[language], baseUrl: process.env.JUDGE0_URL, headers };
-} });
+};
+const contestHandler = createContestHandler({ judgeConfig });
+const pdfContestHandler = createPdfContestHandler({ judgeConfig });
 
 const server = http.createServer(async (req, res) => {
   const reply = (status, data) => { if (!res.destroyed) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); } };
+  if (req.method === 'GET' && req.url === '/api/health') return reply(200, { service: 'peanutcode-api', apiVersion: 2, features: { pdfContestAI: true, automaticTests: true } });
   const contestRoute = /^\/api\/(teacher|contests|contest)(\/|$)/.test(req.url);
   if (!contestRoute && (!['/api/judge', '/api/ai/tutor', '/api/ai/self-check', '/api/ai/global-chat'].includes(req.url) || req.method !== 'POST')) return reply(404, { error: 'Không tìm thấy API.' });
   // The development service is localhost-only; reject cross-origin browser requests.
   if (req.headers.origin && !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(req.headers.origin) && req.headers.origin !== process.env.APP_ORIGIN) return reply(403, { error: 'Origin không được phép.' });
+  if (/^\/api\/teacher\/pdf\//.test(req.url) || req.url.split('?')[0] === '/api/teacher/problems/generate-tests') return pdfContestHandler(req, res);
   if (contestRoute) return contestHandler(req, reply);
   if (req.url === '/api/ai/global-chat') return globalChatHandler(req, res);
   const caller = await authGuard(req);
@@ -93,4 +98,4 @@ const server = http.createServer(async (req, res) => {
 });
 const port = Number(process.env.PORT || process.env.JUDGE_PORT || 3001);
 const host = process.env.HOST || '127.0.0.1'; // Cloud Run/Docker đặt HOST=0.0.0.0
-server.listen(port, host, () => console.log(`Judge API: http://${host}:${port}`));
+server.listen(port, host, () => console.log(`Judge API: http://${host}:${server.address().port}`));

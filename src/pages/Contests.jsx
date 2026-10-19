@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { listContests } from '../services/contestService.js';
 import useContestData from '../hooks/useContestData.js';
@@ -69,7 +69,7 @@ export default function Contests() {
   const { now } = useContestClock();
   const [activeTab, setActiveTab] = useState('running'); // 'running' | 'upcoming' | 'ended'
 
-  const allContests = state.value || [];
+  const allContests = useMemo(() => state.value || [], [state.value]);
 
   // Lọc chỉ các kỳ thi đã xuất bản cho học sinh
   const publishedContests = useMemo(() => {

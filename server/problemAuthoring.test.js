@@ -63,9 +63,17 @@ test('saving authoritative teacher identity ignores client createdBy and disallo
   const denied=createContestHandler({repository:store.repository,authenticate:async()=>({ok:false,status:401,error:'Login'})});
   assert.equal((await request(denied,'/api/teacher/problems')).status,401);
 });
+function fourProblemContest(store, overrides = {}) {
+  for (const id of ['p2', 'p3', 'p4']) {
+    const problem = authoredProblem({ slug: id });
+    store.put(`problems/${id}`, { ...problem, hiddenTests: undefined });
+    store.put(`problemSecrets/${id}`, { hiddenTests: problem.hiddenTests });
+  }
+  return contestFixture(1000000, { ...overrides, problems: ['p1', 'p2', 'p3', 'p4'].map(problemId => ({ problemId, points: 100 })) });
+}
 test('published contests atomically lock public content and hidden tests, including scheduled contests', async () => {
   const store=seedContest(); const now=1000000;
-  const id=await store.repository.saveContest(null,contestFixture(now,{startAt:now+10000}),'t1',now);
+  const id=await store.repository.saveContest(null,fourProblemContest(store,{startAt:now+10000}),'t1',now);
   assert.ok(id);
   await assert.rejects(store.repository.saveProblem('p1',authoredProblem({hiddenTests:[{input:'CHANGED',output:'0'}]}),'t1',now+1),/khóa/);
   await assert.rejects(store.repository.saveContest(id,contestFixture(now),'t1',now+10001),/bắt đầu/);
@@ -74,13 +82,19 @@ test('published contests atomically lock public content and hidden tests, includ
 test('publish checks actual stored problem status and hidden tests inside transaction', async () => {
   const store=seedContest();
   store.put('problemSecrets/p1',{hiddenTests:[]});
-  await assert.rejects(store.repository.saveContest(null,contestFixture(),'t1',1000000),/hidden tests/);
+  await assert.rejects(store.repository.saveContest(null,fourProblemContest(store),'t1',1000000),/hidden tests/);
   store.put('problems/p1',authoredProblem({status:'draft'}));
-  await assert.rejects(store.repository.saveContest(null,contestFixture(),'t1',1000000),/published/);
+  await assert.rejects(store.repository.saveContest(null,fourProblemContest(store),'t1',1000000),/published/);
 });
 
 test('incomplete imported drafts may omit samples; publication still requires samples and private tests', () => {
   const draft = validateProblem(authoredProblem({samples: [], hiddenTests: []}), {status:'draft'});
   assert.equal(draft.status,'draft');
   assert.throws(() => validateProblem(draft, {status:'published'}));
+});
+
+test('teacher cannot publish fewer than four problems and may keep an incomplete draft', async () => {
+  const store = seedContest();
+  await assert.rejects(store.repository.saveContest(null, contestFixture(), 't1', 1000000), /4–26/);
+  await assert.doesNotReject(store.repository.saveContest(null, contestFixture(1000000, {status:'draft'}), 't1', 1000000));
 });

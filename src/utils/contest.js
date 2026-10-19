@@ -15,14 +15,14 @@ export function formatCountdown(ms) {
   const seconds = Math.floor(Math.max(0, ms) / 1000);
   return [Math.floor(seconds / 3600), Math.floor(seconds / 60) % 60, seconds % 60].map((n) => String(n).padStart(2, '0')).join(':');
 }
-export function validateContest(input, { publishedProblems, status = 'draft' } = {}) {
+export function validateContest(input, { publishedProblems, status = 'draft', minimumProblems = 1 } = {}) {
   requireValue(input && typeof input === 'object', 'Contest không hợp lệ.');
   requireValue(typeof input.title === 'string' && input.title.trim() && input.title.length <= 300, 'Tên contest không hợp lệ.');
   requireValue(typeof input.description === 'string' && input.description.length <= 20000, 'Mô tả contest không hợp lệ.');
   requireValue(Number.isFinite(timestampMs(input.startAt)), 'Thời gian bắt đầu không hợp lệ.');
   requireValue(Number.isInteger(input.durationMinutes) && input.durationMinutes > 0 && input.durationMinutes <= 1440, 'Thời lượng phải từ 1 đến 1440 phút.');
   requireValue(['draft', 'published'].includes(status), 'Trạng thái không hợp lệ.');
-  requireValue(Array.isArray(input.problems) && input.problems.length <= 26 && (status !== 'published' || input.problems.length > 0), 'Contest cần 1–26 bài để publish.');
+  requireValue(Array.isArray(input.problems) && input.problems.length <= 26 && (status !== 'published' || input.problems.length >= minimumProblems), `Contest cần ${minimumProblems}–26 bài để publish.`);
   const ids = new Set();
   const problems = input.problems.map((entry, index) => {
     requireValue(validId(entry?.problemId) && !ids.has(entry.problemId), 'ID bài không hợp lệ hoặc bị trùng.');

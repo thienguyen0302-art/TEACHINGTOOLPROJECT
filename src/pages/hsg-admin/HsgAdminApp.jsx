@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { PageShell } from '../../components/hsg-admin/HsgAdminUI';
 import ManageProblemsPage from './ManageProblemsPage';
 import HonorContestPage from './HonorContestPage';
 import ManageContestsPage from './ManageContestsPage';
 
-export const TABS = [
+const TABS = [
   { id: 'problems', label: 'Quản lý bài tập' },
   { id: 'ranking', label: 'Bảng vàng contest HSG toàn trường' },
   { id: 'contests', label: 'Quản lý contest' },
@@ -34,7 +34,7 @@ export default function HsgAdminApp({ initialTab = 'problems', showSwitcher = tr
 
   const handleSelectTab = (tabId) => {
     setActiveTab(tabId);
-    window.location.hash = tabId;
+    window.location.assign(`#${tabId}`);
   };
 
   return (
