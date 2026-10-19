@@ -856,7 +856,7 @@
   width: 18px;
   height: 18px;
   color: #ee7937;
-  transform: translateY(2px);
+  transform: translateY(5px);
 }
 
 .streak-card strong, .streak-card small {
