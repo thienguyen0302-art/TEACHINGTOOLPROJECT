@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import { useNotice } from "../hooks/useNotice";
-import { languageCourses, LANG_BY_KEY } from "../data/curriculum";
+import { languageCourses, LANG_BY_KEY, curriculum } from "../data/curriculum";
 import { firstName, fmtTime, todayText } from "../utils/format";
 import { calcStreak, weekSummary } from "../utils/activity";
 import { isProfileComplete } from "../utils/profile";
@@ -22,7 +22,11 @@ import {
   markAllNotificationsAsRead,
 } from "../services/announcementService";
 import { fetchRecentActivities } from "../services/activityService";
-import { getProblemCount } from "../services/problemService";
+import { getProblemCount, listProblems, difficultyLabels } from "../services/problemService";
+import { listContests } from "../services/contestService";
+import { getLocalChapterState } from "../services/progressService";
+import { getCodeSubmissionHistory } from "../services/submissionPersistence";
+import { generateSmartRecommendation, fetchLiveAiAdvice } from "../services/aiRecommendationService";
 
 const GOAL_TYPES = {
   practice: { label: "Bài tập Code", cls: "practice" },
@@ -148,6 +152,164 @@ export default function Overview({ user, lang, data, onChangeLang }) {
   const openFirst = () => {
     if (firstChapter) nav(`/lesson/${firstChapter.id}`);
     else notice("Nội dung bài học đang được cập nhật");
+  };
+
+  // ── DỮ LIỆU CONTEST HSG ĐỒNG BỘ ───────────────────────────
+  const [contests, setContests] = useState([]);
+  useEffect(() => {
+    let active = true;
+    listContests()
+      .then((items) => {
+        if (active && Array.isArray(items)) {
+          setContests(items);
+        }
+      })
+      .catch((err) => {
+        console.warn("Không tải được danh sách contest:", err);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const publishedContests = useMemo(
+    () => contests.filter((c) => c.status === "published" || c.status === undefined),
+    [contests]
+  );
+  const contestCount = publishedContests.length;
+  const contestProblemCount = publishedContests.reduce(
+    (sum, c) => sum + (c.problems?.length || 0),
+    0
+  );
+
+  const now = Date.now();
+  const runningContest = useMemo(() => {
+    return publishedContests.find((c) => {
+      const start = c.startAt || 0;
+      const end = start + (c.durationMinutes || 120) * 60 * 1000;
+      return now >= start && now <= end;
+    });
+  }, [publishedContests, now]);
+
+  const upcomingContest = useMemo(() => {
+    return publishedContests.find((c) => (c.startAt || 0) > now);
+  }, [publishedContests, now]);
+
+  // ── TIẾN ĐỘ LÝ THUYẾT ĐỒNG BỘ TỰ ĐỘNG DỰA TRÊN DỮ LIỆU ─────
+  const contentByOrder = useMemo(
+    () => Object.fromEntries((data.chapters || []).map((c) => [c.order, c.id])),
+    [data.chapters]
+  );
+  const progressById = useMemo(
+    () => Object.fromEntries((data.rows || []).map((r) => [r.chapterId, r])),
+    [data.rows]
+  );
+  const curriculumList = useMemo(() => curriculum[label] || [], [label]);
+
+  const chaptersProgress = useMemo(() => {
+    return curriculumList.map((c, i) => {
+      const id = contentByOrder[i + 1];
+      let p = id ? progressById[id] : undefined;
+      if (id && (!p || !p.completed)) {
+        const local = getLocalChapterState(user?.uid, lang, id);
+        if (local && (!p || (local.progressPercent ?? 0) > (p.progressPercent ?? 0) || local.completed)) {
+          p = { ...p, ...local };
+        }
+      }
+      const progress = p?.completed ? 100 : p ? Math.max(0, Math.min(99, Math.round(p.progressPercent ?? p.bestScore ?? 0))) : 0;
+      return { ...c, n: i + 1, id, progress, completed: p?.completed || progress === 100 };
+    });
+  }, [curriculumList, contentByOrder, progressById, user?.uid, lang]);
+
+  const totalChaptersCount = chaptersProgress.length || data.chapters.length || 1;
+  const completedChaptersCount = chaptersProgress.filter((c) => c.completed).length;
+  const totalLessonsCount = curriculumList.reduce((sum, c) => sum + (c.lessons || 1), 0);
+  const overallTheoryProgress = totalChaptersCount > 0
+    ? Math.round(chaptersProgress.reduce((sum, c) => sum + c.progress, 0) / totalChaptersCount)
+    : 0;
+
+  const resumeChapter = useMemo(() => {
+    return chaptersProgress.find((c) => c.id && c.progress < 100) || chaptersProgress[0];
+  }, [chaptersProgress]);
+
+  const openTheory = useCallback(() => {
+    if (resumeChapter?.id) nav(`/lesson/${resumeChapter.id}`);
+    else nav("/curriculum");
+  }, [resumeChapter, nav]);
+
+  // ── BÀI TẬP VÀ LỊCH SỬ NỘP CODE ──────────────────────────
+  const [solvedSlugs, setSolvedSlugs] = useState(() => new Set());
+  useEffect(() => {
+    if (!user?.uid) return;
+    let active = true;
+    getCodeSubmissionHistory(user.uid)
+      .then((subs) => {
+        if (!active) return;
+        const solved = new Set(
+          subs
+            .filter((s) => s.solved || s.status === "accepted" || s.lastStatus === "accepted")
+            .map((s) => s.slug)
+        );
+        setSolvedSlugs(solved);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [user?.uid]);
+
+  const allProblems = useMemo(() => listProblems(), []);
+  const dailyProblem = useMemo(() => {
+    return allProblems.find((p) => !solvedSlugs.has(p.slug)) || allProblems[0];
+  }, [allProblems, solvedSlugs]);
+
+  // ── TÍNH NĂNG AI GỢI Ý THÔNG MINH HOÀN THIỆN ─────────────
+  const smartRec = useMemo(() => {
+    return generateSmartRecommendation({
+      lang,
+      chaptersProgress,
+      overallTheoryProgress,
+      resumeChapter,
+      solvedSlugs,
+      problems: allProblems,
+      dueGoals,
+      contests: publishedContests,
+      now,
+    });
+  }, [lang, chaptersProgress, overallTheoryProgress, resumeChapter, solvedSlugs, allProblems, dueGoals, publishedContests, now]);
+
+  const [liveAiAdvice, setLiveAiAdvice] = useState(null);
+  const [loadingAiAdvice, setLoadingAiAdvice] = useState(false);
+
+  const handleFetchLiveAdvice = async () => {
+    setLoadingAiAdvice(true);
+    try {
+      const advice = await fetchLiveAiAdvice({
+        lang,
+        overallTheoryProgress,
+        currentTopic: resumeChapter?.title || "Cơ bản",
+        solvedCount: solvedSlugs.size,
+        streak,
+      });
+      if (advice) {
+        setLiveAiAdvice(advice);
+        notice("Peanut AI đã đưa ra lời khuyên dành riêng cho bạn!");
+      } else {
+        notice("Đã cập nhật lộ trình gợi ý dựa trên tiến trình gần đây.");
+      }
+    } catch {
+      notice("Tạm thời chưa kết nối được Peanut AI.");
+    } finally {
+      setLoadingAiAdvice(false);
+    }
+  };
+
+  const handleExecuteRecommendation = () => {
+    if (smartRec.actionPath === "GOAL_MODAL") {
+      setIsGoalModalOpen(true);
+    } else if (smartRec.actionPath) {
+      nav(smartRec.actionPath);
+    }
   };
 
   return (
@@ -385,23 +547,31 @@ export default function Overview({ user, lang, data, onChangeLang }) {
         </div>
 
         <div className="learning-section-grid">
-          <article className="learning-section-card theory-card">
+          <article
+            className="learning-section-card theory-card"
+            onClick={openTheory}
+            style={{ cursor: "pointer" }}
+          >
             <div className="learning-card-top">
               <span className="learning-card-icon"><Icon name="book" /></span>
-              <span className="learning-status active">Đang học</span>
+              <span className={`learning-status ${overallTheoryProgress > 0 ? "active" : ""}`}>
+                {overallTheoryProgress === 100 ? "Hoàn thành" : overallTheoryProgress > 0 ? "Đang học" : "Mới"}
+              </span>
             </div>
             <span className="learning-index">Phần 01</span>
             <h3>Lý thuyết</h3>
             <p>Nắm chắc khái niệm, cú pháp và tư duy cốt lõi qua nội dung ngắn gọn, ví dụ trực quan.</p>
             <div className="learning-meta">
-              <span><Icon name="book" /> 24 bài học</span>
-              <span><Icon name="clock" /> 8 giờ</span>
+              <span><Icon name="book" /> {totalChaptersCount} chương ({totalLessonsCount} bài học)</span>
+              <span><Icon name="clock" /> {completedChaptersCount}/{totalChaptersCount} chương xong</span>
             </div>
             <div className="learning-card-progress">
-              <div><span>Tiến độ</span><strong>35%</strong></div>
-              <div className="progress-track"><span style={{ width: "35%" }} /></div>
+              <div><span>Tiến độ</span><strong>{overallTheoryProgress}%</strong></div>
+              <div className="progress-track"><span style={{ width: `${overallTheoryProgress}%` }} /></div>
             </div>
-            <button onClick={() => nav("/curriculum")}>Tiếp tục học lý thuyết <Icon name="chevron" /></button>
+            <button onClick={(e) => { e.stopPropagation(); openTheory(); }}>
+              {overallTheoryProgress === 100 ? "Ôn tập lý thuyết" : overallTheoryProgress > 0 ? "Tiếp tục học lý thuyết" : "Bắt đầu học lý thuyết"} <Icon name="chevron" />
+            </button>
           </article>
 
           <article
@@ -445,7 +615,7 @@ export default function Overview({ user, lang, data, onChangeLang }) {
 
           <article
             className="learning-section-card contest-card"
-            onClick={() => nav("/exam")}
+            onClick={() => nav("/contests")}
             style={{ cursor: "pointer" }}
           >
             <div className="contest-glow" />
@@ -454,42 +624,110 @@ export default function Overview({ user, lang, data, onChangeLang }) {
               <span className="learning-status">Thử thách</span>
             </div>
             <span className="learning-index">Phần 04</span>
-            <h3>Làm đề HSG Tin học thực tiễn</h3>
-            <p>Giải các bộ đề chọn đội tuyển và đề thi thực tế với thời gian, giới hạn bộ nhớ như phòng thi.</p>
+            <h3>Đấu trường Contest HSG</h3>
+            <p>Giải các bộ đề thi thử, kỳ thi chọn đội tuyển và cọ xát trực tiếp với thời gian thực.</p>
             <div className="contest-stats">
-              <div><strong>18</strong><span>Bộ đề</span></div>
-              <div><strong>120'</strong><span>Mỗi đề</span></div>
-              <div><strong>AI</strong><span>Phân tích</span></div>
+              <div><strong>{contestCount}</strong><span>Kỳ thi</span></div>
+              <div><strong>{contestProblemCount}</strong><span>Bài thi</span></div>
+              <div><strong>Real-time</strong><span>Bảng xếp hạng</span></div>
             </div>
-            <button onClick={(e) => { e.stopPropagation(); nav("/exam"); }}>
-              Bắt đầu luyện đề <Icon name="chevron" />
+            <button onClick={(e) => { e.stopPropagation(); nav("/contests"); }}>
+              Vào đấu trường Contest <Icon name="chevron" />
             </button>
           </article>
         </div>
       </section>
 
+      {/* ── KHỐI THỬ THÁCH HÔM NAY ĐỒNG BỘ CONTEST HOẶC BÀI TẬP ── */}
       <section className="daily-challenge">
-        <div className="challenge-copy">
-          <span className="challenge-label"><Icon name="fire" /> Thử thách hôm nay</span>
-          <h2>Tìm số lớn nhất trong ba số</h2>
-          <p>
-            Vận dụng câu lệnh điều kiện để tìm đáp án tối ưu. Hoàn thành trong 15 phút để nhận
-            thêm 50 điểm kinh nghiệm.
-          </p>
-          <div className="challenge-meta">
-            <span><Icon name="clock" /> 15 phút</span>
-            <span><Icon name="chart" /> Cơ bản</span>
-            <span><Icon name="trophy" /> +50 XP</span>
-          </div>
-          <button onClick={() => notice("Thử thách hằng ngày đang được cập nhật")}>
-            Làm thử thách ngay <Icon name="chevron" />
-          </button>
-        </div>
-        <div className="challenge-visual" aria-hidden="true">
-          <span className="challenge-code-line">if (a &gt; b)</span>
-          <span className="challenge-code-line">max = a;</span>
-          <div className="challenge-badge"><Icon name="trophy" /><strong>+50</strong><small>điểm XP</small></div>
-        </div>
+        {runningContest ? (
+          <>
+            <div className="challenge-copy">
+              <span className="challenge-label"><Icon name="fire" /> Contest đang diễn ra</span>
+              <h2>{runningContest.title}</h2>
+              <p>
+                {runningContest.description || "Kỳ thi đấu trường HSG đang mở làm bài và chấm điểm trực tiếp. Tham gia ngay để kiểm tra phong độ và cạnh tranh trên bảng xếp hạng!"}
+              </p>
+              <div className="challenge-meta">
+                <span><Icon name="clock" /> {runningContest.durationMinutes || 120} phút</span>
+                <span><Icon name="code" /> {runningContest.problems?.length || 4} bài thi</span>
+                <span><Icon name="trophy" /> Xếp hạng tự động</span>
+              </div>
+              <button onClick={() => nav(`/contest/${runningContest.id}`)}>
+                Vào phòng thi ngay <Icon name="chevron" />
+              </button>
+            </div>
+            <div className="challenge-visual" aria-hidden="true">
+              <span className="challenge-code-line">CONTEST HSG</span>
+              <span className="challenge-code-line">REALTIME JUDGE</span>
+              <div className="challenge-badge"><Icon name="trophy" /><strong>LIVE</strong><small>Đang diễn ra</small></div>
+            </div>
+          </>
+        ) : upcomingContest ? (
+          <>
+            <div className="challenge-copy">
+              <span className="challenge-label"><Icon name="clock" /> Thử thách sắp diễn ra</span>
+              <h2>{upcomingContest.title}</h2>
+              <p>
+                {upcomingContest.description || "Kỳ thi Contest HSG chuẩn bị mở đề. Hãy chuẩn bị sẵn sàng kiến thức và kỹ năng làm bài để đạt điểm số tối đa!"}
+              </p>
+              <div className="challenge-meta">
+                <span><Icon name="calendar" /> {new Date(upcomingContest.startAt).toLocaleString("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</span>
+                <span><Icon name="clock" /> {upcomingContest.durationMinutes || 120} phút</span>
+                <span><Icon name="trophy" /> Contest HSG</span>
+              </div>
+              <button onClick={() => nav("/contests")}>
+                Xem chi tiết kỳ thi <Icon name="chevron" />
+              </button>
+            </div>
+            <div className="challenge-visual" aria-hidden="true">
+              <span className="challenge-code-line">UPCOMING</span>
+              <span className="challenge-code-line">CONTEST</span>
+              <div className="challenge-badge"><Icon name="trophy" /><strong>HSG</strong><small>Sắp diễn ra</small></div>
+            </div>
+          </>
+        ) : dailyProblem ? (
+          <>
+            <div className="challenge-copy">
+              <span className="challenge-label"><Icon name="fire" /> Thử thách hôm nay</span>
+              <h2>{dailyProblem.title}</h2>
+              <p>
+                {dailyProblem.statement ? dailyProblem.statement.slice(0, 140) + "..." : "Vận dụng kiến thức đã học để giải quyết bài toán và vượt qua tất cả bộ test của máy chấm."}
+              </p>
+              <div className="challenge-meta">
+                <span><Icon name="chart" /> {difficultyLabels[dailyProblem.difficulty] || "Cơ bản"}</span>
+                <span><Icon name="code" /> {label}</span>
+                <span><Icon name="trophy" /> +50 XP</span>
+              </div>
+              <button onClick={() => nav(`/practice/problem/${dailyProblem.slug}`)}>
+                Làm thử thách ngay <Icon name="chevron" />
+              </button>
+            </div>
+            <div className="challenge-visual" aria-hidden="true">
+              <span className="challenge-code-line">{lang === "python" ? "a, b = map(int, input().split())" : "cin >> a >> b;"}</span>
+              <span className="challenge-code-line">{lang === "python" ? "print(result)" : "cout << result;"}</span>
+              <div className="challenge-badge"><Icon name="trophy" /><strong>+50</strong><small>điểm XP</small></div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="challenge-copy">
+              <span className="challenge-label"><Icon name="trophy" /> Đấu trường HSG</span>
+              <h2>Thử sức với các kỳ thi Tin học</h2>
+              <p>
+                Tham gia thi đấu cùng các bạn học sinh, rèn luyện áp lực thời gian và nâng cao tư duy lập trình.
+              </p>
+              <button onClick={() => nav("/contests")}>
+                Vào đấu trường Contest <Icon name="chevron" />
+              </button>
+            </div>
+            <div className="challenge-visual" aria-hidden="true">
+              <span className="challenge-code-line">CONTEST</span>
+              <span className="challenge-code-line">PEANUTCODE</span>
+              <div className="challenge-badge"><Icon name="trophy" /><strong>HSG</strong><small>Đấu trường</small></div>
+            </div>
+          </>
+        )}
       </section>
 
       <section className="overview-insights">
@@ -513,20 +751,51 @@ export default function Overview({ user, lang, data, onChangeLang }) {
           </div>
         </div>
 
+        {/* ── KHỐI AI GỢI Ý THÔNG MINH HOÀN THIỆN ──────────────── */}
         <div className="mentor-card">
-          <div className="mentor-top">
-            <span className="mentor-icon">AI</span>
-            <span>Gợi ý dành cho bạn</span>
+          <div className="mentor-top-row">
+            <div className="mentor-top">
+              <span className="mentor-icon">AI</span>
+              <span>Gợi ý dành cho bạn</span>
+            </div>
+            <button
+              type="button"
+              className="mentor-ai-refresh-btn"
+              onClick={handleFetchLiveAdvice}
+              disabled={loadingAiAdvice}
+              title="Nhận phân tích và lời khuyên trực tiếp từ Peanut AI"
+            >
+              <Icon name="sparkles" />
+              <span>{loadingAiAdvice ? "Đang hỏi AI..." : "Hỏi Peanut AI"}</span>
+            </button>
           </div>
-          <h2>Hãy ôn lại câu lệnh điều kiện</h2>
-          <p>
-            Bạn đã làm tốt phần nhập xuất. Trước khi sang vòng lặp, hãy hoàn thành thêm 3 bài
-            điều kiện để củng cố tư duy rẽ nhánh.
-          </p>
-          <div className="mentor-progress"><span><i /></span><strong>2/5 bài</strong></div>
-          <button onClick={() => notice("Gợi ý của AI đang được cập nhật")}>
-            Xem bài được đề xuất <Icon name="chevron" />
-          </button>
+
+          <div style={{ marginTop: "12px" }}>
+            <span className="mentor-ai-badge">{smartRec.badge}</span>
+          </div>
+
+          <h2>{smartRec.title}</h2>
+          <p>{smartRec.description}</p>
+
+          {liveAiAdvice && (
+            <div className="mentor-ai-bubble">
+              <strong>💡 Lời khuyên từ Peanut AI:</strong> {liveAiAdvice}
+            </div>
+          )}
+
+          <div className="mentor-progress">
+            <span>
+              <i style={{ width: `${Math.max(5, Math.min(100, smartRec.progressPercent))}%` }} />
+            </span>
+            <strong>{smartRec.progressText}</strong>
+          </div>
+
+          <div className="mentor-btn-group">
+            <button type="button" onClick={handleExecuteRecommendation}>
+              <span>{smartRec.actionText}</span>
+              <Icon name="chevron" />
+            </button>
+          </div>
         </div>
       </section>
 

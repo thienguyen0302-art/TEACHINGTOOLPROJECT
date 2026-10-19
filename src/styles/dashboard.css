@@ -181,14 +181,27 @@
 .week-summary > div > span { display: grid; width: 31px; height: 31px; place-items: center; flex: 0 0 auto; border-radius: 9px; background: #f1f5fb; color: #5f84c7; }.week-summary svg { width: 14px; }
 .week-summary p { margin: 0; }.week-summary strong, .week-summary small { display: block; }.week-summary strong { color: #40506a; font-size: 9px; }.week-summary small { margin-top: 3px; color: #9ca6b6; font-size: 7px; }
 .mentor-card { display: flex; flex-direction: column; background: linear-gradient(145deg,#f6f9ff,#edf4ff); }
+.mentor-top-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .mentor-top { display: flex; align-items: center; gap: 9px; color: #6283bd; font-size: 8px; font-weight: 800; text-transform: uppercase; }
 .mentor-icon { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 9px; background: #3978ed; color: #fff; font-size: 9px; }
 .mentor-card h2 { margin: 18px 0 9px; color: #243550; font-size: 16px; line-height: 1.4; letter-spacing: -.03em; }
 .mentor-card > p { margin: 0; color: #7e8ca3; font-size: 9px; line-height: 1.75; }
 .mentor-progress { display: flex; margin-top: 18px; align-items: center; gap: 10px; }
-.mentor-progress > span { height: 5px; overflow: hidden; flex: 1; border-radius: 5px; background: #dce7f7; }.mentor-progress i { display: block; width: 40%; height: 100%; background: #3978ed; }
+.mentor-progress > span { height: 5px; overflow: hidden; flex: 1; border-radius: 5px; background: #dce7f7; }.mentor-progress i { display: block; width: 40%; height: 100%; background: #3978ed; transition: width 0.3s ease; }
 .mentor-progress strong { color: #6580ad; font-size: 8px; }
-.mentor-card > button { display: flex; width: 100%; margin-top: auto; padding: 11px 13px; align-items: center; justify-content: space-between; border: 0; border-radius: 10px; background: #3978ed; color: #fff; font-size: 9px; font-weight: 800; }.mentor-card > button svg { width: 13px; }
+.mentor-card > button { display: flex; width: 100%; margin-top: auto; padding: 11px 13px; align-items: center; justify-content: space-between; border: 0; border-radius: 10px; background: #3978ed; color: #fff; font-size: 9px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; }.mentor-card > button:hover { opacity: 0.92; }
+.mentor-card > button svg { width: 13px; }
+.mentor-ai-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 7px; border-radius: 6px; background: #e0ebff; color: #2563eb; font-size: 8px; font-weight: 700; }
+.mentor-ai-refresh-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border: 1px solid #bfdbfe; border-radius: 7px; background: #fff; color: #2563eb; font-size: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.mentor-ai-refresh-btn:hover:not(:disabled) { background: #eff6ff; border-color: #93c5fd; }
+.mentor-ai-refresh-btn:disabled { opacity: 0.6; cursor: wait; }
+.mentor-ai-refresh-btn svg { width: 11px; height: 11px; }
+.mentor-ai-bubble { margin: 12px 0 0; padding: 9px 12px; background: #ffffff; border-radius: 9px; border-left: 3px solid #3b82f6; box-shadow: 0 2px 8px rgba(37,99,235,0.06); color: #1e3a8a; font-size: 8.5px; line-height: 1.6; }
+.mentor-btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 16px; }
+.mentor-sub-btn { display: flex; width: 100%; padding: 8px 12px; align-items: center; justify-content: center; gap: 6px; border: 1px solid #bfdbfe; border-radius: 8px; background: rgba(255,255,255,0.7); color: #2563eb; font-size: 8.5px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.mentor-sub-btn:hover { background: #fff; border-color: #60a5fa; }
+.mentor-sub-btn svg { width: 12px; height: 12px; }
+
 
 .recent-learning { margin-top: 18px; }
 .recent-heading { display: flex; align-items: center; justify-content: space-between; }
