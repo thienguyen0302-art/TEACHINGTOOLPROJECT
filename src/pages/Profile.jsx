@@ -701,7 +701,7 @@ export default function Profile({ user, uid, lang, data }) {
                         ✉️ {resetMsg}
                       </div>
                     </div>
-                    <div style={{ fontSize: "12px", color: "#166534", marginTop: "2px", opacity: 0.9 }}>
+                    <div style={{ fontSize: "12px", color: "#166534", marginTop: "4px", opacity: 0.9, whiteSpace: "nowrap" }}>
                       💡 Vui lòng kiểm tra cả thư mục <strong>Hộp thư đến</strong> và <strong>Spam / Thư rác</strong>.
                     </div>
                   </div>
