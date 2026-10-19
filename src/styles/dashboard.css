@@ -449,7 +449,12 @@
 .challenge-badge { position: absolute; top: 50%; left: 50%; display: flex; width: 118px; height: 118px; align-items: center; justify-content: center; flex-direction: column; border: 1px solid rgba(255,255,255,.2); border-radius: 31px; background: linear-gradient(145deg,rgba(255,255,255,.17),rgba(255,255,255,.07)); box-shadow: 0 20px 45px rgba(5,23,57,.25); transform: translate(-50%,-50%) rotate(5deg); backdrop-filter: blur(8px); }
 .challenge-badge svg { width: 24px; color: #ffd36c; }.challenge-badge strong { margin-top: 5px; font-size: 23px; }.challenge-badge small { color: #9db5dc; font-size: 7px; }
 
-.overview-insights { display: grid; margin-top: 18px; grid-template-columns: 1.35fr .65fr; gap: 16px; }
+.overview-insights {
+  display: grid;
+  margin-top: 18px;
+  grid-template-columns: 1.18fr 0.82fr;
+  gap: 18px;
+}
 .week-progress-card, .recent-learning { padding: 26px; border: 1px solid #dfe7f4; border-radius: 22px; background: #fff; box-shadow: 0 7px 22px rgba(28,57,108,.045); }
 .insight-heading { display: flex; align-items: flex-start; justify-content: space-between; }
 .insight-heading span, .recent-heading span { color: #3978ed; font-size: 8px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
@@ -469,8 +474,8 @@
   flex-direction: column;
   background: #f4f8fe;
   border: 1px solid #dfe7f4;
-  border-radius: 22px;
-  padding: 28px 30px;
+  border-radius: 20px;
+  padding: 22px 24px;
   font-family: 'Nunito', 'Segoe UI', -apple-system, sans-serif;
   box-shadow: 0 8px 24px rgba(28, 48, 78, 0.05);
   box-sizing: border-box;
@@ -480,48 +485,49 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .mentor-top {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .mentor-icon {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 30px;
   place-items: center;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #3975f8;
   color: #ffffff;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 800;
   flex-shrink: 0;
 }
 
 .mentor-kicker {
   color: #1c304e;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .mentor-ai-refresh-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 38px;
-  padding: 0 14px;
+  gap: 5px;
+  height: 32px;
+  padding: 0 10px;
   border: 1px solid #dfe7f4;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #ffffff;
   color: #3975f8;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -539,82 +545,84 @@
 }
 
 .mentor-ai-refresh-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 .mentor-content-group {
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .mentor-badge-row {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .mentor-ai-badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 9px;
-  border-radius: 6px;
+  padding: 2px 8px;
+  border-radius: 5px;
   background: #eaf2ff;
   color: #3975f8;
-  font-size: 11.5px;
+  font-size: 10.5px;
   font-weight: 800;
 }
 
 .mentor-title {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   color: #1c304e;
-  font-size: 23px;
+  font-size: 17.5px;
   font-weight: 800;
   line-height: 1.35;
   letter-spacing: -0.02em;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .mentor-desc {
   margin: 0;
   color: #7d8eaa;
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 500;
-  line-height: 1.65;
+  line-height: 1.55;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .mentor-ai-bubble {
-  margin: 14px 0 0;
-  padding: 10px 14px;
+  margin: 12px 0 0;
+  padding: 8px 12px;
   background: #ffffff;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid #dfe7f4;
   border-left: 3px solid #3975f8;
   box-shadow: 0 2px 8px rgba(57, 117, 248, 0.06);
   color: #1c304e;
-  font-size: 12.5px;
-  line-height: 1.6;
+  font-size: 11.5px;
+  line-height: 1.55;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .mentor-progress {
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .mentor-progress-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 7px;
+  margin-bottom: 5px;
 }
 
 .mentor-progress-label {
   color: #1c304e;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
 }
 
 .mentor-progress-bar {
-  height: 6px;
+  height: 5px;
   border-radius: 99px;
   background: #dfe7f4;
   overflow: hidden;
@@ -630,26 +638,26 @@
 
 .mentor-btn-group {
   margin-top: auto;
-  padding-top: 20px;
+  padding-top: 16px;
 }
 
 .mentor-start-btn {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
+  height: 40px;
+  padding: 0 16px;
   align-items: center;
-  gap: 8px;
-  height: 44px;
-  padding: 0 22px;
+  justify-content: space-between;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   background: #3975f8;
   color: #ffffff;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.15s ease;
-  white-space: nowrap;
-  width: fit-content;
+  box-sizing: border-box;
 }
 
 .mentor-start-btn:hover {
