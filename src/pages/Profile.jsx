@@ -250,6 +250,7 @@ export default function Profile({ user, uid, lang, data }) {
   const [teacherCodeInput, setTeacherCodeInput] = useState("");
   const [claimingTeacher, setClaimingTeacher] = useState(false);
   const [showPwForm, setShowPwForm] = useState(false);
+  const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [updatingPw, setUpdatingPw] = useState(false);
@@ -272,6 +273,10 @@ export default function Profile({ user, uid, lang, data }) {
     e.preventDefault();
     setSecurityMsg("");
     setSecurityErr("");
+    if (!oldPw.trim()) {
+      setSecurityErr("Vui lòng nhập mật khẩu hiện tại (mật khẩu cũ).");
+      return;
+    }
     if (newPw.length < 6) {
       setSecurityErr("Mật khẩu mới phải có ít nhất 6 ký tự.");
       return;
@@ -280,16 +285,25 @@ export default function Profile({ user, uid, lang, data }) {
       setSecurityErr("Mật khẩu xác nhận không trùng khớp.");
       return;
     }
+    if (oldPw === newPw) {
+      setSecurityErr("Mật khẩu mới không được trùng với mật khẩu cũ.");
+      return;
+    }
     setUpdatingPw(true);
     try {
-      await updateUserAccountPassword(newPw);
+      await updateUserAccountPassword(oldPw, newPw);
       setSecurityMsg("Đã cập nhật mật khẩu tài khoản thành công!");
+      setOldPw("");
       setNewPw("");
       setConfirmPw("");
       setShowPwForm(false);
     } catch (e) {
       setSecurityErr(
-        e.code === "auth/requires-recent-login"
+        e.code === "auth/wrong-password" ||
+        e.code === "auth/invalid-credential" ||
+        e.code === "auth/invalid-login-credentials"
+          ? "Mật khẩu cũ không chính xác. Vui lòng kiểm tra lại."
+          : e.code === "auth/requires-recent-login"
           ? "Vì lý do bảo mật, vui lòng đăng nhập lại trước khi đổi mật khẩu trực tiếp (hoặc dùng nút Gửi link qua email ở trên)."
           : (e.message || "Không thể đổi mật khẩu.")
       );
@@ -637,24 +651,44 @@ export default function Profile({ user, uid, lang, data }) {
               {showPwForm && (
                 <form onSubmit={handleUpdatePassword} style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
                   <div>
-                    <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>Mật khẩu mới (tối thiểu 6 ký tự)</label>
+                    <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>
+                      Mật khẩu hiện tại (mật khẩu cũ) <span style={{ color: "#dc2626" }}>*</span>
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Nhập mật khẩu hiện tại của bạn"
+                      value={oldPw}
+                      onChange={(e) => setOldPw(e.target.value)}
+                      required
+                      autoComplete="current-password"
+                      style={{ width: "100%", height: "38px", padding: "0 12px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>
+                      Mật khẩu mới (tối thiểu 6 ký tự) <span style={{ color: "#dc2626" }}>*</span>
+                    </label>
                     <input
                       type="password"
                       placeholder="Nhập mật khẩu mới"
                       value={newPw}
                       onChange={(e) => setNewPw(e.target.value)}
                       required
+                      autoComplete="new-password"
                       style={{ width: "100%", height: "38px", padding: "0 12px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
                     />
                   </div>
                   <div>
-                    <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>Xác nhận mật khẩu mới</label>
+                    <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>
+                      Xác nhận mật khẩu mới <span style={{ color: "#dc2626" }}>*</span>
+                    </label>
                     <input
                       type="password"
                       placeholder="Nhập lại mật khẩu mới"
                       value={confirmPw}
                       onChange={(e) => setConfirmPw(e.target.value)}
                       required
+                      autoComplete="new-password"
                       style={{ width: "100%", height: "38px", padding: "0 12px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
                     />
                   </div>
@@ -663,7 +697,7 @@ export default function Profile({ user, uid, lang, data }) {
                     disabled={updatingPw}
                     style={{ height: "38px", borderRadius: "8px", border: "none", background: "#16a34a", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", marginTop: "4px" }}
                   >
-                    {updatingPw ? "Đang cập nhật..." : "Lưu mật khẩu mới"}
+                    {updatingPw ? "Đang xác thực & cập nhật..." : "Lưu mật khẩu mới"}
                   </button>
                 </form>
               )}

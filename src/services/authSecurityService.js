@@ -1,4 +1,9 @@
-import { sendPasswordResetEmail, updatePassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 import { auth } from "./firebase";
 import { authHeaders } from "./authHeader";
 
@@ -46,12 +51,39 @@ export async function sendResetPassword(email) {
   await sendPasswordResetEmail(auth, email.trim());
 }
 
-export async function updateUserAccountPassword(newPassword) {
+export async function updateUserAccountPassword(oldPassword, newPassword) {
+  if (!oldPassword || !oldPassword.trim()) {
+    throw new Error("Vui lòng nhập mật khẩu hiện tại (mật khẩu cũ).");
+  }
   if (!newPassword || newPassword.length < 6) {
     throw new Error("Mật khẩu mới phải có ít nhất 6 ký tự.");
   }
-  if (!auth.currentUser) {
+  if (oldPassword === newPassword) {
+    throw new Error("Mật khẩu mới không được trùng với mật khẩu cũ.");
+  }
+  const user = auth.currentUser;
+  if (!user || !user.email) {
     throw new Error("Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.");
   }
-  await updatePassword(auth.currentUser, newPassword);
+
+  // 1. Xác thực mật khẩu cũ trước khi cho phép đổi
+  try {
+    const credential = EmailAuthProvider.credential(user.email, oldPassword);
+    await reauthenticateWithCredential(user, credential);
+  } catch (err) {
+    if (
+      err.code === "auth/wrong-password" ||
+      err.code === "auth/invalid-credential" ||
+      err.code === "auth/invalid-login-credentials"
+    ) {
+      throw new Error("Mật khẩu cũ không chính xác. Vui lòng kiểm tra lại.");
+    }
+    if (err.code === "auth/too-many-requests") {
+      throw new Error("Bạn đã nhập sai mật khẩu quá nhiều lần. Vui lòng thử lại sau vài phút.");
+    }
+    throw err;
+  }
+
+  // 2. Mật khẩu cũ đúng -> Cập nhật sang mật khẩu mới
+  await updatePassword(user, newPassword);
 }
