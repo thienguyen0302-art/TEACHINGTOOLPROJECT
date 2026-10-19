@@ -33,57 +33,6 @@ function saveLocalReports(uid, list) {
 
 export const PUBLISHER_EMAIL = "lythuy84@gmail.com";
 
-export function generateMailLinks({
-  title,
-  description,
-  stepsToReproduce,
-  category,
-  severity,
-  displayName,
-  email,
-  systemInfo,
-}) {
-  const severityLabel =
-    severity === "critical"
-      ? "KHẨN CẤP"
-      : severity === "high"
-      ? "CAO"
-      : severity === "medium"
-      ? "TRUNG BÌNH"
-      : "THẤP";
-
-  const subject = `[PeanutCode Báo Lỗi] [${severityLabel}] ${title}`;
-  const body =
-    `Kính gửi Cô Lý Thị Thanh Thúy (Người phát hành nền tảng PeanutCode),\n\n` +
-    `Em/tôi xin gửi thông tin báo cáo lỗi kỹ thuật / đóng góp ý kiến như sau:\n\n` +
-    `• Người gửi: ${displayName || "Học viên"} ${email ? `<${email}>` : ""}\n` +
-    `• Phân loại: ${category}\n` +
-    `• Mức độ: ${severityLabel}\n` +
-    `• Tiêu đề sự cố: ${title}\n\n` +
-    `────────────────────────────────────────\n` +
-    `MÔ TẢ CHI TIẾT:\n${description}\n` +
-    `────────────────────────────────────────\n\n` +
-    (stepsToReproduce
-      ? `CÁC BƯỚC TÁI HIỆN:\n${stepsToReproduce}\n\n`
-      : "") +
-    `THÔNG TIN MÔI TRƯỜNG KỸ THUẬT:\n` +
-    `- URL: ${systemInfo?.url || ""}\n` +
-    `- Trình duyệt: ${systemInfo?.userAgent || ""}\n` +
-    `- Độ phân giải: ${systemInfo?.screenResolution || ""}\n` +
-    `- Thời gian gửi: ${new Date().toLocaleString("vi-VN")}\n\n` +
-    `Trân trọng cảm ơn Cô!`;
-
-  const mailtoUrl = `mailto:${PUBLISHER_EMAIL}?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(body)}`;
-
-  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
-    PUBLISHER_EMAIL
-  )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-  return { mailtoUrl, gmailUrl, subject, body, recipient: PUBLISHER_EMAIL };
-}
-
 /**
  * Gửi báo cáo lỗi kỹ thuật hoặc góp ý xây dựng web
  */
@@ -133,7 +82,25 @@ export async function submitBugReport({
     updatedAt: now,
   };
 
-  // 1. Lưu vào Firestore collection "bugReports"
+  // 1. Gửi email trực tiếp đến Người phát hành qua backend
+  let emailDelivery = { sent: false, recipient: PUBLISHER_EMAIL };
+  try {
+    const resp = await fetch("/api/bug-report/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(report),
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (resp.ok && data.sent) {
+      emailDelivery = { ...emailDelivery, ...data };
+    } else {
+      throw new Error(data.error || "Máy chủ không thể gửi email đến Người phát hành lúc này.");
+    }
+  } catch (err) {
+    throw new Error(err.message || "Không thể kết nối đến máy chủ gửi email.");
+  }
+
+  // 2. Lưu vào Firestore collection "bugReports"
   try {
     const docRef = doc(db, "bugReports", id);
     await setDoc(docRef, report);
@@ -141,7 +108,7 @@ export async function submitBugReport({
     console.warn("Không lưu được bug report vào Firestore, lưu local cache:", err);
   }
 
-  // 2. Ghi một bản sao vào collection "mail" cho Firebase Trigger Email Extension (nếu đã kích hoạt)
+  // 3. Ghi một bản sao vào collection "mail" cho Firebase Trigger Email Extension (nếu có)
   try {
     const mailDocRef = doc(db, "mail", `mail_${id}`);
     await setDoc(mailDocRef, {
@@ -153,23 +120,7 @@ export async function submitBugReport({
       createdAt: now,
     });
   } catch (err) {
-    // Không chặn luồng nếu collection mail không có quyền
-  }
-
-  // 3. Gọi backend Node.js gửi email qua SMTP/Nodemailer (nếu server cấu hình)
-  let emailDelivery = { sent: false, recipient: PUBLISHER_EMAIL };
-  try {
-    const resp = await fetch("/api/bug-report/send-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(report),
-    });
-    if (resp.ok) {
-      const data = await resp.json();
-      emailDelivery = { ...emailDelivery, ...data };
-    }
-  } catch (err) {
-    console.warn("Không thể kết nối đến backend gửi email:", err.message);
+    // Không chặn luồng
   }
 
   // 4. Update local cache
@@ -177,14 +128,10 @@ export async function submitBugReport({
   cached.unshift(report);
   saveLocalReports(uid, cached);
 
-  // 5. Chuẩn bị sẵn link mở Gmail và mailto
-  const mailLinks = generateMailLinks(report);
-
   return {
     ...report,
     emailDelivery,
-    mailLinks,
-    recipient: PUBLISHER_EMAIL,
+    recipient: emailDelivery.recipient || PUBLISHER_EMAIL,
   };
 }
 

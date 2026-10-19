@@ -1,28 +1,80 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import nodemailer from 'nodemailer';
 
-export const PUBLISHER_EMAIL = process.env.PUBLISHER_EMAIL || 'lythuy84@gmail.com';
+export const DEFAULT_PUBLISHER_EMAIL = 'lythuy84@gmail.com';
 
-function createTransporter() {
-  const user = process.env.SMTP_USER || process.env.GMAIL_USER;
-  const pass = process.env.SMTP_PASS || process.env.GMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
+function reloadEnv() {
+  for (const envFile of ['.env.local', '.env']) {
+    const fullPath = path.resolve(process.cwd(), envFile);
+    if (fs.existsSync(fullPath)) {
+      try {
+        const content = fs.readFileSync(fullPath, 'utf8');
+        for (const line of content.split('\n')) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith('#')) continue;
+          const eqIdx = trimmed.indexOf('=');
+          if (eqIdx > 0) {
+            const key = trimmed.slice(0, eqIdx).trim();
+            let val = trimmed.slice(eqIdx + 1).trim();
+            if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+              val = val.slice(1, -1);
+            }
+            process.env[key] = val;
+          }
+        }
+      } catch {
+        // ignore error
+      }
+    }
+  }
+}
 
+function getSmtpConfig() {
+  reloadEnv();
+
+  const user =
+    process.env.SMTP_USER ||
+    process.env.GMAIL_USER ||
+    process.env.MAIL_USER ||
+    process.env.EMAIL_USER;
+
+  const pass =
+    process.env.SMTP_PASS ||
+    process.env.GMAIL_PASS ||
+    process.env.MAIL_PASS ||
+    process.env.EMAIL_PASS ||
+    process.env.GMAIL_APP_PASSWORD;
+
+  const recipient =
+    process.env.PUBLISHER_EMAIL ||
+    process.env.RECEIVER_EMAIL ||
+    process.env.ADMIN_EMAIL ||
+    DEFAULT_PUBLISHER_EMAIL;
+
+  return { user, pass, recipient };
+}
+
+function createTransporter(user, pass) {
   if (!user || !pass) {
     return null;
   }
 
-  // If host is specified, use custom SMTP, otherwise default to Gmail service
+  // Remove any whitespace from app password
+  const cleanPass = pass.replace(/\s+/g, '');
+
   if (process.env.SMTP_HOST) {
     return nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT) || 587,
       secure: process.env.SMTP_SECURE === 'true',
-      auth: { user, pass },
+      auth: { user, pass: cleanPass },
     });
   }
 
   return nodemailer.createTransport({
     service: 'gmail',
-    auth: { user, pass },
+    auth: { user, pass: cleanPass },
   });
 }
 
@@ -69,25 +121,23 @@ export function createBugReportEmailHandler() {
       systemInfo = {},
     } = body || {};
 
-    if (!title || !description) {
+    if (!title?.trim() || !description?.trim()) {
       return reply(400, { error: 'Thiếu thông tin tiêu đề hoặc mô tả sự cố' });
     }
 
-    const transporter = createTransporter();
-    const recipient = PUBLISHER_EMAIL;
+    const { user, pass, recipient } = getSmtpConfig();
+    const transporter = createTransporter(user, pass);
 
     console.log(`[BugReport Email] Nhận báo lỗi mới: "${title}" từ "${displayName}" (${email || 'không có email'})`);
 
     if (!transporter) {
-      console.log(
-        `[BugReport Email] Chưa cấu hình SMTP_USER / SMTP_PASS trong .env.local. Để tự động bắn email tới ${recipient}, hãy thêm tài khoản Gmail và App Password vào .env.local.`
-      );
-      return reply(200, {
-        ok: true,
+      const msg = `Chưa tìm thấy cấu hình SMTP_USER và SMTP_PASS trong .env.local để gửi mail. Hãy kiểm tra lại tệp .env.local.`;
+      console.warn(`[BugReport Email] ${msg}`);
+      return reply(400, {
+        ok: false,
         sent: false,
-        reason: 'smtp_not_configured',
+        error: msg,
         recipient,
-        message: `Báo cáo đã được lưu vào hệ thống. SMTP server chưa cấu hình credentials gửi mail tự động đến ${recipient}.`,
       });
     }
 
@@ -97,7 +147,7 @@ export function createBugReportEmailHandler() {
       severity === 'critical' ? 'Khẩn cấp' : severity === 'high' ? 'Cao' : severity === 'medium' ? 'Trung bình' : 'Thấp';
 
     const mailOptions = {
-      from: `"PeanutCode Báo Lỗi" <${process.env.SMTP_USER || process.env.GMAIL_USER}>`,
+      from: `"PeanutCode Báo Lỗi" <${user}>`,
       to: recipient,
       replyTo: email || undefined,
       subject: `[PeanutCode Báo Lỗi] [${severityLabel.toUpperCase()}] ${title}`,
@@ -192,7 +242,7 @@ export function createBugReportEmailHandler() {
       return reply(500, {
         ok: false,
         sent: false,
-        error: err.message,
+        error: `Lỗi kết nối máy chủ gửi mail: ${err.message}`,
       });
     }
   };

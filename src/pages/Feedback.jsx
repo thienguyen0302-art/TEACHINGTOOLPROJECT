@@ -64,7 +64,6 @@ export default function Feedback({ user, uid, data }) {
   const [bugSubmitting, setBugSubmitting] = useState(false);
   const [bugError, setBugError] = useState("");
   const [bugSuccess, setBugSuccess] = useState("");
-  const [submittedBugData, setSubmittedBugData] = useState(null);
   const [userBugs, setUserBugs] = useState([]);
 
   // Check if user has real study activity
@@ -191,7 +190,7 @@ export default function Feedback({ user, uid, data }) {
 
     setBugSubmitting(true);
     try {
-      const report = await submitBugReport({
+      await submitBugReport({
         uid,
         displayName: displayName(user),
         email: user?.email,
@@ -202,14 +201,11 @@ export default function Feedback({ user, uid, data }) {
         stepsToReproduce: bugSteps,
       });
 
-      setSubmittedBugData(report);
       setBugTitle("");
       setBugDesc("");
       setBugSteps("");
       setBugSuccess(
-        report?.emailDelivery?.sent
-          ? `✅ Báo cáo sự cố đã được gửi trực tiếp đến hộp thư của Người phát hành (${report.recipient || "lythuy84@gmail.com"})!`
-          : `✅ Báo cáo sự cố đã được ghi nhận trên hệ thống của Người phát hành (${report.recipient || "lythuy84@gmail.com"})!`
+        "✅ Báo cáo sự cố đã được gửi trực tiếp đến hộp thư của Người phát hành (lythuy84@gmail.com)!"
       );
     } catch (err) {
       setBugError(err.message || "Không thể gửi báo cáo lỗi lúc này.");
@@ -583,70 +579,16 @@ export default function Feedback({ user, uid, data }) {
                   className="fb-success-banner"
                   style={{
                     marginBottom: 16,
-                    padding: "16px 18px",
+                    padding: "14px 18px",
                     borderRadius: 12,
                     background: "#f0fdf4",
                     border: "1px solid #86efac",
+                    color: "#166534",
+                    fontWeight: 700,
+                    fontSize: 14,
                   }}
                 >
-                  <div style={{ fontWeight: 800, fontSize: 14, color: "#166534", marginBottom: 6 }}>
-                    {bugSuccess}
-                  </div>
-                  <div style={{ fontSize: 13, color: "#15803d", marginBottom: 10, lineHeight: 1.5 }}>
-                    📬 <strong>Hộp thư người nhận:</strong> Cô Lý Thị Thanh Thúy (<code>lythuy84@gmail.com</code>)
-                    {submittedBugData?.emailDelivery?.sent ? (
-                      <span style={{ display: "block", marginTop: 4, color: "#166534", fontWeight: 700 }}>
-                        ✓ Email đã được gửi tự động thành công vào hòm thư!
-                      </span>
-                    ) : (
-                      <span style={{ display: "block", marginTop: 4, color: "#475569" }}>
-                        Báo cáo đã lưu trên hệ thống quản trị của Người phát hành. Bạn cũng có thể bấm nút dưới để mở Gmail gửi trực tiếp một bản sao:
-                      </span>
-                    )}
-                  </div>
-
-                  {submittedBugData?.mailLinks && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8 }}>
-                      <a
-                        href={submittedBugData.mailLinks.gmailUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 7,
-                          padding: "9px 16px",
-                          borderRadius: 9,
-                          background: "#2563eb",
-                          color: "#ffffff",
-                          textDecoration: "none",
-                          fontSize: 12,
-                          fontWeight: 800,
-                          boxShadow: "0 2px 6px rgba(37,99,235,0.25)",
-                        }}
-                      >
-                        <Icon name="send" /> Mở Gmail gửi ngay tới lythuy84@gmail.com
-                      </a>
-                      <a
-                        href={submittedBugData.mailLinks.mailtoUrl}
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 6,
-                          padding: "9px 14px",
-                          borderRadius: 9,
-                          background: "#ffffff",
-                          color: "#334155",
-                          border: "1px solid #cbd5e1",
-                          textDecoration: "none",
-                          fontSize: 12,
-                          fontWeight: 700,
-                        }}
-                      >
-                        Ứng dụng Mail mặc định
-                      </a>
-                    </div>
-                  )}
+                  {bugSuccess}
                 </div>
               )}
 
@@ -655,7 +597,7 @@ export default function Feedback({ user, uid, data }) {
                 className="fb-btn-submit"
                 disabled={bugSubmitting}
               >
-                {bugSubmitting ? "Đang gửi báo cáo..." : "Gửi báo lỗi cho Người phát hành (lythuy84@gmail.com)"}
+                {bugSubmitting ? "Đang gửi báo cáo..." : "Xác nhận gửi báo cáo cho Người phát hành"}
               </button>
             </form>
 
