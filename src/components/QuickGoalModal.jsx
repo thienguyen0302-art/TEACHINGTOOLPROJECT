@@ -108,7 +108,7 @@ export default function QuickGoalModal({ isOpen, onClose, user }) {
             </h3>
             <span className="qg-kbd-badge">Phím tắt: G</span>
           </div>
-          <button className="qg-close-btn" onClick={onClose} aria-label="Đóng">
+          <button className="qg-close-btn" onClick={onClose} aria-label="Đóng" title="Đóng cửa sổ">
             <Icon name="x" />
           </button>
         </div>
@@ -165,7 +165,7 @@ export default function QuickGoalModal({ isOpen, onClose, user }) {
                       <span className={`qg-badge-date ${badge.cls}`}>
                         📅 {badge.text}
                       </span>
-                      {g.notes && <span style={{ color: '#64748b' }}>“{g.notes}”</span>}
+                      {g.notes && <span className="qg-item-note">“{g.notes}”</span>}
                     </div>
                   </div>
                   <button
@@ -206,7 +206,7 @@ export default function QuickGoalModal({ isOpen, onClose, user }) {
                   onChange={(e) => setNewTitle(e.target.value)}
                 />
               </div>
-              <div className="qg-form-row">
+              <div className="qg-form-row qg-form-actions-row">
                 <select
                   className="qg-select"
                   value={newType}
@@ -219,23 +219,20 @@ export default function QuickGoalModal({ isOpen, onClose, user }) {
                 </select>
                 <input
                   type="date"
-                  className="qg-input"
-                  style={{ maxWidth: 160 }}
+                  className="qg-input qg-date-input"
                   value={newDate}
                   onChange={(e) => setNewDate(e.target.value)}
                 />
                 <button
                   type="submit"
-                  className="hsg-btn hsg-btn-primary"
-                  style={{ height: 38, padding: '0 16px', fontSize: 13 }}
+                  className="qg-btn-submit"
                   disabled={saving || !newTitle.trim()}
                 >
                   {saving ? 'Đang lưu…' : 'Lưu'}
                 </button>
                 <button
                   type="button"
-                  className="hsg-btn hsg-btn-secondary"
-                  style={{ height: 38, padding: '0 12px', fontSize: 13 }}
+                  className="qg-btn-cancel"
                   onClick={() => setShowAddForm(false)}
                 >
                   Hủy
@@ -245,8 +242,7 @@ export default function QuickGoalModal({ isOpen, onClose, user }) {
           ) : (
             <button
               type="button"
-              className="hsg-btn hsg-btn-secondary"
-              style={{ width: '100%', marginTop: 14, height: 38, fontSize: 13.5 }}
+              className="qg-add-btn"
               onClick={() => setShowAddForm(true)}
             >
               + Thêm mục tiêu mới
@@ -266,8 +262,8 @@ export default function QuickGoalModal({ isOpen, onClose, user }) {
           >
             Mở trang Lịch học &amp; Mục tiêu chi tiết →
           </button>
-          <span style={{ fontSize: 12, color: '#94a3b8' }}>
-            Nhấn <kbd style={{ background: '#e2e8f0', padding: '1px 5px', borderRadius: 4, color: '#475569' }}>Esc</kbd> để đóng
+          <span className="qg-esc-hint">
+            Nhấn <kbd>Esc</kbd> để đóng
           </span>
         </div>
       </div>

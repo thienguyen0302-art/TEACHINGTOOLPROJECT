@@ -197,7 +197,7 @@ export default function AllAnnouncementsModal({
             className={`aam-tab ${filterType === "unread" ? "active" : ""}`}
             onClick={() => setFilterType("unread")}
           >
-            Chưa đọc
+            <span>Chưa đọc ({unreadCount})</span>
             {unreadCount > 0 && <span className="aam-tab-badge">{unreadCount}</span>}
           </button>
 
@@ -221,7 +221,7 @@ export default function AllAnnouncementsModal({
                 className={`aam-tab ${filterType === key ? "active" : ""}`}
                 onClick={() => setFilterType(key)}
               >
-                {meta.badge} ({count})
+                {meta.label} ({count})
               </button>
             );
           })}
@@ -265,7 +265,8 @@ export default function AllAnnouncementsModal({
                       )}
                       {isUnread && (
                         <span className="aam-unread-badge">
-                          Mới
+                          <span className="aam-unread-dot" />
+                          Chưa đọc
                         </span>
                       )}
                     </div>

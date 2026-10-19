@@ -3,14 +3,14 @@
 .qg-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  animation: qgFadeIn 0.2s ease-out;
+  animation: qgFadeIn 0.18s ease-out;
 }
 
 @keyframes qgFadeIn {
@@ -20,30 +20,34 @@
 
 .qg-modal {
   background: #ffffff;
-  border: 1px solid #e2e8f2;
-  border-radius: 19px;
-  width: 100%;
-  max-width: 560px;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  width: min(720px, calc(100vw - 32px));
+  max-width: 720px;
+  height: auto;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 25px 65px rgba(28, 57, 108, 0.18);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.16);
   overflow: hidden;
-  animation: qgSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Nunito', 'Segoe UI', -apple-system, sans-serif;
+  animation: qgSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes qgSlideUp {
-  from { transform: translateY(16px) scale(0.98); opacity: 0; }
+  from { transform: translateY(14px) scale(0.98); opacity: 0; }
   to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
+/* ── Header ────────────────────────────────────────── */
 .qg-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 22px;
-  border-bottom: 1px solid #edf0f5;
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid #f1f5f9;
   background: #ffffff;
+  flex-shrink: 0;
 }
 
 .qg-header-title {
@@ -53,124 +57,155 @@
 }
 
 .qg-header-title h3 {
-  font-size: 15px;
+  font-size: 23px;
   font-weight: 800;
-  color: #182743;
+  color: #0f172a;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 8px;
-  letter-spacing: -.03em;
+  letter-spacing: -0.02em;
+}
+
+.qg-header-title h3 svg {
+  width: 22px;
+  height: 22px;
+  color: #2859b8;
 }
 
 .qg-kbd-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 9px;
-  font-weight: 800;
-  background: #eaf2ff;
-  color: #3978ed;
-  border: 1px solid #d0e1fd;
-  padding: 2px 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  background: #f0f5ff;
+  color: #2859b8;
+  border: 1px solid #dce3f6;
+  padding: 2px 8px;
   border-radius: 6px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
 }
 
 .qg-close-btn {
-  background: transparent;
-  border: none;
-  color: #8c98aa;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  display: grid;
+  place-items: center;
   cursor: pointer;
-  padding: 6px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-shrink: 0;
   transition: all 0.15s ease;
 }
 
 .qg-close-btn:hover {
-  background: #f1f5fb;
-  color: #182743;
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
 }
 
+.qg-close-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ── Body ──────────────────────────────────────────── */
 .qg-body {
-  padding: 20px 22px;
+  padding: 20px 28px 24px;
   overflow-y: auto;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .qg-reminder-banner {
-  background: #fff4de;
-  border: 1px solid #fae1ad;
-  border-radius: 11px;
-  padding: 10px 14px;
-  margin-bottom: 16px;
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-radius: 12px;
+  padding: 11px 16px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 11px;
-  color: #875c10;
+  font-size: 13px;
+  color: #92400e;
   font-weight: 600;
 }
 
 .qg-reminder-banner strong {
-  color: #b36e05;
+  color: #b45309;
   font-weight: 800;
 }
 
+/* ── Tabs (Bộ lọc) ─────────────────────────────────── */
 .qg-tabs {
-  display: flex;
-  gap: 5px;
-  background: #f3f6fa;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  background: #f1f5f9;
   padding: 4px;
-  border-radius: 11px;
-  margin-bottom: 16px;
+  border-radius: 12px;
+  height: 46px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .qg-tab-btn {
-  flex: 1;
-  padding: 7px 10px;
-  font-size: 10px;
+  height: 38px;
+  padding: 0 10px;
+  font-size: 13.5px;
   font-weight: 700;
-  color: #758399;
+  color: #64748b;
   border: none;
   background: transparent;
-  border-radius: 8px;
+  border-radius: 9px;
   cursor: pointer;
   transition: all 0.15s ease;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 .qg-tab-btn.active {
   background: #ffffff;
-  color: #2862c9;
-  box-shadow: 0 2px 6px rgba(40, 98, 201, 0.1);
+  color: #2859b8;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(40, 89, 184, 0.08);
 }
 
+.qg-tab-btn:not(.active):hover {
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Goal List ─────────────────────────────────────── */
 .qg-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .qg-item {
   display: flex;
   align-items: flex-start;
-  gap: 11px;
-  padding: 12px 14px;
-  background: #fbfcfe;
-  border: 1px solid #e4eaf3;
-  border-radius: 12px;
+  gap: 12px;
+  padding: 13px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
   transition: all 0.15s ease;
 }
 
 .qg-item:hover {
   background: #ffffff;
-  border-color: #bdd1f3;
-  box-shadow: 0 4px 12px rgba(34, 70, 132, 0.06);
+  border-color: #cbd5e1;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
 }
 
 .qg-item.completed {
@@ -180,15 +215,16 @@
 
 .qg-item.completed .qg-item-title {
   text-decoration: line-through;
-  color: #8c98aa;
+  color: #94a3b8;
 }
 
 .qg-checkbox {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   margin-top: 2px;
-  accent-color: #3978ed;
+  accent-color: #2859b8;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .qg-item-content {
@@ -197,71 +233,128 @@
 }
 
 .qg-item-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
-  color: #243550;
-  margin: 0 0 4px 0;
-  line-height: 1.4;
+  color: #0f172a;
+  margin: 0 0 5px 0;
+  line-height: 1.45;
 }
 
 .qg-item-meta {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
-  font-size: 9px;
+  font-size: 12px;
+}
+
+.qg-item-note {
+  color: #64748b;
+  font-style: italic;
 }
 
 .qg-badge-date {
-  font-size: 9px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 5px;
-  background: #f1f5f9;
-  color: #64748b;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: #e2e8f0;
+  color: #475569;
 }
 
 .qg-badge-date.today {
-  background: #fff0e7;
-  color: #e65c00;
+  background: #ffedd5;
+  color: #c2410c;
   font-weight: 800;
 }
 
 .qg-badge-date.overdue {
-  background: #fdecee;
-  color: #c43b47;
+  background: #fee2e2;
+  color: #dc2626;
   font-weight: 800;
 }
 
 .qg-item-delete {
   background: transparent;
   border: none;
-  color: #929daf;
+  color: #94a3b8;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
+  padding: 5px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.15s ease;
 }
 
 .qg-item-delete:hover {
-  background: #fdecee;
-  color: #c43b47;
+  background: #fee2e2;
+  color: #dc2626;
 }
 
-/* Quick Add Form inside modal */
+.qg-item-delete svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── Empty State ───────────────────────────────────── */
+.qg-empty {
+  text-align: center;
+  padding: 30px 16px;
+  color: #64748b;
+}
+
+.qg-empty p {
+  margin: 0 0 8px 0;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.qg-empty small {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ── Add Goal Button ───────────────────────────────── */
+.qg-add-btn {
+  width: 100%;
+  height: 44px;
+  margin-top: 18px;
+  border-radius: 11px;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  color: #2859b8;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.qg-add-btn:hover {
+  background: #f0f5ff;
+  border-color: #2859b8;
+  color: #1d4ed8;
+}
+
+/* ── Quick Add Form inside modal ───────────────────── */
 .qg-quick-form {
-  background: #fbfcfe;
-  border: 1px dashed #dce5f1;
-  border-radius: 12px;
-  padding: 14px;
-  margin-top: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 18px;
 }
 
 .qg-form-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: #21304a;
-  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 10px;
 }
 
 .qg-form-row {
@@ -270,55 +363,108 @@
   margin-bottom: 8px;
 }
 
+.qg-form-actions-row {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 .qg-input {
   flex: 1;
-  height: 36px;
-  padding: 0 11px;
-  font-size: 11px;
-  border: 1px solid #dce4f0;
-  border-radius: 8px;
+  height: 40px;
+  padding: 0 12px;
+  font-size: 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
   background: #ffffff;
-  color: #243550;
+  color: #0f172a;
   font-family: inherit;
   box-sizing: border-box;
 }
 
 .qg-input:focus {
   outline: none;
-  border-color: #3978ed;
-  box-shadow: 0 0 0 3px rgba(57, 120, 237, 0.15);
+  border-color: #2859b8;
+  box-shadow: 0 0 0 3px rgba(40, 89, 184, 0.12);
+}
+
+.qg-date-input {
+  max-width: 160px;
 }
 
 .qg-select {
-  height: 36px;
-  padding: 0 9px;
-  font-size: 11px;
-  border: 1px solid #dce4f0;
-  border-radius: 8px;
+  height: 40px;
+  padding: 0 10px;
+  font-size: 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
   background: #ffffff;
-  color: #243550;
+  color: #0f172a;
   font-family: inherit;
   box-sizing: border-box;
 }
 
 .qg-select:focus {
   outline: none;
-  border-color: #3978ed;
+  border-color: #2859b8;
 }
 
+.qg-btn-submit {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: #2859b8;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.qg-btn-submit:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.qg-btn-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.qg-btn-cancel {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.qg-btn-cancel:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* ── Footer ────────────────────────────────────────── */
 .qg-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 22px;
-  border-top: 1px solid #edf0f5;
-  background: #fbfcfe;
+  padding: 16px 28px;
+  border-top: 1px solid #f1f5f9;
+  background: #ffffff;
+  flex-shrink: 0;
 }
 
 .qg-calendar-link {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 700;
-  color: #3978ed;
+  color: #2859b8;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -334,65 +480,48 @@
   text-decoration: underline;
 }
 
-/* Empty state */
-.qg-empty {
-  text-align: center;
-  padding: 24px 16px;
-  color: #8490a4;
-}
-
-.qg-empty p {
-  margin: 0 0 4px 0;
+.qg-esc-hint {
   font-size: 12px;
-  font-weight: 700;
-  color: #21304a;
+  color: #64748b;
 }
 
-.qg-empty small {
-  font-size: 10px;
-  color: #8c98aa;
-}
-
-/* Topbar goal shortcut button */
-.topbar-goal-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 38px;
-  padding: 0 11px;
-  border-radius: 11px;
-  background: #ffffff;
-  border: 1px solid #e2e8f2;
-  color: #59667c;
-  font-size: 10px;
+.qg-esc-hint kbd {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 5px;
+  color: #475569;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
   font-family: inherit;
 }
 
-.topbar-goal-btn:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #1e293b;
-}
-
-.topbar-goal-btn svg {
-  width: 15px;
-  height: 15px;
-}
-
-.topbar-goal-btn kbd {
-  display: inline-grid;
-  place-items: center;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  background: #eaf2ff;
-  border: 1px solid #d0e1fd;
-  border-radius: 4px;
-  font-size: 8px;
-  font-weight: 800;
-  color: #3978ed;
-  font-family: inherit;
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 640px) {
+  .qg-modal {
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+  .qg-header {
+    padding: 16px 18px 14px;
+  }
+  .qg-header-title h3 {
+    font-size: 19px;
+  }
+  .qg-body {
+    padding: 16px;
+  }
+  .qg-tabs {
+    height: 42px;
+  }
+  .qg-tab-btn {
+    height: 34px;
+    font-size: 11.5px;
+    padding: 0 4px;
+  }
+  .qg-footer {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 }
