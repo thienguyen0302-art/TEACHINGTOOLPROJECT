@@ -56,7 +56,7 @@ export default function Dashboard({ user, lang, data }) {
         </div>
         <div className="streak-card">
           <span><Icon name="fire" /></span>
-          <div><strong>{streak} ngày</strong><small>Chuỗi học liên tiếp</small></div>
+          <div><small>Chuỗi ngày học</small><strong>{streak} <em>ngày</em></strong></div>
         </div>
       </section>
 

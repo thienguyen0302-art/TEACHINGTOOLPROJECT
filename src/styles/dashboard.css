@@ -569,6 +569,8 @@
 .week-summary > div { display: flex; align-items: center; gap: 9px; }.week-summary > div + div { padding-left: 14px; border-left: 1px solid #edf0f5; }
 .week-summary > div > span { display: grid; width: 31px; height: 31px; place-items: center; flex: 0 0 auto; border-radius: 9px; background: #f1f5fb; color: #5f84c7; }.week-summary svg { width: 14px; }
 .week-summary p { margin: 0; }.week-summary strong, .week-summary small { display: block; }.week-summary strong { color: #40506a; font-size: 9px; }.week-summary small { margin-top: 3px; color: #9ca6b6; font-size: 7px; }
+.week-summary > div:nth-child(3) > span { background: #fff0e6; color: #ee7937; }
+.week-summary > div:nth-child(3) svg { color: #ee7937; }
 .mentor-card {
   display: flex;
   flex-direction: column;
@@ -825,11 +827,60 @@
 .welcome p { margin: 0 0 8px; color: #8a96a9; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
 .welcome h1 { margin: 0; color: #182743; font-size: clamp(25px,2.4vw,35px); letter-spacing: -.045em; }
 .welcome > div > span { display: block; margin-top: 8px; color: #748096; font-size: 12px; }
-.streak-card { display: flex; min-width: 188px; padding: 13px 16px; align-items: center; gap: 11px; border: 1px solid #fee5d5; border-radius: 15px; background: #fffaf6; }
-.streak-card > span { display: grid; width: 37px; height: 37px; place-items: center; border-radius: 11px; background: #fff0e7; color: #f07a3d; }
-.streak-card strong, .streak-card small { display: block; }
-.streak-card strong { color: #33415a; font-size: 13px; }
-.streak-card small { margin-top: 2px; color: #9a887e; font-size: 9px; }
+.streak-card {
+  display: flex;
+  min-width: 188px;
+  padding: 14px 18px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #fee5d5;
+  border-radius: 16px;
+  background: #fffaf6;
+  box-sizing: border-box;
+}
+
+.streak-card > span {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background: #fff0e6;
+  color: #ee7937;
+}
+
+.streak-card svg {
+  width: 18px;
+  height: 18px;
+  color: #ee7937;
+}
+
+.streak-card strong, .streak-card small {
+  display: block;
+}
+
+.streak-card small {
+  color: #929daf;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.streak-card strong {
+  margin-top: 3px;
+  color: #34435b;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.streak-card strong em {
+  color: #8f9bad;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 500;
+  margin-left: 2px;
+}
 
 .resume-card { position: relative; display: grid; min-height: 245px; margin-top: 30px; overflow: hidden; grid-template-columns: 35% 65%; border-radius: 23px; background: linear-gradient(120deg,#153d87,#2868d8 62%,#397def); box-shadow: 0 18px 40px rgba(35,93,192,.2); color: #fff; }
 .resume-card::after { position: absolute; right: -40px; bottom: -110px; width: 310px; height: 310px; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; content: ""; }
