@@ -450,7 +450,7 @@ export default function Schedule({ user, data }) {
                 {formError && <p className="err" style={{ margin: 0 }}>{formError}</p>}
 
                 <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 5 }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 800, marginBottom: 5, color: "#1c304e" }}>
                     Tên mục tiêu <span style={{ color: "#dc2626" }}>*</span>
                   </label>
                   <input
@@ -459,19 +459,19 @@ export default function Schedule({ user, data }) {
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
                     required
-                    style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #cbd5e1" }}
+                    style={{ width: "100%", padding: "9px 12px", borderRadius: 12, border: "1px solid #dfe7f4", fontSize: 12.5 }}
                   />
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                   <div>
-                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 5 }}>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 800, marginBottom: 5, color: "#1c304e" }}>
                       Loại mục tiêu
                     </label>
                     <select
                       value={formType}
                       onChange={(e) => setFormType(e.target.value)}
-                      style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #cbd5e1" }}
+                      style={{ width: "100%", padding: "9px 12px", borderRadius: 12, border: "1px solid #dfe7f4", fontSize: 12.5, fontWeight: 700 }}
                     >
                       <option value="practice">Bài tập Code</option>
                       <option value="exam">Luyện đề HSG</option>
@@ -482,7 +482,7 @@ export default function Schedule({ user, data }) {
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 5 }}>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 800, marginBottom: 5, color: "#1c304e" }}>
                       Chỉ tiêu số lượng
                     </label>
                     <input
@@ -490,13 +490,13 @@ export default function Schedule({ user, data }) {
                       placeholder="Ví dụ: 3 bài, 60 phút, 1 đề..."
                       value={formValue}
                       onChange={(e) => setFormValue(e.target.value)}
-                      style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #cbd5e1" }}
+                      style={{ width: "100%", padding: "9px 12px", borderRadius: 12, border: "1px solid #dfe7f4", fontSize: 12.5 }}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 5 }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 800, marginBottom: 5, color: "#1c304e" }}>
                     Ngày hoàn thành (Hạn chót nhắc nhở)
                   </label>
                   <input
@@ -504,12 +504,12 @@ export default function Schedule({ user, data }) {
                     value={formDate}
                     onChange={(e) => setFormDate(e.target.value)}
                     required
-                    style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #cbd5e1" }}
+                    style={{ width: "100%", padding: "9px 12px", borderRadius: 12, border: "1px solid #dfe7f4", fontSize: 12.5, fontWeight: 600 }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 5 }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 800, marginBottom: 5, color: "#1c304e" }}>
                     Ghi chú thêm
                   </label>
                   <textarea
@@ -517,7 +517,7 @@ export default function Schedule({ user, data }) {
                     placeholder="Ghi chú phương pháp, test case cần chú ý..."
                     value={formNotes}
                     onChange={(e) => setFormNotes(e.target.value)}
-                    style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #cbd5e1" }}
+                    style={{ width: "100%", padding: "9px 12px", borderRadius: 12, border: "1px solid #dfe7f4", fontSize: 12.5 }}
                   />
                 </div>
               </div>
@@ -528,6 +528,7 @@ export default function Schedule({ user, data }) {
                   className="teacher-btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                   disabled={saving}
+                  style={{ borderRadius: 999, fontSize: 12, fontWeight: 800, height: 38, padding: "0 18px" }}
                 >
                   Hủy
                 </button>
