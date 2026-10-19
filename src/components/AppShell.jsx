@@ -157,27 +157,6 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
             ))}
           </nav>
 
-          {isTeacher ? (
-            <div className="weekly-goal" style={{ background: "linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(124, 58, 237, 0.08))" }}>
-              <div className="goal-heading">
-                <span style={{ background: "#eff6ff", color: "#2563eb" }}><Icon name="chart" /></span>
-                <div><strong>Quản lý lớp học</strong><small>Bồi dưỡng HSG</small></div>
-              </div>
-              <p style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#64748b", lineHeight: 1.4 }}>
-                Theo dõi sát sao năng lực học sinh để kịp thời bồi dưỡng chuyên đề yếu.
-              </p>
-            </div>
-          ) : (
-            <div className="weekly-goal">
-              <div className="goal-heading">
-                <span><Icon name="fire" /></span>
-                <div><strong>Mục tiêu tuần</strong><small>{weekActive} / 7 ngày</small></div>
-              </div>
-              <div className="goal-bar"><span style={{ width: `${Math.round((weekActive / 7) * 100)}%` }} /></div>
-              <p>{weekActive >= 7 ? "Tuyệt vời, bạn đã học đủ cả tuần!" : `Còn ${7 - weekActive} ngày nữa, cố lên nhé!`}</p>
-            </div>
-          )}
-
           <div className="sidebar-bottom">
             <button onClick={() => setHelpOpen(true)}>
               <Icon name="help" />Trợ giúp
@@ -269,6 +248,7 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
                   anchorRef={avatarRef}
                   isOpen={accountOpen}
                   onClose={() => setAccountOpen(false)}
+                  onOpenHelp={() => setHelpOpen(true)}
                 />
               </div>
             </div>

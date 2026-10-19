@@ -56,6 +56,7 @@ export default function AccountMenu({
   anchorRef,
   isOpen,
   onClose,
+  onOpenHelp,
 }) {
   const nav      = useNavigate();
   const location = useLocation();
@@ -184,7 +185,14 @@ export default function AccountMenu({
 
         {/* ── Nhóm 3: Trợ giúp & đăng xuất ── */}
         <MenuSection>
-          <MenuItem icon="help"    label="Trung tâm trợ giúp"    onClick={() => soon("Trung tâm trợ giúp")} />
+          <MenuItem
+            icon="help"
+            label="Trung tâm trợ giúp"
+            onClick={() => {
+              onClose();
+              if (onOpenHelp) onOpenHelp();
+            }}
+          />
           <MenuItem icon="message" label="Đánh giá & góp ý"      onClick={() => go("/feedback")} />
           <MenuItem icon="send"    label="Gửi góp ý / Báo lỗi"   onClick={() => go("/feedback")} />
         </MenuSection>
