@@ -155,10 +155,10 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 380px;
+  min-height: 350px;
   height: 100%;
   overflow: hidden;
-  padding: 30px;
+  padding: 26px 28px;
   border: 1px solid #dfe7f4;
   border-radius: 22px;
   background: #ffffff;
@@ -343,35 +343,52 @@
 }
 
 /* Phần 04 info */
+.contest-card .contest-stats,
 .contest-stats {
   display: grid;
-  margin-top: 18px;
+  margin-top: 14px;
   grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.contest-card .contest-stats > div,
+.contest-stats > div {
   background: #f8fafc;
   border: 1px solid #dfe7f4;
-  border-radius: 12px;
-  padding: 10px 12px;
+  border-radius: 10px;
+  padding: 8px 6px;
   text-align: center;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.contest-stats div + div {
-  border-left: 1px solid #dfe7f4;
-  padding-left: 10px;
+.contest-card .contest-stats > div:hover,
+.contest-stats > div:hover {
+  background: #f0f5ff;
+  border-color: #cbdcf8;
 }
 
+.contest-card .contest-stats strong,
 .contest-stats strong {
   display: block;
-  font-size: 21px;
+  font-size: 15px;
   font-weight: 800;
   color: #1c304e;
   line-height: 1.2;
 }
 
+.contest-card .contest-stats span,
 .contest-stats span {
   display: block;
-  margin-top: 3px;
+  margin-top: 2px;
   color: #7d8eaa;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -380,7 +397,7 @@
 .learning-section-card > button {
   display: flex;
   width: 100%;
-  height: 50px;
+  height: 48px;
   margin-top: auto;
   padding: 0 18px;
   align-items: center;
