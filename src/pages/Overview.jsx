@@ -631,7 +631,7 @@ export default function Overview({ user, lang, data, onChangeLang }) {
               <span className="learning-status">Thử thách</span>
             </div>
             <span className="learning-index">Phần 04</span>
-            <h3>Đấu trường Contest HSG</h3>
+            <h3>Đấu trường Contest</h3>
             <p>Giải các bộ đề thi thử, kỳ thi chọn đội tuyển và cọ xát trực tiếp với thời gian thực.</p>
             <div className="contest-stats">
               <div><strong>{contestCount}</strong><span>Kỳ thi</span></div>
@@ -763,8 +763,7 @@ export default function Overview({ user, lang, data, onChangeLang }) {
           <div className="mentor-top-row">
             <div className="mentor-top">
               <span className="mentor-icon">AI</span>
-              <span>Gợi ý dành cho bạn</span>
-              <span className="mentor-ai-badge">{smartRec.badge}</span>
+              <span className="mentor-kicker">GỢI Ý DÀNH CHO BẠN</span>
             </div>
             <button
               type="button"
@@ -778,8 +777,13 @@ export default function Overview({ user, lang, data, onChangeLang }) {
             </button>
           </div>
 
-          <h2>{smartRec.title}</h2>
-          <p>{smartRec.description}</p>
+          <div className="mentor-content-group">
+            <div className="mentor-badge-row">
+              <span className="mentor-ai-badge">{smartRec.badge}</span>
+            </div>
+            <h2 className="mentor-title">{smartRec.title}</h2>
+            <p className="mentor-desc">{smartRec.description}</p>
+          </div>
 
           {liveAiAdvice && (
             <div className="mentor-ai-bubble">
@@ -788,15 +792,21 @@ export default function Overview({ user, lang, data, onChangeLang }) {
           )}
 
           <div className="mentor-progress">
-            <span>
+            <div className="mentor-progress-top">
+              <span className="mentor-progress-label">{smartRec.progressText}</span>
+            </div>
+            <div className="mentor-progress-bar">
               <i style={{ width: `${Math.max(5, Math.min(100, smartRec.progressPercent))}%` }} />
-            </span>
-            <strong>{smartRec.progressText}</strong>
+            </div>
           </div>
 
           <div className="mentor-btn-group">
-            <button type="button" onClick={handleExecuteRecommendation}>
-              <span>{smartRec.actionText}</span>
+            <button
+              type="button"
+              className="mentor-start-btn"
+              onClick={handleExecuteRecommendation}
+            >
+              <span>{smartRec.actionText || "Bắt đầu bài học 01"}</span>
               <Icon name="chevron" />
             </button>
           </div>

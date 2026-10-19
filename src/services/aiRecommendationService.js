@@ -58,14 +58,20 @@ export function generateSmartRecommendation({
   // 3. Nếu người học mới bắt đầu (chưa hoàn thành chương nào và tiến độ < 10%)
   if (overallTheoryProgress < 10 && (!resumeChapter || resumeChapter.n === 1 && resumeChapter.progress < 20)) {
     const first = chaptersProgress[0] || resumeChapter;
+    const rawTitle = first?.title || `Khởi đầu với ${label}`;
+    const cleanTitle = rawTitle.toLowerCase().startsWith("làm quen")
+      ? rawTitle
+      : `Làm quen với ${rawTitle}`;
+    const prog = first?.progress && first.progress > 0 ? first.progress : 15;
+
     return {
       type: "lesson",
       badge: "Khởi động lộ trình",
-      title: first ? `Làm quen: ${first.title}` : `Khởi đầu với ${label}`,
+      title: cleanTitle,
       description: `Bạn đang ở bước đầu của lộ trình ${label}. Hãy bắt đầu từ cú pháp, nhập xuất và cách tư duy logic để xây nền tảng vững chắc.`,
-      progressText: first ? `Chương 01 · ${first.progress || 0}%` : "0% hoàn thành",
-      progressPercent: first?.progress || 5,
-      actionText: first?.id ? "Bắt đầu bài học 01" : "Khám phá bài học",
+      progressText: `Chương 01 · ${prog}%`,
+      progressPercent: prog,
+      actionText: "Bắt đầu bài học 01",
       actionPath: first?.id ? `/lesson/${first.id}` : "/curriculum",
       tag: "Nền tảng",
     };
