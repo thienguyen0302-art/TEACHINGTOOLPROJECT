@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import TeacherAuthoringNav from '../components/TeacherAuthoringNav.jsx';
 import Icon from '../components/Icon.jsx';
 import AutoTestGenerator from '../components/AutoTestGenerator.jsx';
-import { listTeacherProblems, loadTeacherProblem, saveTeacherProblem } from '../services/contestService.js';
+import { listTeacherProblems, loadTeacherProblem, saveTeacherProblem, setPracticePublished } from '../services/contestService.js';
 import useContestData from '../hooks/useContestData.js';
 import useContestClock from '../hooks/useContestClock.js';
 import { parseProblemImport, problemTemplate, serializePublicProblem, validateProblem } from '../utils/problemAuthoring.js';
@@ -23,8 +23,11 @@ function downloadJson(value, filename) {
 }
 export default function TeacherProblems() {
   const state = useContestData(listTeacherProblems);
+  const {now}=useContestClock();
   const location = useLocation();
   const [error, setError] = useState(''), [search, setSearch] = useState(''), [filter, setFilter] = useState('all'), [pdfOpen, setPdfOpen] = useState(!!location.state?.openPdf);
+  const [posting,setPosting]=useState('');
+  async function togglePractice(p){setPosting(p.id);setError('');try{await setPracticePublished(p.id,!p.practicePublished);state.refresh();}catch(e){setError(e.message);}finally{setPosting('');}}
   const navigate = useNavigate();
   async function importJson(event) {
     const file = event.target.files[0]; if (!file) return;
@@ -38,14 +41,14 @@ export default function TeacherProblems() {
     setPdfOpen(false); navigate(`/teacher/contests/${result.id}/edit`);
   }
   const problems = state.value ?? [];
-  const visible = problems.filter(p => (filter === 'all' || p.status === filter) && `${p.title} ${p.tags.join(' ')}`.toLocaleLowerCase('vi').includes(search.toLocaleLowerCase('vi')));
+  const visible = problems.filter(p => (filter === 'all' || (filter === 'practice' ? p.practicePublished : p.status === filter)) && `${p.title} ${p.tags.join(' ')}`.toLocaleLowerCase('vi').includes(search.toLocaleLowerCase('vi')));
   return <div className="content contest-ui author-page"><TeacherAuthoringNav />
     <header className="author-hero"><div><span className="author-kicker">KHÔNG GIAN GIÁO VIÊN</span><h1>Thư viện bài tập</h1><p>Viết đề, thêm ví dụ và đáp án để học sinh luyện tập.</p></div><div className="author-hero-actions"><Link className="contest-button contest-primary" to="/teacher/problems/new">+ Soạn bài mới</Link></div></header>
     <div className="author-summary"><div><Icon name="book" /><p><strong>{problems.length}</strong><span>Tổng bài tập</span></p></div><div><Icon name="history" /><p><strong>{problems.filter(p => p.status === 'draft').length}</strong><span>Bản nháp cần hoàn thiện</span></p></div><div><Icon name="check" /><p><strong>{problems.filter(p => p.status === 'published').length}</strong><span>Đã xuất bản</span></p></div></div>
     {error && <p className="author-error" role="alert">{error}</p>}
-    <section className="author-library"><header className="author-library-heading"><div><h2>Bài tập của hệ thống</h2><p>Chọn bài để tiếp tục chỉnh sửa hoặc chuẩn bị cho contest.</p></div><label className="author-search"><Icon name="search" /><input type="search" aria-label="Tìm bài tập" placeholder="Tìm theo tên hoặc chủ đề…" value={search} onChange={e => setSearch(e.target.value)} /></label></header>
-      <div className="author-library-tools"><div className="contest-filters">{[['all','Tất cả'],['draft','Bản nháp'],['published','Đã xuất bản']].map(([key,label]) => <button key={key} aria-pressed={filter === key} onClick={() => setFilter(key)}>{label}</button>)}</div><details className="author-more"><summary>Công cụ hỗ trợ</summary><button type="button" onClick={() => setPdfOpen(true)}>Nhập từ PDF bằng AI</button><label className="contest-button author-file-button">Nhập JSON<input type="file" accept=".json,application/json" aria-label="Nhập JSON" onChange={importJson} /></label><button onClick={() => downloadJson(problemTemplate, 'mau-bai-tap.json')}>Tải mẫu JSON</button></details></div>
-      {!state.value ? <ContestError state={state} /> : <><div className="contest-table-wrap"><table><thead><tr><th>Bài tập</th><th>Mức độ</th><th>Trạng thái</th><th>Ví dụ / Test chấm</th><th /></tr></thead><tbody>{visible.map(p => <tr key={p.id}><td><Link className="author-problem-title" to={`/teacher/problems/${p.id}/edit`}>{p.title}</Link><small>{p.tags.join(' · ') || 'Chưa gắn chủ đề'}</small></td><td>{difficultyLabels[p.difficulty]}</td><td><span className={`author-status ${p.status}`}>{p.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}</span></td><td>{p.samples.length} ví dụ · {p.hiddenTestCount} test</td><td><Link className="contest-button" to={`/teacher/problems/${p.id}/edit`}>Chỉnh sửa →</Link></td></tr>)}{!visible.length && <tr><td colSpan="5"><div className="author-empty"><Icon name="book" /><h3>{problems.length ? 'Không tìm thấy bài phù hợp' : 'Bắt đầu xây dựng kho bài của bạn'}</h3><p>{problems.length ? 'Thử đổi từ khóa hoặc bộ lọc.' : 'Bấm “Soạn bài mới”, nhập nội dung và thêm ví dụ. Bạn có thể lưu nháp bất cứ lúc nào.'}</p></div></td></tr>}</tbody></table></div>{state.error && <p role="alert" className="author-error">{state.error}</p>}</>}
+    <section className="author-library"><header className="author-library-heading"><div><h2>Bài tập của hệ thống</h2><p>Bài tự soạn và bài từ contest dùng chung tại đây. Xuất bản rồi chọn “Đăng vào kho học sinh” để mở luyện tập. Bài đang khóa cho contest sẽ tạm ẩn khỏi kho.</p></div><label className="author-search"><Icon name="search" /><input type="search" aria-label="Tìm bài tập" placeholder="Tìm theo tên hoặc chủ đề…" value={search} onChange={e => setSearch(e.target.value)} /></label></header>
+      <div className="author-library-tools"><div className="contest-filters">{[['all','Tất cả'],['draft','Bản nháp'],['published','Đã xuất bản'],['practice','Kho học sinh']].map(([key,label]) => <button key={key} aria-pressed={filter === key} onClick={() => setFilter(key)}>{label}</button>)}</div><details className="author-more"><summary>Công cụ hỗ trợ</summary><button type="button" onClick={() => setPdfOpen(true)}>Nhập từ PDF bằng AI</button><label className="contest-button author-file-button">Nhập JSON<input type="file" accept=".json,application/json" aria-label="Nhập JSON" onChange={importJson} /></label><button onClick={() => downloadJson(problemTemplate, 'mau-bai-tap.json')}>Tải mẫu JSON</button></details></div>
+      {!state.value ? <ContestError state={state} /> : <><div className="contest-table-wrap"><table><thead><tr><th>Bài tập</th><th>Mức độ</th><th>Trạng thái</th><th>Ví dụ / Test chấm</th><th /></tr></thead><tbody>{visible.map(p => <tr key={p.id}><td><Link className="author-problem-title" to={`/teacher/problems/${p.id}/edit`}>{p.title}</Link><small>{p.tags.join(' · ') || 'Chưa gắn chủ đề'}</small></td><td>{difficultyLabels[p.difficulty]}</td><td><span className={`author-status ${p.status}`}>{p.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}</span></td><td>{p.samples.length} ví dụ · {p.hiddenTestCount} test</td><td><Link className="contest-button" to={`/teacher/problems/${p.id}/edit`}>Chỉnh sửa →</Link> <button type="button" disabled={!!posting||p.status!=='published'||p.lockedUntil>now} onClick={()=>togglePractice(p)}>{posting===p.id?'Đang lưu…':p.practicePublished?'Gỡ khỏi kho học sinh':'Đăng vào kho học sinh'}</button> <Link to="/teacher/contests/new" state={{problemIds:[p.id]}}>Tạo contest từ bài này</Link>{p.practicePublished&&<small>Đã đăng vào kho học sinh</small>}</td></tr>)}{!visible.length && <tr><td colSpan="5"><div className="author-empty"><Icon name="book" /><h3>{problems.length ? 'Không tìm thấy bài phù hợp' : 'Bắt đầu xây dựng kho bài của bạn'}</h3><p>{problems.length ? 'Thử đổi từ khóa hoặc bộ lọc.' : 'Bấm “Soạn bài mới”, nhập nội dung và thêm ví dụ. Bạn có thể lưu nháp bất cứ lúc nào.'}</p></div></td></tr>}</tbody></table></div>{state.error && <p role="alert" className="author-error">{state.error}</p>}</>}
     </section>
     <div className="author-next-step"><Icon name="trophy" /><div><strong>Sẵn sàng tổ chức vòng thi?</strong><p>Chọn ít nhất 4 bài đã xuất bản để tạo contest A–D.</p></div><Link to="/teacher/contests/new" className="contest-button">Tạo contest →</Link></div>
     {pdfOpen && <Suspense fallback={<p role="status">Đang mở công cụ nhập PDF…</p>}><PdfProblemImporter onClose={() => setPdfOpen(false)} onImport={importDrafts} /></Suspense>}
@@ -115,10 +118,10 @@ function ProblemForm({ initial, problemId, savedNotice = '' }) {
     if(nextStatus==='published'&&!form.samples.length){showError('Thêm ít nhất một ví dụ cho học sinh trước khi xuất bản.','simple-examples');return;}
     if(nextStatus==='published'&&!form.hiddenTests.length){showError('Thêm ít nhất một test chấm riêng trước khi xuất bản. Bạn vẫn có thể lưu nháp.','simple-tests');return;}
     try{
-      const valid=validateProblem(payload(),{status:nextStatus});setBusy(true);setError('');
+      const valid=validateProblem({...payload(),practicePublished:nextStatus==='published'&&form.practicePublished===true},{status:nextStatus});setBusy(true);setError('');
       const {id}=await saveTeacherProblem(problemId,{...valid,status:nextStatus});
       const message=nextStatus==='published'?'Đã xuất bản. Bạn có thể chọn bài này khi tạo contest.':'Đã lưu nháp. Bạn có thể tiếp tục sửa bất cứ lúc nào.';
-      setSavedSignature(signature);setStatus(nextStatus);setNotice(message);
+      const savedForm={...form,practicePublished:valid.practicePublished};setForm(savedForm);setSavedSignature(JSON.stringify(savedForm));setStatus(nextStatus);setNotice(message);
       if(!problemId)navigate(`/teacher/problems/${id}/edit`,{replace:true,state:{savedNotice:message}});
     }catch(e){showError(e.message);}finally{setBusy(false);}
   }

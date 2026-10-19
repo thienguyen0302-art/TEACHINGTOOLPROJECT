@@ -1,3 +1,5 @@
+import useContestData from '../hooks/useContestData.js';
+import {listPracticeProblems} from '../services/contestService.js';
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Icon from "../components/Icon";
@@ -7,7 +9,7 @@ import "./Practice.css";
 
 
 function ProblemRow({ problem }) {
-  const url = `/problem/${problem.slug}`;
+  const url = problem.practicePublished ? `/practice/problem/${problem.id}` : `/problem/${problem.slug}`;
   return (
     <tr>
       <td style={{ whiteSpace: "nowrap", color: "#64748b", fontSize: 12, fontWeight: 700 }}>{problem.id}</td>
@@ -32,7 +34,7 @@ function ProblemRow({ problem }) {
         </span>
       </td>
       <td style={{ color: "#64748b", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap" }}>
-        Chương {Number(problem.chapterId.slice(2))}
+        {problem.practicePublished?'Giáo viên đăng':`Chương ${Number(problem.chapterId.slice(2))}`}
       </td>
       <td>
         <Link className="ps-open-btn" aria-label={`Làm bài ${problem.title}`} to={url}>→</Link>
@@ -48,11 +50,13 @@ export default function PracticeBank() {
   const [query, setQuery]           = useState("");
   const [sort, setSort]             = useState("default");
 
-  const allProblems = listProblems();
+  const bank=useContestData(listPracticeProblems,{poll:15000});
+  const additional=bank.value??[];
+  const allProblems = listProblems({additional});
   const topics      = [...new Set(allProblems.flatMap((p) => p.tags))].sort();
-  const problems    = listProblems({ difficulty, chapterId, topic, query, sort });
+  const problems    = listProblems({ difficulty, chapterId, topic, query, sort, additional });
   const hasFilters  = Boolean(difficulty || chapterId || topic || query || sort !== "default");
-  const emptyChapter = chapterId && listProblems({ chapterId }).length === 0;
+  const emptyChapter = chapterId && listProblems({ chapterId, additional }).length === 0;
 
   function resetFilters() {
     setDifficulty(""); setChapterId(""); setTopic(""); setQuery(""); setSort("default");
@@ -61,6 +65,7 @@ export default function PracticeBank() {
   return (
     <div className="content ps-page">
 
+      {bank.error&&<p role="alert">Chưa tải được bài giáo viên: {bank.error} <button onClick={bank.refresh}>Thử lại</button></p>}
       {/* Header */}
       <div className="ps-page-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div>

@@ -1,3 +1,5 @@
+import useContestData from '../hooks/useContestData.js';
+import {listPracticeProblems} from '../services/contestService.js';
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
@@ -11,7 +13,7 @@ const levelDescriptions = {
 };
 
 function ProblemRow({ problem }) {
-  const url = `/problem/${problem.slug}`;
+  const url = problem.practicePublished ? `/practice/problem/${problem.id}` : `/problem/${problem.slug}`;
   return (
     <tr className="practice-table-row">
       <td className="practice-col-id">{problem.id}</td>
@@ -26,7 +28,7 @@ function ProblemRow({ problem }) {
           {difficultyLabels[problem.difficulty]}
         </span>
       </td>
-      <td className="practice-col-chapter">Chương {Number(problem.chapterId.slice(2))}</td>
+      <td className="practice-col-chapter">{problem.practicePublished?'Giáo viên đăng':`Chương ${Number(problem.chapterId.slice(2))}`}</td>
       <td className="practice-col-action">
         <Link className="practice-open-btn" aria-label={`Làm bài ${problem.title}`} to={url}>→</Link>
       </td>
@@ -41,11 +43,13 @@ export default function Practice() {
   const [topic, setTopic] = useState("");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("default");
-  const allProblems = listProblems();
+  const bank=useContestData(listPracticeProblems,{poll:15000});
+  const additional=bank.value??[];
+  const allProblems = listProblems({additional});
   const topics = [...new Set(allProblems.flatMap((problem) => problem.tags))].sort();
-  const problems = listProblems({ difficulty, chapterId, topic, query, sort });
+  const problems = listProblems({ difficulty, chapterId, topic, query, sort, additional });
   const hasFilters = Boolean(difficulty || chapterId || topic || query || sort !== "default");
-  const emptyChapter = chapterId && listProblems({ chapterId }).length === 0;
+  const emptyChapter = chapterId && listProblems({ chapterId, additional }).length === 0;
 
   function resetFilters() {
     setDifficulty("");
@@ -57,6 +61,7 @@ export default function Practice() {
 
   return (
     <div className="content practice-page">
+      {bank.error&&<p role="alert">Chưa tải được bài giáo viên: {bank.error} <button onClick={bank.refresh}>Thử lại</button></p>}
       <section className="practice-hero">
         <div>
           <span><Icon name="code" /> LUYỆN TẬP LẬP TRÌNH</span>

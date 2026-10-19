@@ -18,3 +18,7 @@ export const saveTeacherProblem = (id, body) => api(`/api/teacher/problems${id ?
 export const listTeacherContests = () => api('/api/teacher/contests');
 export const loadTeacherContest = (id) => api(`/api/teacher/contests/${encodeURIComponent(id)}`);
 export const saveTeacherContest = (id, body) => api(`/api/teacher/contests${id ? `/${encodeURIComponent(id)}` : ''}`, { method: id ? 'PUT' : 'POST', body });
+export const listPracticeProblems = () => api('/api/practice');
+export const loadPracticeProblem = id => api(`/api/practice/${encodeURIComponent(id)}`);
+export const setPracticePublished = (id,published) => api(`/api/teacher/problems/${encodeURIComponent(id)}/practice`,{method:'PUT',body:{published}});
+export const judgePractice = ({signal,...body}) => api('/api/practice/judge',{method:'POST',body,signal});

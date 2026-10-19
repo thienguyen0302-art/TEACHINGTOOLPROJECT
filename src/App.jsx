@@ -90,8 +90,9 @@ function Learning({ user, lang, onChangeLang }) {
         />
         <Route path="/curriculum" element={isTeacher ? <Navigate to="/teacher" replace /> : <Curriculum lang={lang} data={data} onChangeLang={onChangeLang} />} />
         <Route path="/lesson/:id" element={isTeacher ? <Navigate to="/teacher" replace /> : <Lesson lang={lang} />} />
-        <Route path="/practice" element={isTeacher ? <Navigate to="/teacher" replace /> : <Practice />} />
-        <Route path="/practice-bank" element={isTeacher ? <Navigate to="/teacher" replace /> : <PracticeBank />} />
+        <Route path="/practice" element={<Practice />} />
+        <Route path="/practice-bank" element={<PracticeBank />} />
+        <Route path="/practice/problem/:problemId" element={<Problem lang={lang} />} />
         <Route path="/problem/:slug" element={<Problem lang={lang} />} />
         <Route path="/contests" element={<Contests />} />
         <Route path="/contest/:contestId" element={<Contest user={user} />} />

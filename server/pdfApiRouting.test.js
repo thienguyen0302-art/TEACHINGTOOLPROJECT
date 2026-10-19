@@ -24,6 +24,9 @@ test('real HTTP entry point dispatches all teacher PDF routes and rejects anonym
       assert.equal(response.status,401,`${action} must reach PDF auth, not a 404`);
       assert.match((await response.json()).error,/đăng nhập/);
     }
+    for (const [path,method] of [['/api/practice','GET'],['/api/practice/p1','GET'],['/api/practice/judge','POST'],['/api/teacher/problems/p1/practice','PUT']]) {
+      const response=await fetch(`http://127.0.0.1:${port}${path}`,{method});assert.equal(response.status,401,`${path} must reach authenticated backend`);
+    }
     const generator=await fetch(`http://127.0.0.1:${port}/api/teacher/problems/generate-tests`,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});assert.equal(generator.status,401);
   } finally {child.kill('SIGTERM');}
 });

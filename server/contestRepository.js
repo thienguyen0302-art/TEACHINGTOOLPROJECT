@@ -32,6 +32,18 @@ export function createContestRepository(db) {
     listScoreboard: (id) => list(collection('contests').doc(id).collection('scoreboard')),
     listSubmissions: (id, uid) => list(uid ? collection('contests').doc(id).collection('submissions').where('uid', '==', uid) : collection('contests').doc(id).collection('submissions')),
     async getProblemLock(id) { return get(`problemLocks/${id}`); },
+    async setPracticePublished(id, published, uid, now) {
+      const ref = collection('problems').doc(id);
+      await db.runTransaction(async tx => {
+        const [p, secret, lock] = await Promise.all([tx.get(ref),tx.get(db.doc(`problemSecrets/${id}`)),tx.get(db.doc(`problemLocks/${id}`))]);
+        const problem = data(p);
+        if (!problem) throw new AuthoringError('Không tìm thấy bài.',404);
+        if (timestampMs(data(lock)?.until) > now) fail('Bài đang được khóa cho contest. Đợi contest kết thúc để đăng vào kho.');
+        if (published) validateProblem({...problem,hiddenTests:data(secret)?.hiddenTests,practicePublished:true},{status:problem.status});
+        tx.set(ref,{...p.data(),practicePublished:published,updatedAt:Timestamp.fromMillis(now)});
+      });
+      return id;
+    },
     async saveProblem(id, input, uid, now) {
       const ref = id ? collection('problems').doc(id) : collection('problems').doc();
       await db.runTransaction(async (tx) => {

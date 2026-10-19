@@ -11,12 +11,12 @@ const object = (v) => v && typeof v === 'object' && !Array.isArray(v);
 const text = (v, name, max = 65536) => requireValue(typeof v === 'string' && v.trim() && bytes(v) <= max, `${name} không được trống hoặc quá dài.`);
 const strings = (v, name, max) => requireValue(Array.isArray(v) && v.length <= max && v.every((x) => typeof x === 'string' && bytes(x) <= 2048), `${name} không hợp lệ.`);
 export const problemTemplate = {
-  title: '', slug: '', difficulty: 'basic', tags: [], statement: '', inputDescription: '', outputDescription: '', constraints: [],
+  practicePublished: false, title: '', slug: '', difficulty: 'basic', tags: [], statement: '', inputDescription: '', outputDescription: '', constraints: [],
   samples: [{ input: '', output: '', explanation: '' }], hiddenTests: [],
   allowedLanguages: ['cpp', 'python'], starterCode: { cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    return 0;\n}\n', python: '' },
 };
 export function serializePublicProblem(value) {
-  const fields = ['title', 'slug', 'difficulty', 'tags', 'statement', 'inputDescription', 'outputDescription', 'constraints', 'allowedLanguages', 'status', 'createdBy', 'createdAt', 'updatedAt'];
+  const fields = ['practicePublished', 'title', 'slug', 'difficulty', 'tags', 'statement', 'inputDescription', 'outputDescription', 'constraints', 'allowedLanguages', 'status', 'createdBy', 'createdAt', 'updatedAt'];
   return {
     ...Object.fromEntries(fields.filter((key) => value[key] !== undefined).map((key) => [key, value[key]])),
     samples: (value.samples ?? []).map(({ input, output, explanation = '' }) => ({ input, output, explanation })),
@@ -46,7 +46,9 @@ export function validateProblem(input, { status = 'draft', existingSlugs = [], c
   }
   tests(input.samples, 'Samples', status === 'published' ? 1 : 0, 10);
   tests(input.hiddenTests ?? [], 'Hidden tests', status === 'published' ? 1 : 0, 50);
-  const publicData = serializePublicProblem({ ...input, status });
+  requireValue(input.practicePublished === undefined || typeof input.practicePublished === 'boolean', 'Trạng thái kho luyện tập không hợp lệ.');
+  requireValue(!input.practicePublished || status === 'published', 'Hãy xuất bản bài trước khi đăng vào kho học sinh.');
+  const publicData = serializePublicProblem({ ...input, practicePublished: input.practicePublished === true, status });
   // Firestore documents have a 1 MiB ceiling, including overhead.
   requireValue(bytes(JSON.stringify(publicData)) <= 900 * 1024, 'Nội dung công khai vượt giới hạn 900 KB.');
   const hiddenTests = (input.hiddenTests ?? []).map(({ input, output }) => ({ input, output }));
@@ -57,5 +59,5 @@ export function parseProblemImport(raw) {
   requireValue(typeof raw === 'string' && bytes(raw) <= 2 * 1024 * 1024, 'JSON import tối đa 2 MB.');
   let data;
   try { data = JSON.parse(raw); } catch { throw new AuthoringError('JSON không hợp lệ.'); }
-  return validateProblem(data, { status: 'draft' }); // Import never publishes.
+  return validateProblem({ ...data, practicePublished: false }, { status: 'draft' }); // Import never publishes.
 }

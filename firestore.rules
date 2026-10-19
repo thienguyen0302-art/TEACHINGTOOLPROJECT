@@ -105,7 +105,7 @@ service cloud.firestore {
         get(/databases/$(database)/documents/problemLocks/$(problemId)).data.until <= request.time;
     }
     function validPublicProblem(d, id) {
-      return d.keys().hasOnly(['title','slug','difficulty','tags','statement','inputDescription','outputDescription','constraints','samples','allowedLanguages','starterCode','status','createdBy','createdAt','updatedAt']) &&
+      return d.keys().hasOnly(['practicePublished','title','slug','difficulty','tags','statement','inputDescription','outputDescription','constraints','samples','allowedLanguages','starterCode','status','createdBy','createdAt','updatedAt']) &&
         d.status in ['draft','published'] && d.title is string && d.slug is string &&
         d.samples is list && d.samples.size() >= 1 && d.samples.size() <= 10 &&
         d.allowedLanguages is list && d.allowedLanguages.size() > 0 && d.allowedLanguages.hasOnly(['cpp','python']) &&

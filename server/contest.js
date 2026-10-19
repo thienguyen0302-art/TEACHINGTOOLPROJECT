@@ -32,15 +32,17 @@ function summarize(graded) {
 }
 export function createContestService({ repository, execute = executeTest, grade = gradeSubmission, clock = Date.now, judgeConfig = () => ({}) }) {
   return {
-    async judge(body, uid, profile, signal) {
-      requireValue(body && validId(body.contestId) && validId(body.problemId), 'ID contest/bài không hợp lệ.');
+    async judge(body, uid, profile, signal, practice = false) {
+      requireValue(body && (practice || validId(body.contestId)) && validId(body.problemId), 'ID contest/bài không hợp lệ.');
       const { contestId, problemId, language, source, mode, stdin = '' } = body;
       requireValue(['run', 'submit'].includes(mode) && typeof source === 'string' && source.trim() && bytes(source) <= 50000 && typeof stdin === 'string' && bytes(stdin) <= 20 * 1024, 'Code, mode hoặc input không hợp lệ.');
       const now = clock();
-      const contest = await repository.getContest(contestId);
-      const entry = authorizeContest(contest, problemId, language, now);
+      const contest = practice ? null : await repository.getContest(contestId);
+      const entry = practice ? {points:100} : authorizeContest(contest, problemId, language, now);
+      requireValue(['cpp','python'].includes(language), 'Ngôn ngữ không hợp lệ.');
       const problem = await repository.getProblem(problemId);
       requireValue(problem?.status === 'published', 'Bài chưa được publish.', 404);
+      if (practice) requireValue(problem.practicePublished === true && !((await repository.getProblemLock(problemId))?.until > now), 'Bài chưa mở trong kho luyện tập hoặc đang được dùng cho contest.', 403);
       requireValue(problem.allowedLanguages.includes(language), 'Ngôn ngữ không được phép.', 403);
       const config = { ...judgeConfig(language), source, signal };
       if (mode === 'run') {
@@ -57,6 +59,7 @@ export function createContestService({ repository, execute = executeTest, grade 
       const earnedPoints = Math.round(entry.points * graded.score / 100);
       const summary = summarize(graded);
       const submission = { uid, problemId, language, score: graded.score, earnedPoints, passed: graded.passed, total: graded.total, ...summary, source, submittedAt: now };
+      if (practice) return {mode,...graded,...summary};
       const submissionId = await repository.recordSubmission(contestId, submission, profile?.displayName || `Học sinh ${uid.slice(0, 6)}`);
       return { mode, ...graded, ...summary, earnedPoints, submissionId };
     },
@@ -94,7 +97,18 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
       const teacherRoute = parts[1] === 'teacher';
       if (teacherRoute) requireValue(teacher, 'Chỉ giáo viên được dùng chức năng này.', 403);
       const now = clock();
-      if (req.method === 'POST' && req.url === '/api/contest/judge') {
+      if (parts[1] === 'practice' && req.method === 'GET') {
+        const visible = async p => p?.status === 'published' && p.practicePublished === true && !((await repo.getProblemLock(p.id))?.until > now);
+        if (parts[2]) {
+          requireValue(validId(parts[2]), 'ID không hợp lệ.');
+          const p = await repo.getProblem(parts[2]);
+          requireValue(await visible(p), 'Bài chưa mở trong kho luyện tập hoặc đang được dùng cho contest.', 404);
+          return reply(200, {id:p.id,...serializePublicProblem(p)});
+        }
+        const items = await Promise.all((await repo.listProblems()).map(async p => await visible(p) ? {id:p.id,...serializePublicProblem(p)} : null));
+        return reply(200, items.filter(Boolean));
+      }
+      if (req.method === 'POST' && ['/api/contest/judge','/api/practice/judge'].includes(req.url)) {
         requireValue(active < 2, 'Máy chấm đang bận. Hãy thử lại.', 429);
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 120000);
@@ -103,12 +117,17 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
         try {
           const body = await readBody(req, 100000);
           const service = createContestService({ repository: repo, execute, grade, clock, judgeConfig });
-          return reply(200, await service.judge(body, caller.uid, profile, controller.signal));
+          return reply(200, await service.judge(body, caller.uid, profile, controller.signal, req.url === '/api/practice/judge'));
         } finally { active--; clearTimeout(timer); }
       }
       if (teacherRoute && parts[2] === 'problems') {
         const id = parts[3];
         if (id) requireValue(validId(id), 'ID không hợp lệ.');
+        if (parts[4] === 'practice' && req.method === 'PUT') {
+          const body = await readBody(req, 10000);
+          requireValue(typeof body.published === 'boolean', 'Trạng thái kho không hợp lệ.');
+          return reply(200, {id:await repo.setPracticePublished(id, body.published, caller.uid, now)});
+        }
         if (req.method === 'GET') {
           const problems = id ? [await repo.getProblem(id)] : await repo.listProblems();
           requireValue(!id || problems[0], 'Không tìm thấy bài.', 404);

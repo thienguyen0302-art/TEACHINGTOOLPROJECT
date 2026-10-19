@@ -52,9 +52,9 @@ const problems = Object.entries(modules).map(([path, problem]) => {
   return Object.fromEntries(publicFields.map((key) => [key, problem[key]]));
 }).sort((a, b) => a.chapterId.localeCompare(b.chapterId) || a.id.localeCompare(b.id));
 
-export function listProblems({ difficulty, chapterId, topic, query = "", sort = "default" } = {}) {
+export function listProblems({ difficulty, chapterId, topic, query = "", sort = "default", additional = [] } = {}) {
   const search = normalize(query.trim());
-  const result = problems.filter((problem) =>
+  const result = [...problems,...additional].filter((problem) =>
     (!difficulty || problem.difficulty === difficulty) &&
     (!chapterId || problem.chapterId === chapterId) &&
     (!topic || problem.tags.includes(topic)) &&

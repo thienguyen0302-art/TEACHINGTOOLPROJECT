@@ -35,6 +35,7 @@ const STUDENT_NAV = [
 ];
 
 const TEACHER_NAV = [
+  { label: "Kho bài tập học sinh", icon: "book", path: "/practice" },
   { label: "Quản trị lớp học", icon: "chart", path: "/teacher" },
   { label: "Quản lý học sinh", icon: "user", path: "/teacher/students" },
   { label: "Tổng hợp Contest", icon: "trophy", path: "/teacher/contest-history" },
