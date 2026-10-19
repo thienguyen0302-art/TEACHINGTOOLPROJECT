@@ -16,7 +16,7 @@ export function lessonCompletion(chapter, { overviewRead, reflections = {}, quiz
 
   const theoryUnlocked = Boolean(overviewRead || answered > 0 || currentTab === "theory" || currentTab === "practice" || currentTab === "summary");
   const practiceUnlocked = Boolean(theoryUnlocked && (checks.length === 0 || answered > 0 || currentTab === "practice" || currentTab === "summary" || quizSubmitted));
-  const summaryUnlocked = Boolean(practiceUnlocked && (quizSubmitted || !chapter?.quiz?.length || currentTab === "summary" || solved > 0));
+  const summaryUnlocked = Boolean(practiceUnlocked && (currentTab === "summary" || ((!chapter?.quiz?.length || quizSubmitted) && (exercises.length === 0 || solved > 0))));
 
   return {
     unlocked: {
