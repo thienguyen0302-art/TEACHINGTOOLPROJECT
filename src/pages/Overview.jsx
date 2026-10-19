@@ -375,9 +375,8 @@ export default function Overview({ user, lang, data, onChangeLang }) {
         <div><span>Sau đó</span><strong>Rẽ nhánh tư duy</strong></div>
       </section>
 
-      {/* ── BẢNG ĐIỀU KHIỂN: KẾ HOẠCH ÔN LUYỆN & THÔNG BÁO MỚI (ĐẶT CẠNH NHAU) ── */}
-      <div className="dash-two-col-grid">
-        <section className="dash-block dash-goals-block">
+      {/* ── KHỐI KẾ HOẠCH ÔN LUYỆN (NẰM NGANG) ─────────────────── */}
+      <section className="dash-block dash-goals-block">
           <div className="dash-block-header">
             <div>
               <div className="dash-title-row">
@@ -540,7 +539,6 @@ export default function Overview({ user, lang, data, onChangeLang }) {
             </div>
           )}
         </section>
-      </div>
 
       <section className="learning-hub">
         <div className="learning-hub-heading">
