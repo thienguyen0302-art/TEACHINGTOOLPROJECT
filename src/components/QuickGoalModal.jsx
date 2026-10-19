@@ -213,7 +213,7 @@ export default function QuickGoalModal({ isOpen, onClose, user }) {
                   onChange={(e) => setNewType(e.target.value)}
                 >
                   <option value="practice">Bài tập</option>
-                  <option value="exam">Đề thi HSG</option>
+                  <option value="contest">Contest HSG</option>
                   <option value="theory">Lý thuyết</option>
                   <option value="time">Thời gian học</option>
                 </select>

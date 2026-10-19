@@ -30,7 +30,7 @@ import { generateSmartRecommendation, fetchLiveAiAdvice } from "../services/aiRe
 
 const GOAL_TYPES = {
   practice: { label: "Bài tập Code", cls: "practice" },
-  exam:     { label: "Luyện đề HSG", cls: "exam" },
+  contest:  { label: "Contest HSG", cls: "contest" },
   theory:   { label: "Lý thuyết", cls: "theory" },
   time:     { label: "Thời lượng", cls: "time" },
   custom:   { label: "Khác", cls: "custom" },

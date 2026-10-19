@@ -33,7 +33,8 @@
     "test:test-generation": "node --test scripts/generated-tests.test.mjs server/pdfContest.test.js",
     "test:teacher:generate": "node scripts/teacher-authoring-browser/generate.mjs",
     "test:practice": "node --test server/practice.test.js",
-    "test:practice:browser": "node scripts/teacher-authoring-browser/practice.mjs"
+    "test:practice:browser": "node scripts/teacher-authoring-browser/practice.mjs",
+    "test:history:browser": "node scripts/student-history-browser/browser.mjs"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

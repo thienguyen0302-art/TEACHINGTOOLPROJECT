@@ -13,13 +13,11 @@ import Curriculum from "./pages/Curriculum";
 import Dashboard from "./pages/Dashboard";
 import Teacher from "./pages/Teacher";
 import TeacherStudents from "./pages/TeacherStudents";
-import ExamHistory from "./pages/ExamHistory";
+import SubmissionHistory from "./pages/SubmissionHistory";
 import Feedback from "./pages/Feedback";
 import Profile, { ProfileForm } from "./pages/Profile";
 import Schedule from "./pages/Schedule";
 import Ranking from "./pages/Ranking";
-import Exam from "./pages/Exam";
-import { saveExamResult } from "./services/examService";
 import AppShell from "./components/AppShell";
 import EmailVerification from "./components/EmailVerification";
 import useStudyTimer from "./hooks/useStudyTimer";
@@ -64,14 +62,6 @@ function Learning({ user, lang, onChangeLang }) {
     }
   }, [navigate]);
 
-  // Chỉ khi chạy dev: cho phép thử bảng xếp hạng bằng Console trình duyệt khi Exam chưa xong.
-  // Ví dụ: await peanutDev.saveExamResult({ examId: "HSG-QN-24", language: "cpp", correct: 18, total: 20, durationSec: 3000 })
-  useEffect(() => {
-    if (!import.meta.env.DEV) return undefined;
-    window.peanutDev = { saveExamResult: (result) => saveExamResult(user.uid, result) };
-    return () => { delete window.peanutDev; };
-  }, [user.uid]);
-
   // Nối bài nộp code (Judge) với Firestore; gỡ adapter khi đăng xuất.
   useEffect(() => {
     setSubmissionPersistenceAdapter(persistSubmission);
@@ -109,9 +99,9 @@ function Learning({ user, lang, onChangeLang }) {
         <Route path="/teacher/contests/:contestId/edit" element={teacherOnly(<TeacherContestEditor />)} />
         <Route path="/teacher/contests/:contestId/monitor" element={teacherOnly(<Contest user={user} teacher />)} />
 
-        <Route path="/exam" element={isTeacher ? <Navigate to="/teacher" replace /> : <Exam lang={lang} />} />
-        <Route path="/exam/:examId" element={isTeacher ? <Navigate to="/teacher" replace /> : <Exam lang={lang} />} />
-        <Route path="/exam-history" element={isTeacher ? <Navigate to="/teacher" replace /> : <ExamHistory />} />
+        <Route path="/exam/*" element={<Navigate to="/contests" replace />} />
+        <Route path="/exam-history" element={<Navigate to="/submissions" replace />} />
+        <Route path="/submissions" element={isTeacher ? <Navigate to="/teacher" replace /> : <SubmissionHistory />} />
         <Route
           path="/progress"
           element={isTeacher ? <Navigate to="/teacher" replace /> : <Dashboard user={viewUser} lang={lang} data={data} />}

@@ -362,7 +362,7 @@
 .ps-empty h3 { font-size: 15px; font-weight: 700; margin: 0 0 6px; }
 .ps-empty p  { font-size: 13px; font-weight: 600; margin: 0; }
 
-/* ── Exam history: score highlight ──────────────────────────── */
+/* ── Submission history: score highlight ──────────────────────────── */
 .ps-score { color: var(--ps-blue); font-weight: 800; font-size: 14px; }
 .ps-score small { color: var(--ps-text-muted); font-weight: 600; font-size: 12px; margin-left: 4px; }
 

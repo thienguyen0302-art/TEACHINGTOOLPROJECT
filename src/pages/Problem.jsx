@@ -149,7 +149,7 @@ function ProblemWorkspace({ problem, initialLang }) {
             </div>
             <SubmissionProgress entry={progress.entry} />
             <JudgeResults busy={busy} error={error} submission={submission} />
-            {!problem.practicePublished&&<AITutorPanel slug={problem.slug} language={language} source={drafts[language] ?? ""} judgeBusy={Boolean(busy)} judgeResult={currentJudgeResult(submission, drafts[language], language)} />}
+            <AITutorPanel slug={problem.practicePublished ? `practice/${problem.id}` : problem.slug} language={language} source={drafts[language] ?? ""} judgeBusy={Boolean(busy)} judgeResult={currentJudgeResult(submission, drafts[language], language)} />
           </div>
         </section>
       </div>

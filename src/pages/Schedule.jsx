@@ -17,7 +17,7 @@ const WEEKDAYS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
 
 const GOAL_TYPES = {
   practice: { label: "Bài tập Code", cls: "practice" },
-  exam:     { label: "Luyện đề HSG", cls: "exam" },
+  contest:  { label: "Contest HSG", cls: "contest" },
   theory:   { label: "Lý thuyết", cls: "theory" },
   time:     { label: "Thời lượng", cls: "time" },
   custom:   { label: "Khác", cls: "custom" },
@@ -455,7 +455,7 @@ export default function Schedule({ user, data }) {
                   </label>
                   <input
                     type="text"
-                    placeholder="Ví dụ: Giải 3 bài Quy hoạch động mảng, Luyện đề HSG Số 2..."
+                    placeholder="Ví dụ: Giải 3 bài Quy hoạch động mảng, Tham gia Contest HSG..."
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
                     required
@@ -474,7 +474,7 @@ export default function Schedule({ user, data }) {
                       style={{ width: "100%", padding: "9px 12px", borderRadius: 12, border: "1px solid #dfe7f4", fontSize: 12.5, fontWeight: 700 }}
                     >
                       <option value="practice">Bài tập Code</option>
-                      <option value="exam">Luyện đề HSG</option>
+                      <option value="contest">Contest HSG</option>
                       <option value="theory">Chuyên đề Lý thuyết</option>
                       <option value="time">Thời lượng học</option>
                       <option value="custom">Mục tiêu khác</option>

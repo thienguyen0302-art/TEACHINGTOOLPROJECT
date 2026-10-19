@@ -6,7 +6,7 @@ const HELP_SECTIONS = [
   { id: "quickstart", label: "Bắt đầu học", icon: "book" },
   { id: "judge", label: "Quy tắc chấm bài", icon: "code" },
   { id: "ai", label: "Trợ lý AI", icon: "fire" },
-  { id: "contest", label: "Contest & Luyện đề", icon: "trophy" },
+  { id: "contest", label: "Contest HSG", icon: "trophy" },
   { id: "faq", label: "Câu hỏi thường gặp", icon: "help" },
   { id: "contact", label: "Hỗ trợ & Liên hệ", icon: "user" },
 ];
@@ -34,7 +34,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Điểm trên bảng xếp hạng (Ranking) được tính ra sao?",
-    a: "Điểm xếp hạng tổng hợp dựa trên: tổng điểm các đề thi thử HSG hoàn thành (lấy điểm cao nhất của mỗi đề thi), số bài tập thực hành đã giải đúng hoàn toàn (AC), và chuỗi ngày chăm chỉ rèn luyện.",
+    a: "Bảng xếp hạng Contest HSG tổng hợp điểm từ các contest bạn đã tham gia. Mỗi bài giữ điểm tốt nhất; điểm được tính từ kết quả máy chấm trên máy chủ.",
   },
   {
     q: "Giáo viên theo dõi kết quả của tôi như thế nào?",
@@ -191,7 +191,7 @@ export default function HelpCenterModal({ isOpen, onClose }) {
 
                   <div className="hcm-step-card">
                     <span className="hcm-step-num">04</span>
-                    <h4>Luyện đề thi HSG &amp; Contest</h4>
+                    <h4>Tham gia Contest HSG</h4>
                     <p>Làm quen với áp lực phòng thi, thời gian đếm ngược và kiểm tra năng lực với các bộ đề thi học sinh giỏi chọn đội tuyển thực tế.</p>
                   </div>
                 </div>
@@ -275,12 +275,12 @@ export default function HelpCenterModal({ isOpen, onClose }) {
               </div>
             )}
 
-            {/* 4. CONTEST & LUYỆN ĐỀ */}
+            {/* 4. CONTEST HSG */}
             {activeTab === "contest" && (
               <div className="hcm-pane">
-                <h3>Quy chế thi Contest &amp; Luyện đề HSG</h3>
+                <h3>Quy chế thi Contest HSG</h3>
                 <p>
-                  Hệ thống hỗ trợ cả 2 hình thức: <strong>Luyện đề tự do</strong> và <strong>Contest trực tuyến có giám sát</strong>:
+                  Học sinh tham gia <strong>Contest lập trình trực tuyến</strong> theo lịch do giáo viên thiết lập:
                 </p>
 
                 <div className="hcm-contest-rules">

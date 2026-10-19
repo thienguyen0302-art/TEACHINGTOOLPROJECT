@@ -1,6 +1,10 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { Buffer } from 'node:buffer';
 import { TutorError, requestProvider } from './aiProvider.js';
+import { createAuthGuard } from './auth.js';
+import { getContestRepository } from './contestRepository.js';
+import { serializePublicProblem, validId } from '../src/utils/problemAuthoring.js';
+import { timestampMs } from '../src/utils/contest.js';
 
 export const actions = ['hint', 'explain_error', 'explain_failure', 'complexity', 'visualize', 'chat'];
 export const TUTOR_SYSTEM = `Bạn là gia sư HSG Tin học, trả lời ngắn bằng tiếng Việt, hint-first.
@@ -89,14 +93,33 @@ export function buildTutorContext(body, problems) {
   const conversation = action === 'chat' ? validateConversation(body) : null;
   const p = problems.get(slug);
   if (p.language && p.language !== language) throw new TutorError(400, 'Ngôn ngữ không khớp bài học.');
+  if (p.allowedLanguages && !p.allowedLanguages.includes(language)) throw new TutorError(400, 'Ngôn ngữ không được phép cho bài tập này.');
   // Explicit allowlist; never spread problem objects or client Judge payloads.
-  return { action, problem: { title: clip(p.title, 300), statement: clip(p.statement), constraints: list(p.constraints),
+  return { action, problem: { title: clip(p.title, 300), statement: clip(p.statement, 20000), inputDescription: clip(p.inputDescription, 10000), outputDescription: clip(p.outputDescription, 10000), constraints: list(p.constraints),
     samples: (p.samples ?? []).slice(0, 10).map((s) => ({ input: clip(s.input), output: clip(s.output) })),
     concepts: list(p.tags), objectives: list(p.aiContext?.objectives), prerequisites: list(p.aiContext?.prerequisites), commonMistakes: list(p.aiContext?.commonMistakes) },
     student: { language, source }, judge: sanitizeJudgeResult(body.judgeResult), ...(conversation ? { conversation } : {}) };
 }
 
-export function createTutorHandler({ problems = loadTutorProblems(), provider = requestProvider, env = process.env } = {}) {
+// Database-backed practice is resolved per request so edits, removals and contest
+// locks take effect immediately. Never load problemSecrets or trust client statements.
+export async function resolveTutorContext(body, {problems, repository, authenticate, req, clock = Date.now}) {
+  if (typeof body?.slug !== 'string' || !body.slug.startsWith('practice/')) return buildTutorContext(body, problems);
+  const id = body.slug.slice('practice/'.length);
+  if (!validId(id)) throw new TutorError(400, 'Bài tập không hợp lệ.');
+  // Apply all request/conversation limits before any database reads.
+  buildTutorContext(body, new Map([[body.slug, {}]]));
+  const caller = await authenticate(req);
+  if (!caller.ok) throw new TutorError(caller.status, caller.error);
+  const repo = repository ?? getContestRepository();
+  const [problem, lock] = await Promise.all([repo.getProblem(id), repo.getProblemLock(id)]);
+  if (problem?.status !== 'published' || problem.practicePublished !== true) throw new TutorError(404, 'Bài chưa mở trong kho luyện tập.');
+  if (timestampMs(lock?.until) > clock()) throw new TutorError(403, 'Peanut AI tạm khóa cho bài đang được dùng trong contest.');
+  return buildTutorContext(body, new Map([[body.slug, serializePublicProblem(problem)]]));
+}
+
+export function createTutorHandler({ problems = loadTutorProblems(), provider = requestProvider, env = process.env, repository, clock = Date.now,
+  authenticate = createAuthGuard({ projectId: env.FIREBASE_PROJECT_ID, required: true }) } = {}) {
   let active = 0;
   return async (req, res) => {
     const reply = (status, body) => { if (!res.destroyed) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(body)); } };
@@ -110,7 +133,7 @@ export function createTutorHandler({ problems = loadTutorProblems(), provider = 
       for await (const chunk of req) { size += chunk.length; if (size > 100000) return reply(413, { error: 'AI request vượt giới hạn 100 KB.' }); chunks.push(chunk); }
       let body;
       try { body = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new TutorError(400, 'JSON không hợp lệ.'); }
-      const context = buildTutorContext(body, problems);
+      const context = await resolveTutorContext(body, {problems, repository, authenticate, req, clock});
       const feedback = await provider({ system: TUTOR_SYSTEM, context, action: context.action, signal: controller.signal, env });
       reply(200, feedback);
     } catch (error) {
