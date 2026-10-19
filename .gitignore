@@ -29,4 +29,8 @@ dist-ssr
 # Firebase Admin uses ADC; never commit downloaded service-account credentials.
 service-account*.json
 *-service-account*.json
+
+# Source archives, reference solutions and private generated test material
+/imports/
+/Đề Thi HSG tin học/
 .firebase/

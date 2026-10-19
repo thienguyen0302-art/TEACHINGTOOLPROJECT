@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Icon from "./Icon";
+import GlobalPeanutChat from "./GlobalPeanutChat.jsx";
+import TutorIcon from "./TutorIcon.jsx";
 import Logo from "./Logo";
 import { displayName, initials } from "../utils/format";
 import NotificationDrawer from "./NotificationDrawer";
@@ -34,6 +36,7 @@ const STUDENT_NAV = [
 ];
 
 const TEACHER_NAV = [
+  { label: "Kho bài tập học sinh", icon: "book", path: "/practice" },
   { label: "Quản trị lớp học", icon: "chart", path: "/teacher" },
   { label: "Quản lý học sinh", icon: "user", path: "/teacher/students" },
   { label: "Tổng hợp Contest", icon: "trophy", path: "/teacher/contest-history" },
@@ -55,10 +58,13 @@ function isActive(item, pathname) {
 
 export default function AppShell({ user, isTeacher = false, weekActive = 0, onLogout, children }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [peanutOpen, setPeanutOpen] = useState(false);
+  const peanutTriggerRef = useRef(null);
   const [notice, setNotice] = useState("");
   const timer = useRef(null);
   const { pathname } = useLocation();
   const nav = useNavigate();
+  const peanutBlocked = /^\/contests?(\/|$)/.test(pathname);
 
   // Trạng thái hệ thống thông báo
   const [notifOpen, setNotifOpen] = useState(false);
@@ -194,6 +200,9 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
               />
             </div>
             <div className="top-actions">
+              {!peanutBlocked && <button ref={peanutTriggerRef} className="peanut-chat-button" title="Trò chuyện với Peanut AI" aria-label="Trò chuyện với Peanut AI" aria-expanded={peanutOpen} aria-controls="global-peanut-chat" onClick={() => setPeanutOpen(value => !value)}>
+                <TutorIcon /><span>Peanut AI</span>
+              </button>}
               {!isTeacher && (
                 <button
                   type="button"
@@ -266,6 +275,8 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
           </header>
           {children}
         </section>
+
+        {!peanutBlocked && <GlobalPeanutChat key={user?.uid} open={peanutOpen} onClose={() => setPeanutOpen(false)} triggerRef={peanutTriggerRef} pathname={pathname} />}
 
         {menuOpen && <button className="menu-backdrop" onClick={() => setMenuOpen(false)} aria-label="Đóng menu" />}
         {notice && (

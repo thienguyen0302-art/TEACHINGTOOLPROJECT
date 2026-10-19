@@ -98,3 +98,11 @@ test('API enforces auth, blocks premature statement access and sanitizes infrast
   const failure=await request(broken,'/api/contest/judge',{method:'POST',body});
   assert.equal(failure.status,503);assert.ok(!JSON.stringify(failure).includes('PRIVATE'));
 });
+
+test('new contest publication policy requires four distinct problems; drafts and legacy reads remain valid', () => {
+  const input = contestFixture(now);
+  assert.throws(() => validateContest(input, { status: 'published', minimumProblems: 4 }), /4–26/);
+  assert.doesNotThrow(() => validateContest(input, { status: 'draft', minimumProblems: 4 }));
+  const problems = ['a', 'b', 'c', 'd'].map(problemId => ({ problemId, points: 100 }));
+  assert.equal(validateContest({ ...input, problems }, { status: 'published', minimumProblems: 4 }).problems.length, 4);
+});

@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { listContests } from '../services/contestService.js';
 import useContestData from '../hooks/useContestData.js';
 import useContestClock from '../hooks/useContestClock.js';
+import { isKienGiangSeries, nextSeriesContest, seriesCountdown } from '../utils/contestSeries.js';
 import { contestPhase } from '../utils/contest.js';
 import Icon from '../components/Icon.jsx';
 import '../components/hsg-admin/HsgAdmin.css';
@@ -68,7 +69,7 @@ export default function Contests() {
   const { now } = useContestClock();
   const [activeTab, setActiveTab] = useState('running'); // 'running' | 'upcoming' | 'ended'
 
-  const allContests = state.value || [];
+  const allContests = useMemo(() => state.value || [], [state.value]);
 
   // Lọc chỉ các kỳ thi đã xuất bản cho học sinh
   const publishedContests = useMemo(() => {
@@ -101,6 +102,7 @@ export default function Contests() {
       : endedContests;
 
   const emptyState = EMPTY_MESSAGES[activeTab];
+  const next = nextSeriesContest(allContests, now);
 
   return (
     <div className="content hsg-page">
@@ -121,6 +123,8 @@ export default function Contests() {
             </span>
           </div>
         </section>
+
+        {next && <p className="contest-series-next">KIÊN GIANG HSG SERIES · Đề tiếp theo mở sau: <strong>{seriesCountdown(next.startAt - now)}</strong></p>}
 
         {/* ── 2. KHU VỰC DANH SÁCH CONTEST & TABS ─────────────── */}
         <section className="hsg-contest-section">
@@ -210,7 +214,8 @@ export default function Contests() {
                           </span>
                         </div>
 
-                        <h3 className="hsg-contest-card-title">{c.title}</h3>
+                        {isKienGiangSeries(c) && <span>KIÊN GIANG HSG SERIES</span>}
+                         <h3 className="hsg-contest-card-title">{c.title}</h3>
                         {c.description && <p className="hsg-contest-card-desc">{c.description}</p>}
                       </div>
 

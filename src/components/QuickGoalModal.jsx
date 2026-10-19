@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from './Icon';
 import {
@@ -15,7 +15,7 @@ function formatDateBadge(dateStr) {
   const today = new Date().toISOString().slice(0, 10);
   if (dateStr === today) return { text: 'Hôm nay', cls: 'today' };
   if (dateStr < today) return { text: 'Quá hạn', cls: 'overdue' };
-  const [y, m, d] = dateStr.split('-');
+  const [, m, d] = dateStr.split('-');
   return { text: `${d}/${m}`, cls: '' };
 }
 

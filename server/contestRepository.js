@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { applicationDefault, getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { AuthoringError, serializePublicProblem, validateProblem } from '../src/utils/problemAuthoring.js';
@@ -28,6 +29,18 @@ export function createContestRepository(db) {
     listScoreboard: (id) => list(collection('contests').doc(id).collection('scoreboard')),
     listSubmissions: (id, uid) => list(uid ? collection('contests').doc(id).collection('submissions').where('uid', '==', uid) : collection('contests').doc(id).collection('submissions')),
     async getProblemLock(id) { return get(`problemLocks/${id}`); },
+    async setPracticePublished(id, published, uid, now) {
+      const ref = collection('problems').doc(id);
+      await db.runTransaction(async tx => {
+        const [p, secret, lock] = await Promise.all([tx.get(ref),tx.get(db.doc(`problemSecrets/${id}`)),tx.get(db.doc(`problemLocks/${id}`))]);
+        const problem = data(p);
+        if (!problem) throw new AuthoringError('Không tìm thấy bài.',404);
+        if (timestampMs(data(lock)?.until) > now) fail('Bài đang được khóa cho contest. Đợi contest kết thúc để đăng vào kho.');
+        if (published) validateProblem({...problem,hiddenTests:data(secret)?.hiddenTests,practicePublished:true},{status:problem.status});
+        tx.set(ref,{...p.data(),practicePublished:published,updatedAt:Timestamp.fromMillis(now)});
+      });
+      return id;
+    },
     async saveProblem(id, input, uid, now) {
       const ref = id ? collection('problems').doc(id) : collection('problems').doc();
       await db.runTransaction(async (tx) => {
@@ -59,7 +72,7 @@ export function createContestRepository(db) {
           ]);
           return { ...data(problem), id: problemId, hiddenTestCount: data(secrets)?.hiddenTests?.length ?? 0, lock: data(lock) };
         }));
-        const payload = validateContest(input, { status: input.status, publishedProblems: details });
+        const payload = validateContest(input, { status: input.status, publishedProblems: details, minimumProblems: 4 });
         if (payload.status === 'published' && contestEnd(payload) <= now) fail('Không thể publish contest đã hết giờ.');
         tx.set(ref, { ...payload, startAt: Timestamp.fromMillis(payload.startAt), createdBy: old?.createdBy ?? uid, createdAt: Timestamp.fromMillis(old?.createdAt ?? now), updatedAt: Timestamp.fromMillis(now) });
         if (payload.status === 'published') for (const problem of details) {
@@ -67,6 +80,34 @@ export function createContestRepository(db) {
         }
       });
       return ref.id;
+    },
+    async importPdfContest(input, uid, now) {
+      const owner = createHash('sha256').update(uid).digest('hex').slice(0, 12);
+      const id = `pdf-${owner}-${input.importId}`;
+      const marker = db.doc(`teacherImports/${id}`);
+      const problemIds = input.problems.map((_, i) => `${id}-${i + 1}`);
+      const contest = validateContest({ ...input.contest, problems: input.problems.map((p, i) => ({problemId: problemIds[i], points:p.points})) }, {status:'draft'});
+      const hash = createHash('sha256').update(JSON.stringify({contest,problems:input.problems})).digest('hex');
+      const result = { id, problemIds, status:'draft' };
+      const problems = input.problems.map(p => validateProblem(p, {status:p.status}));
+      await db.runTransaction(async tx => {
+        const previous = data(await tx.get(marker));
+        if(previous) {
+          if(previous.hash !== hash) fail('Lần nhập này đã được lưu với nội dung khác. Hãy mở contest đã tạo hoặc bắt đầu lần nhập mới.');
+          return;
+        }
+        const refs = [db.doc(`contests/${id}`), ...problems.flatMap((p,i) => [db.doc(`problems/${problemIds[i]}`),db.doc(`problemSecrets/${problemIds[i]}`),db.doc(`problemSlugs/${p.slug}`)])];
+        if((await Promise.all(refs.map(ref=>tx.get(ref)))).some(s=>s.exists)) fail('Có bài trùng mã nhập đề. Hãy bắt đầu lần nhập mới.');
+        const stamp = Timestamp.fromMillis(now);
+        for(const [i,p] of problems.entries()) {
+          tx.create(db.doc(`problems/${problemIds[i]}`),{...serializePublicProblem(p),createdBy:uid,createdAt:stamp,updatedAt:stamp});
+          tx.create(db.doc(`problemSecrets/${problemIds[i]}`),{hiddenTests:p.hiddenTests,updatedAt:stamp});
+          tx.create(db.doc(`problemSlugs/${p.slug}`),{problemId:problemIds[i]});
+        }
+        tx.create(db.doc(`contests/${id}`),{...contest,startAt:Timestamp.fromMillis(contest.startAt),createdBy:uid,createdAt:stamp,updatedAt:stamp});
+        tx.create(marker,{hash,createdBy:uid,createdAt:stamp});
+      });
+      return result;
     },
     async recordSubmission(contestId, submission, displayName) {
       const ref = collection('contests').doc(contestId);

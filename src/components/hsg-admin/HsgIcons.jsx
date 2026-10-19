@@ -1,4 +1,3 @@
-import React from 'react';
 
 export function PlusIcon({ size = 18, color = "currentColor", className = "" }) {
   return (

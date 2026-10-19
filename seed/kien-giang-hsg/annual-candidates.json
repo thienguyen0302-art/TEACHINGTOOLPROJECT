@@ -1,0 +1,2818 @@
+{
+  "2006-2007": [
+    {
+      "id": "kien-giang-hsg-2006-2007-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "Tinhoc_0607.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "5036e9f15591c7d18133f25563a140fe687a8386345b7546d8d9e80611052448",
+        "ocrTextSha256": "cc611eaac1f7a89bcb740531996f359e406c171ceb047b49fe0f50631028ddcd"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2006-2007-a",
+        "statement": "Trên lưới ô vuông, một con sên xuất phát từ đỉnh (0,0) và phải bò đến điểm kết\nthúc tại đỉnh (N,0) (N là sô tự nhiên cho trước).\nQui tắc bò: Mỗi bước (x:.y4) > (%,y2) thõa mãn điều kiện:\n-  Xa=XITtÌ\n- Ya=y¡†] hoặc y2 = yi-l\nHãy viết chương trình đưa ra một đường di sao cho trong quá trình bò, sên có thê\nlên cao nhât trên trục tung (tức tọa độ y đạt cực đại).\nIn kết quả ra màn hình: - Tổng số bước đi từ đỉnh (0,0) đến đỉnh (N,0).\n- Độ cao cực đại đạt được của con sên.\n- Tọa độ các đỉnh con sên đã đi qua.\n\nVi du:\n(0,0) (5,0) (0,0) (6,0)\nVới N=5 Với N=6\n- Tổng số bước di: 5. - Tổng số bước đi: 6.\n- Độ cao cực đại: 2. - Độ cao cuc đại: 3.\n~ Toa độ các đỉnh: (1,1);(2,2);(3,1);(4,0),(5,0) - Tọa độ các đỉnh: (1,1);(2,2);(3,3);(4,2),(5, 1);(6,9)",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2006-2007-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 800,
+      "originalPoints": 8.0,
+      "sourceEvidence": {
+        "source": "Tinhoc_0607.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "5036e9f15591c7d18133f25563a140fe687a8386345b7546d8d9e80611052448",
+        "ocrTextSha256": "cc611eaac1f7a89bcb740531996f359e406c171ceb047b49fe0f50631028ddcd"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2006-2007-b",
+        "statement": "Dãy số tự nhiên các số nguyên không âm được viết ra thành một dãy vô hạn:\n0123456789101112... (1)\nCho trước số k (với k<=2.000.000.000), viết chương trình tìm chữ số ở vị trí thứ k\ntrong dãy (1).\nVi đụ:\nChu so thu 12 cua day vo han cac so nguyen khong am 0123456789101 112... la: 0\nChu so thu 25 cua day vo han cac so nguyen khong am 0123456789101112... la: |",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2006-2007-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "Tinhoc_0607.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "5036e9f15591c7d18133f25563a140fe687a8386345b7546d8d9e80611052448",
+        "ocrTextSha256": "cc611eaac1f7a89bcb740531996f359e406c171ceb047b49fe0f50631028ddcd"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2006-2007-c",
+        "statement": "_ Day Tribonacci là dãy 1, 1, 2, 4, 7, 13, 24,... day nay được sinh ra bởi công thức\nđệ qui sau:\nTr(1)=1, Tr(2)=1, Tr(3)=2, Tr(k)=Tr(k-1)+Tr(k-2)+Tr(k-3) với 3<k<=37\nMoi số tự nhiên N đều có thể biểu diễn duy nhất dưới dạng tổng của một số sỐ\ntrong dãy Tribonacci.\nTa gol: N=Tr(k)+Tr(k-1)+...+Tr(1) là biểu diễn Tribonacci của số N.\nCho trước số tự nhiên N, hãy tìm biểu diễn Tribonacci của số N.\nVidu: 17=13+4\n30=24+4+2",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2007-2008": [
+    {
+      "id": "kien-giang-hsg-2007-2008-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "Tin_0708.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "df63daf168b5dd6ce0511f4ba7c452fea0720d08dd7d4006d4fc597f2cdf3989",
+        "ocrTextSha256": "7d9d37ba7e323e41915bd261a6569d20ad22b5597b25c315edd91e0f7f69ccee"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2007-2008-a",
+        "statement": "Cho X là một hoán vị của n số nguyên dương đầu tiên (3 < n < 9).\nY là một hoán vị của n số nguyên dương đầu tiên gần với hoán vị X nhất (X<Y)\n\nsao cho: số nguyên tạo bởi các chữ số của hoán vị Y (giữ nguyên thứ ty) chia hết cho\nmột số nguyên k cho trước (2 < k < 9).\n\nNhập đữ liệu: số nguyên n; hoán vị X; số nguyên k.\nXuất kết quả ra màn hình: Nếu tồn tại hoán vị Y thì in giá trị hoán vị Y, nếu không\ntồn tại hoán vị Y thì in “Khong ton tai hoan vi Y”.\n\nVi dụ ]: Ví đụ 2 n=3\nX=231\nk=5\n\nKhong ton tai hoan vi Y",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2007-2008-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 800,
+      "originalPoints": 8.0,
+      "sourceEvidence": {
+        "source": "Tin_0708.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "df63daf168b5dd6ce0511f4ba7c452fea0720d08dd7d4006d4fc597f2cdf3989",
+        "ocrTextSha256": "7d9d37ba7e323e41915bd261a6569d20ad22b5597b25c315edd91e0f7f69ccee"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2007-2008-b",
+        "statement": "Viết chương trình điền các số -1, 0, 1 vào ma trận NxN sao cho:\n- _ Tổng các số của mọi hình vuông con 2x2 đều bằng 0.\n- _ Tổng các số của ma trận trên là lớn nhất.\n\nVị dụ:\n1041060 1 10 1 0 1 0\n0 -l 0 -l 0 0 -1 0 -l 0 2l\n101 0 1 to 1 0109\n0 -1 0 -1 0 0 -l 0 -1 0 -t\n101 0 1 1 0 1 01 0\n0 -l 0 -t| 0 -l\nVoiN=§ ;\n- Tong cac so cua ma tran = 5 Voi N=6\n\n- Tong cac so cua ma tran = 0",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2007-2008-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "Tin_0708.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "df63daf168b5dd6ce0511f4ba7c452fea0720d08dd7d4006d4fc597f2cdf3989",
+        "ocrTextSha256": "7d9d37ba7e323e41915bd261a6569d20ad22b5597b25c315edd91e0f7f69ccee"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2007-2008-c",
+        "statement": "Hai số tự nhiên được gọi là Nguyên tố tương đương nêu chúng có chung các ước\nsố nguyên tố.\nSố 75 và 15 là Nguyên tổ tương đương vì có cùng các ước nguyên tổ là 3 và 5.\nCho trước hai số tự nhiên M và N, hãy viết chương trình kiểm tra xem hai số này\ncó là Nguyên tô trơng đương hay không.\n\nVi dụ: 75 va 15 la nguyen to tuong duong\n24 va 78 khong la nguyen to tuong duong",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2008-2009": [
+    {
+      "id": "kien-giang-hsg-2008-2009-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 800,
+      "originalPoints": 8.0,
+      "sourceEvidence": {
+        "source": "tin_0809.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "21752269c7f03c5a203b1b00088dc36f6f5d121294a2e915046dedff57d4ccdb",
+        "ocrTextSha256": "f47df2cb2512c3e2e6acc2bff754e62d13a617426d91b33844938d92ec8e0d49"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2008-2009-a",
+        "statement": "Có n người xép hang một dé mua hàng. Thời gian người bán hàng phục vụ khách\nhàng thứ ¡ là t, phút (=1, 2, ..., n), như sau:\n\nKhách thứ (i) Thời gian (ti)\n1 tị\n\n2 te\n\nn th\n\nYêu cầu:\n\nNhập dit liệu:\n\n- Sôn(n<=2000000): người mua hang;\n- Các giá trị tị (ti<=3600)): thời gian mua hàng của từng người.\n- _ Số k(k<=n): thứ tự người khách cần xác định thời gian chờ.\nXuất kết quả ra màn hình:\n- Thời gian người khách thứ k phải chờ đến lượt mình.\n- _ Thời gian trung bình dé phục vụ một người khách.\n- _ Thời gian một khách hàng được phục vụ nhanh nhất (t nhỏ nhất), ghi rõ người\nkhách thứ may.\n- _ Thời gian một khách hàng được phục vụ chậm nhất (t¡ lớn nhất), ghi rõ người\nkhách thứ may.\nThời gian người khách thứ 3 phải chờ đến lượt mình: 25\nThời gian trung bình để phục vụ một người khách: 13.75\nThời gian một khách hàng được phục vụ nhanh nhất: 10 (người thứ 2, 4)\nThời gian một khách hàng được phục vụ chậm nhất: 20 (người thứ 3)",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2008-2009-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 700,
+      "originalPoints": 7.0,
+      "sourceEvidence": {
+        "source": "tin_0809.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "21752269c7f03c5a203b1b00088dc36f6f5d121294a2e915046dedff57d4ccdb",
+        "ocrTextSha256": "f47df2cb2512c3e2e6acc2bff754e62d13a617426d91b33844938d92ec8e0d49"
+      },
+      "problem": {
+        "title": "Lieu với tên bai2.pas",
+        "slug": "kien-giang-hsg-2008-2009-b",
+        "statement": "Viết chương trình nhập vào số nguyên n (n<1000). Hãy đưa ra cách đọc số đó\n\nbằng tiếng Việt không dấu.\nChi ý: phân biệt cách ghi mốt với một.\nmốt: mot\nmột: mot\nVidu:\nn=761\n\nBay tram sau muoi mo't",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2008-2009-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_0809.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "21752269c7f03c5a203b1b00088dc36f6f5d121294a2e915046dedff57d4ccdb",
+        "ocrTextSha256": "f47df2cb2512c3e2e6acc2bff754e62d13a617426d91b33844938d92ec8e0d49"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2008-2009-c",
+        "statement": "Trong bến xe có n xe gồm: x xe taxi (x>0)\ncó tất cả k bánh xe.\nHỏi có bao nhiêu xe taxi và bao nhiêu xe\nbánh và xe lam có 3 bánh).\nVi du: n=7\nk=25\nCo 4 xe taxi va 3 xe lam trong ben\n\n= Thi sinh không được sử dung tài liệu.\n® Giám thị không giải thích gi thêm.\n\nVidu n=4\n‘t= 15\nt= 10\ntạ= 20\ntạ= 10\nk=3\n\nvà y xe lam (y>0). Người ta đếm thấy\n\nlam trong bến (biết răng xe taxi có 4",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2009-2010": [
+    {
+      "id": "kien-giang-hsg-2009-2010-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 750,
+      "originalPoints": 7.5,
+      "sourceEvidence": {
+        "source": "tin_0910.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "5035fbd4d2a0a7c4b3fa1d74101fc5ffa7634ad211a4c45ce42f40af15f9e224",
+        "ocrTextSha256": "686012ad1a11de985341eca81f610a912da9c6264b0badbe2a3606e0124726c1"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2009-2010-a",
+        "statement": "Viết chương trình tính tiền điện sinh hoạt hàng tháng của hộ gia đình, gồm các\nthông tin sau:\n- Định mức sử dụng điện 100kwh/ 1 tháng với giá 550đ/ Ikwh.\n- Nếu sử dụng vượt định mức thì tính tiền như sau:\n+101-150kwh: 1.110đ/ Ikwh\n+151-200kwh: 1.470đ/ lkwh\n+201-300kwh: 1.600đ/ Ikwh\n+301-—-400kwh: 1.720đ/ Ikwh\n+ Trên 400 kwh:  1.780đ/ lkwh\nYêu cầu: Nhập dữ liệu: Sé kwh điện tiêu thy (<= 2.10\").\nXuất kết quả ra màn hình:\n- _ Tiền phải tra phần sử dụng trong định mức.\n- _ Tiền phải trả phần sử dụng vượt định mức.\n- _ Tổng tiền phải trả trong tháng.\nVí đu: Nhap so kwh dien tieu thu: 175\nTien phai tra phan su dung trong dinh muc: 55000\nTien phai tra phan su dung vuot dinh muc: 92250\nTong tien phai tra trong thang: 147250",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2009-2010-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 450,
+      "originalPoints": 4.5,
+      "sourceEvidence": {
+        "source": "tin_0910.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "5035fbd4d2a0a7c4b3fa1d74101fc5ffa7634ad211a4c45ce42f40af15f9e224",
+        "ocrTextSha256": "686012ad1a11de985341eca81f610a912da9c6264b0badbe2a3606e0124726c1"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2009-2010-b",
+        "statement": "Viết chương trình tối giản phân số.\nYêu cầu: Nhập dữ liệu: Từ số, mẫu số (là số nguyên dương, <= 2.10”).\nXuất kết quả ra màn hình: Phân số tôi giản.\nVi du: Nhap tu so: 15\nNhap mau so: 30\nPhan so toi gian la: 1/2",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2009-2010-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 450,
+      "originalPoints": 4.5,
+      "sourceEvidence": {
+        "source": "tin_0910.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "5035fbd4d2a0a7c4b3fa1d74101fc5ffa7634ad211a4c45ce42f40af15f9e224",
+        "ocrTextSha256": "686012ad1a11de985341eca81f610a912da9c6264b0badbe2a3606e0124726c1"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2009-2010-c",
+        "statement": "Viết chương trình tìm bội số chung nhỏ nhất của 2 số a, b.\nYêu cầu: Nhập dit liệu: a, b (là số nguyên dương, <= 32.10”).\nXuất kết quả ra màn hình: Bội số chung nhỏ nhất.\nVi đụ: Nhap so a: 21\nNhap so b: 45\nBoi so chung nho nhat cua 21 va 45 la: 315",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2009-2010-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 350,
+      "originalPoints": 3.5,
+      "sourceEvidence": {
+        "source": "tin_0910.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "5035fbd4d2a0a7c4b3fa1d74101fc5ffa7634ad211a4c45ce42f40af15f9e224",
+        "ocrTextSha256": "686012ad1a11de985341eca81f610a912da9c6264b0badbe2a3606e0124726c1"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2009-2010-d",
+        "statement": "Viết chương trình cho dòng chữ chạy từ phải sang trái màn hình (tương tự như\nmàn hình tivi).\nchữ <=120 ký tự.\n1 hình: Dòng chữ chạy liên tục từ phải qua trái\nhúc.\nVï dụ: Nhap dong chu: Ky thi chon HSG vong tinh lop 9 THCS - Nam hoc 2009-2010",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2010-2011": [
+    {
+      "id": "kien-giang-hsg-2010-2011-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 700,
+      "originalPoints": 7.0,
+      "sourceEvidence": {
+        "source": "tin_1011.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "d292d11055bbcfa1d43940f2b921307fd3ee4a56a91fa15dfe7cf9cbccc52563",
+        "ocrTextSha256": "d50650b7679b7c3d9048176950b1e4a80d8b0c5ce83a057edbf5cfe814bb4804"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2010-2011-a",
+        "statement": "Lập trình giải và biện luận phương trình ax”+bx+c=0.\n(Lưu ý: Phải xử lý được tất cả các trường hợp a=0, b=0, c=0, a<0, b<0, c<S0).\nYêu cầu:\nNhập dữ liệu: 3 hệ số a, b, c.\nXuất ra màn hình: kết quả của phương trình (chỉ lay đến 2 chữ số thập phân).\n\nVi du: a=0, b=0, c=5 Phuong trinh vo nghiem\na=-123, b=321, c=213 Phuong trinh co 2 nghiem PB: x1=3.16, x2=-0.55",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2010-2011-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1011.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "d292d11055bbcfa1d43940f2b921307fd3ee4a56a91fa15dfe7cf9cbccc52563",
+        "ocrTextSha256": "d50650b7679b7c3d9048176950b1e4a80d8b0c5ce83a057edbf5cfe814bb4804"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2010-2011-b",
+        "statement": "Viết chương trình nhập vào dãy số nguyên theo thứ tự tăng hoặc bằng. In ra tông\ncủa các sô vừa nhập.\nYêu cầu:\nNếu nhập sai (số sau nhỏ hơn số trước) thì yêu cầu nhập lại.\nChương trình dừng và in ra tổng của các số vừa nhập khi số nhập vào là -1.\n\nVĩ đụ: Nhap so thu 1: 6\nNhap so thu 2: 2\nSo khong hop le. Nhap lai!\nNhap so thu 2: 7\nNhap so thu 3: 8\nNhap so thu 4: -1\nTong 3 so la: 21",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2010-2011-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 400,
+      "originalPoints": 4.0,
+      "sourceEvidence": {
+        "source": "tin_1011.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "d292d11055bbcfa1d43940f2b921307fd3ee4a56a91fa15dfe7cf9cbccc52563",
+        "ocrTextSha256": "d50650b7679b7c3d9048176950b1e4a80d8b0c5ce83a057edbf5cfe814bb4804"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2010-2011-c",
+        "statement": "Viết chương trình nhập dãy n (n<=255) số nguyên từ bàn phím sau đó thực hiện:\n\na) Sắp xếp dãy số theo thứ tự tăng dân.\n\nb) Nhập thêm 1 số. Sau đó chèn số này vào day số đã sắp xếp sao cho dãy\nluôn tăng dần (nếu số mới nhập vào bằng số trong dãy thì xếp số mới\nđứng sau). Cho biết vị trí của số mới chèn vào trong day số.\n\nYêu cầu:\nNhập dữ liệu: số n, dãy số, số cần chèn.\nXuất ra màn hình:\n_ 7 Day số ban đầu, dãy số đã sắp xếp tăng dan, dãy sau khi chèn số mới, vị trí\ncủa sô mới trong dãy.\n- Tổng các số chan hoặc lẻ trong dãy nếu số nhập thêm vào là chan hoặc lẻ.\n\nVi du: Cho so phan tu n=5\nSo thu 1: 2\nSo thu 2: 5\nSo thu 3: 4\n\n\f\nSo thu 4: 1\n\nSo thu 5: 6\n\nNhap so can chen: 4\n\n- Day so ban dau: 2 5 4 1 6\n\n- Day so da sap xep tang dan: 1 2 4 5 6\n- Day so da chen them: 1 2 4 4 5 6\n\n- VỊ tri so moi chen: 4\n\n- Tong cac so chan (nếu số mới là lé thì ghi le): 16",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2010-2011-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 400,
+      "originalPoints": 4.0,
+      "sourceEvidence": {
+        "source": "tin_1011.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "d292d11055bbcfa1d43940f2b921307fd3ee4a56a91fa15dfe7cf9cbccc52563",
+        "ocrTextSha256": "d50650b7679b7c3d9048176950b1e4a80d8b0c5ce83a057edbf5cfe814bb4804"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2010-2011-d",
+        "statement": "Lập trình chuẩn hoá chuỗi văn bản. Chuỗi văn bản sau khi được. chuẩn hoá không\ncòn khoảng trăng đầu, cuối, giữa các từ chỉ có 1 khoảng trắng, viết hoa các chữ cái\n\nđầu mỗi từ.\nYêu cầu:\nNhập dữ liệu: chuỗi văn ban cần chuẩn hoá.\nXuất kết quả ra màn hình: chuỗi văn bản đã được chuẩn hoá.\n\nVi dụ: ttUOnGrrTRUNGrrchoCrnrrnconSorrrrnlensnagUYnrnDO\n\nTruong Trung Hoc Co So Le Quy Don",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2011-2012": [
+    {
+      "id": "kien-giang-hsg-2011-2012-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 350,
+      "originalPoints": 3.5,
+      "sourceEvidence": {
+        "source": "tin_1112.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "badd4bdb3ffaea8a6bc4f3a5583f158202518a5f7434c70fd4e494766a7de6e4",
+        "ocrTextSha256": "8309696c4a751bf30e0d12062f8f7c72ac9807323c1acaf37e9c434da334021b"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2011-2012-a",
+        "statement": "Trăm trâu trăm bó cỏ\nTrâu đứng ăn năm\nTrâu nam ăn ba\nTrâu già ba con một bó.\nHỏi có bao nhiêu con mỗi loại?\n\nYêu cầu:\n; Liệt kê tất cả các trường hợp tim được với điều kiện mỗi loại trâu phải lớn hơn\nbăng 1.\nVi du: 4 Trau dung 18 Trau nam 78 Trau gia",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2011-2012-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 650,
+      "originalPoints": 6.5,
+      "sourceEvidence": {
+        "source": "tin_1112.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "badd4bdb3ffaea8a6bc4f3a5583f158202518a5f7434c70fd4e494766a7de6e4",
+        "ocrTextSha256": "8309696c4a751bf30e0d12062f8f7c72ac9807323c1acaf37e9c434da334021b"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2011-2012-b",
+        "statement": "Viết chương trình nhập vào 3 số nguyên dương a, b, c. Xét xem 3 số vừa nhập có\nphải là chiều dài 3 cạnh của tam giác không, nếu là chiều dài 3 cạnh của tam giác thì\nxét xem tam giác đó là tam giác nhọn, vuông hay tù.\n\nYêu cầu:\n\nNhập dữ liệu: 3 số a, b, c.\n\nXuất ra màn hình: a, b, c không phải là chiều dài 3 cạnh của tam giác hoặc a, b, c\nlà chiêu dài 3 cạnh của tam giác nhọn, vuông hay tù\n\nVi du: a=3, b=4, c=9 a,b,c khong phai la chieu dai 3 canh cua tam giac\na=4, b=3, c=5 a,b,c la chieu dai 3 canh cua tam giac vuong",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2011-2012-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 550,
+      "originalPoints": 5.5,
+      "sourceEvidence": {
+        "source": "tin_1112.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "badd4bdb3ffaea8a6bc4f3a5583f158202518a5f7434c70fd4e494766a7de6e4",
+        "ocrTextSha256": "8309696c4a751bf30e0d12062f8f7c72ac9807323c1acaf37e9c434da334021b"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2011-2012-c",
+        "statement": "Viết chương trình nhập vào dãy số nguyên dương. In ra tổng của các số vừa nhập,\nđếm và tính tổng các số nguyên tô có trong dãy số vừa nhập.\n\nYêu cầu: >\n\nKhi số nhập vào là I thì không cho nhập nữa và in ra tổng của các số trong day, số\nlượng và tổng các số nguyên tố có trong dãy số vừa nhập.\n\nVĩ dụ: Nhap so thu 1: 6\nNhap so thu 2: 2\nNhap so thu 3: 7\nNhap so thu 4: 8\nNhap so thu 5: 1\nTong cac so trong day la: 23\nCo 2 so nguyen to trong day, tong cua chung la: 9",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2011-2012-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 450,
+      "originalPoints": 4.5,
+      "sourceEvidence": {
+        "source": "tin_1112.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "badd4bdb3ffaea8a6bc4f3a5583f158202518a5f7434c70fd4e494766a7de6e4",
+        "ocrTextSha256": "8309696c4a751bf30e0d12062f8f7c72ac9807323c1acaf37e9c434da334021b"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2011-2012-d",
+        "statement": "Trò chơi đoán số như sau: Sau bảy lần đoán hoặc ít hơn tuỳ số (1<= số <=100) mà\nngười B (người choi) đang nghĩ trong đầu, người A (máy vi tính) phải đoán đúng\nnêu không là thua (chương trình không đạt yêu cầu).\n\n\n\f\n\nVị ấu:\n\nMô phỏng lập trình như sau:\n_Lần 1: Khi người A trả lời mà người B thấy không đúng thì phải cho người A biết\nsố mình đang nghĩ nhỏ hay lớn hơn sô của người A vừa trả lời.\nLần 2: Khi người A trả lời tiếp mà người B thấy không đúng thì phải cho người A\nbiết số mình đang nghĩ nhỏ hay lớn hơn sô của người A vừa trả lời.\n\nỘ Lần n (n<=7) thì người A phải trả lời đúng nếu không chương trình không đạt yêu\ncau.\nYêu cầu:\nNgười B trả lời bằng cách nhập bàn phím như sau:\nNếu người A trả lời số nhỏ hơn số người B nghĩ thì nhập số 0\nNếu người A trả lời số lớn hơn số người B nghĩ thì nhập số 9\nNếu người A trả lời đúng số người B nghĩ thì nhập số 1\n_ Không quá 7 lần đối đáp giữa người A và người B thì người A phải trả lời đúng\nso.\n\nNgười B nghĩ số 15, chương trình hiển thị lên màn hình 7 lần đối đáp như sau:\nNguoi A (may vi tinh) tra loi: 50 nguoi B (nguoi choi) tra loi: 0\nNguoi A (may vi tinh) tra loi: 25 nguoi B (nguoi choi) tra loi:\nNguoi A (may vi tinh) tra loi: 13 nguoi B (nguoi choi) tra loi:\nNguoi A (may vi tinh) tra loi: 19 nguoi B (nguoi choi) tra loi:\nNguoi A (may vi tinh) tra loi: 16 nguoi B (nguoi choi) tra loi:\nNguoi A (may vi tinh) tra loi: 14 nguoi B (nguoi choi) tra loi:\nNguoi A (may vi tinh) tra loi: 15 nguoi B (nguoi choi) tra loi:\n\nep OOOO OS\n\nNgười B nghĩ số 40, chương trình hién thị lên màn hình 5 lần đối đáp như sau:\nNguoi A (may vi tinh) tra loi: 50 nguoi B (nguoi choi) tra loi: 0\nNguoi A (may vi tinh) tra loi: 25 nguoi B (nguoi choi) tra loi:\nNguoi A (may vi tinh) tra loi: 37 nguoi B (nguoi choi) tra loi:\nNguoi A (may vi tinh) tra loi: 43 nguoi B (nguoi choi) tra loi:\nNguoi A (may vi tinh) tra loi: 40 nguoi B (nguoi choi) tra loi:\n\n— © Oo Oo\n\nThi sinh không duoc sử dung tài liệu.\nGiám thị không giải thích gì thêm.",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2012-2013": [
+    {
+      "id": "kien-giang-hsg-2012-2013-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1213.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "6dd27d68fe603603d577309e493fc106c0c6e427fdb4bd3611c627d71e917650",
+        "ocrTextSha256": "fa9df379fc65f2450551150801a4ea3d35b1b0f4e35b9455a09bc322567e131d"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2012-2013-a",
+        "statement": "Viết chương trình nhập vào một số nguyên dương N. Xét xem N có là tổng của\nnhiêu sô nguyên dương liên tiêp không.\nYêu cầu:\nNhập đữ liệu: số N.\nXuất Ta màn hình: Liệt kê tất cả các trường hợp tìm được, ngược lại thông báo\nkhông ton tại tông.\n\nVi du: N=18\n18=3+4+5+6\n18=5+6+7",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2012-2013-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1213.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "6dd27d68fe603603d577309e493fc106c0c6e427fdb4bd3611c627d71e917650",
+        "ocrTextSha256": "fa9df379fc65f2450551150801a4ea3d35b1b0f4e35b9455a09bc322567e131d"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2012-2013-b",
+        "statement": "Dãy Fibonacci là dãy 1, 1, 2, 3, 5, 8, 13, 21,... dãy này được sinh ra bởi công thức\nđệ quisau:  F(1)=l, F(2)=1, F(k)=F(k-1)+F(k-2) với 2<k<=46\nMọi số nguyên dương N đều có thê biểu điễn duy nhất đưới dạng tổng của một số\nsô trong day Fibonacci.\nTa gọi: N=F(k)+F(k-1)+...+F(1) là biểu điễn Fibonacci của số N.\nCho trước số nguyên đương N, hãy lập trình tìm biểu điễn Fibonacci của số N.\n\nA >\nYéu cau:\nNhập dữ liệu: sô N.\nXuất ra màn hình: biéu diễn Fibonacci của số N.\n\nVi dụ: N=l1§5 N=30\n15=1342 30=21+8+1",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2012-2013-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1213.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "6dd27d68fe603603d577309e493fc106c0c6e427fdb4bd3611c627d71e917650",
+        "ocrTextSha256": "fa9df379fc65f2450551150801a4ea3d35b1b0f4e35b9455a09bc322567e131d"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2012-2013-c",
+        "statement": "Viết chương trình nhập vào mảng A có N phần tử là số nguyên dương. Tìm các số\nxuất hiện trong mang A và sô xuất hiện nhiều nhật (lặp lại nhiêu nhat).\nYêu cầu:\nNhập dữ liệu: số N; mang A (phải có 1 số được lặp lại nhiều nhất).\nXuất ra màn hình: các số xuất hiện trong mang A (số lặp lại chỉ in 1 lần), số xuất\nhiện nhiêu nhât trong mảng A.\n\nVi du: N=10\nAl=4 A6é=11\nA2=5 A7=8\nA3=12 A8=14\nA4=5 A9=9\nA5=4 A10=4\n\nCac so xuat hien trong mang la: 4, 5, 12, 11, 8, 14, 9\nSo xuat hien nhieu nhat trong mang la: 4\n\n1",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2012-2013-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1213.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "6dd27d68fe603603d577309e493fc106c0c6e427fdb4bd3611c627d71e917650",
+        "ocrTextSha256": "fa9df379fc65f2450551150801a4ea3d35b1b0f4e35b9455a09bc322567e131d"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2012-2013-d",
+        "statement": "Lãi suất gửi tiết kiệm có kỳ hạn 3 tháng là 2.0%/ 3 tháng (tức là cứ 3 tháng 1 lần\nlay SỐ tiền gốc đang gửi nhân với lãi suất 2.0% để ra tiền lãi rồi cộng với tiền gốc để\ncó tiền sốc mới);\n\nLãi suất gửi tiết kiệm không có kỳ hạn là 0. 1%/ 1 tháng (tức là nếu gửi không đủ 3\n\nthang thì cứ 1 tháng 1 lần lấy s6 tiền gốc đang gửi nhân với lãi suất 0.1% để ra tiền\nlãi rồi cộng với tiền gốc dé có tiền gốc mới).\n\nMột người dự định gửi vào 1 số tiền ban đầu là a, tính số tiền người đó nhận được\nsau t tháng?\n\nYêu cầu:\n\nNhập dit liệu: số tiền gửi a, số tháng gửi t (t<=36).\n\nXuất ra màn hình: số tiền gửi sau t tháng (lấy 2 số lẻ).\n\nVi du: - Nhap vao tien gui ban dau: 500000\n- So thang muon gui: 8\n- So tien nhan duoc sau 8 thang la: 521240.92\n\n(Giải thích thêm như sau:\n- tién gốc 500000 sau 3 tháng đầu tính lãi 2.0% được gốc mới 510000\n- tién gốc 510000 sau 3 thang ké tiép tính lãi 2.0% được sốc mới 320200\n- tién gốc 520200 sau 1 tháng ké tiếp tính lãi 0.1% được gốc mới 520720.20\n- tiền gốc 520720.20 sau 1 tháng kế tiếp tinh lãi 0.1% duoc gốc mới 521240.92)\n\n\" Thị sinh không được sử dung tài liệu.\n\" Gidm thị không giải thích gì thêm.",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2013-2014": [
+    {
+      "id": "kien-giang-hsg-2013-2014-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1314.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "0949fefdb8bf820b6b5225855f302d2fe63fec0caa270e9c214dc2adfa8a9135",
+        "ocrTextSha256": "63a1f03d367701810775b007aa293944394c7afaccd824371e7bc1ec11798273"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2013-2014-a",
+        "statement": "Viết chương trình nhập từ bàn phím 3 số nguyên a, b,c (0 <a <9; 0 <b, c < 9).\nYêu cầu:\n\nKiểm tra 3 số a, b, c trên có thể biểu diễn được đưới dang abe = a° +B + c® hay\nkhông? Nêu có in ra man hình biéu thức có dang abc=a^3+†b^3-+c^3, nêu không in ra\nman hình thông báo số abc không biểu diễn được dưới dang abc=a^3+b^3+c^43.\n\nNhap so a: 3\nNhap so b: 7\nNhap so c: 1\nSo 371=343+743+143\n\nNhap so a: 1\nNhap so b: 2\nNhap so c: 3\nSo 123 khong bieu dien duoc duoi dang abc=a^3+b^3+c^3.",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2013-2014-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 550,
+      "originalPoints": 5.5,
+      "sourceEvidence": {
+        "source": "tin_1314.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "0949fefdb8bf820b6b5225855f302d2fe63fec0caa270e9c214dc2adfa8a9135",
+        "ocrTextSha256": "63a1f03d367701810775b007aa293944394c7afaccd824371e7bc1ec11798273"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2013-2014-b",
+        "statement": "Viết chương trình nhập vào số nguyên đương N.\nYêu cầu:\nTim và in ra màn hình số nguyên té nhỏ nhất lớn hơn N.\n\nVi du: N=10\nSo nguyen to nho nhat lon hon 10: 11",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2013-2014-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 550,
+      "originalPoints": 5.5,
+      "sourceEvidence": {
+        "source": "tin_1314.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "0949fefdb8bf820b6b5225855f302d2fe63fec0caa270e9c214dc2adfa8a9135",
+        "ocrTextSha256": "63a1f03d367701810775b007aa293944394c7afaccd824371e7bc1ec11798273"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2013-2014-c",
+        "statement": "Cho một mảng số nguyên A gồm n phần tử. Mang con B của mảng A gồm m phân\ntử (m < n) là mảng gồm m phan tử liên tiếp nhau trong mảng A.\n\nNhập dữ liệu: mảng số nguyên A gồm n phân tử. Số phần từ m của mảng con B,\ncó kiêm tra điêu kiện m <n. - - „ -\nTim và in ra màn hình mảng con B có tông lớn nhất va cho kết quả tông.\n\nVi đụ: So phan tu cua mang so nguyen A, n=6\nA[IF1\nA{2]=2\nA[3]=4\nA[4]=3\nA[5]=5\nA[6]=6\nNhap so phan tu cua mang con B, m=3\nMang con B co tong lon nhat la: 3 5 6\nTong = 14.",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2013-2014-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 400,
+      "originalPoints": 4.0,
+      "sourceEvidence": {
+        "source": "tin_1314.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "0949fefdb8bf820b6b5225855f302d2fe63fec0caa270e9c214dc2adfa8a9135",
+        "ocrTextSha256": "63a1f03d367701810775b007aa293944394c7afaccd824371e7bc1ec11798273"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2013-2014-d",
+        "statement": "Cho X là một hoán vị của n số nguyên đương đầu tiên (3 < n < 5), các hoán vị\nđược sắp xếp theo thứ tự từ nhỏ đến lớn.\nYêu cầu:\nNhập dữ liéu: số nguyên n; hoán vị X.\nTìm và in kết quả ra màn hình vị trí của hoán vị X.\n\nVị dụ: n= 3\n\nX=213\n\nVi tri cua hoan vi 213 la 3\n(Giải thích thêm: n=3 có các hoán vị được xếp theo thứ tự từ nhỏ đến lớn như sau: 123, 132,\n213, 231, 312, 321 suy ra 213 có vị trí 3).",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2014-2015": [
+    {
+      "id": "kien-giang-hsg-2014-2015-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1415.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "2ddd453e66313bba08a4fb1b75b66540ec931e80de64c91b1a567652d96c0476",
+        "ocrTextSha256": "e1e1c8f70788eca90a6f1ea31696ec65c281d41777786325b55a47734651c39f"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2014-2015-a",
+        "statement": "Cho dãy số M có chiều dai bat kỳ (tối đa 255 ký tự).\nYêu cầu:\nDém số lượng và tính tổng các chữ số lẻ có trong dãy M.\n\nVi du: 1\nNhap day M: 1231\nSo cac chu so le co trong day 1231 la 3, tong bang 5\n\nNhap day M: 01423123456789\nSo các chu so le co trong day 01423123456789 la 7 tong bang 29",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2014-2015-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1415.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "2ddd453e66313bba08a4fb1b75b66540ec931e80de64c91b1a567652d96c0476",
+        "ocrTextSha256": "e1e1c8f70788eca90a6f1ea31696ec65c281d41777786325b55a47734651c39f"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2014-2015-b",
+        "statement": "Cho chuỗi văn bản S có chiều dài bất kỳ (tối đa 255 ký tự).\nYêu cầu:\nChuẩn hóa chuỗi văn bản S sao cho không còn khoảng trắng đầu, cuối chuỗi, giữa\ncác từ trong chuỗi chỉ còn một khoảng trắng.\nMĩ dụ: Nhap chuoiS: So Giao duc va Dao tao Kien Giang\n\nChuoi da chuan hoa: So Giao duc va Dao tao Kien Giang",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2014-2015-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1415.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "2ddd453e66313bba08a4fb1b75b66540ec931e80de64c91b1a567652d96c0476",
+        "ocrTextSha256": "e1e1c8f70788eca90a6f1ea31696ec65c281d41777786325b55a47734651c39f"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2014-2015-c",
+        "statement": "Cho một mang số nguyên A gồm n phan tử.\n\nViết chương trình xóa phan tử có vị trí i trong mảng A. Chương trình phải kiếm\ntra điêu kiện nhập của n (n < 100) và ¡ (¡ <n)\n\nVi đu: Nhap so phan tu cua mang so nguyen A: 6\nAIIEI\nA[2]=2\nA[3]=3\nA[4]=4\nA[5]=5\nA[6]=6\nMang A: 123456\nNhap vi tri phan tu can xoa: 4\nMang A sau khi xoa phan tu tai vi tri 4: 1 2 3 5 6",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2014-2015-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_1415.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "2ddd453e66313bba08a4fb1b75b66540ec931e80de64c91b1a567652d96c0476",
+        "ocrTextSha256": "e1e1c8f70788eca90a6f1ea31696ec65c281d41777786325b55a47734651c39f"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2014-2015-d",
+        "statement": "Cho X kg gạo cần vận chuyên và các bao chứa gạo với trọng lượng khác nhau\ngém các loại 20kg, 10kg, Skg và lkg.\nYêu cầu:\nHãy tìm cách đóng gói sao cho số lượng bao cần dùng là ít nhất.\n\nVỊ dụ: Nhap so kg gao: 26",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2015-2016": [
+    {
+      "id": "kien-giang-hsg-2015-2016-a",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1516.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true,
+        "method": "compilation draft; annual OCR layer order damaged"
+      },
+      "problem": {
+        "title": "Chuy ển đ ổi đơn vịthờ i gian",
+        "statement": "Một đồng hồbấ                        m giờ        có 2 màn hình:\n      -Màn hình 1 hiển thịth                ời gian dưới dạng X giây.\n      -Màn hình 2 hiển thịth                ời gian dưới dạng A giờ       , B phút, C giây.\nYêu cầu:   Viết chương trình chuy       ển đổi s    ố   X giây trên màn hình 1 để   hiển thị         ở màn hình\n2 dưới dạng giờ       , phút, giây.\nVí dụ       :\n                   Đầu vào                                               Đầu ra\nMan hinh 1: 5550                                     Man hinh 2: 1 gio: 32 phut: 30 giay\nMan hinh 1: 45                                       Man hinh 2: 45 giay",
+        "slug": "kien-giang-hsg-2015-2016-a",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      },
+      "sourceNumber": 1,
+      "originalPoints": 5
+    },
+    {
+      "id": "kien-giang-hsg-2015-2016-b",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1516.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true,
+        "method": "compilation draft; annual OCR layer order damaged"
+      },
+      "problem": {
+        "title": "Th ống kê m ảng s ốnguyên",
+        "statement": "Cho mảng sốnguyên dương A có N phần tử                      (N ≤ 10000).\nYêu cầu:      Hãy viết chương trình xác định:\n       1. Sốphần tử            có giá tr ị  khác nhau trong mảng.\n       2. Giá trịxu               ất hiện nhi         ều nhất trong m           ảng.\n       Nếu có nhiề                  u giá trị            cùng xuất hiệ                 n nhiều nhất, ch                  ọn giá tr  ịnhỏnh         ất trong sốđó.\n\n                                             52\n\f\nVí dụ       :\n                  Đầu vào                                                          Đầu ra\n8                                                   So phan tu co gia tri khac nhau cua mang la: 6\n62 70 11 70 43 24 11 20                             Phan tu xuat hien nhieu nhat co gia tri la: 11\nGiải thích ví dụ                :\n       Các giá trị     khác nhau trong mảng là: 62, 70, 11, 43, 24, 20     nên có 6 giá trị     khác\nnhau.\n       Bảng tần suất xuất hiện:\n       -11 xuất hi             ện 2 lần;\n       -70 xuất hi             ện 2 lần;\n       -62, 43, 24, 20 mỗi số              xuất hiện 1 lần.\n       Số   lần xuất hiện lớ                n nhất là 2,   ứng vớ  i hai giá trị     11 và 70. Trong hai giá trị     này, 11\nnhỏhơn nên kết quảcầ                      n in ralà 11.",
+        "slug": "kien-giang-hsg-2015-2016-b",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      },
+      "sourceNumber": 2,
+      "originalPoints": 5
+    },
+    {
+      "id": "kien-giang-hsg-2015-2016-c",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1516.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true,
+        "method": "compilation draft; annual OCR layer order damaged"
+      },
+      "problem": {
+        "title": "Đế m ký tự s ốtrong chuỗ i",
+        "statement": "Cho một chuỗi văn bản S có độdài bất k                                ỳ (tối đa 255 ký tự                      ).\nYêu cầu:\n       Hãy viết chương trình đếm xem trong chuỗi S có bao nhiêu ký tự số và số lượng\ntừng loại chữ số (0–9).\n       Kết quảin ra theo đúng định dạng không dấu như sau:\n       -Dòng 1: \"Trong   chuoi co X ky tu so, so luong tung loai:\".\n       -Sau đó in các dòng \"So d: k\" ứ   ng với từ   ng chữ sốd xuất hiệ                    n ít nhấ          t một lần.\nVí dụ:\n                   Đầu vào                                             Đầu ra\nHoc sinh gioi nam hoc 2015-2016                    Trong chuoi co 8 ky tu so, so luong tung\n                                                   loai:\n                                                   So 0: 2\n                                                   So 1: 2\n                                                   So 2: 2\n                                                   So 5: 1\n                                                   So 6: 1\n\n                                              59",
+        "slug": "kien-giang-hsg-2015-2016-c",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      },
+      "sourceNumber": 3,
+      "originalPoints": 5
+    },
+    {
+      "id": "kien-giang-hsg-2015-2016-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1516.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true,
+        "method": "compilation draft; annual OCR layer order damaged"
+      },
+      "problem": {
+        "title": "Đế m từ và tìm t ừ dài nh ất",
+        "statement": "Cho chuỗi                  văn bản S có chiều dài bất k                        ỳ (t ối đa 255 ký tự                    ).\nYêu cầu: Hãy viết chương trình đế       m số   lượng các từ trong chuỗi và in ra từ          có chiều dài\nlớ n nhất.\n         Nếu có nhiề                  u từ     có chi ều dài lớ           n nhất bằng nhau thì in ra tất cả, mỗi t                            ừ trên m ột\ndòng.\nDữ    liệu vào:\n         -Một dòng duy nhất ch              ứa chuỗi văn bả                     n S.\nKết quả:\n         -Dòng 1: \"Sốlư        ợng các từ     trong chuỗ                i: X\".\n         -Các dòng tiếp theo: in \"Từ          dài nhất: w1\" và các từ                   khác có cùng độ           dài lớ       n nhất\n(nếu có), mỗi từ              trên một dòng.\nVí dụ:\n                      Đầu vào                                                        Đầu ra\nDao Phu Quoc Kien Giang                                      Số lượng các từ trong chuỗi: 5\n                                                             Từ dài nhất: Giang\nGiải thích ví dụ                :\n         Chuỗi trên có 5 từ                  : Dao, Phu, Quoc, Kien, Giang.\n         Độdài tương ứ           ng: 3, 3, 4, 4, 5. Từ                dài nhất là \"Giang\" nên kết quảnhư trên.",
+        "slug": "kien-giang-hsg-2015-2016-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      },
+      "sourceNumber": 4,
+      "originalPoints": 5
+    }
+  ],
+  "2016-2017": [
+    {
+      "id": "kien-giang-hsg-2016-2017-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1617.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ad38d59b9f2c2cd62f955eddc99f983c894d15d345384141f7cad90b7d6c7f68",
+        "ocrTextSha256": "9fb518289e7344c5419afa77b3322cd15e58018817c6e578f4da5359019a575e"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2016-2017-a",
+        "statement": "Số tự nhiên N được gọi là số hoàn hảo nếu tổng các ước của N (không ké N) bằng\nchính nó.\n\nYêu cầu:\n\nViết chương trình nhập vào một số nguyên dương N (N < 10000), kiếm tra giá trị N\nkhi nhập. Cho biết N có phải là số hoàn hảo không?\n\nVi đụ: Nhap so nguyen duong N: 6\nSo vua nhap la so hoan hao\n(giải thích: 6 là sô hoàn hảo vì 6=1+2+3)",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2016-2017-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1617.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ad38d59b9f2c2cd62f955eddc99f983c894d15d345384141f7cad90b7d6c7f68",
+        "ocrTextSha256": "9fb518289e7344c5419afa77b3322cd15e58018817c6e578f4da5359019a575e"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2016-2017-b",
+        "statement": "Hai xâu được gọi là bạn bè nếu chúng được tạo nên cùng một số kí tự giống nhau\n(không phân biệt kí tự in hoa hay thường).\n\nYêu cầu:\n\nViết chương trình nhập hai xâu bất kỳ từ bản phím (không quá 255 ký tự, gồm các\nký tự chữ [‘A’..°Z’,’a’..’2’]), kiểm tra hai xâu vừa nhập có là bạn bè không?\n\nVi du: Nhap xau 1: hocgioisinhhoc\nNhap xau 2: hocsinhgioi\nHai xau la ban be",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2016-2017-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1617.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ad38d59b9f2c2cd62f955eddc99f983c894d15d345384141f7cad90b7d6c7f68",
+        "ocrTextSha256": "9fb518289e7344c5419afa77b3322cd15e58018817c6e578f4da5359019a575e"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2016-2017-c",
+        "statement": "Cho dãy sô nguyên A gồm N phần tử (N< 100).\n\nYêu cầu:\n\nViết chương trình kiểm tra giá trị N khi nhập và xóa các phần tử trùng nhan trong\ndãy, chỉ giữ lại một phần tử trong số các phần tử trùng nhau.\n\ni đụ:\n\nNhap N: 5\n\nNhap day:\nA[IIE9\nA[2]=8\nAl3]=4\nA[4]=8\nA[5]=4\n\nDay sau khi xoa cac phan tu trung nhau: 9 8 4\n\n\f\nic ghép từ 2 số nguyên tố liên tiếp nhau trong\n\n1, 13, 17, 19,... „ „ `\nSp nhau trong dãy số nguyên tô ban dau: 23,\n57, 1113, 1719,... „ „ -\nDây số nguyên tô ghép được lây từ day số ghép: 23, 3137, 8389, 157163...\nYêu cầu: „ . . .\nNhập sô nguyên dương K (K < 50), kiêm tra K khi nhập. Hãy tim số nguyên tố ghép\nthứ K trong dãy sô nguyên tô ghép.\nVi du: Nhap K: 2\nSo nguyen to ghep thu 2 la: 3137",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2016-2017-d",
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": null,
+      "sourceEvidence": {
+        "source": "15_DE_HSG_KG.pdf",
+        "annualSource": "tin_1617.pdf",
+        "role": "cross-check draft only",
+        "annualComparisonRequired": true,
+        "method": "compilation draft; annual heading requires manual review"
+      },
+      "problem": {
+        "title": "Số nguyên tốghép",
+        "statement": "Số nguyên tố ghép là số nguyên tố thu được bằng cách ghép hai số nguyên tố liên\ntiếp nhautrong dãy số nguyên tố ban đầu.\n      Dãy số nguyên tố ban đầu: 2, 3, 5, 7, 11, 13, 17, 19, ...\n      Dãy số ghép từ hai số nguyên tố liên tiếp: 23, 57, 1113, 1719, ...\n      Dãy số nguyên tố ghép (lọc từ dãy ghép): 23, 3137, 8389, 157163, ...\nYêu cầu:      Nhập số nguyên dương K (K ≤ 50). Hãy tìm số nguyên tố ghép thứ K trong dãy\nsố nguyên tố ghép.\nVí dụ       :\n                    Đầu vào                                                Đầu ra\n2                                                     So nguyen to ghep thu 2 la: 3137\nGiải thích ví dụ: các số ghép lần lượt: 23 (nguyên tố), 35, 57, 711, 1113, 1317, 1719,\n1923, 2329, 2931, 3137 (nguyên tố). Số nguyên tố ghép thứ 2 là 3137.",
+        "slug": "kien-giang-hsg-2016-2017-d",
+        "inputDescription": "",
+        "outputDescription": "",
+        "constraints": [],
+        "samples": [],
+        "hiddenTests": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      },
+      "sourceNumber": 4
+    }
+  ],
+  "2017-2018": [
+    {
+      "id": "kien-giang-hsg-2017-2018-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1728.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ae10a5a1aa9d15aefb95d40921c22f42acd9aa8ccb4e9e7c10743b3e113b445b",
+        "ocrTextSha256": "254b334f46b9082f31541f27b6ea7de6b4200997c256b634adae90a82c895437"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2017-2018-a",
+        "statement": "Viết chương trình nhập vào một số tự nhiên N (1 <NS 65535).\nYéu cau: Hay kiém tra số N vừa nhập có phải là số nguyên tố hay không? Nếu đúng thì thông\nbáo ra màn hình đây là số nguyên tố, ngược lại thì phân tích số N thành tích các thừa số nguyên tố.\nVí dụ 1: Ví dụ 2:\n\nNhap mot so tu nhien: 17 Nhap mot so tu nhien: 56\nKet qua: 17 la so nguyen to . Ket qua: 2.2.2.7",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2017-2018-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1728.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ae10a5a1aa9d15aefb95d40921c22f42acd9aa8ccb4e9e7c10743b3e113b445b",
+        "ocrTextSha256": "254b334f46b9082f31541f27b6ea7de6b4200997c256b634adae90a82c895437"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2017-2018-b",
+        "statement": "Cho day số nguyên A (gồm cả số nguyên âm và số nguyên dương) gồm N phan tử (N<=100).\nYêu cầu: in ra màn hình các giá tri cl day theo quy tắc: in các số đương tăng dan rồi đến các số\nâm giảm dan. -\nVí dụ 1:\nNhapN: 4\nNhap day: -\nAIIIE-2\nA[2]=5\n\nA[3]=8\nA[4]=-9\nDay so theo yeu cau la: 5 8 -2 -9\n\nDay so theo yeu cau la: 2 8 -3 -5 -9",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2017-2018-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1728.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ae10a5a1aa9d15aefb95d40921c22f42acd9aa8ccb4e9e7c10743b3e113b445b",
+        "ocrTextSha256": "254b334f46b9082f31541f27b6ea7de6b4200997c256b634adae90a82c895437"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2017-2018-c",
+        "statement": "Trong tin học dé biểu diễn thông tin dang số, ngoài hệ cơ số thập phân (hệ cơ số 10) người\nta dùng các hệ cơ số: nhị phân (hệ cơ số 2) và hệ thập lục phân (hệ cơ số 16).\n- Hé cơ số 2 chỉ dùng 2 ký hiệu 0 và 1.\n- - Hệ cơ số 16 sử dụng các ký hiệu 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F trong đó A,B,C,D,E,F\ncó giá trị tương ứng là 10, 11, 12. 13, 14, 15 trong hệ thập phan.\nĐề đổi một số nguyên dương ở hệ cơ số 10 sang hệ cơ số 2, người ta chia số cần chuyển cho\n2 được phần dư (giá trị dư là 0 hoặc 1), sau đó cũng lấy phần nguyên chia tiếp cho 2 và lấy phần dư,\n‘Jap lại cho tới khi phan nguyên bang 0. Sau đó xếp thứ tự phan dư theo thứ tự ngược từ dudi lên ta\nđược số ở hệ cơ số 2.\nTương tự để đổi sang hệ cơ số 16 (thực hiện như trên nhưng chia phần nguyên cho 16).\nVí dụ:\n- Đồi số 13 từ hệ cơ số 10 sang hệ cơ số 2.\n13 chia 2=6->dưl\n6 cha 2 =3 -> dư 0\n3 cha 2= 1 -> dư l\n1 cha 2=0->du1\nVậy số 13 đổi sang hệ cơ số 2 là: 1101\n\n\f\n- Đổi số 205 từ hệ cơ số 10 sang hệ cơ số 16.\n205 chia 16 = 12 -> dư 13 tức là D\n12 chial6= 0 -> dư 12 tức là C\nVậy số 205 đổi sang hệ cơ số 16 là: CD\n\nYêu cầu: Viết chương trình nhập vào một số nguyên dương N (N<=10000). Chuyên đổi số\nN sang hệ cơ số 2 và hệ cơ số 16.\n\nVí dụ: Nhap soN: 113\nBieu dien he co so 2 cua 113: 111001\n- Bieu dien he co so 16 cua 113: 71",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2017-2018-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1728.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ae10a5a1aa9d15aefb95d40921c22f42acd9aa8ccb4e9e7c10743b3e113b445b",
+        "ocrTextSha256": "254b334f46b9082f31541f27b6ea7de6b4200997c256b634adae90a82c895437"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2017-2018-d",
+        "statement": "Tập hợp các chữ cái tiếng Anh bao gồm 26 chữ cái được đánh số thứ tự từ 0 đến 25 như sau:\n| STT |0|1|2]3|4|5|6|7|8|9|10|11|12.\n_Kýtựy |A|B|C|D|E|F|[GIH|II|?I|K|LI|M.\n\n_ LKýtự[N|O|P|QO|R|s|T|U|v|w|x|y |Lzj|\nDé bảo mật các thông điệp quan trọng gửi cho nhau người ta thường mã hóa các thông điệp này\ntheo quy tắc nào đó.\nCho quy tắc mã hoá một ký tự như sau (lay ví dụ mã hóa ký tự X):\n- Tìm số thứ tự tương ứng của ký tự trong bảng (số thứ tự X là 23).\n- Tăng giá trị số này lên N=5 (tăng số thứ tự của X lên 5 ta được giá trị 28).\n- Tìm số dư trong phép chia số này cho 26 (Lấy 28 chia 26 lấy phần dư ta được giá trị là 2).\n- Lấy kết quả tra vào bảng chữ cái (thứ tự 2 là ký tự C). Như vậy ký tự X mã hóa thành C.\n* Để giải mã theo quy tắc trên ta thay N=M (M=26 - N).\nViệc mã hóa và giải mã chuỗi (xâu) người ta phải mã hóa và giải mã từng ký tự.\nYêu cầu: Sử dụng quy tắc mã hóa và giải mã trên, viết chương trình thực hiện các công việc\nsau:\n\n- Nhập một chuỗi và in ra chuỗi đã được mã hóa.\n- Nhập một chuỗi đã được mã hoá và in ra chuỗi giải mã.\nVí dụ: Nhap chuoi can ma hoa: YOU .\nChuoi ma hoa: DTZ\n` Nhap chuoi can giai ma: DTZ\nChuoi giai ma: YOU\n\nGhi chu:\ne-_ Thí sinh không duoc sử dụng tai liệu.\ne Giám thị coi thi không giải thích gì thêm.",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2018-2019": [
+    {
+      "id": "kien-giang-hsg-2018-2019-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 300,
+      "originalPoints": 3.0,
+      "sourceEvidence": {
+        "source": "tin_1819.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "60a0ac45f942d11cf33e671c987e0ddd793b2ce459d4b38ed9585797eb752bd6",
+        "ocrTextSha256": "984f7773280e7965567a9a3203692086a1cfbccb7795a7837a32770c34b0a8e6"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2018-2019-a",
+        "statement": "Số Palindrome là số mà bạn đọc theo chiều từ trái sang phải và chiều ngược lại thì\nđều như nhau. Ví dụ các số 131, 151, 34543, 48984...\n\nViết chương trình nhập vào một số tự nhiên N(100<N<65535).\n\nYêu cầu: Hãy kiểm tra số N vừa nhập có phải là sô Palindrome hay không? Nếu\nđúng thì thông báo ra màn hình đây là số Palindrome, ngược lại thì thông báo ra màn hình\nsố Palindrome lớn hơn N và gần N nhất.\n\nVidul: - | Ví dụ 2:\nNhap mot so tu nhien: 131 Nhap mot so tu nhien: 132\n\n| Ket qua: 131 la so Palindrome Ket qua: 132 khong phai so Palindrome, so\nPalindrome lon hon 132 va gan 132 nhat la 141",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2018-2019-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_1819.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "60a0ac45f942d11cf33e671c987e0ddd793b2ce459d4b38ed9585797eb752bd6",
+        "ocrTextSha256": "984f7773280e7965567a9a3203692086a1cfbccb7795a7837a32770c34b0a8e6"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2018-2019-b",
+        "statement": "Số siêu nguyên tố là số nguyên tố mà khi bỏ một chữ số bên phải của nó thì phan con\n_ lại vẫn tạo thành một sỐ nguyên tố. Ví dụ số 7193 là một số siêu nguyên tố có 4 chữ số vì\n719, 71,7 cũng là các số nguyên tố.\n\nYêu cầu: Viết chương trình nhập dit liệu vào là một số nguyên N(0<N<10) và đưa ra\nkết quả là các số siêu nguyên tố có N chữ số cùng số lượng của chúng.\n\nVí dụ 1: Ví dụ 2:\nNhap so N: 2 Nhap so N: 4\n23 29 31 37 53 59 71 73 79 . 2333 2339 2393 2399 2939 3119 3137\nCo tat ca 9 so sieu nguyen to co 2 chu so | 3733 3739 3793 3797 5939 7193 7331\n. 7333 7393\nCo tat ca 16 so sieu nguyen to co 4 chu so",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2018-2019-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_1819.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "60a0ac45f942d11cf33e671c987e0ddd793b2ce459d4b38ed9585797eb752bd6",
+        "ocrTextSha256": "984f7773280e7965567a9a3203692086a1cfbccb7795a7837a32770c34b0a8e6"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2018-2019-c",
+        "statement": "Một dãy con gồm các phần. tử liên tiếp bằng nhau của dãy được gọi là mặt bằng của\ndãy, Viết chương trình nhập vào số nguyên N(ISNS1000) va N phan tử của một day cac số\nnguyên 4, đạ, ¬... ị\nYêu cầu: In ra màn hình dãy số đã nhập và tất cả day con là mặt bằng lớn nhất của\nphan tử cách nhau một khoảng\nKet qua nhap: 12335\nNhap 50 phan tu cua mang: 5 Ket qua mat bang:\nNhap phan tu thu 1: 1 33\n\nNhap phan tu thu 2: 2\nNhap phan tu thu 3: 3\nNhap phan tu thu 4: 3\nNhap phan tu thu 5: 5\n\n\n\f\nVí dụ 2: Ket qua nhap: 1 23 2 2 3 3 15 31\nNhap so phan tu cua mang: 8 . Ket qua mat bang:\n\nNhap phan tu thu 1: 1\n\nNhap phan tu thu 2: 23\n\nNhap phan tu thu 3: 2\n\nNhap phan tu thu 4: 2\nNhap phan tu thu 5: 3\nNhap phan tu thu 6: 3\nNhap phan tu thu 7: 15\n-Nhap phan tu thu 8:31 -",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2018-2019-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1819.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "60a0ac45f942d11cf33e671c987e0ddd793b2ce459d4b38ed9585797eb752bd6",
+        "ocrTextSha256": "984f7773280e7965567a9a3203692086a1cfbccb7795a7837a32770c34b0a8e6"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2018-2019-d",
+        "statement": "Nhân kỷ niệm Ngày Quốc tế phụ nữ 8/3. Bạn An tham gia trò chơi lớn và bạn ay\nphải giải mã một xâu gôm cả chữ, số và ký tự khác, bằng cách loại bỏ tất cả các chữ, ký tự\nkhác chỉ để lại số theo đúng thứ tự, đó là sô điện thoại hoặc mật mã của Thay tổng phụ trách\nđể nhận nhiệm vụ tiếp theo. Em hãy giúp bạn An tim day số ay.\n\nViết chương trình nhập vào một xâu gồm cả chit, số và ký tự khác đan xen nhau.\n\nYêu cau: Hãy loại bỏ tat cả các chữ, ky tự khác và kiểm tra xem xâu đủ 10 chữ số\nkhông? Nếu đủ thì viết ra 10 số theo thứ tự từ trái sang phải, ngược lại nếu hơn 10 số thì bỏ\ncác số thừa bên phải, thiểu thì thêm số 0 vào bên phải cho đủ 10 số.\n\nVị dụ 1:\nNhap xau: abY012QW45_BM<09>?a6f6r6\n\nNhap xau: OKHO89NG902637RTjsz.,90K1738\nKet qua: Thua-0899026379\n\nNhap xau: 12A3K\nKet qua: Thieu- 123000000",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2019-2020": [
+    {
+      "id": "kien-giang-hsg-2019-2020-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 300,
+      "originalPoints": 3.0,
+      "sourceEvidence": {
+        "source": "tin_1920.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "9417ab0a9fc00599944b62e87af5266842bebb0f547d1f52e5f7f24ab37b2bdd",
+        "ocrTextSha256": "8e3ea8bdf85840e81b2a6f7b39791ade2b8d8bcd79230dc3ff7a7c3221d274d9"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2019-2020-a",
+        "statement": "Hai số được gọi là số nguyên tố tương đương nếu chúng có cùng các ước số\nnguyên tố.\n\n15 và 75 là số nguyên tố tương đương, vì 15= 3*5 và 75=3*5^2, có cùng ước số\nnguyên tổ là 3 và 5.\n\n12 và 60 không là số nguyên tố tương đương vì 12=2^2*3 và 60=2^2*3*5, 60 có\nước số nguyên tố 5 trong khi 12 không có 5.\n\nYêu cầu: Viết chương trình nhập vào hai số tự nhiên N, M. Hãy kiểm tra số N,\nM vừa nhập có phải là nguyên tố tương đương hay không? Nếu đúng thì thông báo ra\n\nmàn hình là số nguyên tố tương đương, ngược lai thì thông báo ra màn hình N, M\nkhông là số nguyên tố tương đương.\n\nVí dụ 1:\nNhap so tu nhien N:15\nNhap so tu nhien M:75\n15 va 75 la so nguyen to tuong duong\n\nVi du 2:\nNhap so tu nhien N:12\nNhap so tu nhien M:60\n12 va 60 khong la so nguyen to tuong duong",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2019-2020-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_1920.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "9417ab0a9fc00599944b62e87af5266842bebb0f547d1f52e5f7f24ab37b2bdd",
+        "ocrTextSha256": "8e3ea8bdf85840e81b2a6f7b39791ade2b8d8bcd79230dc3ff7a7c3221d274d9"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2019-2020-b",
+        "statement": "Mang A gồm. có N phần tử các số nguyên không âm, N được nhập từ bàn phim.\nYêu cầu: Viết chương trình để thực hiện các yêu cầu sau:\n- Nhập và xuất giá trị mảng A ra màn hình.\n- Tính tông giá trị của mang A.\n- Tinh tông giá trị các phần tử ở vị trí chan.\n- Tính tích giá trị các phần tử ở vị trí lẻ.\n- Sắp xếp mang A thành mảng có giá trị tăng dan.\n- Liệt kê các phần tử có giá trị lớn hơn 10.\n\nVí dụ 1: | Ví dụ 2:\nNhapN:3 Nhap N:5\nA[1]=8 . A[1]=2\nA[2]=6 A[2]=4\nA[3]=5 A[3]=6\nMang A vua nhap:8 6 5 A[4]=3\nTong gia tri mang A:19 A[5]=11\n\nTong gia tri phan tu o vi tri chan la:6 | Mang A vua nhap:2 4 6 3 11\n\nTịch gia tri phan tu o vi tri le la:40 Tong gia tri mang A:26\n\nMang A sau khi sap xep:5 6 8 Tong gia tri phan tu o vi tri chan la:7\n\nCac phan tu lon hon 10: Tich gia tri phan tu o vi tri le la:132\nMang A sau khi sap xep:2 3 4 6 11\nCac gia tri lon hon 10:11",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2019-2020-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_1920.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "9417ab0a9fc00599944b62e87af5266842bebb0f547d1f52e5f7f24ab37b2bdd",
+        "ocrTextSha256": "8e3ea8bdf85840e81b2a6f7b39791ade2b8d8bcd79230dc3ff7a7c3221d274d9"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2019-2020-c",
+        "statement": "Hai hàng số được gọi là hai hàng số kỳ ao khi tông các số theo các cột bang\nnhau, téng cac số theo các hàng bằng nhau. Hãy sắp xếp các số tự nhiên 0, 1, 2, ..., 2n\n\nthành hai hàng số kỳ ảo:\nAl, A2... An\nB1, B2... Bn\n\nGiải thích: Hai hàng số phải thỏa mãn điều kiện sau\nA1+B1=B2+B2=...=An+Bn (tổng các số theo các cột bằng nhau)\nA1+A2 t.. .+An=B1+B2 +...+Bn (tổng các số theo các hàng bằng nhau)\nYêu cầu: Viết chương trình nhập vào một số nguyên n (n<=20). Tim và in ra\nmàn hình hai hàng số kỳ ảo; nếu nhập n là số lẻ in ra màn hình không thể tìm thấy hai -\nhàng số kỳ ảo.",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2019-2020-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_1920.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "9417ab0a9fc00599944b62e87af5266842bebb0f547d1f52e5f7f24ab37b2bdd",
+        "ocrTextSha256": "8e3ea8bdf85840e81b2a6f7b39791ade2b8d8bcd79230dc3ff7a7c3221d274d9"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2019-2020-d",
+        "statement": "Đề mã hóa một xâu kí tự ta thường thực hiện hoán đổi kí tự này thành kí tự khác.\nVới phương án mã hóa thực hiện hoán đổi vị trí các kí tự theo từng nhóm n kí tự, ta\nchia xâu thành từng nhóm n kí tự (nếu nhóm cuối cùng không đủ n kí tự thì ta có thé\nthêm khoảng trắng vào phía sau cho đủ n kí tự trước khi mã hóa) rồi hoán vị các kí tự\ntrong từng nhóm.\n\nYêu cầu: Cho khóa là một hoán vị của n số 1, 2, ...n.\n\nHãy viết chương trình mã hóa một xâu kí tự được nhập từ bàn phím.\n\nVí du 1: Vi dụ 2:\n\nNhap xau: english Nhap xau: KIENGIANG\n\nNhap n:4 Nhap n:5\n\nKi tu vi tri 1 thay bang ki tu vi tri:3 Ki tu vi tri 1 thay bang ki tu vi tri:5\n\nKi tu vi tri 2 thay bang ki tu vi tri:2 Ki tu vi tri 2 thay bang ki tu vi tri:4\nKi tu vi tri 3 thay bang ki tu vi tri:4: Ki tu vi tri 3 thay bang ki tu vi tri:2\nKi tu vi tri 4 thay bang ki tu vi tri:1 Ki tu vi tri 4 thay bang ki tu vi tri:3\nXau sau khi ma hoa: gnlehs i Ki tu vi tri 5 thay bang ki tu vi tri:4\nXau sau khi ma hoa: GNIEN GANG",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2020-2021": [
+    {
+      "id": "kien-giang-hsg-2020-2021-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 300,
+      "originalPoints": 3.0,
+      "sourceEvidence": {
+        "source": "tin_2021.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "7e6c026320ba1ca77b6e8460c648fdbefe611d8ba7a6ddbaa0bac2d6df88f014",
+        "ocrTextSha256": "febf408334aa15c0c2c79eebba2e271c4f6d8776f02741368f8cd64cfc2f3bb8"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2020-2021-a",
+        "statement": "Hai số được gọi là cặp số sinh đôi nếu chúng là các số nguyên té và có hiệu số\nbằng 2. Vi du: Hai sé nguyên tố 7 và 5 là cặp số nguyên tố sinh đôi (vì số 7 và 5 là\ncác số nguyên tố và có hiệu số bằng 2).\n\nYêu cầu: Viết chương trình nhập vào một số nguyên dương n (1<n<30). Đếm\ntrong day số Al, A2,....An có bao nhiêu cặp số sinh đôi, nếu không tim thấy in ra\nkhông có cặp số nao.\n\nVí dụ 1: Ví dụ 2:\n\nNhap n: 5 Nhap so tu nhien n: 6\nA[1]=6 A[1]=5\n\nA[2]=5 A[2]=5\n\nA[3]=7 A[3]=6\n\nA[4]=11 A[4]=8\n\nA[5]=13 A[5]=15\n\nCo 2 cap so sinh doi A[6]=6\n\n(7 5) (13 11) Ket qua: khong co cap so nao",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2020-2021-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2021.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "7e6c026320ba1ca77b6e8460c648fdbefe611d8ba7a6ddbaa0bac2d6df88f014",
+        "ocrTextSha256": "febf408334aa15c0c2c79eebba2e271c4f6d8776f02741368f8cd64cfc2f3bb8"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2020-2021-b",
+        "statement": "Nhân dip ngày Nhà giáo Việt Nam Hà đến cửa hang bán hoa dé mua hoa tặng\nCô giáo. Cô giáo Hà rất thích hoa hồng, cửa hàng hiện đang có n (1<n<20) đóa hoa\nhồng rất đẹp được đánh số từ 1 đến n, các đóa hoa hồng đều đẹp như nhau, nên Hà\nphân vân không biết chọn đóa hoa hồng nào. Hà muốn mua tặng Cô giáo k (k< n) đóa\nhoa hồng.\nYêu cầu: Viết chương trình nhập n,k từ bàn phím (n,k là hai số nguyên dương).\nTìm giúp Hà tất cả các cách có thê chọn mua đóa hoa hồng tặng cô.\nVí dụ 1; Ví dụ 2:\nNhap n:4 Nhap n:3\nNhap k:2 Nhap k:2\nTong so cach chon:6 Tong so cach chon:3\n12 12\n\n13 | 13\n14 23\n23\n24\n34\n\nTrang 1/2",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2020-2021-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2021.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "7e6c026320ba1ca77b6e8460c648fdbefe611d8ba7a6ddbaa0bac2d6df88f014",
+        "ocrTextSha256": "febf408334aa15c0c2c79eebba2e271c4f6d8776f02741368f8cd64cfc2f3bb8"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2020-2021-c",
+        "statement": "Mang A gồm N phan tử (gồm cả số nguyên âm và số nguyên đương) (N<100), N\nđược nhập từ bàn phím.\n\nYêu cầu: Viết chương trình để thực hiện các yêu cầu sau:\n\n- Nhập vào một số nguyên x từ ban phím và đếm số lượng phan tử x có trong\nmảng A.\n\n- In ra màn hình các phan tử có giá trị chan ở vị trí lẻ trong mảng A.\n\n- Đếm các phan tử là số hoàn hảo trong mang A. Ví dụ: 6=1+2+3.\n\n- Tính tích các phần tử nằm trong đoạn từ vị trí giá trị nhỏ nhất đến vị trí giá trị\nlớn nhất trong mang A. (Lưu ý thứ tự phan tử không đổi).\n\nVí dụ 1: Vi dụ 2:\nNhap N:8 Nhap N:6\nALIIFI AEI]E3\nA[2]=6 A[2]=4\nA[3]=-2 A[3]=-3\nA[4]=4 A[4]=10\nA[5]=8 A[5]=3\n\nA[6]=4 A[6]=28\n\nA[7]=6 | Nhap x:3\n\nA[8]=7 So phan tu x la:2\n\nNhap x:4 Phan tu co gia tri chan o vi tri le:\nSo phan tu x la:2 Phan tu la so hoan hao:1\n\nPhan tu co gia tri chan o vi tri le:-2 86 | Tich cac phan tu:-2520\n\nPhan tu la so hoan hao:2\n\nTich cac phan tu:-64",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2020-2021-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_2021.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "7e6c026320ba1ca77b6e8460c648fdbefe611d8ba7a6ddbaa0bac2d6df88f014",
+        "ocrTextSha256": "febf408334aa15c0c2c79eebba2e271c4f6d8776f02741368f8cd64cfc2f3bb8"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2020-2021-d",
+        "statement": "Tudi của bố hiện nay là x tuổi, tuổi của con là y tuổi (x-y >20 va x, y là các số\nnguyên dương).\n\nYêu cầu; Hãy viết chương trình nhập x,y và kiểm tra xem tuôi của con có bằng\n1/2 tuổi của bố không.\n\n- Nếu bằng thì đưa ra màn hình “Hiện nay tuổi con bằng 1/2 tuổi bố”.\n\n- Trường hợp ngược lại, hãy tính số năm n (trước đó hoặc sau đó) tuôi con bằng\n1/2 tuổi bố và đưa ra man hình thông báo “n năm trước đây tuổi con bằng 1/2 tuổi bố”\nhoặc ““Sau n năm tuổi con bằng 1/2 tuổi bố”.\n\nVí dụ 1: Ví dụ 2:\nNhap x:42 Nhap x:45\n\nNhap y:21 Nhap y:20\nHien nay tuoi con bang 1/2 tuoi bo Sau 5 nam tuoi con bang 1/2 tuoi bo",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2021-2022": [
+    {
+      "id": "kien-giang-hsg-2021-2022-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 300,
+      "originalPoints": 3.0,
+      "sourceEvidence": {
+        "source": "tin_2122.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "1caf2136222a0bcc8dcab79b9a76ba83f41dd3cb5ff67c1e37532d99c4e3711b",
+        "ocrTextSha256": "a8eeed602f1f7b07fae33fc30eb1126c2d77f6dc0cd7166d2922fc98714c10fe"
+      },
+      "problem": {
+        "title": "Bài 1",
+        "slug": "kien-giang-hsg-2021-2022-a",
+        "statement": "Một xâu được gọi là Palindrome nếu sau khi đảo ngược các ký tự của nó, ta\nnhận được xâu mới giống xâu ban đầu. ©\n\nYêu cầu: - Viết chương trình nhập vào một xâu bat kỳ (tối đa 255 ký tự).\n\nKiểm tra xâu vừa nhập có phải là xâu Palindrome hay không, nếu đúng xuất ra\nmàn hình câu thông báo “là xâu Palindrome”, ngược lại xuất ra màn hình “không\nphải xâu Palindrome”.\n\nNhap xau:ABcBA Nhap xau:ABDdBA\nXau ABcBA la xau Palindrome Xau ABDdBA khong phai xau Palindrome",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2021-2022-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2122.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "1caf2136222a0bcc8dcab79b9a76ba83f41dd3cb5ff67c1e37532d99c4e3711b",
+        "ocrTextSha256": "a8eeed602f1f7b07fae33fc30eb1126c2d77f6dc0cd7166d2922fc98714c10fe"
+      },
+      "problem": {
+        "title": "Bài 2",
+        "slug": "kien-giang-hsg-2021-2022-b",
+        "statement": "Cho mảng A gồm N phần tử thuộc kiểu nguyên (N<100), N được nhập từ bàn\nphím.\n\nYêu cầu: Viết chương trình để thực hiện các yêu cầu sau:\n\n- Đếm số lượng phan tử k có trong mảng A với k được nhập từ bàn phím.\n\n- In ra màn hình các phan tử có giá trị lẻ ở vị trí chan trong mảng A.\n\n- Tính trung bình cộng (TBC) của các số lớn hơn k. (Kết quả làm tròn 2 chữ số\nthập phân). Nếu trong mảng A không có số nào lớn hơn k thì in ra màn hình thông báo\nkhông có số nào lớn hơn k.\n\nNhap N:4 Nhap N:4\nAIIE-2 _ | Nhap day:\n-A[2]=5 A[1]=-1\nAl3lES5_. A[2]=-5\n\nA[4IE9 A[3]=2\n\nNhap k:5 | Af[4]=3\n\nSo phan tu k la:1 Nhap k:5\n\nPhan tu co gia tri le o vi tri chan:5 9 So phan tu k la:0\n\nTBC:8.50 Phan tu co gia tri le o vi tri chan:-5 3\nKhong co so nao lon hon k.\n\n1/2",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2021-2022-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2122.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "1caf2136222a0bcc8dcab79b9a76ba83f41dd3cb5ff67c1e37532d99c4e3711b",
+        "ocrTextSha256": "a8eeed602f1f7b07fae33fc30eb1126c2d77f6dc0cd7166d2922fc98714c10fe"
+      },
+      "problem": {
+        "title": "Bài 3",
+        "slug": "kien-giang-hsg-2021-2022-c",
+        "statement": "Cho chuỗi văn bản S có chiều dài bat kỳ (tối đa 255 ký tự).\n\nYêu cầu: Viết chương trình đếm xem trong chuỗi S vừa nhập có bao nhiêu ký\ntự in thường (ký tự viết thường) va số lượng từng ký tự.\n\nNhap chuoi:Nam Hoc 2021-2022 . Nhap chuoi:#Chao Lop 8A#\nTrong chuoi co:4 ky tu in thuong Trong chuoi co:5 ky tu in thuong\nSo luong nhu sau: ‘| So luong nhu sau:\n\nKytua:l Kytuh:1\nKy tum:1 ` Kytua:l\nKytuo:l . Kytuo:2\nKytuc:] | . Ky tu p:1",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2021-2022-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_2122.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "1caf2136222a0bcc8dcab79b9a76ba83f41dd3cb5ff67c1e37532d99c4e3711b",
+        "ocrTextSha256": "a8eeed602f1f7b07fae33fc30eb1126c2d77f6dc0cd7166d2922fc98714c10fe"
+      },
+      "problem": {
+        "title": "Bài 4",
+        "slug": "kien-giang-hsg-2021-2022-d",
+        "statement": "Cho day số nguyên A (bao gồm cả số nguyên âm va số nguyên dương) gồm N\nphan tử (N<=100), N được nhập từ ban phím.\n\nYêu cầu: Viết chương trình dé thực hiện các yêu cầu sau:\n\n- Tìm số nhỏ nhất cùng vị trí của nó trong day số (Nếu có nhiều số có cùng giá\ntrị nhỏ nhất thì in giá trị và vị trí của số nhỏ nhất đầu tiên).\n\n- Xoá số nhỏ nhất đầu tiên tìm thấy và in ra day số sau khi đã xoá.\n\nNhap N:5 |\nA{1]}=1\n\n-Nhap N:5\nA[1]=7\n\nA[(2]=4 A[2]=-1\nA[3]=5 A[3]=9\nA[4]=1 A[4]=-5\nA[S]=6 A[5]E8\nKet qua: Ket qua:\n\nSo nho nhat la:-5, vi tri so nho nhat la:4\nDay so sau khi xoa la:7 -1 9 8\n\nSo nho nhat la:1, vi tri so nho nhat la: 1\nDay so sau khi xoa la:4 5 1 6",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2022-2023": [
+    {
+      "id": "kien-giang-hsg-2022-2023-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 300,
+      "originalPoints": 3.0,
+      "sourceEvidence": {
+        "source": "tin_2223.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "6b087a3bf4e457dbb37d218f71b362aeb309778aee7cb365eacf7e05571393dc",
+        "ocrTextSha256": "8ba97ecda37550d18702ff819c536ccd0c1225cd866712297b26ea91bf00324f"
+      },
+      "problem": {
+        "title": "Ma trận đều",
+        "slug": "kien-giang-hsg-2022-2023-a",
+        "statement": "Một ma trận n x n gọi là ma trận đều theo hàng, cột nếu tổng các số hạng theo\ntừng hàng hoặc ting cột đều bằng nhau.\n\nYêu cầu: Viết chương trình xem 1 ma trận có phải là ma trận đều theo hang,\ncột hay không? .\n\nDữ liệu vào: Nhập vào từ ban phim một số nguyên dương n và giá trị từng\nphần tử của ma trận.\n\nDữ liệu ra: Xuất ra màn hình:\n\n- Đúng ma trận đều hoặc không phải ma trận đều.\n\n- Nếu đúng là ma trận đều thì ghi thông báo “vì tông các số hạng theo từng hàng\nhoặc từng cột bằng nhau”; nếu không phải là ma trận đều thì ghi thông báo “vì tổng các\nsố hạng theo từng hàng hoặc từng cột không bằng nhau”.\n\nVị dụ:\n\nDữ liệu vào Dữ liệu ra\n\n“Dung ma tran deu\n\nvi tong cac so hang theo tung hang hoac tung cot deu\nbang 14\n\nKhong phai ma tran deu\nvi tong cac so hang theo tung hang hoac tung cot\nkhong bang nhau",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2022-2023-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2223.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "6b087a3bf4e457dbb37d218f71b362aeb309778aee7cb365eacf7e05571393dc",
+        "ocrTextSha256": "8ba97ecda37550d18702ff819c536ccd0c1225cd866712297b26ea91bf00324f"
+      },
+      "problem": {
+        "title": "Phân tích số",
+        "slug": "kien-giang-hsg-2022-2023-b",
+        "statement": "Cho trước số tự nhiên n, lập thuật toán cho biết n có thể biểu diễn thành\ntổng của hai hay nhiều số tự nhiên liên tiếp hay không? Trong trường hợp phân\ntích được, hãy liệt kê tất cả các cách có thé chia số n vừa nhập.\n\nYêu cầu: Viết chương trình để biểu diễn n thành tổng của hai hay nhiều số tự\nnhiên liên tiếp.\n\nDữ liệu vào: Nhập vào từ bàn phím số tự nhiên n (0 <n < 32000).\n\nDữ liệu ra: Xuất ra màn hình:\n\n- Liệt kê tất cả các cách chia số tự nhiên liên tiếp vừa nhập;\n\n- Tổng số cách chia số tự nhiên vừa nhập;\n\nNếu không biéu diễn thành tổng của hai hay nhiều số tự nhiên liên tiếp thì in\nra màn hình thông báo “không có cách chia nào”.\n\nVi dụ:\n\n23456\n\nCo ] cach chia so 20\n49 50\n\n32 33 34\n\n1415 16171819\n78910111213 1415\n4567891011 121314\nCo 5 cach chia so 99",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2022-2023-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2223.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "6b087a3bf4e457dbb37d218f71b362aeb309778aee7cb365eacf7e05571393dc",
+        "ocrTextSha256": "8ba97ecda37550d18702ff819c536ccd0c1225cd866712297b26ea91bf00324f"
+      },
+      "problem": {
+        "title": "Giải mã tin nhắn",
+        "slug": "kien-giang-hsg-2022-2023-c",
+        "statement": "Trong một trò chơi nhân ngày 26/3, học sinh có nhiệm vụ tìm và giải mã tin\nnhắn được giấu trong một văn bản. Biết rằng khi mã hóa tin nhắn là sử dụng phương\npháp thay các chữ cái trong tin nhắn thành một chữ cái đứng cách nó k vị trí trong\nbảng chữ cái tiếng Anh theo quy tắc xoay vòng, các ký tự không phải chữ cái thì\nkhông thay đổi (nghĩa là không cần giải mã). Trong xâu có thể có nhiều tin nhắn,\ngiữa các tin nhắn được ngăn cách nhau bởi dấu # và tin nhắn có độ dài lớn nhất là tin\nnhắn cần tìm.\n\nNếu có nhiều tin nhắn có cùng chiều dài thì tin nhắn đầu tiên tìm thấy là tin\nnhắn cần giải mã. Hãy tìm và giải mã tin nhắn được giấu trong xâu S.\n\nYêu cầu: Viết chương trình để tìm ra tin nhắn trong xâu văn bản vừa nhập.\n\nDữ liệu vào: Nhập vào từ bàn phím xâu S (1 < S < 255) và một số nguyên\ndương k.\n\nDữ liệu ra: Xuất ra màn hình:\n\n- Số lượng tin nhắn;\n\n- Tin nhắn đã được giải mã;\n\nVí dụ:\n\n\f\nDữ liệu vào Dữ liệu ra\nABC#QBTDBM#123HG 3\n| PASCAL\n\nqbt123#qbtdbm\n|",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2022-2023-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_2223.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "6b087a3bf4e457dbb37d218f71b362aeb309778aee7cb365eacf7e05571393dc",
+        "ocrTextSha256": "8ba97ecda37550d18702ff819c536ccd0c1225cd866712297b26ea91bf00324f"
+      },
+      "problem": {
+        "title": "Tiền khách sạn",
+        "slug": "kien-giang-hsg-2022-2023-d",
+        "statement": "Trong một dịp nghỉ lễ, do lượng khách du lịch đến Thành phố Phú Quốc tham\nquan tăng ký lục, dẫn đến tình trạng các khách sạn ở đây “cháy phòng”.\n\nKhách sạn Best Western chỉ còn một phòng nên quyết định cho thuê phòng\nnày theo hình thức thỏa thuận về giá cả. Sau khi tổng hợp các đơn đặt hàng, khách\nsạn nhận được n đơn đặt hàng, trong đó đơn đặt hàng thứ ¡ đăng ký ngày bắt đầu là\nai, ngày trả phòng là bị và chấp nhận trả số tiền thuê phòng là ci.\n\nDo có nhiều đơn đặt hàng, thời gian đặt phòng lại chồng chéo nhau, số tiền\nkhách hàng chấp nhận trả cho khách sạn cũng khác nhau nên ban quản lý khách sạn\nđang rất khó khăn không biết nhận lời hay từ chối khách hàng nảo.\n\nYêu cầu: Viết chương trình giúp khách sạn Best Western nhận đơn đặt phòng\nsao cho lợi nhuận thu được số tiền lớn nhất.\n\nLưu ý: Theo điều lệ của khách sạn, khách hàng phải trả phòng trước 12 giờ\ntrưa, khách hàng khác có thể nhận phòng từ 12 giờ trong một ngày.\n\nDữ liệu vào: Nhập từ bàn phím bao gồm:\n\n- Dòng thứ nhất là số nguyên n (1 <n < 12000) thể hiện số đơn đặt hàng.\n\n- n dòng tiếp theo gồm 3 số nguyên ai, bị và ci. Mỗi số cách nhau một khoảng\n\ntrang (1 < ai <b; < 100, 0 < c <1000, ai < ain).\n\nDữ liệu ra: Là một số nguyên thé hiện số tiền lớn nhất.\n\nDữ liệu vào Dữ liệu ra\n\n3\n\n128\n236\n476",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2023-2024": [
+    {
+      "id": "kien-giang-hsg-2023-2024-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 300,
+      "originalPoints": 3.0,
+      "sourceEvidence": {
+        "source": "tin_2324.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "973fb6d7c136c27ea435061f4c8e3b3a37740d0632ee90037c7332d081051a4f",
+        "ocrTextSha256": "924890dc90c7bede3840a35f82c9ca62eabfc4a5328ea4a03ff077205e9be6b2"
+      },
+      "problem": {
+        "title": "Giải nén xâu",
+        "slug": "kien-giang-hsg-2023-2024-a",
+        "statement": "Bạn Tuan va bạn An cùng tham gia một trò chơi. Trong quá trình diễn biến trò\nchơi bạn Tuan đố bạn An tìm cách giải nén xâu ký tự theo phương pháp được mô tả\nnhư sau:\n\n- Với xâu ky tự ‘aaabbbbbe’ sẽ được nén lại thành xâu “3a5bc'.\n\n- Với xâu ký tự ‘aaaaaabbbbcc’ sé được nén lại thành xâu ‘6a4b2c’.\n\nĐược biết xâu ký tự St gồm N (1 <N < 255) ký tự thuộc tập các ký tự 'a’..'z',\n'0'..'9' và xâu ký tự Stl gồm các ký tự thuộc tập các ký tự 'a’..'z’.\n\nYêu cầu: Viết chương trình giúp bạn An giải nén xâu St dé được xâu Stl.\n\nDữ liệu vào: Nhập vào từ bàn phím xâu ký tự St.\n\nDữ liệu ra: Xuất ra màn hình xâu St1 là xâu ký tự sau khi đã được giai nén.\n\nVị dụ:\n\n[ mm |  — mạn — —\n| 6a4b2c aaaaaabbbbcc |",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2023-2024-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2324.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "973fb6d7c136c27ea435061f4c8e3b3a37740d0632ee90037c7332d081051a4f",
+        "ocrTextSha256": "924890dc90c7bede3840a35f82c9ca62eabfc4a5328ea4a03ff077205e9be6b2"
+      },
+      "problem": {
+        "title": "Bộ ba số nguyên tố",
+        "slug": "kien-giang-hsg-2023-2024-b",
+        "statement": "Cho số tự nhiên n (0 <n < 105).\nYêu cầu: Viết chương trình tìm tất cả bộ ba số nguyên tố x, y, z thỏa mãn hai\n\nx2+y?=z\n\n\f\nDữ liệu vào: Nhập vào từ bàn phím một số tự nhiên n (0 <n < 10°),\n\nDữ liệu ra: Xuất ra màn hình gồm các nội dung:\n\n- Nếu tìm được bộ ba số nguyên tố x, y, z thỏa mãn hai điều kiện trên thì:\n\n+ In ra mỗi dòng một bộ ba số nguyên tố x, y, z„ theo thứ tự tăng dan.\n\n+ Dòng cuối cùng in số lượng bộ ba số nguyên tố tìm được.\n\n- Nếu tìm không có bộ ba số nguyên tố x, y, z nào thỏa mãn hai điều kiện trên\nthì in ra “Khong ton tai bo ba so nguyen to nao thoa man dieu kien”.\n\nVị dụ:\n\n2313\nCo 2 bo ba so nguyen to tim duoc\n\nKhong ton tai bo ba so nguyen to nao thoa man dieu kien",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2023-2024-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2324.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "973fb6d7c136c27ea435061f4c8e3b3a37740d0632ee90037c7332d081051a4f",
+        "ocrTextSha256": "924890dc90c7bede3840a35f82c9ca62eabfc4a5328ea4a03ff077205e9be6b2"
+      },
+      "problem": {
+        "title": "Cho thuê Hội trường",
+        "slug": "kien-giang-hsg-2023-2024-c",
+        "statement": "Trung tâm hội nghị XYZ thường cho thuê Hội trường để tổ chức các sự kiện.\nNhân dịp cuối năm có rất nhiều Công ty (n Công ty) đặt lịch thuê. Tuy nhiên, trung\ntâm chỉ có một Hội trường 500 chỗ ngồi (các Hội trường còn lại chỉ có 300 chỗ ngồi\n\n. trở xuống) nên Hội trường 500 chỗ ngồi sẽ cho Công ty ¡ thuê trong khoảng thời gian\ntừ a[ï] đến b[i] và trả tiền thuê là c[i] theo thỏa thuận.\n\nHãy bố trí lịch cho thuê Hội trường 500 chỗ ngồi dé tổng số tiền thu được là\nlớn nhất mà thời gian sử dụng Hội trường 500 chỗ ngồi của 2 Công ty bất kì được\nphục vụ đều không trùng lịch nhau.\n\nYêu cầu: Viết chương trình để thực hiện các yêu cầu sau:\n\nDữ liệu vào: Nhập vào từ bàn phím:\n\n- Dòng đầu nhập giá trị n (n < 10%).\n\n- Dòng thứ i trong số n dòng tiếp theo nhập 3 số nguyên afi], bị] và c[i] (a[1].\nb[i], c[i] < 10°). .\n\nDữ liệu ra: Xuất ra màn hình gồm:\n\n- Dòng đầu tiên ghi tổng số tiền lớn nhất thu được.\n\n- Các dòng tiếp theo, mỗi dòng ghi số hiệu của Công ty được phục vụ theo\ntrình tự lịch bố trí.\n\nVí dụ:\n\nDữ liệu vào",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2023-2024-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_2324.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "973fb6d7c136c27ea435061f4c8e3b3a37740d0632ee90037c7332d081051a4f",
+        "ocrTextSha256": "924890dc90c7bede3840a35f82c9ca62eabfc4a5328ea4a03ff077205e9be6b2"
+      },
+      "problem": {
+        "title": "Kho an toàn",
+        "slug": "kien-giang-hsg-2023-2024-d",
+        "statement": "Trong khuôn viên một công ty giao hàng nhanh có nhiều kho hàng. Các kho\nhàng và nhân viên bảo vệ được thể hiện trên ma trận m dòng và n cột. Kho hàng là\n“Kho an toàn” nếu xung quanh kho toàn là nhân viên bảo vệ.\n\nYêu cầu: Viết chương trình đưa ra tổng số kho an toàn và vị trí các kho an toàn.\n\nDữ liệu vào: Nhập từ ban phím bao gồm:\n\n- Nhập 2 số m, n nguyên dương (m, n < 100);\n\n- Nhập các phần tử của ma trận m đòng và n cột chỉ chứa 2 số (0 hoặc 1) thể\nhiện kho hàng và bảo vệ (quy ước: kho hàng = 0; bảo vệ = 1).\n\nDữ liệu ra: Xuất ra màn hình gồm các nội dung:\n\n- Nếu có kho an toàn thì: |\n\n+ Mỗi dòng in vị trí một kho an toàn (chi số dòng, chỉ sỐ cột).\n\n+ Dòng cuối cùng in tổng số kho an toàn.\n\n- Nếu không có kho an toàn thì in -1.\n\nVị dụ:",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ],
+  "2024-2025": [
+    {
+      "id": "kien-giang-hsg-2024-2025-a",
+      "sourceNumber": 1,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 300,
+      "originalPoints": 3.0,
+      "sourceEvidence": {
+        "source": "tin_2425.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ada308ee134da1d3ead9524c653a16868039191738c81477726ccd7db17b2939",
+        "ocrTextSha256": "d5db0388d6f12b90fdb099e0cd09ab03ceadd75f0cf4481104c92b6aa1f91080"
+      },
+      "problem": {
+        "title": "Rút tiền",
+        "slug": "kien-giang-hsg-2024-2025-a",
+        "statement": "Minh là sinh viên năm nhất của một trường đại học, khi đi học gia đình đã mở một\ntài khoản ngân hàng cho Minh để thuận tiện gửi và rút tiền qua máy ATM. Nguyên tắc\ntrả tiền của máy ATM là cho phép người dùng rút tiền không quá 5.000.000đ cho một\nlần, số tiền rút phải là bội của 50.000đ và số tờ tiền máy trả ra là ít nhất có thể.\n\nYêu cầu: Em hãy viết chương trình xử lý tương tự máy ATM để tính tổng số tờ\ntiền Minh rút được và số tờ tiền tương ứng với từng loại mệnh giá cho mỗi lần rút. Quy\nước máy ATM chỉ có 4 loại mệnh giá là: 500.000đ, 200.000đ, 100.000đ, 50.000đ.\n\nDữ liệu vào: Nhập từ bàn phím số tiền cần rút.\n\nDữ liệu ra: Xuất ra màn hình dong 1 tong số tờ tiền và 4 dòng tiếp theo là số tờ tiền\ntừng loại mệnh giá theo thứ tự 500.000đ, 200.000đ, 100.000đ, 50.000đ.\n\nVị dụ:\n\nDữ liệu vào Dữ liệu ra\n\n1350000 5\n2\n|\n1",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2024-2025-b",
+      "sourceNumber": 2,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2425.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ada308ee134da1d3ead9524c653a16868039191738c81477726ccd7db17b2939",
+        "ocrTextSha256": "d5db0388d6f12b90fdb099e0cd09ab03ceadd75f0cf4481104c92b6aa1f91080"
+      },
+      "problem": {
+        "title": "Số nguyên té",
+        "slug": "kien-giang-hsg-2024-2025-b",
+        "statement": "Số nguyên tố là số tự nhiên chỉ có các ước số là 1 và chính nó.\nYêu cầu: Viết chương trình tìm và tính tổng các số nguyên tố trong dãy số nguyên\ntừ A đến B.\nDữ liệu vào: Nhập vào từ bàn phím 02 số nguyên A, B (0< A < B).\n1\n\n\f\nDữ liệu ra: Xuât ra màn hình:\n- Sô lượng các sô nguyên tô vừa tìm được;\n- Các sô nguyên tô tìm được;\n\n- Tông các sô nguyên tô.\n\nVí dụ: :\n| Dwliguvio | Dữhm  —\n6 5 |\n711131719\n67",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2024-2025-c",
+      "sourceNumber": 3,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 600,
+      "originalPoints": 6.0,
+      "sourceEvidence": {
+        "source": "tin_2425.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ada308ee134da1d3ead9524c653a16868039191738c81477726ccd7db17b2939",
+        "ocrTextSha256": "d5db0388d6f12b90fdb099e0cd09ab03ceadd75f0cf4481104c92b6aa1f91080"
+      },
+      "problem": {
+        "title": "Mã hóa văn bản",
+        "slug": "kien-giang-hsg-2024-2025-c",
+        "statement": "Tập hợp các chữ cái tiếng Anh bao gồm 26 chữ cái được đánh số thứ tự từ 0 đến 25\nnhư sau:\nrr |o[i2[s|a[s[[?|s|s[ vo [m [ae [3 | tá [hs [tố [1 [rẽ [ 19 [20 [2i [22 [23 [24 [ 2s |\nEIBEEDEDEDHDIIDIIDDIEIDHIIINIIDHID\nPhương pháp mã hóa ký tự đơn giản được thực hiện theo các bước sau:\nBước 1: Tìm T là số thứ tự tương ứng của ký tự cần mã hóa trong bảng.\nBước 2: Tăng giá trị số T này lên K (khóa) đơn vị ta được TT= T+K.\nBước 3: Tìm số dư trong phép chia TT/26 ta được TTT=T1/26.\nBước 4: Tìm số thứ tự TTT trong bang chữ cái ta thu được ký tự mới.\nYêu cầu: Viết chương trình mã hóa chuỗi ký tự theo phương pháp trên.\nDữ liệu vào: Nhập vào một chuỗi ký tự và một khóa K (K>0).\n\nDữ liệu ra: Chuỗi ký tự sau mã hóa.\n\nVị dụ:\nDữ liệu ra\n\n@ TIN HOC 2025 @ @ APU OVI 2025 @\n7",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    },
+    {
+      "id": "kien-giang-hsg-2024-2025-d",
+      "sourceNumber": 4,
+      "needsReview": true,
+      "extractionVerified": false,
+      "samplesVerified": false,
+      "hiddenTestsVerified": false,
+      "points": 500,
+      "originalPoints": 5.0,
+      "sourceEvidence": {
+        "source": "tin_2425.pdf",
+        "method": "unverified Vietnamese OCR",
+        "sha256": "ada308ee134da1d3ead9524c653a16868039191738c81477726ccd7db17b2939",
+        "ocrTextSha256": "d5db0388d6f12b90fdb099e0cd09ab03ceadd75f0cf4481104c92b6aa1f91080"
+      },
+      "problem": {
+        "title": "Sô may mắn",
+        "slug": "kien-giang-hsg-2024-2025-d",
+        "statement": "Một sô tự nhiên được gọi là “may man” nêu các chữ số của nó được chia thành hai\n\nnhóm mà tông các chữ sô của nhóm 1 băng tông các chữ sô của nhóm 2.\n\nYêu cầu: Viết chương trình kiểm tra xem một số N được nhập vào từ bàn phím có\nphải là số may mắn hay không.\nDữ liệu vào: Nhập vào số tự nhiên N <10000 từ bàn phím.\n\nDữ liệu ra: In kêt quả ra màn hình.\n- Dong 1: Là sô may man hoặc Không là sô may man.\n- Dong 2 : Thê hiện biêu thức nêu là sô may man.\n\n2\n\n\f\nVí dụ\n\nDữ liêu vào\n\n55 La so may man\n5=5 .\n123 La so may man : le.\n\n1982 La so may man\n\n1+9=842\n2024\n\nene HET--------------------",
+        "inputDescription": "Standard Input. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "outputDescription": "Standard Output. Cần đối chiếu định dạng dữ liệu với PDF gốc.",
+        "constraints": [],
+        "samples": [],
+        "difficulty": "advanced",
+        "tags": [
+          "kien-giang-hsg",
+          "needs-review"
+        ],
+        "allowedLanguages": [
+          "cpp",
+          "python"
+        ],
+        "starterCode": {
+          "cpp": "",
+          "python": ""
+        }
+      }
+    }
+  ]
+}

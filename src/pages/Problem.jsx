@@ -1,3 +1,6 @@
+import {useCallback} from 'react';
+import useContestData from '../hooks/useContestData.js';
+import {loadPracticeProblem,judgePractice} from '../services/contestService.js';
 import ProblemStatement from "../components/ProblemStatement";
 import SubmissionProgress from "../components/SubmissionProgress";
 import useSubmissionProgress from "../hooks/useSubmissionProgress";
@@ -31,13 +34,13 @@ function ProblemHints({ hints }) {
 }
 
 function ProblemWorkspace({ problem, initialLang }) {
-  const [language, setLanguage] = useState(initialLang === "python" ? "python" : "cpp");
+  const [language, setLanguage] = useState(problem.allowedLanguages?.includes(initialLang) ? initialLang : problem.allowedLanguages?.[0] ?? (initialLang === "python" ? "python" : "cpp"));
   const [drafts, setDrafts] = useState({ ...problem.starterCode });
   const [stdin, setStdin] = useState(problem.samples[0]?.input ?? "");
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [submission, setSubmission] = useState(null);
-  const progress = useSubmissionProgress({ problemId: problem.id, slug: problem.slug, chapterId: problem.chapterId, language });
+  const progress = useSubmissionProgress({ problemId: problem.id, slug: problem.practicePublished ? `practice/${problem.id}` : problem.slug, chapterId: problem.chapterId ?? "practice", language });
   const requestRef = useRef(null);
   useEffect(() => () => requestRef.current?.abort(), []);
 
@@ -49,7 +52,7 @@ function ProblemWorkspace({ problem, initialLang }) {
     setError("");
     setSubmission(null);
     try {
-      const result = await judgeCode({ slug: problem.slug, source: drafts[language], language, mode, stdin, signal: controller.signal });
+      const result = await (problem.practicePublished ? judgePractice : judgeCode)({ problemId:problem.id, slug: problem.slug, source: drafts[language], language, mode, stdin, signal: controller.signal });
       if (!controller.signal.aborted) {
         setSubmission({ ...result, language, judgedSource: drafts[language] });
         // A persistence/normalization issue must not turn a Judge verdict into an error.
@@ -91,7 +94,7 @@ function ProblemWorkspace({ problem, initialLang }) {
                 {difficultyLabels[problem.difficulty]}
               </span>
               <span className="problem-meta">
-                Chương {Number(problem.chapterId.slice(2))} · Cấp độ {problem.level}
+                {problem.practicePublished?'Bài tập do giáo viên đăng':`Chương ${Number(problem.chapterId.slice(2))} · Cấp độ ${problem.level}`}
               </span>
             </div>
             <div className="bank-row-tags">
@@ -111,8 +114,8 @@ function ProblemWorkspace({ problem, initialLang }) {
           <div className="problem-editor__toolbar">
             <label className="bank-sr-only" htmlFor={languageId}>Ngôn ngữ</label>
             <select id={languageId} value={language} onChange={(event) => setLanguage(event.target.value)}>
-              <option value="cpp">C++</option>
-              <option value="python">Python</option>
+              {(!problem.allowedLanguages||problem.allowedLanguages.includes("cpp"))&&<option value="cpp">C++</option>}
+              {(!problem.allowedLanguages||problem.allowedLanguages.includes("python"))&&<option value="python">Python</option>}
             </select>
             <span>UTF-8</span>
           </div>
@@ -146,7 +149,7 @@ function ProblemWorkspace({ problem, initialLang }) {
             </div>
             <SubmissionProgress entry={progress.entry} />
             <JudgeResults busy={busy} error={error} submission={submission} />
-            <AITutorPanel slug={problem.slug} language={language} source={drafts[language] ?? ""} judgeBusy={Boolean(busy)} judgeResult={currentJudgeResult(submission, drafts[language], language)} />
+            {!problem.practicePublished&&<AITutorPanel slug={problem.slug} language={language} source={drafts[language] ?? ""} judgeBusy={Boolean(busy)} judgeResult={currentJudgeResult(submission, drafts[language], language)} />}
           </div>
         </section>
       </div>
@@ -155,8 +158,12 @@ function ProblemWorkspace({ problem, initialLang }) {
 }
 
 export default function Problem({ lang }) {
-  const { slug } = useParams();
-  const problem = getProblemBySlug(slug);
+  const { slug, problemId } = useParams();
+  const loader=useCallback(()=>problemId?loadPracticeProblem(problemId):Promise.resolve(null),[problemId]);
+  const bank=useContestData(loader);
+  if(problemId&&bank.loading)return <div className="content" role="status">Đang tải bài tập…</div>;
+  if(problemId&&bank.error)return <div className="content"><p role="alert">{bank.error}</p><Link to="/practice">Về kho bài tập</Link></div>;
+  const problem = problemId ? {...bank.value,hints:[]} : getProblemBySlug(slug);
   if (!problem) {
     return (
       <section className="bank-ui bank-empty">

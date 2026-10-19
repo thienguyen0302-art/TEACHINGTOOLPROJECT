@@ -10,7 +10,7 @@ function stop(code = 0) {
   for (const child of children) child.kill('SIGTERM');
 }
 for (const args of [
-  ['--env-file-if-exists=.env.local', 'server/index.js'],
+  ['--watch', '--env-file-if-exists=.env.local', 'server/index.js'],
   ['node_modules/vite/bin/vite.js', ...process.argv.slice(2)],
 ]) {
   const child = spawn(process.execPath, args, { stdio: 'inherit' });
