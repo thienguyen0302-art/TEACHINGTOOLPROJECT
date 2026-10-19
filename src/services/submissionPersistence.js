@@ -1,4 +1,4 @@
-import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
+import { collection, doc, getDocs, runTransaction, serverTimestamp } from "firebase/firestore";
 import { db } from "./firebase";
 import { mergeSubmission, submissionDocId } from "../utils/persistence";
 
@@ -12,3 +12,17 @@ export async function persistSubmission(contract, { uid }) {
     tx.set(ref, { ...mergeSubmission(snap.exists() ? snap.data() : null, contract), lastSubmittedAt: serverTimestamp() });
   });
 }
+
+export async function getCodeSubmissionHistory(uid) {
+  if (!uid) return [];
+  const snap = await getDocs(collection(db, "users", uid, "submissions"));
+  return snap.docs.map((d) => {
+    const data = d.data();
+    return {
+      id: d.id,
+      ...data,
+      lastSubmittedAt: data.lastSubmittedAt?.toMillis?.() ?? data.lastSubmittedAt ?? null,
+    };
+  }).sort((a, b) => (b.lastSubmittedAt || 0) - (a.lastSubmittedAt || 0));
+}
+

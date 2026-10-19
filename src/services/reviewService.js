@@ -159,6 +159,36 @@ export async function deleteUserReview(uid) {
 }
 
 /**
+ * Dành cho Giáo viên / Quản trị viên: Lắng nghe toàn bộ đánh giá để kiểm duyệt
+ */
+export function subscribeAllReviews(callback) {
+  try {
+    const colRef = collection(db, "reviews");
+    const unsubscribe = onSnapshot(
+      colRef,
+      (snapshot) => {
+        const items = snapshot.docs.map((d) => ({
+          id: d.id,
+          ...d.data(),
+        }));
+        items.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        saveLocalCache(items);
+        callback(items);
+      },
+      (error) => {
+        console.warn("Lỗi Firestore all reviews, dùng cache:", error.message);
+        callback(getLocalCache());
+      }
+    );
+    return unsubscribe;
+  } catch (err) {
+    console.warn("Không khởi tạo được realtime all reviews:", err);
+    callback(getLocalCache());
+    return () => {};
+  }
+}
+
+/**
  * Dành cho Giáo viên / Quản trị viên: Kiểm duyệt đánh giá ('approved' | 'rejected' | 'hidden')
  */
 export async function moderateReview(uid, status) {

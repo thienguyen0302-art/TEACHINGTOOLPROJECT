@@ -7,7 +7,11 @@ import Logo from "./Logo";
 import { displayName, initials } from "../utils/format";
 import NotificationDrawer from "./NotificationDrawer";
 import CreateAnnouncementModal from "./CreateAnnouncementModal";
+import AllAnnouncementsModal from "./AllAnnouncementsModal";
+import HelpCenterModal from "./HelpCenterModal";
 import AccountMenu from "./AccountMenu";
+import QuickGoalModal from "./QuickGoalModal";
+import useGoalShortcut from "../hooks/useGoalShortcut";
 import {
   subscribeAnnouncements,
   getReadNotificationIds,
@@ -24,20 +28,20 @@ const STUDENT_NAV = [
   { label: "Kho bài tập", icon: "code", path: "/practice" },
   { label: "Contest HSG", icon: "trophy", path: "/contests" },
   { label: "Luyện đề HSG", icon: "clock", path: "/exam" },
+  { label: "Lịch sử nộp bài", icon: "check", path: "/exam-history" },
   { label: "Lịch học", icon: "calendar", path: "/calendar" },
   { label: "Tiến độ của tôi", icon: "chart", path: "/progress" },
   { label: "Bảng xếp hạng", icon: "trophy", path: "/ranking" },
 ];
 
 const TEACHER_NAV = [
+  { label: "Quản trị lớp học", icon: "chart", path: "/teacher" },
+  { label: "Quản lý học sinh", icon: "user", path: "/teacher/students" },
+  { label: "Tổng hợp Contest", icon: "trophy", path: "/teacher/contest-history" },
+  { label: "Tổ chức Contest", icon: "trophy", path: "/teacher/contests" },
   { label: "Bài tập tự soạn", icon: "code", path: "/teacher/problems" },
-  { label: "Contest HSG", icon: "trophy", path: "/teacher/contests" },
-  { label: "Quản trị lớp học", icon: "chart",   path: "/teacher" },
-  { label: "Quản lý học sinh", icon: "user",    path: "/teacher/students" },
-  { label: "Kho bài tập",      icon: "code",    path: "/practice-bank" },
-  { label: "Đề thi HSG",       icon: "clock",   path: "/exam" },
-  { label: "Lịch sử thi",      icon: "trophy",  path: "/exam-history" },
-  { label: "Bảng xếp hạng",    icon: "trophy",  path: "/ranking" },
+  { label: "Bảng xếp hạng Contest", icon: "trophy", path: "/ranking" },
+  { label: "Duyệt đánh giá & Báo lỗi", icon: "message", path: "/teacher/reviews" },
 ];
 
 function isActive(item, pathname) {
@@ -62,12 +66,22 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
 
   // Trạng thái hệ thống thông báo
   const [notifOpen, setNotifOpen] = useState(false);
+  const [allNotifOpen, setAllNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [createNotifOpen, setCreateNotifOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [announcements, setAnnouncements] = useState([]);
   const [readIds, setReadIds] = useState(() => getReadNotificationIds(user?.uid));
   const bellRef = useRef(null); // ref cho nút chuông – dùng để neo popup
   const avatarRef = useRef(null); // ref cho nút avatar – dùng để neo popup tài khoản
+
+  // Lắng nghe phím tắt 'G' để bật/tắt nhanh modal mục tiêu
+  useGoalShortcut(useCallback(() => {
+    if (!isTeacher) {
+      setGoalModalOpen((prev) => !prev);
+    }
+  }, [isTeacher]));
 
   useEffect(() => {
     const unsub = subscribeAnnouncements((items) => {
@@ -163,7 +177,7 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
           )}
 
           <div className="sidebar-bottom">
-            <button onClick={() => showNotice("Trung tâm trợ giúp sẽ sớm có mặt")}>
+            <button onClick={() => setHelpOpen(true)}>
               <Icon name="help" />Trợ giúp
             </button>
             <button onClick={onLogout}><Icon name="logout" />Đăng xuất</button>
@@ -187,6 +201,24 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
               {!peanutBlocked && <button ref={peanutTriggerRef} className="peanut-chat-button" title="Trò chuyện với Peanut AI" aria-label="Trò chuyện với Peanut AI" aria-expanded={peanutOpen} aria-controls="global-peanut-chat" onClick={() => setPeanutOpen(value => !value)}>
                 <TutorIcon /><span>Peanut AI</span>
               </button>}
+              {!isTeacher && (
+                <button
+                  type="button"
+                  className="topbar-goal-btn"
+                  onClick={() => setGoalModalOpen(true)}
+                  title="Mục tiêu học tập (Bấm phím G)"
+                  aria-label="Mục tiêu học tập (Phím tắt G)"
+                >
+                  <Icon name="target" />
+                  <span>Mục tiêu</span>
+                  <kbd>G</kbd>
+                </button>
+              )}
+
+              <button className="language-button" onClick={() => showNotice("Phiên bản tiếng Anh sẽ sớm có mặt")}>
+                <Icon name="globe" /><span>VI</span>
+              </button>
+
               {/* Nút chuông + popup neo bên dưới */}
               <div style={{ position: "relative" }}>
                 <button
@@ -211,6 +243,8 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
                   onMarkAllRead={handleMarkAllRead}
                   isTeacher={isTeacher}
                   onOpenCreateModal={() => setCreateNotifOpen(true)}
+                  onOpenAllModal={() => setAllNotifOpen(true)}
+                  uid={user?.uid}
                 />
               </div>
               {/* Nút avatar + popup menu tài khoản neo bên dưới */}
@@ -255,6 +289,30 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
             onClose={() => setCreateNotifOpen(false)}
             currentUser={user}
             onCreated={() => showNotice("Đã đăng thông báo thành công!")}
+          />
+        )}
+
+        <AllAnnouncementsModal
+          isOpen={allNotifOpen}
+          onClose={() => setAllNotifOpen(false)}
+          announcements={announcements}
+          readIds={readIds}
+          onMarkRead={handleMarkRead}
+          onMarkAllRead={handleMarkAllRead}
+          isTeacher={isTeacher}
+          onOpenCreateModal={() => setCreateNotifOpen(true)}
+        />
+
+        <HelpCenterModal
+          isOpen={helpOpen}
+          onClose={() => setHelpOpen(false)}
+        />
+
+        {!isTeacher && (
+          <QuickGoalModal
+            isOpen={goalModalOpen}
+            onClose={() => setGoalModalOpen(false)}
+            user={user}
           />
         )}
       </main>

@@ -28,11 +28,14 @@ import { persistSubmission } from "./services/submissionPersistence";
 import { saveProfile } from "./services/progressService";
 import { isProfileComplete } from "./utils/profile";
 import { weekSummary } from "./utils/activity";
+import { isTeacherUser } from "./services/authSecurityService";
 
 const TeacherProblems = lazy(() => import("./pages/TeacherProblems"));
 const TeacherProblemEditor = lazy(() => import("./pages/TeacherProblems").then((module) => ({ default: module.TeacherProblemEditor })));
 const TeacherContests = lazy(() => import("./pages/TeacherContests"));
 const TeacherContestEditor = lazy(() => import("./pages/TeacherContests").then((module) => ({ default: module.TeacherContestEditor })));
+const TeacherContestHistory = lazy(() => import("./pages/TeacherContestHistory"));
+const TeacherReviews = lazy(() => import("./pages/TeacherReviews"));
 const Lesson = lazy(() => import("./pages/Lesson"));
 const Practice = lazy(() => import("./pages/Practice"));
 const Problem = lazy(() => import("./pages/Problem"));
@@ -44,7 +47,7 @@ function Learning({ user, lang, onChangeLang }) {
   const { pathname } = useLocation();
   const inContest = pathname.startsWith("/contest") || pathname.startsWith("/teacher");
   const data = useLearningData(user.uid, lang, !inContest);
-  const isTeacher = data.profile.role === "teacher";
+  const isTeacher = isTeacherUser(user, data.profile);
   const week = weekSummary(data.daily);
   const teacherOnly = (element) => data.loading ? <div className="content">Đang tải...</div> : isTeacher ? element : <Navigate to="/" replace />;
   // Tên hiển thị ưu tiên hồ sơ học viên đã nhập, sau đó mới tới tên tài khoản.
@@ -85,10 +88,10 @@ function Learning({ user, lang, onChangeLang }) {
             ? <Navigate to="/teacher" replace />
             : <Overview user={viewUser} lang={lang} data={data} onChangeLang={onChangeLang} />}
         />
-        <Route path="/curriculum" element={<Curriculum lang={lang} data={data} onChangeLang={onChangeLang} />} />
-        <Route path="/lesson/:id" element={<Lesson lang={lang} />} />
-        <Route path="/practice" element={<Practice />} />
-        <Route path="/practice-bank" element={<PracticeBank />} />
+        <Route path="/curriculum" element={isTeacher ? <Navigate to="/teacher" replace /> : <Curriculum lang={lang} data={data} onChangeLang={onChangeLang} />} />
+        <Route path="/lesson/:id" element={isTeacher ? <Navigate to="/teacher" replace /> : <Lesson lang={lang} />} />
+        <Route path="/practice" element={isTeacher ? <Navigate to="/teacher" replace /> : <Practice />} />
+        <Route path="/practice-bank" element={isTeacher ? <Navigate to="/teacher" replace /> : <PracticeBank />} />
         <Route path="/problem/:slug" element={<Problem lang={lang} />} />
         <Route path="/contests" element={<Contests />} />
         <Route path="/contest/:contestId" element={<Contest user={user} />} />
@@ -103,14 +106,14 @@ function Learning({ user, lang, onChangeLang }) {
         <Route path="/teacher/contests/:contestId/edit" element={teacherOnly(<TeacherContestEditor />)} />
         <Route path="/teacher/contests/:contestId/monitor" element={teacherOnly(<Contest user={user} teacher />)} />
 
-        <Route path="/exam" element={<Exam lang={lang} />} />
-        <Route path="/exam/:examId" element={<Exam lang={lang} />} />
-        <Route path="/exam-history" element={<ExamHistory />} />
+        <Route path="/exam" element={isTeacher ? <Navigate to="/teacher" replace /> : <Exam lang={lang} />} />
+        <Route path="/exam/:examId" element={isTeacher ? <Navigate to="/teacher" replace /> : <Exam lang={lang} />} />
+        <Route path="/exam-history" element={isTeacher ? <Navigate to="/teacher" replace /> : <ExamHistory />} />
         <Route
           path="/progress"
           element={isTeacher ? <Navigate to="/teacher" replace /> : <Dashboard user={viewUser} lang={lang} data={data} />}
         />
-        <Route path="/ranking" element={<Ranking key={lang} uid={user.uid} lang={lang} />} />
+        <Route path="/ranking" element={<Ranking key={lang} uid={user.uid} lang={lang} isTeacher={isTeacher} />} />
         <Route
           path="/calendar"
           element={isTeacher ? <Navigate to="/teacher" replace /> : <Schedule user={viewUser} data={data} />}
@@ -128,6 +131,18 @@ function Learning({ user, lang, onChangeLang }) {
           element={data.loading
             ? <div className="content">Đang tải...</div>
             : isTeacher ? <TeacherStudents /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/teacher/contest-history"
+          element={data.loading
+            ? <div className="content">Đang tải...</div>
+            : isTeacher ? <TeacherContestHistory /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/teacher/reviews"
+          element={data.loading
+            ? <div className="content">Đang tải...</div>
+            : isTeacher ? <TeacherReviews /> : <Navigate to="/" replace />}
         />
         <Route path="*" element={<Navigate to={isTeacher ? "/teacher" : "/"} replace />} />
       </Routes></Suspense>
@@ -173,7 +188,10 @@ export default function App() {
     });
   }, []);
 
-  useStudyTimer(user && user.emailVerified && lang ? user.uid : null);
+  const isTeacher = isTeacherUser(user, profile);
+  const activeLang = lang || (isTeacher ? "cpp" : null);
+
+  useStudyTimer(user && user.emailVerified && !isTeacher && activeLang ? user.uid : null);
 
   if (!ready) return <div className="box">Đang tải...</div>;
   if (!user) return <Login />;
@@ -196,8 +214,7 @@ export default function App() {
     );
   }
 
-  // Bước 1: Bắt buộc hoàn tất thông tin cá nhân (họ tên, tỉnh, trường, lớp) nếu chưa đủ
-  const isTeacher = profile?.role === "teacher";
+  // Bước 1: Bắt buộc hoàn tất thông tin cá nhân (họ tên, tỉnh, trường, lớp) nếu chưa đủ (chỉ áp dụng cho học sinh)
   if (!isTeacher && !isProfileComplete(profile)) {
     return (
       <main className="dashboard-shell">
@@ -214,8 +231,8 @@ export default function App() {
     );
   }
 
-  // Bước 2: Sau khi có đầy đủ hồ sơ, bắt buộc chọn ngôn ngữ lập trình nếu chưa chọn
-  if (!lang || picking) {
+  // Bước 2: Sau khi có đầy đủ hồ sơ, bắt buộc chọn ngôn ngữ lập trình nếu chưa chọn (chỉ áp dụng cho học sinh)
+  if (!isTeacher && (!lang || picking)) {
     return (
       <ChooseLang
         uid={user.uid}
@@ -227,5 +244,5 @@ export default function App() {
   }
 
   // Bước 3: Đã đủ thông tin hồ sơ và ngôn ngữ -> Vào trang học tập
-  return <Learning user={user} lang={lang} onChangeLang={() => setPicking(true)} />;
+  return <Learning user={user} lang={activeLang} onChangeLang={() => setPicking(true)} />;
 }

@@ -1,0 +1,839 @@
+/* ==========================================================================
+   HSG ADMIN INTERFACE STYLES (Framer-aligned Design System)
+   - Background: Very pale blue-gray (#f4f6fa)
+   - Tables & Cards: Crisp White (#ffffff) with soft borders (#e2e8f0)
+   - Text: Deep Navy (#0f2042 / #0f172a), Secondary (#64748b)
+   - Primary Accent: Royal Blue (#2563eb)
+   - Max Width: 1104px content centered within 1200px frame, 48px gutters
+   - No heavy shadows, subtle borders, soft rounded corners
+   ========================================================================== */
+
+:root {
+  --hsg-bg: #f4f6fa;
+  --hsg-surface: #ffffff;
+  --hsg-border: #e2e8f0;
+  --hsg-border-subtle: #edf2f7;
+  
+  --hsg-navy-900: #0b192c;
+  --hsg-navy-800: #0f2042;
+  --hsg-navy-700: #1e293b;
+  
+  --hsg-text-primary: #0f2042;
+  --hsg-text-secondary: #64748b;
+  --hsg-text-muted: #94a3b8;
+  
+  --hsg-blue-primary: #2563eb;
+  --hsg-blue-hover: #1d4ed8;
+  --hsg-blue-light: #eff6ff;
+  
+  --hsg-font-sans: 'Be Vietnam Pro', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  
+  --hsg-radius-sm: 8px;
+  --hsg-radius-md: 12px;
+  --hsg-radius-lg: 16px;
+  --hsg-radius-xl: 20px;
+}
+
+/* Base resets & container */
+.hsg-root {
+  min-height: 100vh;
+  background-color: var(--hsg-bg);
+  color: var(--hsg-text-primary);
+  font-family: var(--hsg-font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* App frame: 1200px container with 48px padding on both sides => 1104px content */
+.hsg-frame {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 48px 64px 48px;
+  box-sizing: border-box;
+}
+
+/* Page wrapper inside AppShell */
+.content.hsg-page {
+  padding: 36px 48px 64px 48px !important;
+  background-color: var(--hsg-bg) !important;
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+}
+
+.hsg-frame-inner {
+  max-width: 1104px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Header switcher (Tabs to switch between the 3 Framer pages) */
+.hsg-nav-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--hsg-border);
+}
+
+.hsg-nav-tabs {
+  display: inline-flex;
+  gap: 8px;
+  background: #e9eef5;
+  padding: 4px;
+  border-radius: var(--hsg-radius-md);
+}
+
+.hsg-nav-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--hsg-text-secondary);
+  border: none;
+  background: transparent;
+  border-radius: var(--hsg-radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+}
+
+.hsg-nav-tab:hover {
+  color: var(--hsg-navy-800);
+}
+
+.hsg-nav-tab.active {
+  background: var(--hsg-surface);
+  color: var(--hsg-blue-primary);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+/* Page Header */
+.hsg-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.hsg-header-text {
+  flex: 1;
+}
+
+.hsg-page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--hsg-text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.hsg-page-desc {
+  font-size: 14.5px;
+  color: var(--hsg-text-secondary);
+  margin: 6px 0 0 0;
+  line-height: 1.5;
+}
+
+/* Action Button Group */
+.hsg-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Base Button */
+.hsg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: var(--hsg-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* Primary Button (Xanh dương) */
+.hsg-btn-primary {
+  background-color: var(--hsg-blue-primary);
+  color: #ffffff;
+  border: 1px solid var(--hsg-blue-primary);
+}
+
+.hsg-btn-primary:hover {
+  background-color: var(--hsg-blue-hover);
+  border-color: var(--hsg-blue-hover);
+}
+
+/* Secondary Button (Nền trắng, viền mảnh, chữ xanh navy) */
+.hsg-btn-secondary {
+  background-color: var(--hsg-surface);
+  color: var(--hsg-navy-800);
+  border: 1px solid var(--hsg-border);
+}
+
+.hsg-btn-secondary:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* Table Card Container */
+.hsg-table-card {
+  background-color: var(--hsg-surface);
+  border: 1px solid var(--hsg-border);
+  border-radius: var(--hsg-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+/* Scroll wrapper for responsive table */
+.hsg-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Minimal Table */
+.hsg-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 780px;
+}
+
+.hsg-table th {
+  background-color: #fbfcfe;
+  color: var(--hsg-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--hsg-border);
+  white-space: nowrap;
+}
+
+.hsg-table td {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--hsg-text-primary);
+  border-bottom: 1px solid var(--hsg-border-subtle);
+  vertical-align: middle;
+}
+
+.hsg-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Empty State */
+.hsg-empty-state {
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.hsg-empty-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--hsg-text-primary);
+  margin: 0 0 6px 0;
+}
+
+.hsg-empty-desc {
+  font-size: 13.5px;
+  color: var(--hsg-text-secondary);
+  margin: 0;
+}
+
+/* ==========================================================================
+   2. TRANG BẢNG VÀNG CONTEST HSG TOÀN TRƯỜNG
+   ========================================================================== */
+
+/* Banner ngang bo góc chuyển sắc xanh navy sang xanh dương */
+.hsg-banner {
+  background: linear-gradient(135deg, #091931 0%, #112856 50%, #1d4ed8 100%);
+  border-radius: var(--hsg-radius-lg);
+  padding: 44px 48px;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hsg-banner-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.hsg-banner-title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.hsg-banner-desc {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 680px;
+}
+
+/* Ba thẻ vinh danh: Bục vinh quang (Hạng 2, Hạng 1, Hạng 3) */
+.hsg-podium-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 36px;
+  align-items: flex-end; /* Thẻ Hạng 1 cao hơn sẽ nhô lên phía trên */
+}
+
+/* Base Honor Card */
+.hsg-honor-card {
+  border-radius: var(--hsg-radius-lg);
+  padding: 36px 24px 32px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Hạng 2: Nền xanh bạc nhạt */
+.hsg-honor-card.rank-2 {
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  min-height: 250px;
+}
+
+.hsg-honor-card.rank-2 .hsg-card-cup {
+  color: #64748b;
+}
+
+.hsg-honor-card.rank-2 .hsg-card-rank-tag {
+  color: #475569;
+  background: rgba(100, 116, 139, 0.1);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+/* Hạng 1: Nền vàng kem nhạt, cao hơn và nổi bật ở giữa */
+.hsg-honor-card.rank-1 {
+  background-color: #fef9ee;
+  border: 1px solid #fde68a;
+  min-height: 290px;
+  padding: 44px 24px 38px 24px;
+}
+
+.hsg-honor-card.rank-1 .hsg-card-cup {
+  color: #d97706;
+}
+
+.hsg-honor-card.rank-1 .hsg-card-rank-tag {
+  color: #b45309;
+  background: rgba(217, 119, 6, 0.12);
+  border: 1px solid rgba(217, 119, 6, 0.25);
+}
+
+/* Hạng 3: Nền cam kem nhạt */
+.hsg-honor-card.rank-3 {
+  background-color: #fff7ed;
+  border: 1px solid #fed7aa;
+  min-height: 250px;
+}
+
+.hsg-honor-card.rank-3 .hsg-card-cup {
+  color: #ea580c;
+}
+
+.hsg-honor-card.rank-3 .hsg-card-rank-tag {
+  color: #c2410c;
+  background: rgba(234, 88, 12, 0.1);
+  border: 1px solid rgba(234, 88, 12, 0.2);
+}
+
+/* Cup Icon Container */
+.hsg-card-cup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+/* Rank Label */
+.hsg-card-rank-tag {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+/* Waiting honor title */
+.hsg-card-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--hsg-text-primary);
+  margin: 0 0 6px 0;
+}
+
+/* No result subtitle */
+.hsg-card-desc {
+  font-size: 13.5px;
+  color: var(--hsg-text-secondary);
+  margin: 0;
+}
+
+/* Footer note for ranking */
+.hsg-ranking-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.hsg-ranking-footer-main {
+  font-size: 14px;
+  color: var(--hsg-text-secondary);
+  margin: 0 0 8px 0;
+}
+
+.hsg-ranking-footer-note {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--hsg-text-muted);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Desktop, Tablet, Mobile)
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .hsg-frame {
+    padding: 36px 32px 48px 32px;
+  }
+  
+  .hsg-banner {
+    padding: 36px 32px;
+  }
+  
+  .hsg-banner-title {
+    font-size: 26px;
+  }
+  
+  .hsg-podium-grid {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hsg-frame {
+    padding: 24px 16px 36px 16px;
+  }
+  
+  .hsg-page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+  
+  .hsg-btn-group {
+    width: 100%;
+  }
+  
+  .hsg-btn {
+    flex: 1;
+    font-size: 13px;
+    padding: 0 12px;
+  }
+  
+  .hsg-banner {
+    padding: 28px 20px;
+  }
+  
+  .hsg-banner-title {
+    font-size: 22px;
+  }
+  
+  .hsg-banner-desc {
+    font-size: 13.5px;
+  }
+  
+  /* On small screens, keep podium layout or stack */
+  .hsg-podium-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .hsg-honor-card.rank-1 {
+    order: -1; /* First on mobile */
+    min-height: auto;
+    padding: 32px 20px;
+  }
+  
+  .hsg-honor-card.rank-2,
+  .hsg-honor-card.rank-3 {
+    min-height: auto;
+    padding: 28px 20px;
+  }
+  
+  .hsg-empty-state {
+    padding: 60px 16px;
+  }
+}
+
+/* ==========================================================================
+   4. TRANG ĐẤU TRƯỜNG HSG (CONTEST ARENA)
+   ========================================================================== */
+
+.hsg-contest-banner {
+  background: linear-gradient(135deg, #091931 0%, #112856 50%, #1d4ed8 100%);
+  border-radius: var(--hsg-radius-lg, 16px);
+  padding: 40px 44px;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(11, 25, 44, 0.08);
+}
+
+.hsg-contest-banner .hsg-banner-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.hsg-contest-banner-title {
+  font-size: clamp(30px, 3.2vw, 38px);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.hsg-contest-chips {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hsg-contest-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.hsg-contest-chip svg {
+  width: 14px;
+  height: 14px;
+  color: #93c5fd;
+}
+
+/* Contest Section & Tabs */
+.hsg-contest-section {
+  margin-top: 28px;
+}
+
+.hsg-contest-tabs-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.hsg-contest-tabs-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.hsg-contest-tabs {
+  display: inline-flex;
+  gap: 6px;
+  background: #e2e8f0;
+  padding: 4px;
+  border-radius: var(--hsg-radius-md, 12px);
+}
+
+.hsg-contest-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--hsg-text-secondary, #64748b);
+  border: none;
+  background: transparent;
+  border-radius: var(--hsg-radius-sm, 8px);
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.hsg-contest-tab:hover {
+  color: var(--hsg-navy-800, #0f2042);
+}
+
+.hsg-contest-tab.active {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12);
+}
+
+.hsg-contest-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(100, 116, 139, 0.14);
+  color: inherit;
+}
+
+.hsg-contest-tab.active .hsg-contest-tab-count {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* Content Container Card */
+.hsg-contest-box {
+  background: #ffffff;
+  border: 1px solid var(--hsg-border, #e2e8f0);
+  border-radius: var(--hsg-radius-lg, 16px);
+  padding: 32px;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+}
+
+/* Empty State */
+.hsg-contest-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 44px 20px;
+}
+
+.hsg-contest-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #94a3b8;
+  margin-bottom: 16px;
+}
+
+.hsg-contest-empty-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.hsg-contest-empty-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--hsg-text-primary, #0f2042);
+  margin: 0 0 6px 0;
+}
+
+.hsg-contest-empty-desc {
+  font-size: 13.5px;
+  color: var(--hsg-text-secondary, #64748b);
+  margin: 0;
+  max-width: 440px;
+  line-height: 1.5;
+}
+
+/* Contest Cards Grid */
+.hsg-contest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.hsg-contest-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--hsg-radius-md, 12px);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+}
+
+.hsg-contest-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  transform: translateY(-2px);
+}
+
+.hsg-contest-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.hsg-contest-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f2042;
+  margin: 0 0 8px 0;
+  line-height: 1.35;
+}
+
+.hsg-contest-card-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hsg-contest-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 18px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.hsg-contest-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.hsg-contest-card-meta svg {
+  width: 14px;
+  height: 14px;
+  color: #94a3b8;
+}
+
+.hsg-contest-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hsg-contest-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: var(--hsg-radius-sm, 8px);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.hsg-contest-action-btn.primary {
+  background: #2563eb;
+  color: #ffffff;
+  border: 1px solid #2563eb;
+}
+.hsg-contest-action-btn.primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.hsg-contest-action-btn.secondary {
+  background: #f8fafc;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+.hsg-contest-action-btn.secondary:hover {
+  background: #ffffff;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+@media (max-width: 768px) {
+  .hsg-contest-banner {
+    padding: 28px 20px;
+  }
+
+  .hsg-contest-banner-title {
+    font-size: 24px;
+  }
+
+  .hsg-contest-chips {
+    gap: 8px;
+  }
+
+  .hsg-contest-chip {
+    font-size: 12px;
+    padding: 5px 11px;
+  }
+
+  .hsg-contest-box {
+    padding: 20px 16px;
+  }
+
+  .hsg-contest-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

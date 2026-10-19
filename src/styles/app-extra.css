@@ -49,3 +49,382 @@
 
 .profile-banner { display: flex; margin-bottom: 14px; padding: 12px 16px; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid #f3d9a8; border-radius: 12px; background: #fff8ea; color: #7a5a1d; font-size: 13px; }
 .profile-banner button { flex: 0 0 auto; padding: 7px 12px; border: 0; border-radius: 8px; background: #3978ed; color: #fff; font-size: 12px; font-weight: 700; }
+
+/* ── Dashboard Blocks: Kế hoạch ôn luyện & Thông báo mới ─── */
+.dash-block {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.dash-block-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.dash-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-block-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f2042;
+  letter-spacing: -0.02em;
+}
+
+.dash-count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dash-block-desc {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.dash-block-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dash-shortcut-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.dash-shortcut-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: inherit;
+}
+
+.dash-action-btn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.dash-action-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+/* Alert nhiệm vụ đến hạn */
+.dash-due-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 9px 13px;
+  border-radius: 8px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.dash-due-alert svg {
+  width: 14px;
+  height: 14px;
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+/* Danh sách nhiệm vụ kế hoạch ôn luyện */
+.dash-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dash-task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+
+.dash-task-item:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+
+.dash-task-item.is-completed {
+  opacity: 0.65;
+  background: #f1f5f9;
+}
+
+.dash-task-item.is-completed .dash-task-title {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.dash-task-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: #2563eb;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.dash-task-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.dash-task-title {
+  margin: 0 0 5px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f2042;
+  line-height: 1.4;
+}
+
+.dash-task-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.dash-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dash-meta-value {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dash-meta-due {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dash-meta-due svg {
+  width: 13px;
+  height: 13px;
+  color: #64748b;
+}
+
+.dash-meta-due.is-today {
+  color: #b45309;
+  font-weight: 600;
+}
+.dash-meta-due.is-today svg {
+  color: #b45309;
+}
+
+.dash-meta-due.is-overdue {
+  color: #b91c1c;
+  font-weight: 600;
+}
+.dash-meta-due.is-overdue svg {
+  color: #b91c1c;
+}
+
+.dash-empty-content {
+  padding: 12px 0 4px 0;
+  color: #64748b;
+  font-size: 13.5px;
+}
+
+.dash-empty-content p {
+  margin: 0;
+}
+
+/* Lưới thẻ thông báo mới */
+.dash-announcements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.dash-announcement-card {
+  padding: 18px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #2563eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-announcement-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  border-left-color: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.dash-announcement-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.dash-pinned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dash-pinned-badge svg {
+  width: 12px;
+  height: 12px;
+  color: #475569;
+}
+
+.dash-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2563eb;
+  margin-left: auto;
+}
+
+.dash-announcement-title {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f2042;
+  line-height: 1.4;
+}
+
+.dash-announcement-content {
+  margin: 0 0 14px 0;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.dash-announcement-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.dash-announcement-foot span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dash-announcement-foot svg {
+  width: 13px;
+  height: 13px;
+  color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+  .dash-block {
+    padding: 16px;
+  }
+  
+  .dash-block-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .dash-block-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .dash-announcements-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+

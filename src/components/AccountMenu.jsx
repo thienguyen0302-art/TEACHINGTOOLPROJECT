@@ -140,11 +140,13 @@ export default function AccountMenu({
         {isTeacher ? (
           // GIÁO VIÊN
           <MenuSection>
-            <MenuItem icon="chart"    label="Quản trị lớp học"  onClick={() => go("/teacher")} />
-            <MenuItem icon="user"     label="Quản lý học sinh"  onClick={() => go("/teacher/students")} />
-            <MenuItem icon="book"     label="Bài tập & đề thi"  onClick={() => go("/practice-bank")} />
-            <MenuItem icon="history"  label="Lịch sử thi lớp"   onClick={() => soon("Báo cáo lịch sử thi lớp")} />
-            <MenuItem icon="list"     label="Báo cáo học tập"   onClick={() => soon("Báo cáo học tập")} />
+            <MenuItem icon="chart"    label="Quản trị lớp học"        onClick={() => go("/teacher")} />
+            <MenuItem icon="user"     label="Quản lý học sinh"        onClick={() => go("/teacher/students")} />
+            <MenuItem icon="trophy"   label="Tổng hợp Contest"        onClick={() => go("/teacher/contest-history")} />
+            <MenuItem icon="trophy"   label="Tổ chức Contest"         onClick={() => go("/teacher/contests")} />
+            <MenuItem icon="code"     label="Bài tập tự soạn"         onClick={() => go("/teacher/problems")} />
+            <MenuItem icon="trophy"   label="Bảng xếp hạng Contest"   onClick={() => go("/ranking")} />
+            <MenuItem icon="message"  label="Duyệt đánh giá & Báo lỗi" onClick={() => go("/teacher/reviews")} />
           </MenuSection>
         ) : (
           // HỌC SINH
@@ -173,9 +175,8 @@ export default function AccountMenu({
 
         {/* ── Nhóm 2: Cài đặt ── */}
         <MenuSection>
-          <MenuItem icon="shield"   label="Tài khoản & bảo mật"    onClick={() => soon("Tài khoản & bảo mật")} />
-          <MenuItem icon="bell"     label="Cài đặt thông báo"       onClick={() => soon("Cài đặt thông báo")} />
-          <MenuItem icon="palette"  label="Giao diện"               onClick={() => soon("Tuỳ chỉnh giao diện")} />
+          <MenuItem icon="shield"   label="Tài khoản & bảo mật"    onClick={() => go("/profile?tab=security")} />
+          <MenuItem icon="bell"     label="Cài đặt thông báo"       onClick={() => go("/profile?tab=notifications")} />
           <MenuItem icon="globe"    label="Ngôn ngữ"                onClick={() => soon("Chọn ngôn ngữ")} />
         </MenuSection>
 
@@ -185,7 +186,7 @@ export default function AccountMenu({
         <MenuSection>
           <MenuItem icon="help"    label="Trung tâm trợ giúp"    onClick={() => soon("Trung tâm trợ giúp")} />
           <MenuItem icon="message" label="Đánh giá & góp ý"      onClick={() => go("/feedback")} />
-          <MenuItem icon="send"    label="Gửi góp ý / Báo lỗi"   onClick={() => soon("Gửi góp ý")} />
+          <MenuItem icon="send"    label="Gửi góp ý / Báo lỗi"   onClick={() => go("/feedback")} />
         </MenuSection>
 
         <div className="am-divider" role="separator" />

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
 import Icon from "../components/Icon";
 import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
+import { auth } from "../services/firebase";
 import "../styles/pages-shared.css";
 import "./Teacher.css";
 
@@ -17,6 +19,7 @@ function lastSeenText(ms) {
 }
 
 export default function TeacherStudents() {
+  const navigate = useNavigate();
   const [state, setState] = useState({ loading: true, error: "", overview: null });
   const [search, setSearch] = useState("");
   const [filterLang, setFilterLang] = useState("all");
@@ -113,7 +116,6 @@ export default function TeacherStudents() {
 
   return (
     <div className="content ps-page">
-
       {/* ── Header ── */}
       <div className="ps-page-header">
         <h1>Quản lý học sinh</h1>
@@ -348,6 +350,13 @@ export default function TeacherStudents() {
             </div>
 
             <div className="teacher-modal-actions">
+              <button
+                type="button"
+                className="teacher-btn-secondary"
+                onClick={() => navigate(`/teacher/contest-history?studentId=${selectedStudent.uid}&tab=submissions`)}
+              >
+                <Icon name="trophy" /> Xem lịch sử Contest HSG
+              </button>
               <button type="button" className="teacher-btn-secondary" onClick={handleSendReminder}>Gửi nhắc nhở học tập</button>
               <button type="button" className="teacher-btn-primary" onClick={handleSaveNote}>Lưu ghi chú</button>
             </div>
@@ -358,7 +367,7 @@ export default function TeacherStudents() {
       <CreateAnnouncementModal
         isOpen={isCreateNotifOpen}
         onClose={() => setIsCreateNotifOpen(false)}
-        currentUser={{ displayName: "Giáo viên phụ trách", role: "teacher" }}
+        currentUser={auth.currentUser}
         onCreated={() => showNotice("Đã gửi thông báo đến toàn bộ học sinh thành công!")}
       />
 

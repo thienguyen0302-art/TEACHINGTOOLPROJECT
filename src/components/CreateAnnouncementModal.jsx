@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "./Icon";
-import { ANNOUNCEMENT_TYPES, createAnnouncement } from "../services/announcementService";
+import { ANNOUNCEMENT_TYPES, createAnnouncement, updateAnnouncement } from "../services/announcementService";
 import "./CreateAnnouncementModal.css";
 
 export default function CreateAnnouncementModal({
@@ -8,13 +8,31 @@ export default function CreateAnnouncementModal({
   onClose,
   currentUser,
   onCreated,
+  onUpdated,
+  editItem = null,
 }) {
+  const isEditing = Boolean(editItem);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [type, setType] = useState("general");
   const [pinned, setPinned] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (editItem) {
+      setTitle(editItem.title || "");
+      setContent(editItem.content || "");
+      setType(editItem.type || "general");
+      setPinned(Boolean(editItem.pinned));
+    } else {
+      setTitle("");
+      setContent("");
+      setType("general");
+      setPinned(false);
+    }
+    setError("");
+  }, [editItem, isOpen]);
 
   if (!isOpen) return null;
 
@@ -33,22 +51,34 @@ export default function CreateAnnouncementModal({
     setLoading(true);
 
     try {
-      const created = await createAnnouncement({
-        title,
-        content,
-        type,
-        pinned,
-        authorName: currentUser?.displayName || "Giáo viên",
-        authorUid: currentUser?.uid || "",
-      });
-      setTitle("");
-      setContent("");
-      setType("general");
-      setPinned(false);
-      onCreated?.(created);
+      if (isEditing) {
+        await updateAnnouncement(editItem.id, {
+          title,
+          content,
+          type,
+          pinned,
+        });
+        onUpdated?.({
+          ...editItem,
+          title,
+          content,
+          type,
+          pinned,
+        });
+      } else {
+        const created = await createAnnouncement({
+          title,
+          content,
+          type,
+          pinned,
+          authorName: currentUser?.displayName || "Giáo viên",
+          authorUid: currentUser?.uid || "",
+        });
+        onCreated?.(created);
+      }
       onClose();
     } catch (err) {
-      setError(err.message || "Không thể đăng thông báo. Vui lòng thử lại.");
+      setError(err.message || (isEditing ? "Không thể cập nhật thông báo." : "Không thể đăng thông báo. Vui lòng thử lại."));
     } finally {
       setLoading(false);
     }
@@ -60,8 +90,8 @@ export default function CreateAnnouncementModal({
         <div className="cam-header">
           <div>
             <span className="cam-kicker">QUẢN LÝ LỚP HỌC</span>
-            <h2>Đăng thông báo cho học sinh</h2>
-            <p>Thông báo sẽ hiển thị trực tiếp trên thanh thông báo của tất cả học sinh.</p>
+            <h2>{isEditing ? "Chỉnh sửa thông báo" : "Đăng thông báo cho học sinh"}</h2>
+            <p>{isEditing ? "Cập nhật nội dung hiển thị tới toàn thể học sinh." : "Thông báo sẽ hiển thị trực tiếp trên thanh thông báo của tất cả học sinh."}</p>
           </div>
           <button
             type="button"
@@ -147,8 +177,8 @@ export default function CreateAnnouncementModal({
               className="cam-btn-submit"
               disabled={loading}
             >
-              <Icon name="megaphone" />
-              <span>{loading ? "Đang đăng..." : "Đăng thông báo"}</span>
+              <Icon name={isEditing ? "check" : "megaphone"} />
+              <span>{loading ? (isEditing ? "Đang lưu..." : "Đang đăng...") : (isEditing ? "Lưu thay đổi" : "Đăng thông báo")}</span>
             </button>
           </div>
         </form>

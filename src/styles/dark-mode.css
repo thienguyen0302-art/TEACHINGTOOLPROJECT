@@ -1,0 +1,296 @@
+/* ================================================================
+   dark-mode.css  –  Giao diện tối (Dark Mode) cho PeanutCode
+   Kích hoạt khi [data-theme="dark"] được gán trên <html>
+   ================================================================ */
+
+[data-theme="dark"] {
+  --ps-bg:          #0b0f19;
+  --ps-surface:     #172033;
+  --ps-border:      #2d3b55;
+  --ps-text-main:   #f1f5f9;
+  --ps-text-sub:    #94a3b8;
+  --ps-text-muted:  #64748b;
+  --ps-blue-light:  #1e293b;
+  --ps-blue-border: #3b82f6;
+
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body {
+  background-color: #0b0f19;
+  color: #f1f5f9;
+}
+
+/* ── App Shell & Navbar ── */
+[data-theme="dark"] .app-shell {
+  background: radial-gradient(circle at 76% 22%, rgba(59, 130, 246, 0.08), transparent 24rem), #0b0f19 !important;
+}
+
+[data-theme="dark"] .navbar {
+  border-bottom-color: #243048;
+}
+
+[data-theme="dark"] .brand-text {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .nav-link,
+[data-theme="dark"] .bottom-nav a,
+[data-theme="dark"] .sidebar-nav a {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .nav-link:hover,
+[data-theme="dark"] .bottom-nav a:hover,
+[data-theme="dark"] .sidebar-nav a:hover {
+  color: #f8fafc;
+  background: #1e293b;
+}
+
+[data-theme="dark"] .nav-link.active,
+[data-theme="dark"] .sidebar-nav a.active {
+  color: #60a5fa !important;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+/* ── Cards & Surfaces ── */
+[data-theme="dark"] .ps-card,
+[data-theme="dark"] .month-calendar-card,
+[data-theme="dark"] .calendar-agenda,
+[data-theme="dark"] .fb-card,
+[data-theme="dark"] .contest-card,
+[data-theme="dark"] .tch-stat-card,
+[data-theme="dark"] .notif-drawer,
+[data-theme="dark"] .hcm-modal,
+[data-theme="dark"] .teacher-modal,
+[data-theme="dark"] .tch-code-modal,
+[data-theme="dark"] .overview-card,
+[data-theme="dark"] .profile-card {
+  background: #172033 !important;
+  border-color: #26354f !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .ps-page {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .ps-page-header h1,
+[data-theme="dark"] .ps-toolbar-left h2,
+[data-theme="dark"] .tch-contest-title,
+[data-theme="dark"] .tch-stat-value,
+[data-theme="dark"] .calendar-card-heading h2,
+[data-theme="dark"] .tch-code-modal-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .ps-page-header p,
+[data-theme="dark"] .ps-toolbar-left p,
+[data-theme="dark"] .tch-stat-label,
+[data-theme="dark"] .calendar-card-heading span {
+  color: #94a3b8 !important;
+}
+
+/* ── Hero Banners ── */
+[data-theme="dark"] .calendar-hero,
+[data-theme="dark"] .fb-hero,
+[data-theme="dark"] .teacher-hero {
+  background: linear-gradient(135deg, #13274f, #1e3a78) !important;
+  border: 1px solid #2d4575 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ── Tables ── */
+[data-theme="dark"] .ps-table-wrap,
+[data-theme="dark"] .contest-table-wrap {
+  background: #172033 !important;
+  border-color: #26354f !important;
+}
+
+[data-theme="dark"] .ps-table th,
+[data-theme="dark"] .contest-ui th {
+  background: #131c2e !important;
+  color: #94a3b8 !important;
+  border-bottom-color: #26354f !important;
+}
+
+[data-theme="dark"] .ps-table td,
+[data-theme="dark"] .contest-ui td {
+  border-bottom-color: #222e44 !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .ps-table tr:hover td,
+[data-theme="dark"] .contest-ui tr:hover td {
+  background: rgba(59, 130, 246, 0.05) !important;
+}
+
+/* ── Inputs & Selects ── */
+[data-theme="dark"] .ps-search,
+[data-theme="dark"] .ps-select,
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: #0f172a !important;
+  border-color: #2c3c58 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .ps-search input {
+  color: #f8fafc !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .ps-search input::placeholder,
+[data-theme="dark"] textarea::placeholder,
+[data-theme="dark"] input::placeholder {
+  color: #64748b !important;
+}
+
+/* ── Tabs ── */
+[data-theme="dark"] .ps-tabs,
+[data-theme="dark"] .teacher-nav-pills {
+  background: #0f172a;
+  border: 1px solid #26354f;
+}
+
+[data-theme="dark"] .ps-tab-btn,
+[data-theme="dark"] .teacher-nav-pills a {
+  background: #172033;
+  color: #94a3b8;
+  border-color: #26354f;
+}
+
+[data-theme="dark"] .ps-tab-btn:hover,
+[data-theme="dark"] .teacher-nav-pills a:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .ps-tab-btn.active,
+[data-theme="dark"] .teacher-nav-pills a.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
+
+/* ── Buttons ── */
+[data-theme="dark"] .ps-export-btn,
+[data-theme="dark"] .ps-action-btn,
+[data-theme="dark"] .contest-button,
+[data-theme="dark"] .teacher-btn-secondary {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .ps-export-btn:hover,
+[data-theme="dark"] .ps-action-btn:hover,
+[data-theme="dark"] .contest-button:hover,
+[data-theme="dark"] .teacher-btn-secondary:hover {
+  background: #29384f !important;
+  color: #ffffff !important;
+}
+
+/* ── Meta Pills & Badges ── */
+[data-theme="dark"] .tch-meta-pill,
+[data-theme="dark"] .contest-badge,
+[data-theme="dark"] .contest-clock {
+  background: #0f172a !important;
+  border-color: #28374f !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .tch-contest-meta {
+  background: #131c2e !important;
+  border-color: #243048 !important;
+}
+
+/* ── Modal Headers & Footers ── */
+[data-theme="dark"] .tch-code-modal-header,
+[data-theme="dark"] .tch-code-modal-footer,
+[data-theme="dark"] .hcm-header,
+[data-theme="dark"] .hcm-sidebar,
+[data-theme="dark"] .teacher-modal-header {
+  background: #131c2e !important;
+  border-color: #243048 !important;
+}
+
+[data-theme="dark"] .teacher-modal-box {
+  background: #0f172a !important;
+  border-color: #26354f !important;
+}
+
+[data-theme="dark"] .teacher-modal-box span {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .teacher-modal-box strong {
+  color: #f8fafc !important;
+}
+
+/* ── Calendar Days ── */
+[data-theme="dark"] .month-days button {
+  background: #0f172a;
+  border-color: #26354f;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .month-days button:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .month-days button.today {
+  border-color: #3b82f6;
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .month-days button.selected {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .agenda-day {
+  background: #0f172a !important;
+  border-color: #26354f !important;
+}
+
+[data-theme="dark"] .agenda-progress {
+  background: #131c2e !important;
+  border-color: #26354f !important;
+}
+
+/* ── Theme Toggle Button ── */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--ps-bg, #f1f5f9);
+  border: 1px solid var(--ps-border, #e2e8f0);
+  color: var(--ps-text-main, #334155);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--ps-surface, #ffffff);
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #facc15;
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+  background: #28374f;
+  border-color: #facc15;
+}

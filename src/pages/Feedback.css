@@ -159,9 +159,10 @@
   transform: scale(1.18);
 }
 
+.fb-star-btn.active,
 .fb-star-btn.lit {
-  color: #f59e0b;
-  text-shadow: 0 1px 4px rgba(245, 158, 11, 0.35);
+  color: #f59e0b !important;
+  text-shadow: 0 1px 6px rgba(245, 158, 11, 0.45);
 }
 
 .fb-rating-desc {
@@ -449,7 +450,8 @@
 }
 
 .fb-star-static.active {
-  color: #f59e0b;
+  color: #f59e0b !important;
+  text-shadow: 0 1px 4px rgba(245, 158, 11, 0.35);
 }
 
 .fb-existing-stars strong {
@@ -552,4 +554,189 @@
   .fb-btn-withdraw {
     width: 100%;
   }
+}
+/* ===================================================
+   Feedback.css – Thêm styles cho Bug Reports & Tabs
+   =================================================== */
+
+.fb-main-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  gap: 8px;
+}
+
+[data-theme="dark"] .fb-main-tabs {
+  background: #0f172a;
+  border-bottom-color: #26354f;
+}
+
+.fb-main-tab-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 13.5px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.fb-main-tab-btn:hover {
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="dark"] .fb-main-tab-btn:hover {
+  color: #f8fafc;
+  background: #1e293b;
+}
+
+.fb-main-tab-btn.active {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .fb-main-tab-btn.active {
+  background: #1e293b;
+  color: #60a5fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Bug Reports History */
+.bug-history-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+[data-theme="dark"] .bug-history-section {
+  border-top-color: #26354f;
+}
+
+.bug-history-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+[data-theme="dark"] .bug-history-title {
+  color: #f8fafc;
+}
+
+.bug-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bug-history-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .bug-history-item {
+  background: #0f172a;
+  border-color: #26354f;
+}
+
+.bug-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.bug-item-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+[data-theme="dark"] .bug-item-title {
+  color: #f1f5f9;
+}
+
+.bug-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.bug-status-badge.new {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.bug-status-badge.investigating {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.bug-status-badge.resolved {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+[data-theme="dark"] .bug-status-badge.new {
+  background: #1e3a8a;
+  color: #bfdbfe;
+}
+
+[data-theme="dark"] .bug-status-badge.investigating {
+  background: #7c2d12;
+  color: #fed7aa;
+}
+
+[data-theme="dark"] .bug-status-badge.resolved {
+  background: #14532d;
+  color: #bbf7d0;
+}
+
+.bug-item-desc {
+  font-size: 13px;
+  color: #475569;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+[data-theme="dark"] .bug-item-desc {
+  color: #94a3b8;
+}
+
+.bug-dev-note {
+  background: #e0f2fe;
+  border-left: 3px solid #0284c7;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #0369a1;
+  margin-top: 8px;
+}
+
+[data-theme="dark"] .bug-dev-note {
+  background: #0c4a6e;
+  border-left-color: #38bdf8;
+  color: #bae6fd;
 }

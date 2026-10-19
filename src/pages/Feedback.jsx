@@ -5,6 +5,10 @@ import {
   submitUserReview,
   deleteUserReview,
 } from "../services/reviewService";
+import {
+  submitBugReport,
+  subscribeUserBugReports,
+} from "../services/bugReportService";
 import { displayName } from "../utils/format";
 import "./Feedback.css";
 
@@ -16,8 +20,28 @@ const RATING_DESCRIPTIONS = {
   5: "Rất hài lòng",
 };
 
+const BUG_CATEGORIES = {
+  judge: "Hệ thống chấm bài (Judge)",
+  ui: "Giao diện người dùng (UI/UX)",
+  content: "Nội dung bài học / Đề thi / Typo",
+  account: "Tài khoản / Đăng nhập (Auth)",
+  feature: "Đề xuất tính năng mới",
+  other: "Khác",
+};
+
+const BUG_SEVERITIES = {
+  low: { label: "Thấp - Lỗi nhỏ", color: "#64748b" },
+  medium: { label: "Trung bình - Khó chịu", color: "#ea580c" },
+  high: { label: "Cao - Ảnh hưởng việc học", color: "#dc2626" },
+  critical: { label: "Khẩn cấp - Không thể tiếp tục", color: "#991b1b" },
+};
+
 export default function Feedback({ user, uid, data }) {
-  const [rating, setRating] = useState(0); // 0 = unselected
+  // Main Tab: 'review' | 'bug'
+  const [activeTab, setActiveTab] = useState("review");
+
+  // ── Review state ──
+  const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [publicName, setPublicName] = useState(
     () => data?.profile?.displayName || user?.displayName || ""
@@ -31,13 +55,25 @@ export default function Feedback({ user, uid, data }) {
   const [existingReview, setExistingReview] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Kiểm tra xem học viên đã có hoạt động học tập thực tế chưa
+  // ── Bug report state ──
+  const [bugCategory, setBugCategory] = useState("judge");
+  const [bugSeverity, setBugSeverity] = useState("medium");
+  const [bugTitle, setBugTitle] = useState("");
+  const [bugDesc, setBugDesc] = useState("");
+  const [bugSteps, setBugSteps] = useState("");
+  const [bugSubmitting, setBugSubmitting] = useState(false);
+  const [bugError, setBugError] = useState("");
+  const [bugSuccess, setBugSuccess] = useState("");
+  const [userBugs, setUserBugs] = useState([]);
+
+  // Check if user has real study activity
   const hasStudyActivity = Boolean(
     (data?.profile?.studySeconds && data.profile.studySeconds > 60) ||
     (data?.rows && data.rows.some((r) => r.completed || r.bestScore > 0)) ||
     (data?.daily && Object.keys(data.daily).length > 0)
   );
 
+  // Load user review
   useEffect(() => {
     let cancelled = false;
     if (!uid) return;
@@ -59,9 +95,19 @@ export default function Feedback({ user, uid, data }) {
     };
   }, [uid, user]);
 
+  // Subscribe to user bug reports
+  useEffect(() => {
+    if (!uid) return;
+    const unsub = subscribeUserBugReports(uid, (items) => {
+      setUserBugs(items || []);
+    });
+    return () => unsub?.();
+  }, [uid]);
+
   const activeRating = hoverRating > 0 ? hoverRating : rating;
 
-  async function handleSubmit(e) {
+  // Submit review
+  async function handleSubmitReview(e) {
     e.preventDefault();
     setError("");
     setSuccessMsg("");
@@ -94,7 +140,7 @@ export default function Feedback({ user, uid, data }) {
       setIsEditing(false);
       setSuccessMsg(
         isPublicConsent
-          ? "Đánh giá của bạn đã được gửi và đang chờ kiểm duyệt để hiển thị công khai trên trang giới thiệu!"
+          ? "Đánh giá của bạn đã được gửi và đang chờ Ban phát hành phê duyệt để hiển thị công khai trên trang đăng nhập!"
           : "Cảm ơn bạn đã đóng góp ý kiến để hoàn thiện PeanutCode!"
       );
     } catch (err) {
@@ -104,7 +150,8 @@ export default function Feedback({ user, uid, data }) {
     }
   }
 
-  async function handleWithdraw() {
+  // Withdraw review
+  async function handleWithdrawReview() {
     if (
       !window.confirm(
         "Bạn có chắc chắn muốn rút lại đánh giá này? Đánh giá sẽ không còn hiển thị trên hệ thống."
@@ -126,6 +173,47 @@ export default function Feedback({ user, uid, data }) {
     }
   }
 
+  // Submit Bug Report
+  async function handleSubmitBug(e) {
+    e.preventDefault();
+    setBugError("");
+    setBugSuccess("");
+
+    if (!bugTitle.trim()) {
+      setBugError("Vui lòng nhập tóm tắt sự cố");
+      return;
+    }
+    if (bugDesc.trim().length < 10) {
+      setBugError("Vui lòng mô tả chi tiết sự cố ít nhất 10 ký tự.");
+      return;
+    }
+
+    setBugSubmitting(true);
+    try {
+      await submitBugReport({
+        uid,
+        displayName: displayName(user),
+        email: user?.email,
+        category: bugCategory,
+        severity: bugSeverity,
+        title: bugTitle,
+        description: bugDesc,
+        stepsToReproduce: bugSteps,
+      });
+
+      setBugTitle("");
+      setBugDesc("");
+      setBugSteps("");
+      setBugSuccess(
+        "✅ Báo cáo sự cố đã được gửi trực tiếp đến Người xây dựng web! Đội ngũ phát triển sẽ kiểm tra và cập nhật tiến độ cho bạn tại đây."
+      );
+    } catch (err) {
+      setBugError(err.message || "Không thể gửi báo cáo lỗi lúc này.");
+    } finally {
+      setBugSubmitting(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="content fb-page">
@@ -139,245 +227,412 @@ export default function Feedback({ user, uid, data }) {
   return (
     <div className="content fb-page">
       <div className="fb-card">
-        {/* ── Đầu khung nền xanh chuyển sắc ── */}
+        {/* ── Đầu khung Hero ── */}
         <div className="fb-hero">
           <span className="fb-kicker">
-            <Icon name="message" /> ĐÁNH GIÁ &amp; GÓP Ý
+            <Icon name="message" /> TRUNG TÂM PHẢN HỒI &amp; GÓP Ý
           </span>
-          <h1>Chia sẻ cảm nhận của bạn về PeanutCode</h1>
+          <h1>
+            {activeTab === "review"
+              ? "Chia sẻ cảm nhận của bạn về PeanutCode"
+              : "Báo lỗi & Góp ý cho Người xây dựng web"}
+          </h1>
           <p>
-            Mỗi ý kiến đóng góp chân thành từ học viên là động lực to lớn giúp nền tảng ngày càng
-            hoàn thiện hơn trong hành trình bồi dưỡng đội tuyển HSG Tin học.
+            {activeTab === "review"
+              ? "Ý kiến đóng góp chân thành của bạn giúp nền tảng ngày càng hoàn thiện và truyền cảm hứng cho các thế hệ học viên HSG tiếp theo."
+              : "Mọi báo cáo lỗi hoặc đề xuất kỹ thuật sẽ được gửi trực tiếp đến lập trình viên xây dựng hệ thống để khắc phục nhanh nhất."}
           </p>
         </div>
 
-        {/* ── Trạng thái đánh giá hiện tại nếu có và không trong chế độ sửa ── */}
-        {existingReview && !isEditing ? (
-          <div className="fb-existing-box">
-            <div className="fb-status-bar">
-              {existingReview.status === "approved" ? (
-                <span className="fb-status-badge approved">
-                  <Icon name="check" /> Đã được duyệt
-                  {existingReview.isPublicConsent && " · Đang hiển thị công khai"}
-                </span>
-              ) : existingReview.status === "rejected" ? (
-                <span className="fb-status-badge rejected">
-                  <Icon name="x" /> Cần chỉnh sửa nội dung
-                </span>
-              ) : (
-                <span className="fb-status-badge pending">
-                  <Icon name="clock" /> Đang chờ duyệt công khai
-                </span>
-              )}
+        {/* ── Main Navigation Tabs ── */}
+        <div className="fb-main-tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "review"}
+            className={`fb-main-tab-btn ${activeTab === "review" ? "active" : ""}`}
+            onClick={() => setActiveTab("review")}
+          >
+            <Icon name="trophy" /> Đánh giá khóa học
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "bug"}
+            className={`fb-main-tab-btn ${activeTab === "bug" ? "active" : ""}`}
+            onClick={() => setActiveTab("bug")}
+          >
+            <Icon name="code" /> Báo lỗi &amp; Góp ý kỹ thuật ({userBugs.length})
+          </button>
+        </div>
 
-              {existingReview.isVerifiedLearner && (
-                <span className="fb-verified-pill">
-                  <Icon name="check" /> Học viên đã xác thực
-                </span>
-              )}
-            </div>
+        {/* ── TAB 1: ĐÁNH GIÁ KHÓA HỌC ── */}
+        {activeTab === "review" && (
+          <div>
+            {existingReview && !isEditing ? (
+              <div className="fb-existing-box">
+                <div className="fb-status-bar">
+                  {existingReview.status === "approved" ? (
+                    <span className="fb-status-badge approved">
+                      <Icon name="check" /> Đã được duyệt
+                      {existingReview.isPublicConsent && " · Đang hiển thị trang đăng nhập"}
+                    </span>
+                  ) : existingReview.status === "rejected" ? (
+                    <span className="fb-status-badge rejected">
+                      <Icon name="x" /> Cần chỉnh sửa nội dung
+                    </span>
+                  ) : (
+                    <span className="fb-status-badge pending">
+                      <Icon name="clock" /> Đang chờ Ban phát hành duyệt công khai
+                    </span>
+                  )}
 
-            <div className="fb-existing-stars">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  className={`fb-star-static ${star <= existingReview.rating ? "active" : ""}`}
-                >
-                  ★
-                </span>
-              ))}
-              <strong>{RATING_DESCRIPTIONS[existingReview.rating]}</strong>
-            </div>
-
-            <blockquote className="fb-existing-quote">“{existingReview.content}”</blockquote>
-
-            <div className="fb-existing-meta">
-              <span>Tên hiển thị: <b>{existingReview.displayName}</b></span>
-              <span>
-                Chia sẻ trang ngoài:{" "}
-                <b>{existingReview.isPublicConsent ? "Đồng ý" : "Không"}</b>
-              </span>
-            </div>
-
-            {successMsg && <div className="fb-success-banner">{successMsg}</div>}
-
-            <div className="fb-existing-actions">
-              <button
-                type="button"
-                className="fb-btn-edit"
-                onClick={() => {
-                  setIsEditing(true);
-                  setSuccessMsg("");
-                  setError("");
-                }}
-              >
-                Chỉnh sửa đánh giá
-              </button>
-              <button
-                type="button"
-                className="fb-btn-withdraw"
-                onClick={handleWithdraw}
-              >
-                Rút lại đánh giá
-              </button>
-            </div>
-          </div>
-        ) : (
-          /* ── Form đánh giá nền trắng ── */
-          <form className="fb-form" onSubmit={handleSubmit} noValidate>
-            {isEditing && (
-              <div className="fb-edit-notice">
-                <Icon name="clock" />
-                <span>
-                  Bạn đang chỉnh sửa đánh giá. Khi lưu lại, đánh giá sẽ quay về trạng thái chờ
-                  kiểm duyệt.
-                </span>
-              </div>
-            )}
-
-            {/* 1. Chọn sao */}
-            <div className="fb-field">
-              <label className="fb-label">
-                Mức độ hài lòng của bạn <em className="fb-req">*</em>
-              </label>
-              <div
-                className="fb-star-picker"
-                role="radiogroup"
-                aria-label="Đánh giá từ 1 đến 5 sao"
-              >
-                <div
-                  className="fb-stars-row"
-                  onMouseLeave={() => setHoverRating(0)}
-                >
-                  {[1, 2, 3, 4, 5].map((star) => {
-                    const isLit = star <= activeRating;
-                    return (
-                      <button
-                        key={star}
-                        type="button"
-                        className={`fb-star-btn ${isLit ? "lit" : ""}`}
-                        onMouseEnter={() => setHoverRating(star)}
-                        onClick={() => {
-                          setRating(star);
-                          if (error) setError("");
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "ArrowRight" && star < 5) setRating(star + 1);
-                          if (e.key === "ArrowLeft" && star > 1) setRating(star - 1);
-                        }}
-                        aria-label={`${star} sao: ${RATING_DESCRIPTIONS[star]}`}
-                        aria-checked={rating === star}
-                        role="radio"
-                      >
-                        ★
-                      </button>
-                    );
-                  })}
+                  {existingReview.isVerifiedLearner && (
+                    <span className="fb-verified-pill">
+                      <Icon name="check" /> Học viên đã xác thực
+                    </span>
+                  )}
                 </div>
-                <span className={`fb-rating-desc ${activeRating > 0 ? "visible" : ""}`}>
-                  {activeRating > 0
-                    ? RATING_DESCRIPTIONS[activeRating]
-                    : "Chọn số sao tương ứng cảm nhận của bạn"}
+
+                <div className="fb-existing-stars">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      className={`fb-star-static ${star <= existingReview.rating ? "active" : ""}`}
+                    >
+                      ★
+                    </span>
+                  ))}
+                  <strong>{RATING_DESCRIPTIONS[existingReview.rating]}</strong>
+                </div>
+
+                <blockquote className="fb-existing-quote">“{existingReview.content}”</blockquote>
+
+                <div className="fb-existing-meta">
+                  <span>Tên hiển thị: <b>{existingReview.displayName}</b></span>
+                  <span>
+                    Chia sẻ trang đăng nhập:{" "}
+                    <b>{existingReview.isPublicConsent ? "Đồng ý" : "Không"}</b>
+                  </span>
+                </div>
+
+                {successMsg && <div className="fb-success-banner">{successMsg}</div>}
+
+                <div className="fb-existing-actions">
+                  <button
+                    type="button"
+                    className="fb-btn-edit"
+                    onClick={() => {
+                      setIsEditing(true);
+                      setSuccessMsg("");
+                      setError("");
+                    }}
+                  >
+                    Chỉnh sửa đánh giá
+                  </button>
+                  <button
+                    type="button"
+                    className="fb-btn-withdraw"
+                    onClick={handleWithdrawReview}
+                  >
+                    Rút lại đánh giá
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form className="fb-form" onSubmit={handleSubmitReview} noValidate>
+                {isEditing && (
+                  <div className="fb-edit-notice">
+                    <Icon name="clock" />
+                    <span>
+                      Bạn đang chỉnh sửa đánh giá. Khi lưu lại, đánh giá sẽ quay về trạng thái chờ
+                      kiểm duyệt.
+                    </span>
+                  </div>
+                )}
+
+                {/* 1. Chọn sao */}
+                <div className="fb-field">
+                  <label className="fb-label">
+                    Mức độ hài lòng của bạn <em className="fb-req">*</em>
+                  </label>
+                  <div
+                    className="fb-star-picker"
+                    role="radiogroup"
+                    aria-label="Đánh giá từ 1 đến 5 sao"
+                  >
+                    <div
+                      className="fb-stars-row"
+                      onMouseLeave={() => setHoverRating(0)}
+                    >
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          className={`fb-star-btn ${star <= activeRating ? "active lit" : ""}`}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onClick={() => setRating(star)}
+                          aria-label={`${star} sao`}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                    <span className={`fb-rating-desc ${activeRating > 0 ? "visible" : ""}`}>
+                      {RATING_DESCRIPTIONS[activeRating] || "Nhấp vào sao để đánh giá"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 2. Tên hiển thị */}
+                <div className="fb-field">
+                  <label htmlFor="fb-name" className="fb-label">
+                    Tên hiển thị công khai
+                  </label>
+                  <input
+                    id="fb-name"
+                    type="text"
+                    className="fb-input"
+                    maxLength={50}
+                    value={publicName}
+                    onChange={(e) => setPublicName(e.target.value)}
+                    placeholder="Ví dụ: Nguyễn Văn A hoặc ẩn danh"
+                  />
+                  <span className="fb-hint">
+                    Tên này sẽ xuất hiện kèm theo đánh giá nếu được chọn hiển thị.
+                  </span>
+                </div>
+
+                {/* 3. Nội dung chia sẻ */}
+                <div className="fb-field">
+                  <label htmlFor="fb-content" className="fb-label">
+                    Cảm nhận &amp; Đóng góp ý kiến <em className="fb-req">*</em>
+                  </label>
+                  <textarea
+                    id="fb-content"
+                    className="fb-textarea"
+                    rows={4}
+                    maxLength={600}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Bạn cảm thấy bài giảng, hệ thống chấm bài hoặc trợ lý AI như thế nào? Điều gì giúp bạn tiến bộ nhất?"
+                  />
+                  <div className="fb-char-count">{content.length}/600 ký tự</div>
+                </div>
+
+                {/* 4. Đồng ý hiển thị công khai */}
+                <div className="fb-field fb-field--checkbox">
+                  <label className="fb-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={isPublicConsent}
+                      onChange={(e) => setIsPublicConsent(e.target.checked)}
+                    />
+                    <span>
+                      Cho phép hiển thị đánh giá này trên trang đăng nhập và giới thiệu của
+                      PeanutCode sau khi Ban phát hành phê duyệt.
+                    </span>
+                  </label>
+                </div>
+
+                {error && <div className="fb-error-banner">{error}</div>}
+                {successMsg && <div className="fb-success-banner">{successMsg}</div>}
+
+                <div className="fb-submit-row">
+                  <button
+                    type="submit"
+                    className="fb-btn-submit"
+                    disabled={submitting}
+                  >
+                    {submitting
+                      ? "Đang gửi đánh giá..."
+                      : existingReview
+                      ? "Cập nhật đánh giá"
+                      : "Gửi đánh giá"}
+                  </button>
+
+                  {isEditing && (
+                    <button
+                      type="button"
+                      className="fb-btn-cancel"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setError("");
+                      }}
+                    >
+                      Hủy chỉnh sửa
+                    </button>
+                  )}
+                </div>
+              </form>
+            )}
+          </div>
+        )}
+
+        {/* ── TAB 2: BÁO LỖI & GÓP Ý KỸ THUẬT CHO LẬP TRÌNH VIÊN ── */}
+        {activeTab === "bug" && (
+          <div style={{ padding: "24px 36px 36px" }}>
+            <form onSubmit={handleSubmitBug} noValidate>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "16px" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                    Phân loại sự cố <em style={{ color: "#dc2626" }}>*</em>
+                  </label>
+                  <select
+                    value={bugCategory}
+                    onChange={(e) => setBugCategory(e.target.value)}
+                    className="fb-input"
+                    style={{ width: "100%", padding: "10px 12px" }}
+                  >
+                    {Object.entries(BUG_CATEGORIES).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                    Mức độ nghiêm trọng <em style={{ color: "#dc2626" }}>*</em>
+                  </label>
+                  <select
+                    value={bugSeverity}
+                    onChange={(e) => setBugSeverity(e.target.value)}
+                    className="fb-input"
+                    style={{ width: "100%", padding: "10px 12px" }}
+                  >
+                    {Object.entries(BUG_SEVERITIES).map(([key, info]) => (
+                      <option key={key} value={key}>
+                        {info.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "16px" }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                  Tóm tắt sự cố <em style={{ color: "#dc2626" }}>*</em>
+                </label>
+                <input
+                  type="text"
+                  className="fb-input"
+                  placeholder="Ví dụ: Nút Nộp bài bị xoay vòng, Lỗi sai kết quả test 3 bài Chuyên đề 2..."
+                  value={bugTitle}
+                  onChange={(e) => setBugTitle(e.target.value)}
+                  maxLength={120}
+                  required
+                />
+              </div>
+
+              <div style={{ marginBottom: "16px" }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                  Mô tả chi tiết sự cố <em style={{ color: "#dc2626" }}>*</em>
+                </label>
+                <textarea
+                  className="fb-textarea"
+                  rows={4}
+                  placeholder="Hãy mô tả chi tiết điều gì đã xảy ra, kết quả mong đợi và thông báo lỗi (nếu có)..."
+                  value={bugDesc}
+                  onChange={(e) => setBugDesc(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div style={{ marginBottom: "16px" }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                  Các bước tái hiện lỗi (nếu có)
+                </label>
+                <textarea
+                  className="fb-textarea"
+                  rows={2}
+                  placeholder="1. Vào bài tập... 2. Bấm Chạy thử... 3. Xuất hiện lỗi..."
+                  value={bugSteps}
+                  onChange={(e) => setBugSteps(e.target.value)}
+                />
+              </div>
+
+              <div
+                style={{
+                  background: "var(--ps-bg, #f8fafc)",
+                  border: "1px solid var(--ps-border, #e2e8f0)",
+                  borderRadius: 10,
+                  padding: "10px 14px",
+                  fontSize: 12,
+                  color: "var(--ps-text-sub, #64748b)",
+                  marginBottom: 16,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <Icon name="check" />
+                <span>
+                  Hệ thống sẽ tự động đính kèm thông tin trình duyệt, màn hình và URL hiện tại để người xây dựng web dễ dàng sửa lỗi.
                 </span>
               </div>
-            </div>
 
-            {/* 2. Tên hiển thị công khai */}
-            <div className="fb-field">
-              <label htmlFor="fb-name" className="fb-label">
-                Tên hiển thị công khai
-              </label>
-              <input
-                id="fb-name"
-                type="text"
-                className="fb-input"
-                maxLength={50}
-                placeholder="Ví dụ: Nguyễn Minh Anh hoặc Học viên 9A"
-                value={publicName}
-                onChange={(e) => setPublicName(e.target.value)}
-              />
-              <span className="fb-hint">
-                Tên này sẽ xuất hiện cùng đánh giá nếu được chia sẻ. Không bao giờ hiển thị email, lớp
-                hoặc trường.
-              </span>
-            </div>
+              {bugError && <div className="fb-error-banner" style={{ marginBottom: 14 }}>{bugError}</div>}
+              {bugSuccess && <div className="fb-success-banner" style={{ marginBottom: 14 }}>{bugSuccess}</div>}
 
-            {/* 3. Nội dung đánh giá */}
-            <div className="fb-field">
-              <div className="fb-label-row">
-                <label htmlFor="fb-content" className="fb-label">
-                  Chia sẻ cảm nhận &amp; trải nghiệm của bạn <em className="fb-req">*</em>
-                </label>
-                <span className="fb-char-count">{content.length}/600</span>
-              </div>
-              <textarea
-                id="fb-content"
-                className="fb-textarea"
-                rows={4}
-                maxLength={600}
-                placeholder="Ví dụ: Nền tảng giúp mình hiểu rõ thuật toán qua từng testcase biên và phân tích Big-O của AI Tutor. Mình đã tự tin hơn rất nhiều khi làm các bài tập mảng và quy hoạch động..."
-                value={content}
-                onChange={(e) => {
-                  setContent(e.target.value);
-                  if (error) setError("");
-                }}
-              />
-              <span className="fb-hint">Tối thiểu 15 ký tự. Vui lòng không chia sẻ thông tin riêng tư.</span>
-            </div>
-
-            {/* 4. Checkbox đồng ý công khai */}
-            <label className="fb-checkbox-label">
-              <input
-                type="checkbox"
-                className="fb-checkbox"
-                checked={isPublicConsent}
-                onChange={(e) => setIsPublicConsent(e.target.checked)}
-              />
-              <span className="fb-checkbox-text">
-                Cho phép hiển thị đánh giá trên trang giới thiệu bên ngoài
-              </span>
-            </label>
-
-            {/* 5. Thông báo kiểm duyệt & bảo mật */}
-            <div className="fb-notice-card">
-              <span className="fb-notice-icon">
-                <Icon name="shield" />
-              </span>
-              <p>
-                <b>Chính sách kiểm duyệt &amp; bảo vệ thông tin:</b> Đánh giá công khai được đội ngũ
-                giáo viên duyệt để đảm bảo nội dung tích cực, văn minh. Địa chỉ email, kết quả điểm
-                thi và thông tin cá nhân của bạn sẽ luôn được bảo mật tuyệt đối.
-              </p>
-            </div>
-
-            {/* Thông báo lỗi / thành công */}
-            {error && <div className="fb-error-banner">{error}</div>}
-            {successMsg && <div className="fb-success-banner">{successMsg}</div>}
-
-            {/* Nút gửi dạng pill, 100% width */}
-            <div className="fb-submit-row">
               <button
                 type="submit"
                 className="fb-btn-submit"
-                disabled={submitting}
+                disabled={bugSubmitting}
               >
-                {submitting ? "Đang gửi đánh giá..." : existingReview ? "Cập nhật đánh giá" : "Gửi đánh giá"}
+                {bugSubmitting ? "Đang gửi báo cáo..." : "Gửi báo lỗi cho Người xây dựng web"}
               </button>
+            </form>
 
-              {isEditing && (
-                <button
-                  type="button"
-                  className="fb-btn-cancel"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setError("");
-                  }}
-                >
-                  Hủy chỉnh sửa
-                </button>
-              )}
+            {/* Lịch sử báo lỗi đã gửi của người dùng */}
+            <div className="bug-history-section">
+              <div className="bug-history-title">
+                <span>Lịch sử báo lỗi của bạn</span>
+                <span style={{ fontSize: 12, color: "var(--ps-text-sub, #64748b)", fontWeight: 600 }}>
+                  {userBugs.length} báo cáo
+                </span>
+              </div>
+
+              <div className="bug-history-list">
+                {userBugs.map((b) => {
+                  const isResolved = b.status === "resolved";
+                  const isInvestigating = b.status === "investigating";
+                  const statusClass = isResolved ? "resolved" : isInvestigating ? "investigating" : "new";
+                  const statusLabel = isResolved ? "✓ Đã khắc phục" : isInvestigating ? "🔍 Đang xử lý" : "📬 Mới nhận";
+
+                  return (
+                    <div key={b.id} className="bug-history-item">
+                      <div className="bug-item-header">
+                        <h4 className="bug-item-title">{b.title}</h4>
+                        <span className={`bug-status-badge ${statusClass}`}>
+                          {statusLabel}
+                        </span>
+                      </div>
+                      <p className="bug-item-desc">{b.description}</p>
+                      <div style={{ fontSize: 12, color: "#94a3b8", display: "flex", gap: 12 }}>
+                        <span>Loại: {BUG_CATEGORIES[b.category] || b.category}</span>
+                        <span>Mức độ: {BUG_SEVERITIES[b.severity]?.label || b.severity}</span>
+                        <span>Gửi lúc: {new Date(b.createdAt).toLocaleDateString("vi-VN")}</span>
+                      </div>
+
+                      {b.devNotes && (
+                        <div className="bug-dev-note">
+                          <strong>Phản hồi từ Ban phát triển:</strong> {b.devNotes}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {userBugs.length === 0 && (
+                  <p style={{ textAlign: "center", color: "var(--ps-text-sub, #94a3b8)", fontSize: 13, margin: "16px 0" }}>
+                    Bạn chưa gửi báo lỗi nào. Nếu gặp bất kỳ vấn đề gì, hãy gửi biểu mẫu phía trên!
+                  </p>
+                )}
+              </div>
             </div>
-          </form>
+          </div>
         )}
       </div>
     </div>

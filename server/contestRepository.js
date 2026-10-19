@@ -16,6 +16,13 @@ export function createContestRepository(db) {
   const list = async (query) => (await query.get()).docs.map(data);
   return {
     getProfile: (uid) => get(`users/${uid}`),
+    setTeacherRole: async (uid) => {
+      try {
+        await db.doc(`users/${uid}`).set({ role: 'teacher' }, { merge: true });
+      } catch (e) {
+        console.warn('Không thể ghi vai trò giáo viên:', e);
+      }
+    },
     getContest: (id) => get(`contests/${id}`),
     getProblem: (id) => get(`problems/${id}`),
     getSecrets: (id) => get(`problemSecrets/${id}`),

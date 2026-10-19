@@ -1,4 +1,3 @@
-import TeacherAuthoringNav from "../components/TeacherAuthoringNav.jsx";
 import { useEffect, useState } from "react";
 import { getClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
@@ -7,8 +6,10 @@ import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
 import {
   subscribeAnnouncements,
   deleteAnnouncement,
+  togglePinAnnouncement,
   ANNOUNCEMENT_TYPES,
 } from "../services/announcementService";
+import { auth } from "../services/firebase";
 import "./Teacher.css";
 
 const chapterName = (c) => `${LANG_LABEL[c.language] ?? c.language} · Chương ${Number(c.chapterId.slice(2))}`;
@@ -34,6 +35,7 @@ export default function Teacher() {
   // Quản lý thông báo lớp học
   const [announcements, setAnnouncements] = useState([]);
   const [isCreateNotifOpen, setIsCreateNotifOpen] = useState(false);
+  const [editAnnouncementItem, setEditAnnouncementItem] = useState(null);
 
   useEffect(() => {
     const unsub = subscribeAnnouncements((items) => {
@@ -130,7 +132,6 @@ export default function Teacher() {
   if (state.loading) {
     return (
       <div className="content teacher-page">
-        <TeacherAuthoringNav />
         <p>Đang tải dữ liệu lớp học...</p>
       </div>
     );
@@ -139,7 +140,6 @@ export default function Teacher() {
   if (state.error) {
     return (
       <div className="content teacher-page">
-        <TeacherAuthoringNav />
         <p className="err">{state.error}</p>
       </div>
     );
@@ -172,8 +172,6 @@ export default function Teacher() {
 
   return (
     <div className="content teacher-page">
-        <TeacherAuthoringNav />
-
       {/* ── 1. Banner Hero ─────────────────────────────────── */}
       <section className="teacher-hero">
         <div>
@@ -272,15 +270,40 @@ export default function Teacher() {
                         </span>
                         {a.pinned && <span className="notif-pinned-badge">📌 Đã ghim</span>}
                       </div>
-                      <button
-                        type="button"
-                        className="tac-delete-btn"
-                        onClick={() => handleDeleteAnnouncement(a.id, a.title)}
-                        title="Xóa thông báo này"
-                        aria-label="Xóa thông báo"
-                      >
-                        <Icon name="trash" />
-                      </button>
+                      <div className="tac-actions" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <button
+                          type="button"
+                          className="tac-action-btn"
+                          style={{ background: a.pinned ? "#fef3c7" : "transparent", border: "none", color: a.pinned ? "#b45309" : "#94a3b8", cursor: "pointer", padding: "4px 6px", borderRadius: 6, display: "grid", placeItems: "center" }}
+                          onClick={async () => {
+                            await togglePinAnnouncement(a.id, a.pinned);
+                            showNotice(a.pinned ? "Đã bỏ ghim thông báo" : "Đã ghim thông báo lên đầu");
+                          }}
+                          title={a.pinned ? "Bỏ ghim thông báo" : "Ghim thông báo lên đầu"}
+                          aria-label="Ghim thông báo"
+                        >
+                          <Icon name="pin" />
+                        </button>
+                        <button
+                          type="button"
+                          className="tac-action-btn"
+                          style={{ background: "transparent", border: "none", color: "#64748b", cursor: "pointer", padding: "4px 6px", borderRadius: 6, display: "grid", placeItems: "center" }}
+                          onClick={() => setEditAnnouncementItem(a)}
+                          title="Chỉnh sửa thông báo"
+                          aria-label="Chỉnh sửa thông báo"
+                        >
+                          <Icon name="edit" />
+                        </button>
+                        <button
+                          type="button"
+                          className="tac-delete-btn"
+                          onClick={() => handleDeleteAnnouncement(a.id, a.title)}
+                          title="Xóa thông báo này"
+                          aria-label="Xóa thông báo"
+                        >
+                          <Icon name="trash" />
+                        </button>
+                      </div>
                     </div>
                     <h3 className="tac-title">{a.title}</h3>
                     <p className="tac-content">{a.content}</p>
@@ -621,10 +644,15 @@ export default function Teacher() {
       )}
 
       <CreateAnnouncementModal
-        isOpen={isCreateNotifOpen}
-        onClose={() => setIsCreateNotifOpen(false)}
-        currentUser={{ displayName: "Giáo viên phụ trách", role: "teacher" }}
+        isOpen={isCreateNotifOpen || Boolean(editAnnouncementItem)}
+        onClose={() => {
+          setIsCreateNotifOpen(false);
+          setEditAnnouncementItem(null);
+        }}
+        editItem={editAnnouncementItem}
+        currentUser={auth.currentUser}
         onCreated={() => showNotice("Đã gửi thông báo đến toàn bộ học sinh thành công!")}
+        onUpdated={() => showNotice("Đã cập nhật thông báo thành công!")}
       />
 
       {notice && (
