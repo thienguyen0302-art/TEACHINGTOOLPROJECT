@@ -40,6 +40,7 @@
     "firebase": "^12.19.0",
     "firebase-admin": "^14.5.0",
     "monaco-editor": "^0.57.0",
+    "nodemailer": "^10.1.7",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.4.299",
     "react": "^19.2.8",

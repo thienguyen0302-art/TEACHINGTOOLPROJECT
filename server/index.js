@@ -11,6 +11,8 @@ import { loadLessonProblems } from './lessonProblems.js';
 import { createContestHandler } from './contest.js';
 import { requireValue } from '../src/utils/problemAuthoring.js';
 
+import { createBugReportEmailHandler } from './bugReportEmail.js';
+
 const bankRoot = new URL('../src/content/problems/', import.meta.url);
 const problems = new Map();
 for (const chapter of readdirSync(bankRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory())) {
@@ -26,6 +28,7 @@ let active = 0;
 const tutorHandler = createTutorHandler();
 const globalChatHandler = createGlobalChatHandler();
 const selfCheckHandler = createSelfCheckHandler();
+const bugReportEmailHandler = createBugReportEmailHandler();
 // Production: đặt REQUIRE_AUTH=true và FIREBASE_PROJECT_ID để chỉ người đã đăng nhập mới gọi được Judge/AI.
 const authGuard = createAuthGuard({ projectId: process.env.FIREBASE_PROJECT_ID, required: process.env.REQUIRE_AUTH === 'true' });
 
@@ -44,12 +47,13 @@ const server = http.createServer(async (req, res) => {
   const reply = (status, data) => { if (!res.destroyed) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); } };
   if (req.method === 'GET' && req.url === '/api/health') return reply(200, { service: 'peanutcode-api', apiVersion: 2, features: { pdfContestAI: true, automaticTests: true } });
   const contestRoute = /^\/api\/(teacher|contests|contest|practice)(\/|$)/.test(req.url);
-  if (!contestRoute && (!['/api/judge', '/api/ai/tutor', '/api/ai/self-check', '/api/ai/global-chat'].includes(req.url) || req.method !== 'POST')) return reply(404, { error: 'Không tìm thấy API.' });
+  if (!contestRoute && (!['/api/judge', '/api/ai/tutor', '/api/ai/self-check', '/api/ai/global-chat', '/api/bug-report/send-email'].includes(req.url) || req.method !== 'POST')) return reply(404, { error: 'Không tìm thấy API.' });
   // The development service is localhost-only; reject cross-origin browser requests.
   if (req.headers.origin && !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(req.headers.origin) && req.headers.origin !== process.env.APP_ORIGIN) return reply(403, { error: 'Origin không được phép.' });
   if (/^\/api\/teacher\/pdf\//.test(req.url) || req.url.split('?')[0] === '/api/teacher/problems/generate-tests') return pdfContestHandler(req, res);
   if (contestRoute) return contestHandler(req, reply);
   if (req.url === '/api/ai/global-chat') return globalChatHandler(req, res);
+  if (req.url === '/api/bug-report/send-email') return bugReportEmailHandler(req, res);
   const caller = await authGuard(req);
   if (!caller.ok) return reply(caller.status, { error: caller.error });
   if (req.url === '/api/ai/tutor') return tutorHandler(req, res);

@@ -64,6 +64,7 @@ export default function Feedback({ user, uid, data }) {
   const [bugSubmitting, setBugSubmitting] = useState(false);
   const [bugError, setBugError] = useState("");
   const [bugSuccess, setBugSuccess] = useState("");
+  const [submittedBugData, setSubmittedBugData] = useState(null);
   const [userBugs, setUserBugs] = useState([]);
 
   // Check if user has real study activity
@@ -190,7 +191,7 @@ export default function Feedback({ user, uid, data }) {
 
     setBugSubmitting(true);
     try {
-      await submitBugReport({
+      const report = await submitBugReport({
         uid,
         displayName: displayName(user),
         email: user?.email,
@@ -201,11 +202,14 @@ export default function Feedback({ user, uid, data }) {
         stepsToReproduce: bugSteps,
       });
 
+      setSubmittedBugData(report);
       setBugTitle("");
       setBugDesc("");
       setBugSteps("");
       setBugSuccess(
-        "✅ Báo cáo sự cố đã được gửi trực tiếp đến Người xây dựng web! Đội ngũ phát triển sẽ kiểm tra và cập nhật tiến độ cho bạn tại đây."
+        report?.emailDelivery?.sent
+          ? `✅ Báo cáo sự cố đã được gửi trực tiếp đến hộp thư của Người phát hành (${report.recipient || "lythuy84@gmail.com"})!`
+          : `✅ Báo cáo sự cố đã được ghi nhận trên hệ thống của Người phát hành (${report.recipient || "lythuy84@gmail.com"})!`
       );
     } catch (err) {
       setBugError(err.message || "Không thể gửi báo cáo lỗi lúc này.");
@@ -235,12 +239,12 @@ export default function Feedback({ user, uid, data }) {
           <h1>
             {activeTab === "review"
               ? "Chia sẻ cảm nhận của bạn về PeanutCode"
-              : "Báo lỗi & Góp ý cho Người xây dựng web"}
+              : "Báo lỗi & Góp ý cho Người phát hành"}
           </h1>
           <p>
             {activeTab === "review"
               ? "Ý kiến đóng góp chân thành của bạn giúp nền tảng ngày càng hoàn thiện và truyền cảm hứng cho các thế hệ học viên HSG tiếp theo."
-              : "Mọi báo cáo lỗi hoặc đề xuất kỹ thuật sẽ được gửi trực tiếp đến lập trình viên xây dựng hệ thống để khắc phục nhanh nhất."}
+              : "Mọi báo cáo lỗi hoặc đề xuất kỹ thuật sẽ được gửi trực tiếp đến Người phát hành nền tảng (Cô Lý Thị Thanh Thúy - lythuy84@gmail.com) để khắc phục nhanh nhất."}
           </p>
         </div>
 
@@ -569,19 +573,89 @@ export default function Feedback({ user, uid, data }) {
               >
                 <Icon name="check" />
                 <span>
-                  Hệ thống sẽ tự động đính kèm thông tin trình duyệt, màn hình và URL hiện tại để người xây dựng web dễ dàng sửa lỗi.
+                  Hệ thống sẽ tự động đính kèm thông tin trình duyệt, màn hình và URL hiện tại gửi đến Người phát hành (Cô Lý Thị Thanh Thúy - lythuy84@gmail.com).
                 </span>
               </div>
 
               {bugError && <div className="fb-error-banner" style={{ marginBottom: 14 }}>{bugError}</div>}
-              {bugSuccess && <div className="fb-success-banner" style={{ marginBottom: 14 }}>{bugSuccess}</div>}
+              {bugSuccess && (
+                <div
+                  className="fb-success-banner"
+                  style={{
+                    marginBottom: 16,
+                    padding: "16px 18px",
+                    borderRadius: 12,
+                    background: "#f0fdf4",
+                    border: "1px solid #86efac",
+                  }}
+                >
+                  <div style={{ fontWeight: 800, fontSize: 14, color: "#166534", marginBottom: 6 }}>
+                    {bugSuccess}
+                  </div>
+                  <div style={{ fontSize: 13, color: "#15803d", marginBottom: 10, lineHeight: 1.5 }}>
+                    📬 <strong>Hộp thư người nhận:</strong> Cô Lý Thị Thanh Thúy (<code>lythuy84@gmail.com</code>)
+                    {submittedBugData?.emailDelivery?.sent ? (
+                      <span style={{ display: "block", marginTop: 4, color: "#166534", fontWeight: 700 }}>
+                        ✓ Email đã được gửi tự động thành công vào hòm thư!
+                      </span>
+                    ) : (
+                      <span style={{ display: "block", marginTop: 4, color: "#475569" }}>
+                        Báo cáo đã lưu trên hệ thống quản trị của Người phát hành. Bạn cũng có thể bấm nút dưới để mở Gmail gửi trực tiếp một bản sao:
+                      </span>
+                    )}
+                  </div>
+
+                  {submittedBugData?.mailLinks && (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8 }}>
+                      <a
+                        href={submittedBugData.mailLinks.gmailUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 7,
+                          padding: "9px 16px",
+                          borderRadius: 9,
+                          background: "#2563eb",
+                          color: "#ffffff",
+                          textDecoration: "none",
+                          fontSize: 12,
+                          fontWeight: 800,
+                          boxShadow: "0 2px 6px rgba(37,99,235,0.25)",
+                        }}
+                      >
+                        <Icon name="send" /> Mở Gmail gửi ngay tới lythuy84@gmail.com
+                      </a>
+                      <a
+                        href={submittedBugData.mailLinks.mailtoUrl}
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 6,
+                          padding: "9px 14px",
+                          borderRadius: 9,
+                          background: "#ffffff",
+                          color: "#334155",
+                          border: "1px solid #cbd5e1",
+                          textDecoration: "none",
+                          fontSize: 12,
+                          fontWeight: 700,
+                        }}
+                      >
+                        Ứng dụng Mail mặc định
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <button
                 type="submit"
                 className="fb-btn-submit"
                 disabled={bugSubmitting}
               >
-                {bugSubmitting ? "Đang gửi báo cáo..." : "Gửi báo lỗi cho Người xây dựng web"}
+                {bugSubmitting ? "Đang gửi báo cáo..." : "Gửi báo lỗi cho Người phát hành (lythuy84@gmail.com)"}
               </button>
             </form>
 
