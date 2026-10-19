@@ -399,17 +399,17 @@
 .learning-section-card > button {
   display: flex;
   width: 100%;
-  height: 48px;
+  height: 42px;
   margin-top: auto;
   padding: 0 18px;
   align-items: center;
   justify-content: space-between;
   border: 1px solid #dfe7f4;
-  border-radius: 12px;
+  border-radius: 999px;
   background: #f0f5ff;
   color: #2859b8;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 12px;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -423,8 +423,8 @@
 }
 
 .learning-section-card > button svg {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
   transition: transform 0.15s ease;
 }
 
@@ -635,14 +635,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 22px;
+  height: 40px;
+  padding: 0 20px;
   border: none;
-  border-radius: 12px;
+  border-radius: 999px;
   background: #3975f8;
   color: #ffffff;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 12px;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -657,8 +657,8 @@
 }
 
 .mentor-start-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   transition: transform 0.15s ease;
 }
 
