@@ -394,7 +394,8 @@ export default function Overview({ user, lang, data, onChangeLang }) {
                 className="dash-action-btn"
                 onClick={() => setIsGoalModalOpen(true)}
               >
-                Xem kế hoạch
+                <span>Xem kế hoạch</span>
+                <Icon name="chevron" />
               </button>
             </div>
           </div>
@@ -480,7 +481,8 @@ export default function Overview({ user, lang, data, onChangeLang }) {
                   className="dash-action-btn"
                   onClick={() => setIsAllNotifOpen(true)}
                 >
-                  Xem tất cả
+                  <span>Xem tất cả</span>
+                  <Icon name="chevron" />
                 </button>
               )}
             </div>
