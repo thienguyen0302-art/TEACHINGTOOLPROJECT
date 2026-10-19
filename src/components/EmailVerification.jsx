@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { sendEmailVerification, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { auth } from "../services/firebase";
+import { sendVerificationEmail } from "../services/authSecurityService";
 import "./EmailVerification.css";
 
 const COUNTDOWN_STORAGE_KEY = "peanut_email_resend_expiry";
@@ -98,7 +99,7 @@ export default function EmailVerification({ user, onVerified, onLogout }) {
         throw new Error("Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.");
       }
 
-      await sendEmailVerification(auth.currentUser);
+      await sendVerificationEmail(auth.currentUser);
 
       const seconds = 60;
       setCountdown(seconds);
@@ -108,7 +109,7 @@ export default function EmailVerification({ user, onVerified, onLogout }) {
 
       setFeedback({
         type: "success",
-        message: `Đã gửi lại thư xác minh tới ${user?.email || "email của bạn"}. Vui lòng kiểm tra hộp thư (kể cả mục Spam).`,
+        message: `Đã gửi lại thư xác minh từ PeanutCode tới ${user?.email || "email của bạn"}. Vui lòng kiểm tra hộp thư (kể cả mục Spam).`,
       });
     } catch (err) {
       if (err.code === "auth/too-many-requests") {

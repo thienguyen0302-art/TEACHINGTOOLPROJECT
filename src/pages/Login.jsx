@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
   signInWithPopup, GoogleAuthProvider,
-  sendEmailVerification, sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../services/firebase";
 import Logo from "../components/Logo";
 import { subscribePublicReviews } from "../services/reviewService";
-import { verifyTeacherCode, claimTeacherRole } from "../services/authSecurityService";
+import {
+  verifyTeacherCode,
+  claimTeacherRole,
+  sendResetPassword,
+  sendVerificationEmail,
+} from "../services/authSecurityService";
 
 const ERR = {
   "auth/invalid-credential": "Sai email hoặc mật khẩu.",
@@ -209,7 +213,7 @@ export default function Login() {
         if (targetRole === "teacher" && teacherCode.trim()) {
           await claimTeacherRole(cred.user, teacherCode);
         }
-        await sendEmailVerification(cred.user);
+        await sendVerificationEmail(cred.user);
       } else {
         const cred = await signInWithEmailAndPassword(auth, email, pw);
         if (targetRole === "teacher" && teacherCode.trim()) {
@@ -238,9 +242,9 @@ export default function Login() {
   async function reset() {
     if (!email) { setIsErr(true); setMsg("Hãy nhập email ở trên trước."); return; }
     try {
-      await sendPasswordResetEmail(auth, email);
+      await sendResetPassword(email);
       setIsErr(false);
-      setMsg("Nếu email này đã đăng ký, bạn sẽ nhận được thư đặt lại mật khẩu. Kiểm tra cả mục Spam.");
+      setMsg("Nếu email này đã đăng ký, bạn sẽ nhận được thư đặt lại mật khẩu từ PeanutCode. Kiểm tra cả mục Spam.");
     } catch (e) { fail(e); }
   }
 

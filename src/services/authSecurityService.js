@@ -1,5 +1,6 @@
 import {
   sendPasswordResetEmail,
+  sendEmailVerification,
   updatePassword,
   EmailAuthProvider,
   reauthenticateWithCredential,
@@ -44,11 +45,78 @@ export async function claimTeacherRole(user, teacherCode) {
   return { ok: true, role: "teacher" };
 }
 
+/**
+ * Gửi email đặt lại mật khẩu với giao diện chuẩn PeanutCode (tiêu đề và người gửi luôn là PeanutCode).
+ * Tự động ưu tiên backend SMTP để gửi mẫu thư HTML đẹp, và dự phòng Firebase Authentication nếu backend chưa sẵn sàng.
+ */
 export async function sendResetPassword(email) {
-  if (!email || !email.trim()) {
+  const cleanEmail = String(email || "").trim();
+  if (!cleanEmail) {
     throw new Error("Vui lòng nhập địa chỉ email của bạn.");
   }
-  await sendPasswordResetEmail(auth, email.trim());
+
+  const actionCodeSettings = {
+    url: `${window.location.origin}/login`,
+    handleCodeInApp: false,
+  };
+
+  // 1. Thử gửi qua endpoint server PeanutCode (chứa mẫu HTML thương hiệu PeanutCode và tựa đề PeanutCode)
+  try {
+    const res = await fetch("/api/auth/send-reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: cleanEmail, origin: window.location.origin }),
+    });
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      return { ok: true, method: "server", message: data.message };
+    }
+  } catch {
+    // Dự phòng tự động nếu không gọi được server
+  }
+
+  // 2. Dự phòng an toàn qua Firebase Client SDK
+  await sendPasswordResetEmail(auth, cleanEmail, actionCodeSettings);
+  return { ok: true, method: "firebase" };
+}
+
+/**
+ * Gửi email xác minh tài khoản với giao diện chuẩn PeanutCode (tiêu đề và người gửi luôn là PeanutCode).
+ * Tự động ưu tiên backend SMTP để gửi mẫu thư HTML đẹp, và dự phòng Firebase Authentication nếu backend chưa sẵn sàng.
+ */
+export async function sendVerificationEmail(user) {
+  const targetUser = user || auth.currentUser;
+  const cleanEmail = targetUser?.email ? String(targetUser.email).trim() : "";
+  if (!cleanEmail) {
+    throw new Error("Không tìm thấy thông tin email của tài khoản.");
+  }
+
+  const actionCodeSettings = {
+    url: `${window.location.origin}/login`,
+    handleCodeInApp: false,
+  };
+
+  // 1. Thử gửi qua endpoint server PeanutCode (chứa mẫu HTML thương hiệu PeanutCode và tựa đề PeanutCode)
+  try {
+    const res = await fetch("/api/auth/send-verification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: cleanEmail, origin: window.location.origin }),
+    });
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      return { ok: true, method: "server", message: data.message };
+    }
+  } catch {
+    // Dự phòng tự động nếu không gọi được server
+  }
+
+  // 2. Dự phòng an toàn qua Firebase Client SDK
+  if (targetUser) {
+    await sendEmailVerification(targetUser, actionCodeSettings);
+    return { ok: true, method: "firebase" };
+  }
+  throw new Error("Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.");
 }
 
 export async function updateUserAccountPassword(oldPassword, newPassword) {
