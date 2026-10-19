@@ -64,7 +64,7 @@
 .profile-stat-grid { display: grid; margin-top: 16px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
 .profile-stat-grid article { display: flex; min-width: 0; padding: 16px; align-items: center; gap: 12px; border: 1px solid #e2e8f2; border-radius: 15px; background: #fff; }
 .profile-stat-icon { display: grid; width: 42px; height: 42px; place-items: center; flex: 0 0 auto; border-radius: 12px; }
-.profile-stat-icon svg { width: 18px; height: 18px; display: block; }
+.profile-stat-icon svg { width: 18px; height: 18px; }
 .profile-stat-icon.xp { background: #fff3d9; color: #cc9220; }
 .profile-stat-icon.solved { background: #e7f7f0; color: #32a17a; }
 .profile-stat-icon.hours { background: #eaf2ff; color: #3978ed; }
