@@ -234,3 +234,44 @@ test('frontend chat sends only user/assistant text and public Judge fields',asyn
  await askTutor({...body,action:'chat',message:'Câu hỏi tiếp theo',judgeResult:submit,history:[{role:'user',text:'Câu hỏi trước',secret:'SECRET_HISTORY'},{role:'assistant',text:'Gợi ý trước'}]});
  } finally {globalThis.fetch=original;}
 });
+
+import { seedContest, authoredProblem, identity } from './contestTestSupport.js';
+test('practice Tutor supports every action with authoritative public statement and no private fields',async()=>{
+ const s=seedContest();s.put('problems/p1',authoredProblem({practicePublished:true,solution:'PRIVATE_SOLUTION',hiddenTests:[{input:'PRIVATE_TEST',output:'PRIVATE_OUTPUT'}],aiContext:{objectives:['PRIVATE_NOTES']}}));
+ const repo={...s.repository,getSecrets:()=>{throw Error('must never load secrets');}};
+ const contexts=[];const handler=createTutorHandler({repository:repo,authenticate:identity(),provider:async({context,action})=>{contexts.push(context);return normalizeFeedback('Đọc lại định dạng dữ liệu vào.',action);}});
+ for(const action of ['hint','explain_error','explain_failure','complexity','visualize','chat']){
+  const response=await httpCall(handler,{...body,slug:'practice/p1',action,...(action==='chat'?{message:'Đề yêu cầu gì?',history:[]}:{}),judgeResult:submit});
+  assert.equal(response.status,200);assert.equal(response.body.action,action);
+ }
+ assert.equal(contexts.length,6);
+ for(const context of contexts){assert.equal(context.problem.title,'Tổng hai số');assert.equal(context.problem.inputDescription,'Hai số.');assert.equal(context.problem.outputDescription,'Tổng.');assert.equal(context.problem.samples[0].input,'2 3');assert.ok(!JSON.stringify(context).includes('PRIVATE_'));assert.ok(!JSON.stringify(context).includes('SECRET_'));assert.deepEqual(context.problem.objectives,[]);}
+ assert.equal(problems.has('practice/p1'),false);
+});
+test('practice Tutor requires verified auth and valid requests before reading database or invoking AI',async()=>{
+ let reads=0,calls=0;const handler=createTutorHandler({repository:{getProblem:()=>{reads++;}},authenticate:async()=>({ok:false,status:401,error:'Cần đăng nhập.'}),provider:async()=>{calls++;}});
+ assert.equal((await httpCall(handler,{...body,slug:'practice/p1'})).status,401);
+ for(const extra of [{slug:'practice/../../p1'},{statement:'client injected statement'},{source:'x'.repeat(50001)},{action:'solve'},{action:'chat',message:'',history:[]}])assert.equal((await httpCall(handler,{...body,slug:'practice/p1',...extra})).status,400);
+ assert.equal(reads,0);assert.equal(calls,0);
+});
+test('practice Tutor blocks drafts, removed/withdrawn/locked problems and disallowed languages',async()=>{
+ const s=seedContest();let calls=0;const handler=createTutorHandler({repository:s.repository,authenticate:identity(),clock:()=>1000,provider:async()=>{calls++;return {message:'hint'};}});
+ for(const override of [{status:'draft',practicePublished:true},{practicePublished:false},{status:'published'}]){
+  s.put('problems/p1',authoredProblem(override));assert.equal((await httpCall(handler,{...body,slug:'practice/p1'})).status,404);
+ }
+ assert.equal((await httpCall(handler,{...body,slug:'practice/missing'})).status,404);
+ s.put('problems/p1',authoredProblem({practicePublished:true}));s.put('problemLocks/p1',{until:1001});
+ assert.equal((await httpCall(handler,{...body,slug:'practice/p1'})).status,403);assert.equal(calls,0);
+ s.put('problemLocks/p1',{until:1000});assert.equal((await httpCall(handler,{...body,slug:'practice/p1'})).status,200);
+ s.put('problems/p1',authoredProblem({practicePublished:true,allowedLanguages:['python']}));assert.equal((await httpCall(handler,{...body,slug:'practice/p1'})).status,400);
+ assert.equal((await httpCall(handler,{...body,slug:'practice/p1',language:'python'})).status,200);
+});
+test('practice Tutor refreshes edited context, revokes access immediately, and redacts repository errors',async()=>{
+ const s=seedContest();s.put('problems/p1',authoredProblem({practicePublished:true}));let captured;
+ const handler=createTutorHandler({repository:s.repository,authenticate:identity(),provider:async({context})=>{captured=context;return {message:'hint'};}});
+ assert.equal((await httpCall(handler,{...body,slug:'practice/p1'})).status,200);
+ s.put('problems/p1',authoredProblem({practicePublished:true,statement:'Nội dung mới'}));await httpCall(handler,{...body,slug:'practice/p1'});assert.equal(captured.problem.statement,'Nội dung mới');
+ s.put('problems/p1',authoredProblem({practicePublished:false}));assert.equal((await httpCall(handler,{...body,slug:'practice/p1'})).status,404);
+ const failed=createTutorHandler({authenticate:identity(),repository:{getProblem:async()=>{throw Error('PRIVATE_DATABASE_ERROR');},getProblemLock:async()=>null}});
+ const response=await httpCall(failed,{...body,slug:'practice/p1'});assert.equal(response.status,502);assert.ok(!JSON.stringify(response.body).includes('PRIVATE_'));
+});

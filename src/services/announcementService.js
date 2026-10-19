@@ -14,7 +14,7 @@ const LOCAL_ANNOUNCEMENTS_KEY = "peanut_local_announcements_cache";
 
 export const ANNOUNCEMENT_TYPES = {
   general: { label: "Thông báo chung", badge: "Chung", color: "blue", icon: "megaphone" },
-  exam: { label: "Lịch thi HSG", badge: "Đề thi", color: "purple", icon: "trophy" },
+  exam: { label: "Lịch contest", badge: "Contest", color: "purple", icon: "trophy" },
   reminder: { label: "Nhắc nhở học tập", badge: "Nhắc nhở", color: "orange", icon: "clock" },
   urgent: { label: "Tin quan trọng", badge: "Quan trọng", color: "red", icon: "fire" },
 };

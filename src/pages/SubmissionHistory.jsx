@@ -1,29 +1,19 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
-import { getExamHistory } from "../services/examService";
 import { getCodeSubmissionHistory } from "../services/submissionPersistence";
 import { listContests, loadContestSubmissions } from "../services/contestService";
-import { formatTime } from "../utils/timer";
 import { auth } from "../services/firebase";
 import { LANG_LABEL } from "../utils/format";
 import "../styles/pages-shared.css";
-import "./Exam.css";
 
-/**
- * ExamHistory – Trung tâm Lịch sử bài nộp & kết quả thi của Học sinh
- * Bao gồm:
- *  1. Bài nộp Code (Kho bài tập & Chuyên đề)
- *  2. Luyện đề HSG (Trắc nghiệm)
- *  3. Kỳ thi Contest HSG
- */
-export default function ExamHistory() {
+// Student history for code submissions and programming contests.
+export default function SubmissionHistory() {
   const nav = useNavigate();
-  const [activeTab, setActiveTab] = useState("code"); // 'code' | 'exam' | 'contest'
+  const [activeTab, setActiveTab] = useState("code"); // 'code' | 'contest'
   const [loading, setLoading] = useState(true);
 
   // Data states
-  const [examHistory, setExamHistory] = useState([]);
   const [codeHistory, setCodeHistory] = useState([]);
   const [contestHistory, setContestHistory] = useState([]);
 
@@ -44,14 +34,12 @@ export default function ExamHistory() {
     async function loadAllHistory() {
       setLoading(true);
       try {
-        const [exams, codeSubs, contests] = await Promise.all([
-          getExamHistory(uid, 100).catch(() => []),
+        const [codeSubs, contests] = await Promise.all([
           getCodeSubmissionHistory(uid).catch(() => []),
           listContests().catch(() => []),
         ]);
 
         if (cancelled) return;
-        setExamHistory(exams || []);
         setCodeHistory(codeSubs || []);
 
         // Load contest submissions for the student across contests
@@ -110,16 +98,6 @@ export default function ExamHistory() {
     });
   }, [codeHistory, searchQuery, statusFilter, langFilter]);
 
-  // Exam Filtered Data
-  const filteredExamHistory = useMemo(() => {
-    return examHistory.filter((item) => {
-      const matchSearch =
-        !searchQuery || (item.examId && item.examId.toLowerCase().includes(searchQuery.toLowerCase()));
-      const matchLang = langFilter === "all" || item.language === langFilter;
-      return matchSearch && matchLang;
-    });
-  }, [examHistory, searchQuery, langFilter]);
-
   // Stats calculation
   const codeStats = useMemo(() => {
     const total = codeHistory.length;
@@ -127,13 +105,6 @@ export default function ExamHistory() {
     const totalAttempts = codeHistory.reduce((sum, c) => sum + (c.attempts || 1), 0);
     return { total, solved, totalAttempts };
   }, [codeHistory]);
-
-  const examStats = useMemo(() => {
-    const total = examHistory.length;
-    const avgScore = total > 0 ? Math.round(examHistory.reduce((sum, e) => sum + (e.score || 0), 0) / total) : 0;
-    const maxScore = total > 0 ? Math.max(...examHistory.map((e) => e.points ?? e.score ?? 0)) : 0;
-    return { total, avgScore, maxScore };
-  }, [examHistory]);
 
   const formatSlugName = (slug, problemId) => {
     if (problemId) return problemId;
@@ -147,7 +118,7 @@ export default function ExamHistory() {
       {/* Header */}
       <div className="ps-page-header">
         <h1>Lịch sử nộp bài & Kết quả học tập</h1>
-        <p>Theo dõi tiến trình giải bài tập, làm đề thi và tham gia các kỳ thi Contest HSG</p>
+        <p>Theo dõi tiến trình giải bài tập và tham gia các kỳ thi Contest HSG</p>
       </div>
 
       {/* Tabs */}
@@ -159,14 +130,6 @@ export default function ExamHistory() {
           style={{ height: 36, padding: "0 18px", fontSize: 13, fontWeight: 700 }}
         >
           <Icon name="code" /> Bài nộp Code ({codeHistory.length})
-        </button>
-        <button
-          type="button"
-          className={`ps-tab-btn ${activeTab === "exam" ? "active" : ""}`}
-          onClick={() => setActiveTab("exam")}
-          style={{ height: 36, padding: "0 18px", fontSize: 13, fontWeight: 700 }}
-        >
-          <Icon name="check" /> Đề thi HSG ({examHistory.length})
         </button>
         <button
           type="button"
@@ -382,151 +345,7 @@ export default function ExamHistory() {
         </div>
       )}
 
-      {/* TAB 2: ĐỀ THI HSG */}
-      {activeTab === "exam" && (
-        <div className="ps-card">
-          {/* Quick Metrics */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: 16,
-              marginBottom: 20,
-            }}
-          >
-            <div style={{ background: "#f8fafc", borderRadius: 14, padding: "14px 18px", border: "1px solid #e2e8f0" }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: "#64748b" }}>Số đề thi đã làm</span>
-              <div style={{ fontSize: 24, fontWeight: 800, color: "#1e293b", marginTop: 4 }}>
-                {examStats.total} <small style={{ fontSize: 13, color: "#94a3b8" }}>đề</small>
-              </div>
-            </div>
-            <div style={{ background: "#eff6ff", borderRadius: 14, padding: "14px 18px", border: "1px solid #bfdbfe" }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: "#2563eb" }}>Điểm trung bình</span>
-              <div style={{ fontSize: 24, fontWeight: 800, color: "#1d4ed8", marginTop: 4 }}>
-                {examStats.avgScore}%
-              </div>
-            </div>
-            <div style={{ background: "#fefce8", borderRadius: 14, padding: "14px 18px", border: "1px solid #fef08a" }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: "#ca8a04" }}>Điểm cao nhất</span>
-              <div style={{ fontSize: 24, fontWeight: 800, color: "#a16207", marginTop: 4 }}>
-                {examStats.maxScore} <small style={{ fontSize: 13, color: "#ca8a04" }}>điểm</small>
-              </div>
-            </div>
-          </div>
-
-          <div className="ps-toolbar" style={{ marginBottom: 16 }}>
-            <div className="ps-search" style={{ maxWidth: 280 }}>
-              <Icon name="search" />
-              <input
-                type="text"
-                placeholder="Tìm mã đề thi..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-
-            <select
-              className="ps-select"
-              value={langFilter}
-              onChange={(e) => setLangFilter(e.target.value)}
-            >
-              <option value="all">Tất cả ngôn ngữ</option>
-              <option value="cpp">C++</option>
-              <option value="python">Python</option>
-            </select>
-          </div>
-
-          {loading ? (
-            <div className="ps-empty"><p>Đang tải lịch sử thi...</p></div>
-          ) : filteredExamHistory.length === 0 ? (
-            <div className="ps-empty">
-              <Icon name="trophy" />
-              <h3>Chưa có bài thi nào</h3>
-              <p>Bạn chưa hoàn thành bài thi nào. Hãy thử sức với các đề thi HSG nhé!</p>
-              <button
-                type="button"
-                className="ps-action-btn"
-                style={{ marginTop: 12, height: 36, padding: "0 16px", fontSize: 13 }}
-                onClick={() => nav("/exam")}
-              >
-                Vào thi ngay
-              </button>
-            </div>
-          ) : (
-            <div className="ps-table-wrap">
-              <table className="ps-table">
-                <thead>
-                  <tr>
-                    <th>Mã đề thi</th>
-                    <th>Ngôn ngữ</th>
-                    <th>Số câu đúng</th>
-                    <th>Điểm số</th>
-                    <th>Thời gian làm bài</th>
-                    <th>Cách nộp</th>
-                    <th>Hành động</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredExamHistory.map((h) => (
-                    <tr key={h.id}>
-                      <td>
-                        <strong style={{ fontSize: 13, color: "#1e293b" }}>{h.examId}</strong>
-                        {h.takenAt && (
-                          <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>
-                            {new Date(h.takenAt).toLocaleString("vi-VN")}
-                          </div>
-                        )}
-                      </td>
-                      <td>
-                        <span className={`ps-badge ${h.language}`}>
-                          {LANG_LABEL[h.language] || h.language}
-                        </span>
-                      </td>
-                      <td style={{ fontSize: 14, fontWeight: 600, color: "#475569" }}>
-                        <b style={{ color: "#1e293b" }}>{h.correct}</b> / {h.total}
-                      </td>
-                      <td>
-                        <span className="ps-score">
-                          {h.points ?? h.score} điểm
-                          <small>({h.score}%)</small>
-                        </span>
-                      </td>
-                      <td style={{ fontSize: 13, fontWeight: 600, color: "#64748b", whiteSpace: "nowrap" }}>
-                        {formatTime(h.durationSec)}
-                      </td>
-                      <td>
-                        {h.autoSubmitted ? (
-                          <span className="ps-submit-tag auto">Tự động hết giờ</span>
-                        ) : (
-                          <span className="ps-submit-tag manual">Chủ động nộp</span>
-                        )}
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className="ps-tab-btn"
-                          style={{
-                            height: 28,
-                            padding: "0 10px",
-                            fontSize: 11,
-                            borderColor: "#2563eb",
-                            color: "#2563eb",
-                          }}
-                          onClick={() => nav("/exam")}
-                        >
-                          Thi lại →
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* TAB 3: KỲ THI CONTEST HSG */}
+      {/* TAB 2: KỲ THI CONTEST HSG */}
       {activeTab === "contest" && (
         <div className="ps-card">
           <div className="ps-toolbar" style={{ marginBottom: 16 }}>

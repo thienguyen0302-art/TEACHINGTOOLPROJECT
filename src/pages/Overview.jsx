@@ -24,7 +24,7 @@ import {
 
 const GOAL_TYPES = {
   practice: { label: "Bài tập Code", cls: "practice" },
-  exam:     { label: "Luyện đề HSG", cls: "exam" },
+  contest:  { label: "Contest HSG", cls: "contest" },
   theory:   { label: "Lý thuyết", cls: "theory" },
   time:     { label: "Thời lượng", cls: "time" },
   custom:   { label: "Khác", cls: "custom" },
@@ -404,7 +404,7 @@ export default function Overview({ user, lang, data, onChangeLang }) {
 
           <article
             className="learning-section-card contest-card"
-            onClick={() => nav("/exam")}
+            onClick={() => nav("/contests")}
             style={{ cursor: "pointer" }}
           >
             <div className="contest-glow" />
@@ -413,15 +413,15 @@ export default function Overview({ user, lang, data, onChangeLang }) {
               <span className="learning-status">Thử thách</span>
             </div>
             <span className="learning-index">Phần 04</span>
-            <h3>Làm đề HSG Tin học thực tiễn</h3>
-            <p>Giải các bộ đề chọn đội tuyển và đề thi thực tế với thời gian, giới hạn bộ nhớ như phòng thi.</p>
+            <h3>Tham gia Contest HSG</h3>
+            <p>Giải các bài lập trình trong vòng thi có thời gian, nộp code và theo dõi bảng điểm.</p>
             <div className="contest-stats">
-              <div><strong>18</strong><span>Bộ đề</span></div>
-              <div><strong>120'</strong><span>Mỗi đề</span></div>
-              <div><strong>AI</strong><span>Phân tích</span></div>
+              <div><strong>A–Z</strong><span>Bài lập trình</span></div>
+              <div><strong>Test</strong><span>Chấm tự động</span></div>
+              <div><strong>Điểm</strong><span>Từng phần</span></div>
             </div>
-            <button onClick={(e) => { e.stopPropagation(); nav("/exam"); }}>
-              Bắt đầu luyện đề <Icon name="chevron" />
+            <button onClick={(e) => { e.stopPropagation(); nav("/contests"); }}>
+              Xem các contest <Icon name="chevron" />
             </button>
           </article>
         </div>

@@ -268,13 +268,13 @@
 }
 
 .goal-tag.practice { background: #eff6ff; color: #2563eb; }
-.goal-tag.exam     { background: #fdf2f8; color: #db2777; }
+.goal-tag.contest     { background: #fdf2f8; color: #db2777; }
 .goal-tag.theory   { background: #f0fdf4; color: #16a34a; }
 .goal-tag.time     { background: #fefce8; color: #ca8a04; }
 .goal-tag.custom   { background: #f1f5f9; color: #475569; }
 
 [data-theme="dark"] .goal-tag.practice { background: #1e3a8a; color: #bfdbfe; }
-[data-theme="dark"] .goal-tag.exam     { background: #831843; color: #fbcfe8; }
+[data-theme="dark"] .goal-tag.contest     { background: #831843; color: #fbcfe8; }
 [data-theme="dark"] .goal-tag.theory   { background: #14532d; color: #bbf7d0; }
 [data-theme="dark"] .goal-tag.time     { background: #713f12; color: #fef08a; }
 [data-theme="dark"] .goal-tag.custom   { background: #1e293b; color: #cbd5e1; }

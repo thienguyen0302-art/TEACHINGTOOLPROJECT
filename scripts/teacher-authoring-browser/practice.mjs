@@ -7,10 +7,11 @@ try{
  browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  for(const width of [1440,390]){
  const page=await browser.newPage({viewport:{width,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
- const p={...authoredProblem({id:'p1',title:'Bài luyện tập dùng chung',practicePublished:false}),hiddenTestCount:1};let toggles=0;
+ const p={...authoredProblem({id:'p1',title:'Bài luyện tập dùng chung',practicePublished:false}),hiddenTestCount:1};let toggles=0;const tutorRequests=[];
  const publicProblem=()=>{const {hiddenTests,...value}=p;assert.ok(hiddenTests);return value;};
  await page.route('**/api/**',async route=>{
   const req=route.request(),path=new URL(req.url()).pathname;
+  if(path==='/api/ai/tutor'){tutorRequests.push(req.postDataJSON());return route.fulfill({json:{action:req.postDataJSON().action,title:'Gợi ý',message:'Hãy đọc hai số từ input.',nextStep:'Đối chiếu với ví dụ.'}});}
   if(path==='/api/teacher/problems/p1/practice'){p.practicePublished=req.postDataJSON().published;toggles++;return route.fulfill({json:{id:'p1'}});}
   if(path==='/api/teacher/problems')return route.fulfill({json:[publicProblem()]});
   if(path==='/api/teacher/contests')return route.fulfill({json:[]});
@@ -25,9 +26,14 @@ try{
  await page.getByRole('link',{name:p.title,exact:true}).click();await page.getByRole('heading',{name:p.title,exact:true}).waitFor();
  assert.ok(!(await page.locator('body').innerText()).includes('PRIVATE_INPUT'));
  assert.equal(await page.getByRole('button',{name:'Nộp bài ↑'}).count(),1);
+ await page.getByRole('complementary',{name:'AI Tutor'}).waitFor();
+ await page.getByRole('button',{name:'Gửi yêu cầu: Gợi ý tiếp theo',exact:true}).click();await page.getByText('Hãy đọc hai số từ input.',{exact:true}).waitFor();
+ await page.locator('.ai-tutor-chat summary').click();await page.getByLabel('Câu hỏi của em',{exact:true}).fill('Em cần đọc dữ liệu như thế nào?');await page.getByRole('button',{name:'Gửi câu hỏi',exact:true}).click();await page.getByRole('log',{name:'Hội thoại AI Tutor'}).getByText('Hãy đọc hai số từ input.',{exact:false}).waitFor();
+ assert.deepEqual(tutorRequests.map(r=>r.slug),['practice/p1','practice/p1']);assert.deepEqual(tutorRequests.map(r=>r.action),['hint','chat']);assert.ok(tutorRequests.every(r=>!Object.hasOwn(r,'statement')&&!JSON.stringify(r).includes('PRIVATE_INPUT')));
+
  await page.evaluate(()=>{history.pushState({},'','/teacher/problems');dispatchEvent(new PopStateEvent('popstate'));});
  await page.getByRole('button',{name:'Gỡ khỏi kho học sinh',exact:true}).click();await page.getByRole('button',{name:'Đăng vào kho học sinh',exact:true}).waitFor();assert.equal(toggles,2);
  assert.deepEqual(errors,[]);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
- await page.screenshot({path:`/tmp/teacher-practice-${width}.png`,fullPage:true});await page.close();console.log(`PASS ${width}px: publish/remove practice, reuse in contest, student bank and private statement`);
+ await page.screenshot({path:`/tmp/teacher-practice-${width}.png`,fullPage:true});await page.close();console.log(`PASS ${width}px: publish/remove practice, reuse in contest, student bank, Tutor hint/chat and private statement`);
  }
 }finally{await browser?.close();await server.close();}

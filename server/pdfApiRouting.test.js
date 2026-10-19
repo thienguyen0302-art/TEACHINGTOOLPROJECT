@@ -27,6 +27,7 @@ test('real HTTP entry point dispatches all teacher PDF routes and rejects anonym
     for (const [path,method] of [['/api/practice','GET'],['/api/practice/p1','GET'],['/api/practice/judge','POST'],['/api/teacher/problems/p1/practice','PUT']]) {
       const response=await fetch(`http://127.0.0.1:${port}${path}`,{method});assert.equal(response.status,401,`${path} must reach authenticated backend`);
     }
+    const practiceTutor=await fetch(`http://127.0.0.1:${port}/api/ai/tutor`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slug:'practice/p1',language:'python',source:'print(1)',action:'hint'})});assert.equal(practiceTutor.status,401,'Database practice Tutor must require authentication even in dev');
     const generator=await fetch(`http://127.0.0.1:${port}/api/teacher/problems/generate-tests`,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});assert.equal(generator.status,401);
   } finally {child.kill('SIGTERM');}
 });

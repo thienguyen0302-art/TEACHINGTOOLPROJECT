@@ -156,7 +156,7 @@ export default function AccountMenu({
             <MenuItem icon="calendar" label="Lịch học & mục tiêu" onClick={() => go("/calendar")} />
             <MenuItem icon="bookmark" label="Bài tập đã lưu"    onClick={() => soon("Bài tập đã lưu")} />
             <MenuItem icon="list"     label="Lịch sử bài nộp"   onClick={() => soon("Lịch sử bài nộp")} />
-            <MenuItem icon="history"  label="Lịch sử thi"       onClick={() => go("/exam-history")} />
+            <MenuItem icon="history"  label="Lịch sử nộp bài"       onClick={() => go("/submissions")} />
             <MenuItem icon="message"  label="Đánh giá & góp ý"  onClick={() => go("/feedback")} />
           </MenuSection>
         )}

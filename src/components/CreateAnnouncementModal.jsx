@@ -94,7 +94,7 @@ function AnnouncementForm({ onClose, currentUser, onCreated, onUpdated, editItem
             <input
               id="cam-title"
               type="text"
-              placeholder="Ví dụ: Lịch thi thử HSG tuần này, Nhắc nhở ôn tập chuyên đề Mảng..."
+              placeholder="Ví dụ: Lịch Contest HSG tuần này, Nhắc nhở ôn tập chuyên đề Mảng..."
               value={title}
               maxLength={150}
               onChange={(e) => setTitle(e.target.value)}

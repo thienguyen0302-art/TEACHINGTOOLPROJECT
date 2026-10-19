@@ -24,7 +24,7 @@ const RESET_ON = ["auth/invalid-credential", "auth/wrong-password", "auth/too-ma
 const benefits = [
   "Ôn học sinh giỏi từ cơ bản đến nâng cao",
   "Nắm vững cấu trúc dữ liệu và thuật toán",
-  "Luyện đề chọn đội tuyển và đề thi thực tế",
+  "Tham gia các kỳ thi lập trình Contest HSG",
 ];
 
 const platformHighlights = [

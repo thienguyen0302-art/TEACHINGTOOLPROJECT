@@ -30,11 +30,6 @@ service cloud.firestore {
         allow create, update: if isOwner(uid) && validScore(request.resource.data.bestScore);
       }
 
-      match /exams/{id} {
-        allow read: if isOwner(uid) || isTeacher();
-        allow create: if isOwner(uid) && validScore(request.resource.data.score);
-      }
-
       match /daily/{day} {
         allow read: if isOwner(uid) || isTeacher();
         allow create, update: if isOwner(uid);
@@ -61,15 +56,6 @@ service cloud.firestore {
     // không còn lưu ở đây. Đóng hẳn để không ai ghi đè được điểm.
     match /contestLeaderboard/{uid} {
       allow read, write: if false;
-    }
-
-    // Bảng xếp hạng đề thi thật: mọi người đã đăng nhập được đọc; chỉ chủ sở hữu ghi dòng của mình.
-    match /leaderboards/{lang}/entries/{uid} {
-      allow read: if signedIn();
-      allow create, update: if isOwner(uid) && lang in ['cpp', 'python']
-        && request.resource.data.uid == uid
-        && request.resource.data.total is number
-        && request.resource.data.total >= 0 && request.resource.data.total <= 100000;
     }
 
     // Giáo viên đọc tiến độ toàn lớp bằng collectionGroup('progress').
