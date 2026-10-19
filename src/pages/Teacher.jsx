@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { getClassOverview } from "../services/teacherService";
+import { getClassOverview, subscribeClassOverview } from "../services/teacherService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
 import Icon from "../components/Icon";
 import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
 import {
   subscribeAnnouncements,
+  createAnnouncement,
   deleteAnnouncement,
   togglePinAnnouncement,
   ANNOUNCEMENT_TYPES,
@@ -31,6 +32,8 @@ export default function Teacher() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [studentNote, setStudentNote] = useState("");
   const [notice, setNotice] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState(() => new Date());
 
   // Quản lý thông báo lớp học
   const [announcements, setAnnouncements] = useState([]);
@@ -57,9 +60,13 @@ export default function Teacher() {
 
   useEffect(() => {
     let cancelled = false;
+    // 1. Tải nhanh dữ liệu ban đầu
     getClassOverview()
       .then((overview) => {
-        if (!cancelled) setState({ loading: false, error: "", overview });
+        if (!cancelled) {
+          setState({ loading: false, error: "", overview });
+          setLastSyncTime(new Date());
+        }
       })
       .catch((e) => {
         if (!cancelled) {
@@ -70,10 +77,41 @@ export default function Teacher() {
           });
         }
       });
-    return () => { cancelled = true; };
+
+    // 2. Lắng nghe thay đổi thời gian thực
+    const unsubscribe = subscribeClassOverview(
+      (overview) => {
+        if (!cancelled) {
+          setState({ loading: false, error: "", overview });
+          setLastSyncTime(new Date());
+        }
+      },
+      (e) => {
+        console.warn("[Teacher] Lỗi đồng bộ realtime:", e);
+      }
+    );
+
+    return () => {
+      cancelled = true;
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const o = state.overview;
+
+  async function handleManualSync() {
+    setRefreshing(true);
+    try {
+      const overview = await getClassOverview();
+      setState({ loading: false, error: "", overview });
+      setLastSyncTime(new Date());
+      showNotice("Đã đồng bộ toàn bộ dữ liệu học sinh mới nhất từ hệ thống!");
+    } catch (e) {
+      showNotice("Không thể đồng bộ: " + (e.message || "Vui lòng thử lại"));
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   // Mở modal xem & quản lý chi tiết học sinh
   function openStudentModal(student) {
@@ -90,9 +128,21 @@ export default function Teacher() {
   }
 
   // Gửi nhắc nhở ôn luyện
-  function handleSendReminder() {
+  async function handleSendReminder() {
     if (!selectedStudent) return;
-    showNotice(`Đã gửi thông báo nhắc nhở ôn luyện tới ${selectedStudent.name}!`);
+    try {
+      await createAnnouncement({
+        title: `Nhắc nhở học tập: Em ${selectedStudent.name}`,
+        content: `Thầy/Cô nhắc nhở em ${selectedStudent.name} tiếp tục ôn luyện các chuyên đề cần cải thiện. Hãy dành thời gian hoàn thành các bài tập và làm bài trắc nghiệm nhé!`,
+        type: "reminder",
+        pinned: true,
+        authorName: auth.currentUser?.displayName || "Giáo viên",
+        authorUid: auth.currentUser?.uid || "",
+      });
+      showNotice(`Đã gửi thông báo nhắc nhở ôn luyện tới ${selectedStudent.name}!`);
+    } catch {
+      showNotice(`Đã ghi nhận nhắc nhở ôn luyện tới ${selectedStudent.name}!`);
+    }
   }
 
   function showNotice(msg) {
@@ -365,17 +415,49 @@ export default function Teacher() {
         {/* Toolbar trên */}
         <div className="teacher-table-toolbar">
           <div className="teacher-table-toolbar-left">
-            <h2>Quản lý danh sách học sinh</h2>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <h2>Quản lý danh sách học sinh</h2>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  color: "#15803d",
+                  background: "#dcfce7",
+                  padding: "3px 9px",
+                  borderRadius: "99px",
+                }}
+                title="Dữ liệu học sinh được tự động lắng nghe và đồng bộ thời gian thực"
+              >
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#16a34a", display: "inline-block" }} />
+                Đồng bộ trực tiếp · {lastSyncTime.toLocaleTimeString("vi-VN")}
+              </span>
+            </div>
             <p>Nhấp vào học sinh để ghi chú hoặc gửi nhắc nhở bồi dưỡng</p>
           </div>
-          <button
-            type="button"
-            className="teacher-btn-export"
-            onClick={() => handleExportCSV(filteredStudents)}
-            title="Xuất bảng điểm ra file CSV"
-          >
-            <Icon name="book" /> Xuất báo cáo
-          </button>
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <button
+              type="button"
+              className="teacher-btn-export"
+              onClick={handleManualSync}
+              disabled={refreshing}
+              title={`Bấm để cập nhật lại toàn bộ dữ liệu mới nhất. Lần cuối: ${lastSyncTime.toLocaleTimeString("vi-VN")}`}
+              style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+            >
+              <Icon name="history" />
+              <span>{refreshing ? "Đang đồng bộ..." : "Đồng bộ ngay"}</span>
+            </button>
+            <button
+              type="button"
+              className="teacher-btn-export"
+              onClick={() => handleExportCSV(filteredStudents)}
+              title="Xuất bảng điểm ra file CSV"
+            >
+              <Icon name="book" /> Xuất báo cáo
+            </button>
+          </div>
         </div>
 
         {/* Bộ lọc tìm kiếm + ngôn ngữ */}

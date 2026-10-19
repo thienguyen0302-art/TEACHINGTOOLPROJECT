@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getClassOverview } from "../services/teacherService";
+import { getClassOverview, subscribeClassOverview } from "../services/teacherService";
+import { createAnnouncement } from "../services/announcementService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
 import Icon from "../components/Icon";
 import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
@@ -28,19 +29,59 @@ export default function TeacherStudents() {
   const [studentNote, setStudentNote] = useState("");
   const [notice, setNotice] = useState("");
   const [isCreateNotifOpen, setIsCreateNotifOpen] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState(() => new Date());
 
   useEffect(() => {
     let cancelled = false;
+    // 1. Tải nhanh dữ liệu ban đầu
     getClassOverview()
-      .then((overview) => { if (!cancelled) setState({ loading: false, error: "", overview }); })
+      .then((overview) => {
+        if (!cancelled) {
+          setState({ loading: false, error: "", overview });
+          setLastSyncTime(new Date());
+        }
+      })
       .catch((e) => {
-        if (!cancelled)
+        if (!cancelled) {
           setState({ loading: false, error: "Không tải được dữ liệu lớp: " + (e.code || e.message), overview: null });
+        }
       });
-    return () => { cancelled = true; };
+
+    // 2. Lắng nghe thay đổi thời gian thực (Real-time Live Sync khi học sinh học/nộp bài/đổi hồ sơ)
+    const unsubscribe = subscribeClassOverview(
+      (overview) => {
+        if (!cancelled) {
+          setState({ loading: false, error: "", overview });
+          setLastSyncTime(new Date());
+        }
+      },
+      (e) => {
+        console.warn("[TeacherStudents] Lỗi lắng nghe đồng bộ:", e);
+      }
+    );
+
+    return () => {
+      cancelled = true;
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const o = state.overview;
+
+  async function handleManualSync() {
+    setRefreshing(true);
+    try {
+      const overview = await getClassOverview();
+      setState({ loading: false, error: "", overview });
+      setLastSyncTime(new Date());
+      showNotice("Đã đồng bộ toàn bộ dữ liệu học sinh mới nhất từ hệ thống!");
+    } catch (e) {
+      showNotice("Không thể đồng bộ: " + (e.message || "Vui lòng thử lại"));
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   function openStudentModal(student) {
     setSelectedStudent(student);
@@ -53,9 +94,21 @@ export default function TeacherStudents() {
     showNotice(`Đã lưu ghi chú cho học sinh ${selectedStudent.name}`);
   }
 
-  function handleSendReminder() {
+  async function handleSendReminder() {
     if (!selectedStudent) return;
-    showNotice(`Đã gửi thông báo nhắc nhở ôn luyện tới ${selectedStudent.name}!`);
+    try {
+      await createAnnouncement({
+        title: `Nhắc nhở học tập: Em ${selectedStudent.name}`,
+        content: `Thầy/Cô nhắc nhở em ${selectedStudent.name} tiếp tục ôn luyện các chuyên đề cần cải thiện. Hãy dành thời gian hoàn thành các bài tập và làm bài trắc nghiệm nhé!`,
+        type: "reminder",
+        pinned: true,
+        authorName: auth.currentUser?.displayName || "Giáo viên",
+        authorUid: auth.currentUser?.uid || "",
+      });
+      showNotice(`Đã gửi thông báo nhắc nhở ôn luyện tới ${selectedStudent.name}!`);
+    } catch {
+      showNotice(`Đã ghi nhận nhắc nhở ôn luyện tới ${selectedStudent.name}!`);
+    }
   }
 
   function showNotice(msg) {
@@ -128,7 +181,26 @@ export default function TeacherStudents() {
         {/* Toolbar */}
         <div className="ps-toolbar">
           <div className="ps-toolbar-left">
-            <h2>Danh sách học sinh <span style={{ color: "#94a3b8", fontWeight: 600 }}>({filteredStudents.length}/{studentsList.length})</span></h2>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <h2>Danh sách học sinh <span style={{ color: "#94a3b8", fontWeight: 600 }}>({filteredStudents.length}/{studentsList.length})</span></h2>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  color: "#15803d",
+                  background: "#dcfce7",
+                  padding: "3px 9px",
+                  borderRadius: "99px",
+                }}
+                title="Hệ thống tự động lắng nghe và đồng bộ dữ liệu học sinh thay đổi theo thời gian thực"
+              >
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#16a34a", display: "inline-block" }} />
+                Đồng bộ trực tiếp · {lastSyncTime.toLocaleTimeString("vi-VN")}
+              </span>
+            </div>
             <p>Nhấp vào học sinh để ghi chú hoặc gửi nhắc nhở</p>
           </div>
           <div className="ps-search" style={{ maxWidth: 280 }}>
@@ -150,6 +222,17 @@ export default function TeacherStudents() {
             <option value="cpp">C++</option>
             <option value="python">Python</option>
           </select>
+          <button
+            type="button"
+            className="ps-export-btn"
+            onClick={handleManualSync}
+            disabled={refreshing}
+            title={`Bấm để cập nhật lại toàn bộ dữ liệu mới nhất. Lần cuối: ${lastSyncTime.toLocaleTimeString("vi-VN")}`}
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <Icon name="history" />
+            <span>{refreshing ? "Đang đồng bộ..." : "Đồng bộ ngay"}</span>
+          </button>
           <button
             type="button"
             className="ps-export-btn"

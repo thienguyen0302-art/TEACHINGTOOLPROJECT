@@ -24,9 +24,64 @@ test('contest validation rejects invalid duration, no published problems and inv
   assert.deepEqual(validateContest(contestFixture(now),{status:'published'}).problems,[{problemId:'p1',label:'A',points:200}]);
 });
 for(const [name,changes,time] of [
-  ['before start',{startAt:now+1},now], ['after end',{startAt:now-3600000},now], ['draft',{status:'draft'},now],
+  ['before start',{startAt:now+1},now], ['after end',{startAt:now-3600000},now],
+  ['after endAt even with duration remaining',{startAt:now-600000,durationMinutes:150,endAt:now-1000},now],
+  ['draft',{status:'draft'},now],
 ]) test(`judge rejects ${name}`,async()=>{
   const {service,put}=setup({clock:()=>time});put('contests/c1',contestFixture(now,changes));await assert.rejects(service.judge(body,'u1',{}));
+});
+test('contest endAt cutoff takes precedence over remaining durationMinutes and rejects judging', async () => {
+  const c = contestFixture(now, { startAt: now - 600000, durationMinutes: 150, endAt: now - 60000 });
+  assert.equal(contestPhase(c, now), 'ended');
+  assert.equal(remainingMs(c, now), 0);
+  assert.equal(contestEnd(c), now - 60000);
+  assert.equal(contestPhase(c, now - 120000), 'running');
+  assert.equal(remainingMs(c, now - 120000), 60000);
+
+  const { service, put } = setup({ clock: () => now });
+  put('contests/c1', c);
+  await assert.rejects(service.judge(body, 'u1', {}), /kết thúc/);
+});
+test('extending endAt reopens an ended contest and allows submissions', async () => {
+  // Contest started 2 hours ago with 60 min duration (ended 1 hour ago)
+  const endedContest = contestFixture(now, { startAt: now - 7200000, durationMinutes: 60 });
+  assert.equal(contestPhase(endedContest, now), 'ended');
+
+  // Teacher updates endAt to 30 mins in the future
+  const reopenedContest = { ...endedContest, endAt: now + 1800000 };
+  assert.equal(contestEnd(reopenedContest), now + 1800000);
+  assert.equal(contestPhase(reopenedContest, now), 'running');
+  assert.equal(remainingMs(reopenedContest, now), 1800000);
+
+  // Judge accepts submissions for reopened contest
+  let executed = false;
+  const { service, put } = setup({
+    clock: () => now,
+    execute: async () => {
+      executed = true;
+      return result();
+    },
+  });
+  put('contests/c1', reopenedContest);
+  const res = await service.judge(body, 'u1', {});
+  assert.equal(executed, true);
+  assert.ok(res.status);
+});
+test('validateContest validates endAt correctly', () => {
+  const c = contestFixture(now, { startAt: now, durationMinutes: 60 });
+  const minEnd = now + 60 * 60000;
+  // Rejects endAt shorter than duration
+  assert.throws(() => validateContest({ ...c, endAt: now - 2000 }), /dài hơn hoặc bằng thời gian làm bài/);
+  assert.throws(() => validateContest({ ...c, endAt: minEnd - 1000 }), /dài hơn hoặc bằng thời gian làm bài/);
+  assert.throws(() => validateContest({ ...c, endAt: 'invalid-date' }), /không hợp lệ/);
+
+  // Accepts endAt equal to duration
+  const equalEnd = validateContest({ ...c, endAt: minEnd });
+  assert.equal(equalEnd.endAt, minEnd);
+
+  // Accepts endAt longer than duration
+  const longerEnd = validateContest({ ...c, endAt: minEnd + 500000 });
+  assert.equal(longerEnd.endAt, minEnd + 500000);
 });
 test('unknown contest/problem membership/language rejected before executing',async()=>{
   let executions=0;const {service}=setup({execute:async()=>{executions++;return result();}});
@@ -106,3 +161,61 @@ test('new contest publication policy requires four distinct problems; drafts and
   const problems = ['a', 'b', 'c', 'd'].map(problemId => ({ problemId, points: 100 }));
   assert.equal(validateContest({ ...input, problems }, { status: 'published', minimumProblems: 4 }).problems.length, 4);
 });
+
+test('teacher can adjust endAt on an ongoing contest, but cannot change problems or startAt', async () => {
+  const store = seedContest(now);
+  for (const id of ['p2', 'p3', 'p4']) {
+    store.put(`problems/${id}`, { title: id, status: 'published', allowedLanguages: ['cpp', 'python'], samples: [{ input: '1', output: '1' }] });
+    store.put(`problemSecrets/${id}`, { hiddenTests: [{ input: '1', output: '1' }] });
+  }
+  const contest = contestFixture(now, {
+    startAt: now - 1000,
+    durationMinutes: 150,
+    problems: ['p1', 'p2', 'p3', 'p4'].map(problemId => ({ problemId, points: 100 }))
+  });
+  const id = await store.repository.saveContest(null, contest, 't1', now - 2000);
+  assert.ok(id);
+
+  // When contest is ongoing (now > startAt):
+  // 1. Changing problems or startAt is rejected
+  await assert.rejects(
+    store.repository.saveContest(id, { ...contest, startAt: now - 5000 }, 't1', now),
+    /bắt đầu/
+  );
+  await assert.rejects(
+    store.repository.saveContest(id, { ...contest, problems: [{ problemId: 'p1', points: 100 }] }, 't1', now),
+    /bắt đầu/
+  );
+
+  // 2. Adjusting endAt (e.g. extending deadline) is accepted!
+  const extendedEndAt = now + 10000000;
+  await assert.doesNotReject(
+    store.repository.saveContest(id, { ...contest, endAt: extendedEndAt }, 't1', now)
+  );
+  const updated = await store.repository.getContest(id);
+  assert.equal(updated.endAt, extendedEndAt);
+
+  // 3. Problem locks are updated to the new end time
+  const lock = await store.repository.getProblemLock('p1');
+  assert.equal(lock.until, extendedEndAt);
+});
+
+test('teacher can delete contest and associated problem locks are released', async () => {
+  const store = seedContest(now);
+  store.put('problemLocks/p1', { until: now + 50000 });
+  const handler = createContestHandler({ repository: store.repository, authenticate: identity('t1'), clock: () => now });
+
+  const del = await request(handler, '/api/teacher/contests/c1', { method: 'DELETE' });
+  assert.equal(del.status, 200);
+  assert.equal(del.data.success, true);
+
+  // Contest is gone
+  const check = await store.repository.getContest('c1');
+  assert.equal(check, null);
+
+  // Problem lock released
+  const lock = await store.repository.getProblemLock('p1');
+  assert.equal(lock, null);
+});
+
+

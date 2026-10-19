@@ -166,6 +166,11 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
           requireValue(value, 'Không tìm thấy contest.', 404);
           return reply(200, value);
         }
+        if (req.method === 'DELETE') {
+          requireValue(id, 'Thiếu ID contest để xóa.', 400);
+          await repo.deleteContest(id, caller.uid);
+          return reply(200, { success: true, id });
+        }
         requireValue(req.method === (id ? 'PUT' : 'POST'), 'Method không hợp lệ.', 405);
         const body = await readBody(req, 100000);
         const contest = validateContest(body, { status: body?.status });

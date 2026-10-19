@@ -65,7 +65,18 @@ export function createContestRepository(db) {
       await db.runTransaction(async (tx) => {
         const old = data(await tx.get(ref));
         if (id && !old) throw new AuthoringError('Không tìm thấy contest.', 404);
-        if (old?.status === 'published' && now >= timestampMs(old.startAt)) fail('Contest đã bắt đầu: không thể sửa cấu hình thi.');
+        const isOngoing = old?.status === 'published' && now >= timestampMs(old.startAt);
+        if (isOngoing) {
+          // Contest đã mở/bắt đầu: cho phép giáo viên điều chỉnh thời gian kết thúc (endAt),
+          // nhưng nghiêm cấm thay đổi danh sách bài thi, điểm hoặc thời gian bắt đầu để giữ công bằng.
+          const problemsChanged =
+            input.problems?.length !== old.problems?.length ||
+            input.problems?.some((p, i) => p.problemId !== old.problems[i]?.problemId || p.points !== old.problems[i]?.points);
+          const startAtChanged = timestampMs(input.startAt) !== timestampMs(old.startAt);
+          if (problemsChanged || startAtChanged) {
+            fail('Contest đã bắt đầu: không thể sửa cấu hình thi (chỉ được điều chỉnh thời gian kết thúc).');
+          }
+        }
         const details = await Promise.all(input.problems.map(async ({ problemId }) => {
           const [problem, secrets, lock] = await Promise.all([
             tx.get(collection('problems').doc(problemId)), tx.get(collection('problemSecrets').doc(problemId)), tx.get(collection('problemLocks').doc(problemId)),
@@ -73,13 +84,39 @@ export function createContestRepository(db) {
           return { ...data(problem), id: problemId, hiddenTestCount: data(secrets)?.hiddenTests?.length ?? 0, lock: data(lock) };
         }));
         const payload = validateContest(input, { status: input.status, publishedProblems: details, minimumProblems: 4 });
-        if (payload.status === 'published' && contestEnd(payload) <= now) fail('Không thể publish contest đã hết giờ.');
-        tx.set(ref, { ...payload, startAt: Timestamp.fromMillis(payload.startAt), createdBy: old?.createdBy ?? uid, createdAt: Timestamp.fromMillis(old?.createdAt ?? now), updatedAt: Timestamp.fromMillis(now) });
+        if (payload.status === 'published' && !isOngoing && contestEnd(payload) <= now) fail('Không thể publish contest đã hết giờ.');
+        const contestPayload = {
+          ...payload,
+          startAt: Timestamp.fromMillis(payload.startAt),
+          ...(payload.endAt ? { endAt: Timestamp.fromMillis(payload.endAt) } : {}),
+          createdBy: old?.createdBy ?? uid,
+          createdAt: Timestamp.fromMillis(old?.createdAt ?? now),
+          updatedAt: Timestamp.fromMillis(now),
+        };
+        if (!payload.endAt) delete contestPayload.endAt;
+        tx.set(ref, contestPayload);
         if (payload.status === 'published') for (const problem of details) {
-          tx.set(collection('problemLocks').doc(problem.id), { until: Timestamp.fromMillis(Math.max(timestampMs(problem.lock?.until) || 0, contestEnd(payload))) });
+          tx.set(collection('problemLocks').doc(problem.id), { until: Timestamp.fromMillis(contestEnd(payload)) });
         }
       });
       return ref.id;
+    },
+    async deleteContest(id, uid) {
+      const ref = collection('contests').doc(id);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(ref);
+        const old = data(snap);
+        if (!old) throw new AuthoringError('Không tìm thấy contest để xóa.', 404);
+        if (old.problems && Array.isArray(old.problems)) {
+          for (const entry of old.problems) {
+            if (entry.problemId) {
+              tx.delete(collection('problemLocks').doc(entry.problemId));
+            }
+          }
+        }
+        tx.delete(ref);
+      });
+      return id;
     },
     async importPdfContest(input, uid, now) {
       const owner = createHash('sha256').update(uid).digest('hex').slice(0, 12);

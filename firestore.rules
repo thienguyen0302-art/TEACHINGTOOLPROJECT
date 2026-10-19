@@ -134,10 +134,10 @@ service cloud.firestore {
       // contests through Admin transactions to establish all problem locks.
       allow create: if isTeacher() && request.resource.data.status == 'draft' &&
         request.resource.data.createdBy == request.auth.uid &&
-        request.resource.data.keys().hasOnly(['title','description','status','startAt','durationMinutes','scoringMode','problems','createdBy','createdAt','updatedAt']);
+        request.resource.data.keys().hasOnly(['title','description','status','startAt','endAt','durationMinutes','scoringMode','problems','createdBy','createdAt','updatedAt']);
       allow update: if isTeacher() && resource.data.status == 'draft' && request.resource.data.status == 'draft' &&
         request.resource.data.createdBy == resource.data.createdBy &&
-        request.resource.data.keys().hasOnly(['title','description','status','startAt','durationMinutes','scoringMode','problems','createdBy','createdAt','updatedAt']);
+        request.resource.data.keys().hasOnly(['title','description','status','startAt','endAt','durationMinutes','scoringMode','problems','createdBy','createdAt','updatedAt']);
       allow delete: if false;
       match /submissions/{submissionId} {
         allow read: if isTeacher() || (signedIn() && resource.data.uid == request.auth.uid &&

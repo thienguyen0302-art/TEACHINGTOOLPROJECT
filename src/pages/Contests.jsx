@@ -227,6 +227,11 @@ export default function Contests() {
                           <span>
                             <Icon name="clock" /> {c.durationMinutes} phút
                           </span>
+                          {c.endAt && (
+                            <span title="Thời điểm đóng contest tuyệt đối" style={{ color: '#dc2626', fontWeight: 600 }}>
+                              <Icon name="history" /> Đóng: {formatContestDate(c.endAt)}
+                            </span>
+                          )}
                           <span>
                             <Icon name="code" /> {problemCount} bài
                           </span>

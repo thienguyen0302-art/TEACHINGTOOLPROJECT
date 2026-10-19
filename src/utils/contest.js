@@ -5,7 +5,16 @@ export function timestampMs(value) {
   if (typeof value === 'string' && value.trim()) return Date.parse(value);
   return NaN;
 }
-export const contestEnd = (contest) => timestampMs(contest.startAt) + contest.durationMinutes * 60000;
+export const contestEnd = (contest) => {
+  if (!contest) return NaN;
+  const endAtMs = contest.endAt ? timestampMs(contest.endAt) : NaN;
+  if (Number.isFinite(endAtMs) && endAtMs > 0) {
+    // Khi có thiết lập endAt: endAt là mốc kết thúc chính thức của contest (cho phép mở lại hoặc đóng sớm)
+    return endAtMs;
+  }
+  const start = timestampMs(contest.startAt);
+  return Number.isFinite(start) ? start + (Number(contest.durationMinutes) || 0) * 60000 : NaN;
+};
 export function contestPhase(contest, now = Date.now()) {
   if (now < timestampMs(contest.startAt)) return 'upcoming';
   return now < contestEnd(contest) ? 'running' : 'ended';
@@ -21,6 +30,15 @@ export function validateContest(input, { publishedProblems, status = 'draft', mi
   requireValue(typeof input.description === 'string' && input.description.length <= 20000, 'Mô tả contest không hợp lệ.');
   requireValue(Number.isFinite(timestampMs(input.startAt)), 'Thời gian bắt đầu không hợp lệ.');
   requireValue(Number.isInteger(input.durationMinutes) && input.durationMinutes > 0 && input.durationMinutes <= 1440, 'Thời lượng phải từ 1 đến 1440 phút.');
+  let endAt = null;
+  if (input.endAt !== undefined && input.endAt !== null && input.endAt !== '') {
+    const endMs = timestampMs(input.endAt);
+    requireValue(Number.isFinite(endMs), 'Thời gian kết thúc không hợp lệ.');
+    const startMs = timestampMs(input.startAt);
+    const minEndMs = startMs + input.durationMinutes * 60000;
+    requireValue(endMs >= minEndMs, `Thời gian kết thúc phải dài hơn hoặc bằng thời gian làm bài (${input.durationMinutes} phút tính từ lúc bắt đầu).`);
+    endAt = endMs;
+  }
   requireValue(['draft', 'published'].includes(status), 'Trạng thái không hợp lệ.');
   requireValue(Array.isArray(input.problems) && input.problems.length <= 26 && (status !== 'published' || input.problems.length >= minimumProblems), `Contest cần ${minimumProblems}–26 bài để publish.`);
   const ids = new Set();
@@ -34,7 +52,7 @@ export function validateContest(input, { publishedProblems, status = 'draft', mi
     }
     return { problemId: entry.problemId, points: entry.points, label: String.fromCharCode(65 + index) };
   });
-  return { title: input.title.trim(), description: input.description, status, startAt: timestampMs(input.startAt), durationMinutes: input.durationMinutes, scoringMode: 'partial', problems };
+  return { title: input.title.trim(), description: input.description, status, startAt: timestampMs(input.startAt), ...(endAt ? { endAt } : {}), durationMinutes: input.durationMinutes, scoringMode: 'partial', problems };
 }
 export function mergeScoreboard(previous, submission, displayName) {
   const problems = { ...(previous?.problems ?? {}) };
