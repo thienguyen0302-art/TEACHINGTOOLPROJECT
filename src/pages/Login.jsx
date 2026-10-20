@@ -1,7 +1,9 @@
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../services/firebase";
 import { useState, useEffect } from "react";
 import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  signInWithPopup, GoogleAuthProvider,
+  signInWithPopup, GoogleAuthProvider, signOut,
 } from "firebase/auth";
 import { auth } from "../services/firebase";
 import Logo from "../components/Logo";
@@ -190,6 +192,23 @@ export default function Login() {
     if (RESET_ON.includes(e.code)) setShowReset(true);
   };
 
+  // Tab giáo viên: tài khoản đã là giáo viên thì vào luôn, chưa thì bắt buộc có mã đúng.
+  // Trả về true nếu vừa kích hoạt quyền giáo viên (cần tải lại để app đọc role mới).
+  async function ensureTeacher(user) {
+    try {
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists() && snap.data().role === "teacher") return false;
+    } catch { /* chưa đọc được hồ sơ: coi như chưa phải giáo viên */ }
+    if (!teacherCode.trim()) {
+      setShowTeacherClaim(true);
+      throw Object.assign(new Error("no code"), {
+        customMessage: "Tài khoản này chưa có quyền Giáo viên. Hãy nhập Mã bảo mật Giáo viên, hoặc đăng nhập ở tab Học sinh.",
+      });
+    }
+    await claimTeacherRole(user, teacherCode);
+    return true;
+  }
+
   async function submit(ev) {
     ev.preventDefault();
     setBusy(true); setMsg(""); setShowReset(false); setIsErr(false);
@@ -210,14 +229,27 @@ export default function Login() {
     try {
       if (mode === "register") {
         const cred = await createUserWithEmailAndPassword(auth, email, pw);
-        if (targetRole === "teacher" && teacherCode.trim()) {
-          await claimTeacherRole(cred.user, teacherCode);
+        if (targetRole === "teacher") {
+          try {
+            await claimTeacherRole(cred.user, teacherCode);
+          } catch (e) {
+            // Mã sai: xoá tài khoản vừa tạo để không bị rơi thành tài khoản học sinh.
+            await cred.user.delete().catch(() => signOut(auth));
+            throw Object.assign(new Error(e.message), { customMessage: e.message });
+          }
         }
         await sendVerificationEmail(cred.user);
       } else {
         const cred = await signInWithEmailAndPassword(auth, email, pw);
-        if (targetRole === "teacher" && teacherCode.trim()) {
-          await claimTeacherRole(cred.user, teacherCode);
+        if (targetRole === "teacher") {
+          let claimed = false;
+          try {
+            claimed = await ensureTeacher(cred.user);
+          } catch (e) {
+            await signOut(auth);
+            throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
+          }
+          if (claimed) { window.location.reload(); return; }
         }
       }
     } catch (e) { fail(e); }
@@ -232,8 +264,15 @@ export default function Login() {
     }
     try {
       const res = await signInWithPopup(auth, new GoogleAuthProvider());
-      if (targetRole === "teacher" && teacherCode.trim()) {
-        await claimTeacherRole(res.user, teacherCode);
+      if (targetRole === "teacher") {
+        let claimed = false;
+        try {
+          claimed = await ensureTeacher(res.user);
+        } catch (e) {
+          await signOut(auth);
+          throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
+        }
+        if (claimed) { window.location.reload(); return; }
       }
     }
     catch (e) { fail(e); }
@@ -395,7 +434,7 @@ export default function Login() {
                     id="teacherCode"
                     name="teacherCode"
                     type="text"
-                    placeholder="Nhập mã bảo mật (VD: GV-HSG-2025)"
+                    placeholder="Nhập mã bảo mật giáo viên"
                     value={teacherCode}
                     onChange={(e) => setTeacherCode(e.target.value)}
                     autoComplete="off"
@@ -442,7 +481,7 @@ export default function Login() {
                     <div>
                       <input
                         type="text"
-                        placeholder="Nhập mã bảo mật (VD: GV-HSG-2025)"
+                        placeholder="Nhập mã bảo mật giáo viên"
                         value={teacherCode}
                         onChange={(e) => setTeacherCode(e.target.value)}
                         className="teacher-claim-input"

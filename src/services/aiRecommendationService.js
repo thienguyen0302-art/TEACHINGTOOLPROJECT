@@ -62,7 +62,7 @@ export function generateSmartRecommendation({
     const cleanTitle = rawTitle.toLowerCase().startsWith("làm quen")
       ? rawTitle
       : `Làm quen với ${rawTitle}`;
-    const prog = first?.progress && first.progress > 0 ? first.progress : 15;
+    const prog = first?.progress && first.progress > 0 ? first.progress : 0;
 
     return {
       type: "lesson",

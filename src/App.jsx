@@ -209,15 +209,16 @@ export default function App() {
   }
 
   // Bước 1: Bắt buộc hoàn tất thông tin cá nhân (họ tên, tỉnh, trường, lớp) nếu chưa đủ (chỉ áp dụng cho học sinh)
-  if (!isTeacher && !isProfileComplete(profile)) {
+  if (!isProfileComplete(profile, isTeacher)) {
     return (
       <main className="dashboard-shell">
         <ProfileForm
           initial={profile || { displayName: user.displayName || "" }}
           isMandatory={true}
+          isTeacher={isTeacher}
           onLogout={() => signOut(auth)}
           onSave={async (formData) => {
-            const saved = await saveProfile(user.uid, formData);
+            const saved = await saveProfile(user.uid, formData, isTeacher);
             setProfile((prev) => ({ ...(prev || {}), ...saved }));
           }}
         />

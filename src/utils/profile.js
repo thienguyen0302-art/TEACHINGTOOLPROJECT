@@ -73,9 +73,10 @@ export const PROFILE_FIELDS = [
   ["className", "lớp"],
 ];
 
-export function isProfileComplete(profile = {}) {
+export function isProfileComplete(profile = {}, isTeacher = false) {
   if (!profile) return false;
-  return PROFILE_FIELDS.every(([key]) => typeof profile[key] === "string" && profile[key].trim() !== "");
+  const fields = isTeacher ? PROFILE_FIELDS.filter(([k]) => k !== "className") : PROFILE_FIELDS;
+  return fields.every(([key]) => typeof profile[key] === "string" && profile[key].trim() !== "");
 }
 
 // Kiểm tra từng trường và trả về object các lỗi tương ứng
@@ -96,9 +97,10 @@ export function validateProfileFields(input = {}, isTeacher = false) {
 }
 
 // Chuẩn hoá và kiểm tra dữ liệu form; ném Error có thông báo tiếng Việt nếu sai.
-export function normalizeProfile(input = {}) {
+export function normalizeProfile(input = {}, isTeacher = false) {
   const out = {};
-  for (const [key, label] of PROFILE_FIELDS) {
+  const fields = isTeacher ? PROFILE_FIELDS.filter(([k]) => k !== "className") : PROFILE_FIELDS;
+  for (const [key, label] of fields) {
     const value = String(input[key] ?? "").trim().replace(/\s+/g, " ");
     if (!value) throw new Error(key === "province" ? "Hãy chọn tỉnh / thành phố." : `Hãy nhập ${label}.`);
     if (value.length > 80) throw new Error(`${label[0].toUpperCase()}${label.slice(1)} quá dài (tối đa 80 ký tự).`);

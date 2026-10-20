@@ -34,3 +34,4 @@ service-account*.json
 /imports/
 /Đề Thi HSG tin học/
 .firebase/
+.DS_Store

@@ -2,7 +2,7 @@ import {
   doc, getDoc, setDoc, getDocs, collection, increment, serverTimestamp,
   writeBatch, query, where,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { auth, db } from "./firebase";
 import { dateKey } from "../utils/activity";
 import { normalizeProfile } from "../utils/profile";
 
@@ -111,8 +111,17 @@ export async function getDailyActivity(uid, days = 35) {
 }
 
 // Lưu hồ sơ học viên (tên, trường, lớp, tỉnh, huyện) vào users/{uid}. Không đụng tới `role`.
-export async function saveProfile(uid, input) {
-  const profile = normalizeProfile(input);
-  await setDoc(doc(db, "users", uid), profile, { merge: true });
+export async function saveProfile(uid, input, isTeacher = false) {
+  const profile = normalizeProfile(input, isTeacher);
+  const ref = doc(db, "users", uid);
+  try {
+    await setDoc(ref, profile, { merge: true });
+  } catch (e) {
+    if (e.code !== "permission-denied" || !auth.currentUser) throw e;
+    // Token có thể còn cũ (chưa có email_verified). Làm mới rồi thử lại một lần.
+    await auth.currentUser.reload();
+    await auth.currentUser.getIdToken(true);
+    await setDoc(ref, profile, { merge: true });
+  }
   return profile;
 }

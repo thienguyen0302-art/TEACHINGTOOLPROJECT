@@ -1,15 +1,5 @@
 {
   "projects": {
-    "default": "gen-lang-client-0036136032"
-  },
-  "targets": {
-    "gen-lang-client-0036136032": {
-      "hosting": {
-        "web": [
-          "peanutcode"
-        ]
-      }
-    }
-  },
-  "etags": {}
+    "default": "peanutcode-hsgtinhoc"
+  }
 }

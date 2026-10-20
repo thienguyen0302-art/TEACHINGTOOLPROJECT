@@ -322,7 +322,7 @@ export default function Profile({ user, uid, lang, data }) {
   const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
 
   async function handleSave(form) {
-    await saveProfile(uid, form);
+    await saveProfile(uid, form, isTeacher);
     await data.reload();
     setEditing(false);
     notice("Đã lưu hồ sơ");

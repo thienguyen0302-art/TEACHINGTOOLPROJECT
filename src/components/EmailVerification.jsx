@@ -57,6 +57,10 @@ export default function EmailVerification({ user, onVerified, onLogout }) {
     try {
       if (auth.currentUser) {
         await auth.currentUser.reload();
+        // Làm mới token để Firestore thấy email_verified = true
+        if (auth.currentUser.emailVerified) {
+          await auth.currentUser.getIdToken(true);
+        }
       }
 
       if (auth.currentUser?.emailVerified) {
