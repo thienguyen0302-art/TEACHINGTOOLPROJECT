@@ -196,7 +196,9 @@ export default function App() {
   useStudyTimer(user && user.emailVerified && !isTeacher && activeLang ? user.uid : null);
 
   if (!ready) return <div className="box">Đang tải...</div>;
-  if (!user) return <Login />;
+  if (!user || (sessionStorage.getItem("peanut_auth_target_role") === "teacher" && !isTeacher)) {
+    return <Login />;
+  }
 
   if (!user.emailVerified) {
     return (

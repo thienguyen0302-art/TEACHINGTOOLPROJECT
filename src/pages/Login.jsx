@@ -197,15 +197,29 @@ export default function Login() {
   async function ensureTeacher(user) {
     try {
       const snap = await getDoc(doc(db, "users", user.uid));
-      if (snap.exists() && snap.data().role === "teacher") return false;
+      if (snap.exists() && snap.data().role === "teacher") {
+        sessionStorage.removeItem("peanut_auth_target_role");
+        return false;
+      }
     } catch { /* chưa đọc được hồ sơ: coi như chưa phải giáo viên */ }
+
     if (!teacherCode.trim()) {
-      setShowTeacherClaim(true);
+      sessionStorage.removeItem("peanut_auth_target_role");
       throw Object.assign(new Error("no code"), {
-        customMessage: "Tài khoản này chưa có quyền Giáo viên. Hãy nhập Mã bảo mật Giáo viên, hoặc đăng nhập ở tab Học sinh.",
+        customMessage: "Tài khoản này chưa có quyền Giáo viên. Vui lòng nhập Mã bảo mật Giáo viên để kích hoạt, hoặc đăng nhập ở tab Học sinh.",
       });
     }
-    await claimTeacherRole(user, teacherCode);
+
+    try {
+      await claimTeacherRole(user, teacherCode);
+    } catch (e) {
+      sessionStorage.removeItem("peanut_auth_target_role");
+      throw Object.assign(new Error(e.message), {
+        customMessage: e.message || "Mã bảo mật giáo viên không chính xác.",
+      });
+    }
+
+    sessionStorage.removeItem("peanut_auth_target_role");
     return true;
   }
 
@@ -213,17 +227,24 @@ export default function Login() {
     ev.preventDefault();
     setBusy(true); setMsg(""); setShowReset(false); setIsErr(false);
 
-    if (targetRole === "teacher" && mode === "register") {
-      if (!teacherCode.trim()) {
-        fail({ customMessage: "Vui lòng nhập Mã bảo mật Giáo viên để kích hoạt quyền Giáo viên." });
-        setBusy(false);
-        return;
+    if (targetRole === "teacher") {
+      sessionStorage.setItem("peanut_auth_target_role", "teacher");
+      if (mode === "register") {
+        if (!teacherCode.trim()) {
+          sessionStorage.removeItem("peanut_auth_target_role");
+          fail({ customMessage: "Vui lòng nhập Mã bảo mật Giáo viên để kích hoạt quyền Giáo viên." });
+          setBusy(false);
+          return;
+        }
+        if (!verifyTeacherCode(teacherCode)) {
+          sessionStorage.removeItem("peanut_auth_target_role");
+          fail({ customMessage: "Mã bảo mật Giáo viên không hợp lệ. Vui lòng kiểm tra lại hoặc liên hệ Quản trị viên." });
+          setBusy(false);
+          return;
+        }
       }
-      if (!verifyTeacherCode(teacherCode)) {
-        fail({ customMessage: "Mã bảo mật Giáo viên không hợp lệ. Vui lòng kiểm tra lại hoặc liên hệ Quản trị viên." });
-        setBusy(false);
-        return;
-      }
+    } else {
+      sessionStorage.setItem("peanut_auth_target_role", "student");
     }
 
     try {
@@ -235,9 +256,11 @@ export default function Login() {
           } catch (e) {
             // Mã sai: xoá tài khoản vừa tạo để không bị rơi thành tài khoản học sinh.
             await cred.user.delete().catch(() => signOut(auth));
+            sessionStorage.removeItem("peanut_auth_target_role");
             throw Object.assign(new Error(e.message), { customMessage: e.message });
           }
         }
+        sessionStorage.removeItem("peanut_auth_target_role");
         await sendVerificationEmail(cred.user);
       } else {
         const cred = await signInWithEmailAndPassword(auth, email, pw);
@@ -247,12 +270,19 @@ export default function Login() {
             claimed = await ensureTeacher(cred.user);
           } catch (e) {
             await signOut(auth);
+            sessionStorage.removeItem("peanut_auth_target_role");
             throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
           }
+          sessionStorage.removeItem("peanut_auth_target_role");
           if (claimed) { window.location.reload(); return; }
+        } else {
+          sessionStorage.removeItem("peanut_auth_target_role");
         }
       }
-    } catch (e) { fail(e); }
+    } catch (e) {
+      sessionStorage.removeItem("peanut_auth_target_role");
+      fail(e);
+    }
     setBusy(false);
   }
 
@@ -262,6 +292,11 @@ export default function Login() {
       fail({ customMessage: "Vui lòng nhập Mã bảo mật Giáo viên trước khi đăng ký bằng Google." });
       return;
     }
+    if (targetRole === "teacher") {
+      sessionStorage.setItem("peanut_auth_target_role", "teacher");
+    } else {
+      sessionStorage.setItem("peanut_auth_target_role", "student");
+    }
     try {
       const res = await signInWithPopup(auth, new GoogleAuthProvider());
       if (targetRole === "teacher") {
@@ -270,12 +305,19 @@ export default function Login() {
           claimed = await ensureTeacher(res.user);
         } catch (e) {
           await signOut(auth);
+          sessionStorage.removeItem("peanut_auth_target_role");
           throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
         }
+        sessionStorage.removeItem("peanut_auth_target_role");
         if (claimed) { window.location.reload(); return; }
+      } else {
+        sessionStorage.removeItem("peanut_auth_target_role");
       }
     }
-    catch (e) { fail(e); }
+    catch (e) {
+      sessionStorage.removeItem("peanut_auth_target_role");
+      fail(e);
+    }
   }
 
   async function reset() {
@@ -371,7 +413,7 @@ export default function Login() {
               <button
                 type="button"
                 className={`login-role-tab ${targetRole === "student" ? "active" : ""}`}
-                onClick={() => { setTargetRole("student"); setMsg(""); setIsErr(false); }}
+                onClick={() => { setTargetRole("student"); setMsg(""); setIsErr(false); sessionStorage.removeItem("peanut_auth_target_role"); }}
                 role="tab"
                 aria-selected={targetRole === "student"}
               >
@@ -380,7 +422,7 @@ export default function Login() {
               <button
                 type="button"
                 className={`login-role-tab ${targetRole === "teacher" ? "active" : ""}`}
-                onClick={() => { setTargetRole("teacher"); setMsg(""); setIsErr(false); }}
+                onClick={() => { setTargetRole("teacher"); setMsg(""); setIsErr(false); sessionStorage.setItem("peanut_auth_target_role", "teacher"); }}
                 role="tab"
                 aria-selected={targetRole === "teacher"}
               >
@@ -469,28 +511,23 @@ export default function Login() {
               </div>
 
               {targetRole === "teacher" && mode === "login" && (
-                <div className="teacher-claim-toggle">
-                  <button
-                    type="button"
-                    className="btn-text-claim"
-                    onClick={() => setShowTeacherClaim(!showTeacherClaim)}
-                  >
-                    {showTeacherClaim ? "Ẩn mã bảo mật" : "Lần đầu đăng nhập bằng tài khoản này? Nhập mã kích hoạt Giáo viên"}
-                  </button>
-                  {showTeacherClaim && (
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Nhập mã bảo mật giáo viên"
-                        value={teacherCode}
-                        onChange={(e) => setTeacherCode(e.target.value)}
-                        className="teacher-claim-input"
-                      />
-                      <span className="field-hint">
-                        Nhập mã để nâng cấp tài khoản của thầy cô lên quyền Giáo viên ngay khi đăng nhập.
-                      </span>
-                    </div>
-                  )}
+                <div style={{ marginTop: 14 }}>
+                  <label htmlFor="teacherCodeLogin">
+                    Mã kích hoạt Giáo viên <span style={{ fontWeight: 400, color: "#94a3b8", fontSize: "0.85em" }}>(chỉ cần nhập khi kích hoạt lần đầu)</span>
+                  </label>
+                  <input
+                    id="teacherCodeLogin"
+                    name="teacherCode"
+                    type="text"
+                    placeholder="Nhập mã bảo mật giáo viên (nếu chưa kích hoạt)"
+                    value={teacherCode}
+                    onChange={(e) => setTeacherCode(e.target.value)}
+                    className="teacher-claim-input"
+                    autoComplete="off"
+                  />
+                  <span className="field-hint">
+                    Tài khoản đã kích hoạt giáo viên ở những lần trước chỉ cần nhập Email và Mật khẩu để vào.
+                  </span>
                 </div>
               )}
 
