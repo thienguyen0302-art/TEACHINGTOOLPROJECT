@@ -195,8 +195,15 @@ export default function App() {
 
   useStudyTimer(user && user.emailVerified && !isTeacher && activeLang ? user.uid : null);
 
+  const isTargetingTeacher = sessionStorage.getItem("peanut_auth_target_role") === "teacher";
+  const isTargetingStudent = sessionStorage.getItem("peanut_auth_target_role") === "student";
+
   if (!ready) return <div className="box">Đang tải...</div>;
-  if (!user || (sessionStorage.getItem("peanut_auth_target_role") === "teacher" && !isTeacher)) {
+  if (
+    !user ||
+    (isTargetingTeacher && !isTeacher) ||
+    (isTargetingStudent && isTeacher)
+  ) {
     return <Login />;
   }
 

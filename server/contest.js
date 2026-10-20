@@ -101,6 +101,15 @@ export function createContestHandler({ repository, authenticate = createAuthGuar
         requireValue(record.count < CLAIM_MAX_ATTEMPTS, 'Thử quá nhiều lần. Hãy chờ 15 phút.', 429);
         record.count += 1;
         claimAttempts.set(caller.uid, record);
+
+        // Chặn không cho tài khoản học sinh đổi qua giáo viên
+        const existing = await repo.getProfile(caller.uid);
+        requireValue(
+          !existing || existing.role === 'teacher' || (!existing.firstLoginAt && !existing.province && !existing.school),
+          'Tài khoản này đã được đăng ký là Học sinh, không thể chuyển đổi sang Giáo viên.',
+          403
+        );
+
         const body = await readBody(req, 10000);
         const given = Buffer.from(String(body?.teacherCode ?? '').trim());
         const expected = Buffer.from(secret);

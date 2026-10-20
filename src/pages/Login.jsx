@@ -192,16 +192,41 @@ export default function Login() {
     if (RESET_ON.includes(e.code)) setShowReset(true);
   };
 
+  // Tab học sinh: nếu tài khoản trong database là giáo viên thì không cho phép đăng nhập ở cổng học sinh.
+  async function ensureStudent(user) {
+    try {
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists() && snap.data().role === "teacher") {
+        sessionStorage.removeItem("peanut_auth_target_role");
+        throw Object.assign(new Error("teacher_account"), {
+          customMessage: "Tài khoản này là tài khoản Giáo viên, không thể đăng nhập ở cổng Học sinh. Vui lòng chuyển sang tab 'Giáo viên / Admin' để đăng nhập.",
+        });
+      }
+    } catch (e) {
+      if (e.message === "teacher_account" || e.customMessage) throw e;
+    }
+  }
+
   // Tab giáo viên: tài khoản đã là giáo viên thì vào luôn, chưa thì bắt buộc có mã đúng.
   // Trả về true nếu vừa kích hoạt quyền giáo viên (cần tải lại để app đọc role mới).
   async function ensureTeacher(user) {
+    let snap;
     try {
-      const snap = await getDoc(doc(db, "users", user.uid));
+      snap = await getDoc(doc(db, "users", user.uid));
       if (snap.exists() && snap.data().role === "teacher") {
         sessionStorage.removeItem("peanut_auth_target_role");
         return false;
       }
     } catch { /* chưa đọc được hồ sơ: coi như chưa phải giáo viên */ }
+
+    // Nếu tài khoản đã tồn tại trong database với tư cách Học sinh (không phải role teacher)
+    // thì KHÔNG ĐƯỢC PHÉP chuyển đổi sang Giáo viên!
+    if (snap?.exists() && snap.data().role !== "teacher" && (snap.data().createdAt || snap.data().firstLoginAt || snap.data().province || snap.data().school)) {
+      sessionStorage.removeItem("peanut_auth_target_role");
+      throw Object.assign(new Error("student_account"), {
+        customMessage: "Tài khoản này đã được đăng ký với tư cách Học sinh và không thể chuyển đổi sang Giáo viên. Vui lòng đăng nhập ở tab 'Học sinh HSG', hoặc sử dụng email khác cho Giáo viên.",
+      });
+    }
 
     if (!teacherCode.trim()) {
       sessionStorage.removeItem("peanut_auth_target_role");
@@ -276,6 +301,13 @@ export default function Login() {
           sessionStorage.removeItem("peanut_auth_target_role");
           if (claimed) { window.location.reload(); return; }
         } else {
+          try {
+            await ensureStudent(cred.user);
+          } catch (e) {
+            await signOut(auth);
+            sessionStorage.removeItem("peanut_auth_target_role");
+            throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
+          }
           sessionStorage.removeItem("peanut_auth_target_role");
         }
       }
@@ -311,6 +343,13 @@ export default function Login() {
         sessionStorage.removeItem("peanut_auth_target_role");
         if (claimed) { window.location.reload(); return; }
       } else {
+        try {
+          await ensureStudent(res.user);
+        } catch (e) {
+          await signOut(auth);
+          sessionStorage.removeItem("peanut_auth_target_role");
+          throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
+        }
         sessionStorage.removeItem("peanut_auth_target_role");
       }
     }
