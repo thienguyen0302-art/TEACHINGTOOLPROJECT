@@ -3,6 +3,7 @@
 export async function authHeaders() {
   try {
     const { auth } = await import("./firebase.js");
+    await auth.authStateReady();
     const token = await auth.currentUser?.getIdToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
   } catch {

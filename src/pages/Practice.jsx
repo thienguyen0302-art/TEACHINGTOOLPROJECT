@@ -61,6 +61,7 @@ export default function Practice() {
 
   return (
     <div className="content practice-page">
+      {bank.loading&&<p role="status">Đang tải bài tập giáo viên…</p>}
       {bank.error&&<p role="alert">Chưa tải được bài giáo viên: {bank.error} <button onClick={bank.refresh}>Thử lại</button></p>}
       <section className="practice-hero">
         <div>

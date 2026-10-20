@@ -34,6 +34,7 @@
     "test:teacher:generate": "node scripts/teacher-authoring-browser/generate.mjs",
     "test:practice": "node --test server/practice.test.js",
     "test:practice:browser": "node scripts/teacher-authoring-browser/practice.mjs",
+    "test:practice:student": "node scripts/student-bank-browser/browser.mjs",
     "test:history:browser": "node scripts/student-history-browser/browser.mjs"
   },
   "dependencies": {
