@@ -23,6 +23,13 @@ try{
  await page.getByRole('button',{name:'Đăng vào kho học sinh',exact:true}).click();await page.getByRole('button',{name:'Gỡ khỏi kho học sinh',exact:true}).waitFor();assert.equal(toggles,1);
  await page.getByRole('link',{name:'Tạo contest từ bài này'}).click();await page.getByRole('heading',{name:'Tạo contest mới'}).waitFor();assert.equal(await page.getByLabel('Bài A',{exact:true}).inputValue(),'p1');
  await page.evaluate(()=>{history.pushState({},'','/practice');dispatchEvent(new PopStateEvent('popstate'));});
+ await page.getByRole('link',{name:p.title,exact:true}).waitFor();
+ // New uploads from another tab must appear on return, without opening a problem.
+ p.title='Bài vừa cập nhật trong kho';
+ await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+ await page.getByRole('link',{name:p.title,exact:true}).waitFor();
+ await page.evaluate(()=>{history.pushState({},'','/practice-bank');dispatchEvent(new PopStateEvent('popstate'));});
+ await page.getByRole('link',{name:p.title,exact:true}).waitFor();
  await page.getByRole('link',{name:p.title,exact:true}).click();await page.getByRole('heading',{name:p.title,exact:true}).waitFor();
  assert.ok(!(await page.locator('body').innerText()).includes('PRIVATE_INPUT'));
  assert.equal(await page.getByRole('button',{name:'Nộp bài ↑'}).count(),1);

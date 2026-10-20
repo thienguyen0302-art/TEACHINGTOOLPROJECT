@@ -65,6 +65,7 @@ export default function PracticeBank() {
   return (
     <div className="content ps-page">
 
+      {bank.loading&&<p role="status">Đang tải bài tập giáo viên…</p>}
       {bank.error&&<p role="alert">Chưa tải được bài giáo viên: {bank.error} <button onClick={bank.refresh}>Thử lại</button></p>}
       {/* Header */}
       <div className="ps-page-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
