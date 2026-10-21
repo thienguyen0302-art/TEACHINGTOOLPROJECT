@@ -52,6 +52,45 @@ const problems = Object.entries(modules).map(([path, problem]) => {
   return Object.fromEntries(publicFields.map((key) => [key, problem[key]]));
 }).sort((a, b) => a.chapterId.localeCompare(b.chapterId) || a.id.localeCompare(b.id));
 
+// Chapter exercises already have judge tests; expose their public statements in
+// the bank while keeping their original judge/progress identity.
+const lessonModules = import.meta.glob('../content/{cpp,python}/ch*.json', {
+  eager: true, import: 'default',
+});
+const starters = {
+  cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // Viết lời giải tại đây.\n    return 0;\n}\n',
+  python: '# Đọc dữ liệu và viết lời giải tại đây.\n',
+};
+for (const [path, chapter] of Object.entries(lessonModules)) {
+  const language = path.split('/').at(-2);
+  for (const section of ['practice', 'advanced']) {
+    for (const exercise of chapter[section] ?? []) {
+      if (!exercise.runnable) continue;
+      const slug = `lesson-${language}-${chapter.id}-${section}-${exercise.id}`;
+      problems.push({
+        id: `${chapter.id}-${language}-${exercise.id}`,
+        slug,
+        judgeSlug: `lesson/${language}/${chapter.id}/${section}/${exercise.id}`,
+        chapterId: chapter.id,
+        title: exercise.title,
+        type: 'coding',
+        difficulty: exercise.difficulty,
+        level: section === 'advanced' ? 3 : 1,
+        tags: [...(exercise.tags ?? []), language === 'cpp' ? 'C++' : 'Python'],
+        statement: exercise.problem,
+        inputDescription: exercise.inputDescription,
+        outputDescription: exercise.outputDescription,
+        constraints: exercise.constraints,
+        samples: [{ input: exercise.sampleInput, output: exercise.sampleOutput }],
+        hints: exercise.hint ? [exercise.hint] : [],
+        starterCode: { [language]: starters[language] },
+        allowedLanguages: [language],
+      });
+    }
+  }
+}
+problems.sort((a, b) => a.chapterId.localeCompare(b.chapterId) || a.id.localeCompare(b.id));
+
 export function listProblems({ difficulty, chapterId, topic, query = "", sort = "default", additional = [] } = {}) {
   const search = normalize(query.trim());
   const result = [...problems,...additional].filter((problem) =>
