@@ -43,7 +43,7 @@ function ProblemWorkspace({ problem, initialLang }) {
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [submission, setSubmission] = useState(null);
-  const progress = useSubmissionProgress({ problemId: problem.id, slug: problem.practicePublished ? `practice/${problem.id}` : problem.slug, chapterId: problem.chapterId ?? "practice", language });
+  const progress = useSubmissionProgress({ problemId: problem.id, slug: problem.practicePublished ? `practice/${problem.id}` : (problem.judgeSlug ?? problem.slug), chapterId: problem.chapterId ?? "practice", language });
   const requestRef = useRef(null);
   useEffect(() => () => requestRef.current?.abort(), []);
 
@@ -55,7 +55,7 @@ function ProblemWorkspace({ problem, initialLang }) {
     setError("");
     setSubmission(null);
     try {
-      const result = await (problem.practicePublished ? judgePractice : judgeCode)({ problemId:problem.id, slug: problem.slug, source: drafts[language], language, mode, stdin, signal: controller.signal });
+      const result = await (problem.practicePublished ? judgePractice : judgeCode)({ problemId:problem.id, slug: problem.judgeSlug ?? problem.slug, source: drafts[language], language, mode, stdin, signal: controller.signal });
       if (!controller.signal.aborted) {
         setSubmission({ ...result, language, judgedSource: drafts[language] });
         // A persistence/normalization issue must not turn a Judge verdict into an error.
@@ -95,7 +95,7 @@ function ProblemWorkspace({ problem, initialLang }) {
       <nav className="workspace-nav" aria-label="Điều hướng bài tập">
         <Link to="/practice">← Danh sách bài tập</Link>
         <span>{problem.id}</span>
-        <span className="workspace-nav__language">C++ / Python</span>
+        <span className="workspace-nav__language">{problem.allowedLanguages?.length === 1 ? (problem.allowedLanguages[0] === "cpp" ? "C++" : "Python") : "C++ / Python"}</span>
       </nav>
       <div className="problem-workspace">
         <article className="problem-statement bank-panel">
@@ -190,7 +190,7 @@ function ProblemWorkspace({ problem, initialLang }) {
             </div>
             <SubmissionProgress entry={progress.entry} />
             <JudgeResults busy={busy} error={error} submission={submission} />
-            <AITutorPanel slug={problem.practicePublished ? `practice/${problem.id}` : problem.slug} language={language} source={drafts[language] ?? ""} judgeBusy={Boolean(busy)} judgeResult={currentJudgeResult(submission, drafts[language], language)} />
+            <AITutorPanel slug={problem.practicePublished ? `practice/${problem.id}` : (problem.judgeSlug ?? problem.slug)} language={language} source={drafts[language] ?? ""} judgeBusy={Boolean(busy)} judgeResult={currentJudgeResult(submission, drafts[language], language)} />
           </div>
         </section>
       </div>

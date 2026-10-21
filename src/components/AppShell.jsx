@@ -150,7 +150,7 @@ export default function AppShell({ user, isTeacher = false, weekActive = 0, onLo
                 onClick={() => choose(item)}
               >
                 <Icon name={item.icon} /><span>{item.label}</span>
-                {item.label === "Kho bài tập" && <em>24</em>}
+
               </button>
             ))}
           </nav>
