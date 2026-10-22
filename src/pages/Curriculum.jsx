@@ -4,7 +4,7 @@ import { useNotice } from "../hooks/useNotice";
 import { curriculum, LANG_BY_KEY } from "../data/curriculum";
 import { getLocalChapterState } from "../services/progressService";
 
-// Danh sách 12 chương theo thiết kế. Chương nào đã có file JSON (cùng số thứ tự) thì mở được và lấy tiến độ thật.
+// Danh sách 14 chương theo nội dung trong src/content. Chương nào đã có file JSON (cùng số thứ tự) thì mở được và lấy tiến độ thật.
 export default function Curriculum({ lang, data, onChangeLang }) {
   const nav = useNavigate();
   const notice = useNotice();

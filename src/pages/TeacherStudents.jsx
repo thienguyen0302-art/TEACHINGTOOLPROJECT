@@ -4,6 +4,7 @@ import { getClassOverview, subscribeClassOverview } from "../services/teacherSer
 import { createAnnouncement } from "../services/announcementService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
 import Icon from "../components/Icon";
+import StudentChapterProgress from "../components/StudentChapterProgress";
 import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
 import { auth } from "../services/firebase";
 import "../styles/pages-shared.css";
@@ -125,7 +126,7 @@ export default function TeacherStudents() {
       `"${(s.className || "").replaceAll('"', '""')}"`,
       `"${(s.school || "").replaceAll('"', '""')}"`,
       LANG_LABEL[s.language] || s.language || "Chưa chọn",
-      `"${s.chaptersCompleted}/${s.chaptersTried}"`,
+      `"${s.chaptersCompleted}/${s.chaptersTotal}"`,
       s.avgScore,
       Math.round((s.studySeconds || 0) / 60),
       lastSeenText(s.lastActive).text,
@@ -278,8 +279,8 @@ export default function TeacherStudents() {
             <tbody>
               {filteredStudents.map((s) => {
                 const activity = lastSeenText(s.lastActive);
-                const percentDone = s.chaptersTried > 0
-                  ? Math.round((s.chaptersCompleted / s.chaptersTried) * 100)
+                const percentDone = s.chaptersTotal > 0
+                  ? Math.round((s.chaptersCompleted / s.chaptersTotal) * 100)
                   : 0;
                 return (
                   <tr key={s.uid}>
@@ -312,7 +313,7 @@ export default function TeacherStudents() {
                         <div className="ps-progress-track">
                           <div className="ps-progress-fill" style={{ width: `${percentDone}%` }} />
                         </div>
-                        <small>{s.chaptersCompleted}/{s.chaptersTried} chương</small>
+                        <small>{s.chaptersCompleted}/{s.chaptersTotal} chương</small>
                       </div>
                     </td>
                     <td style={{ whiteSpace: "nowrap" }}>
@@ -405,6 +406,13 @@ export default function TeacherStudents() {
                 <span>Lần học gần nhất</span>
                 <strong>{lastSeenText(selectedStudent.lastActive).text}</strong>
               </div>
+            </div>
+
+            <div style={{ marginBottom: "1.25rem" }}>
+              <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "13px", fontWeight: 700, color: "#334155" }}>
+                Tiến độ từng chương ({selectedStudent.chaptersCompleted}/{selectedStudent.chaptersTotal} chương hoàn thành):
+              </h4>
+              <StudentChapterProgress chapters={selectedStudent.chapterProgress} />
             </div>
 
             <div style={{ marginBottom: "1.25rem" }}>

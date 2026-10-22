@@ -386,6 +386,14 @@ export function createAuthEmailHandler({
       });
     }
 
+    // Dùng trang xác nhận riêng của PeanutCode thay cho trang mặc định của Firebase.
+    try {
+      const u = new URL(actionLink);
+      const oob = u.searchParams.get('oobCode');
+      const m = u.searchParams.get('mode');
+      if (oob && m) actionLink = `${appOrigin}/auth-action?mode=${encodeURIComponent(m)}&oobCode=${encodeURIComponent(oob)}`;
+    } catch { /* giữ nguyên liên kết gốc */ }
+
     const transporter = transportFactory(smtp.user, smtp.pass);
     if (!transporter) {
       return reply(503, {

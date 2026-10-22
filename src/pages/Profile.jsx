@@ -15,6 +15,7 @@ import {
   sendResetPassword,
   updateUserAccountPassword,
   isTeacherUser,
+  deleteUserAccount,
 } from "../services/authSecurityService";
 import "./Profile.css";
 
@@ -254,6 +255,49 @@ export default function Profile({ user, uid, lang, data }) {
   const [confirmPw, setConfirmPw] = useState("");
   const [updatingPw, setUpdatingPw] = useState(false);
 
+  // Trạng thái Xoá tài khoản & Dữ liệu
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [deleteErr, setDeleteErr] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  const isPasswordUser = (user?.providerData || []).some(
+    (pr) => pr.providerId === "password"
+  );
+
+  async function handleDeleteAccount(e) {
+    if (e) e.preventDefault();
+    setDeleteErr("");
+
+    if (isPasswordUser) {
+      if (!deletePassword.trim()) {
+        setDeleteErr("Vui lòng nhập mật khẩu hiện tại để xác nhận xoá tài khoản.");
+        return;
+      }
+    } else {
+      const clean = deleteConfirmText.trim().toUpperCase();
+      if (clean !== "XÓA" && clean !== "XOÁ") {
+        setDeleteErr("Vui lòng gõ đúng chữ XOÁ để xác nhận.");
+        return;
+      }
+    }
+
+    setDeleting(true);
+    try {
+      await deleteUserAccount({ password: deletePassword });
+      try {
+        sessionStorage.clear();
+        localStorage.clear();
+      } catch {}
+      notice("Đã xoá tài khoản và toàn bộ dữ liệu thành công.");
+      window.location.href = "/login?deleted=1";
+    } catch (err) {
+      setDeleteErr(err.message || "Không thể xoá tài khoản. Vui lòng thử lại.");
+      setDeleting(false);
+    }
+  }
+
   async function handleSendResetEmail() {
     setResetMsg("");
     setResetErr("");
@@ -404,7 +448,7 @@ export default function Profile({ user, uid, lang, data }) {
         <>
           {/* KHÔNG GIAN QUẢN LÝ (CHỈ DÀNH CHO GIÁO VIÊN) */}
           {isTeacher && (
-            <section className="profile-card" style={{ marginTop: "24px", padding: "24px", borderRadius: "16px", background: "var(--ps-surface, #fff)", border: "1px solid var(--ps-border, #e2e8f0)" }}>
+            <section className="profile-card" style={{ display: "block", marginTop: "24px", padding: "24px", borderRadius: "16px", background: "var(--ps-surface, #fff)", border: "1px solid var(--ps-border, #e2e8f0)" }}>
               <h2 style={{ fontSize: "18px", margin: "0 0 16px", fontWeight: 800 }}>Không gian Quản lý Giảng dạy &amp; HSG</h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
                 <button
@@ -490,7 +534,7 @@ export default function Profile({ user, uid, lang, data }) {
 
       {/* ── TAB 2: CÀI ĐẶT THÔNG BÁO ── */}
       {activeTab === "notifications" && (
-        <section className="profile-card" style={{ marginTop: "24px", padding: "24px", borderRadius: "16px", background: "var(--ps-surface, #fff)", border: "1px solid var(--ps-border, #e2e8f0)" }}>
+        <section className="profile-card" style={{ display: "block", marginTop: "24px", padding: "24px", borderRadius: "16px", background: "var(--ps-surface, #fff)", border: "1px solid var(--ps-border, #e2e8f0)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
             <div>
               <h2 style={{ fontSize: "18px", margin: "0 0 4px", fontWeight: 800 }}>Cài đặt Thông báo</h2>
@@ -555,7 +599,7 @@ export default function Profile({ user, uid, lang, data }) {
 
       {/* ── TAB 3: BẢO MẬT TÀI KHOẢN & QUYỀN HẠN ── */}
       {activeTab === "security" && (
-        <section className="profile-card" style={{ marginTop: "24px", padding: "24px", borderRadius: "16px", background: "var(--ps-surface, #fff)", border: "1px solid var(--ps-border, #e2e8f0)" }}>
+        <section className="profile-card" style={{ display: "block", marginTop: "24px", padding: "24px", borderRadius: "16px", background: "var(--ps-surface, #fff)", border: "1px solid var(--ps-border, #e2e8f0)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
             <div>
               <h2 style={{ fontSize: "18px", margin: "0 0 4px", fontWeight: 800 }}>Bảo mật tài khoản &amp; Quyền hạn</h2>
@@ -823,7 +867,146 @@ export default function Profile({ user, uid, lang, data }) {
               )}
             </div>
           </div>
+
+          {/* Cột / Khối 3: Khu vực nguy hiểm - Xoá tài khoản */}
+          <div className="profile-danger-zone">
+            <div className="profile-danger-info">
+              <div className="profile-danger-kicker">
+                <Icon name="trash" />
+                <span>Khu vực nguy hiểm</span>
+              </div>
+              <h3 className="profile-danger-title">Xoá vĩnh viễn tài khoản</h3>
+              <p className="profile-danger-desc">
+                Xoá hoàn toàn hồ sơ, tiến độ làm bài, lịch sử thi đấu và toàn bộ dữ liệu của bạn trên PeanutCode.
+                Sau khi xoá, nếu đăng nhập lại bằng email này, bạn sẽ bắt đầu lại như một người mới hoàn toàn.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="profile-danger-btn"
+              onClick={() => {
+                setShowDeleteModal(true);
+                setDeletePassword("");
+                setDeleteConfirmText("");
+                setDeleteErr("");
+              }}
+            >
+              <Icon name="trash" />
+              <span>Xoá tài khoản</span>
+            </button>
+          </div>
         </section>
+      )}
+
+      {/* Modal xác nhận Xoá tài khoản vĩnh viễn */}
+      {showDeleteModal && (
+        <div className="pf-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-account-title">
+          <div className="pf-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="pf-header">
+              <div className="pf-header-top">
+                <div className="pf-brand">
+                  <span className="pf-brand-logo"><Logo /></span>
+                  <span className="pf-brand-text">Peanut<span>Code</span></span>
+                </div>
+                <div className="pf-danger-badge">
+                  <span className="pf-kicker-dot" />
+                  XÁC NHẬN NGUY HIỂM
+                </div>
+              </div>
+              <h2 id="delete-account-title" className="pf-title" style={{ marginTop: "12px" }}>
+                Xoá vĩnh viễn tài khoản?
+              </h2>
+              <p className="pf-desc">
+                Hành động này <strong>không thể hoàn tác</strong>. Toàn bộ dữ liệu của bạn sẽ bị xoá sạch khỏi hệ thống website.
+              </p>
+
+              <div className="pf-danger-alert">
+                <div className="pf-danger-alert-head">
+                  <Icon name="trash" />
+                  <span>Dữ liệu bị xoá sạch bao gồm:</span>
+                </div>
+                <ul>
+                  <li>Tiến độ học các chuyên đề và bài tập code</li>
+                  <li>Điểm quiz lý thuyết, điểm danh chuyên cần và chuỗi streak</li>
+                  <li>Lịch sử tham gia thi đấu Contest HSG và bài nộp</li>
+                  <li>Mục tiêu học tập cá nhân và thông tin hồ sơ học viên</li>
+                </ul>
+                <div style={{ marginTop: "10px", fontSize: "12.5px", fontWeight: 600 }}>
+                  👉 Khi bạn đăng nhập lại bằng email này, hệ thống sẽ coi bạn như một người mới hoàn toàn.
+                </div>
+              </div>
+            </div>
+
+            <form onSubmit={handleDeleteAccount} noValidate>
+              {deleteErr && <div className="pf-error" style={{ marginBottom: "16px" }}>⚠️ {deleteErr}</div>}
+
+              {isPasswordUser ? (
+                <div className="pf-field pf-field-full">
+                  <label htmlFor="delete-pw-input">
+                    Nhập mật khẩu hiện tại của bạn để xác nhận <em>*</em>
+                  </label>
+                  <input
+                    id="delete-pw-input"
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="Nhập mật khẩu tài khoản"
+                    value={deletePassword}
+                    onChange={(e) => {
+                      setDeletePassword(e.target.value);
+                      if (deleteErr) setDeleteErr("");
+                    }}
+                    disabled={deleting}
+                    required
+                  />
+                </div>
+              ) : (
+                <div className="pf-field pf-field-full">
+                  <label htmlFor="delete-confirm-text">
+                    Gõ chữ <strong>XOÁ</strong> để xác nhận xoá tài khoản <em>*</em>
+                  </label>
+                  <input
+                    id="delete-confirm-text"
+                    type="text"
+                    placeholder="Nhập chữ XOÁ"
+                    value={deleteConfirmText}
+                    onChange={(e) => {
+                      setDeleteConfirmText(e.target.value);
+                      if (deleteErr) setDeleteErr("");
+                    }}
+                    disabled={deleting}
+                    required
+                  />
+                </div>
+              )}
+
+              <div className="pf-actions">
+                <button
+                  type="button"
+                  className="pf-btn-secondary"
+                  onClick={() => {
+                    if (!deleting) setShowDeleteModal(false);
+                  }}
+                  disabled={deleting}
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  className="pf-btn-danger-solid"
+                  disabled={
+                    deleting ||
+                    (isPasswordUser
+                      ? !deletePassword.trim()
+                      : !["XÓA", "XOÁ"].includes(deleteConfirmText.trim().toUpperCase()))
+                  }
+                >
+                  <Icon name="trash" />
+                  <span>{deleting ? "Đang xoá dữ liệu..." : "Chắc chắn xoá tài khoản"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
 
       {showForm && (

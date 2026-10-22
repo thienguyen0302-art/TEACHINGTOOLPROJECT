@@ -333,6 +333,20 @@ a {
   justify-content: center;
 }
 
+/* Giữ cột trái đứng yên: khung đăng nhập luôn có chiều cao cố định (đủ cho tab Giáo viên - Đăng ký),
+   thẻ đăng nhập bám phía trên và giãn xuống thay vì làm hàng lưới cao lên rồi đẩy cột trái. */
+@media (min-width: 821px) {
+  .login-stage {
+    min-height: 820px;
+    align-items: flex-start;
+  }
+
+  /* Cột trái (Nền tảng ôn thi...) dời lên, mép trên ngang với mép trên khung đăng nhập. */
+  .hero {
+    align-items: start;
+  }
+}
+
 .login-stage::before {
   position: absolute;
   z-index: -2;
@@ -402,6 +416,7 @@ a {
 }
 
 form > label,
+.login-stage form label,
 .password-label label {
   display: block;
   margin-bottom: 9px;
@@ -485,6 +500,15 @@ form > label,
 
 .login-teacher-notice small {
   color: #3b82f6;
+}
+
+.field-group {
+  margin-top: 19px;
+}
+
+.login-stage form label em {
+  color: #dc2626;
+  font-style: normal;
 }
 
 .field-hint {

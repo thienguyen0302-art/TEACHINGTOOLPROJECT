@@ -1005,3 +1005,16 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Tiến độ từng chương trong popup Quản lý ── */
+.scp-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 16px; max-height: 220px; overflow-y: auto; }
+.scp-item { display: grid; grid-template-columns: 68px 1fr 58px; align-items: center; gap: 8px; font-size: 12.5px; color: #475569; }
+.scp-name { font-weight: 600; white-space: nowrap; }
+.scp-track { height: 6px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+.scp-track span { display: block; height: 100%; background: #f59e0b; border-radius: 99px; }
+.scp-item.done .scp-track span { background: #16a34a; }
+.scp-item:not(.done):not(.doing) .scp-track span { background: #cbd5e1; }
+.scp-value { text-align: right; font-variant-numeric: tabular-nums; color: #334155; }
+.scp-item.done .scp-value { color: #16a34a; }
+.scp-empty { margin: 0; font-size: 13px; color: #64748b; }
+@media (max-width: 560px) { .scp-list { grid-template-columns: 1fr; } }

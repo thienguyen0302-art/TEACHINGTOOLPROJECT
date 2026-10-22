@@ -7,6 +7,7 @@ import { onAuthStateChanged, signOut, sendEmailVerification } from "firebase/aut
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./services/firebase";
 import Login from "./pages/Login";
+import AuthAction from "./pages/AuthAction";
 import ChooseLang from "./pages/ChooseLang";
 import Overview from "./pages/Overview";
 import Curriculum from "./pages/Curriculum";
@@ -178,7 +179,9 @@ export default function App() {
           if (!userData.createdAt) patch.createdAt = firstLoginAt;
           if (userData.email !== u.email) patch.email = u.email;
           if (!userData.displayName && u.displayName) patch.displayName = u.displayName;
-          if (Object.keys(patch).length) {
+          const pendingTeacherClaim =
+            sessionStorage.getItem("peanut_auth_target_role") === "teacher" && userData.role !== "teacher";
+          if (!pendingTeacherClaim && Object.keys(patch).length) {
             setDoc(ref, patch, { merge: true }).catch(() => {});
             setProfile((prev) => ({ ...(prev || {}), ...patch }));
           }
@@ -198,6 +201,7 @@ export default function App() {
   const isTargetingTeacher = sessionStorage.getItem("peanut_auth_target_role") === "teacher";
   const isTargetingStudent = sessionStorage.getItem("peanut_auth_target_role") === "student";
 
+  if (window.location.pathname === "/auth-action") return <AuthAction />;
   if (!ready) return <div className="box">Đang tải...</div>;
   if (
     !user ||

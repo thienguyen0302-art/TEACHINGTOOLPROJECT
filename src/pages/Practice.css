@@ -277,15 +277,15 @@
 /* Chủ đề (Chips) */
 .practice-topics {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .practice-topic-chip {
-  padding: 6px 14px;
+  padding: 4px 11px;
   border-radius: 999px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   border: 1px solid transparent;
@@ -563,4 +563,16 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+}
+
+.practice-topic-toggle {
+  background: transparent;
+  border-color: #bcd2f8;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.practice-topic-toggle:hover {
+  background: #e3efff;
+  color: #1d4ed8;
 }

@@ -1,3 +1,4 @@
+import "../components/EmailVerification.css";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useState, useEffect } from "react";
@@ -7,9 +8,11 @@ import {
 } from "firebase/auth";
 import { auth } from "../services/firebase";
 import Logo from "../components/Logo";
+import Icon from "../components/Icon";
 import { subscribePublicReviews } from "../services/reviewService";
 import {
   verifyTeacherCode,
+  verifyTeacherCodeRemote,
   claimTeacherRole,
   sendResetPassword,
   sendVerificationEmail,
@@ -157,18 +160,56 @@ function FeedbackPublicCard({ feedback }) {
 }
 
 export default function Login() {
-  const [targetRole, setTargetRole] = useState("student"); // "student" | "teacher"
+  const [targetRole, setTargetRole] = useState(() => {
+    return sessionStorage.getItem("peanut_auth_target_role") === "teacher" ? "teacher" : "student";
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [mode, setMode] = useState("login");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => {
+    return sessionStorage.getItem("peanut_auth_email") || "";
+  });
   const [pw, setPw] = useState("");
-  const [teacherCode, setTeacherCode] = useState("");
+  const [teacherCode, setTeacherCode] = useState(() => {
+    return sessionStorage.getItem("peanut_auth_teacher_code") || "";
+  });
   const [showTeacherClaim, setShowTeacherClaim] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [isErr, setIsErr] = useState(false);
+  const [registerDone, setRegisterDone] = useState(false);
+  const [msg, setMsg] = useState(() => {
+    const pending = sessionStorage.getItem("peanut_auth_error");
+    if (pending) {
+      sessionStorage.removeItem("peanut_auth_error");
+      return pending;
+    }
+    return "";
+  });
+  const [isErr, setIsErr] = useState(() => {
+    const hasErr = Boolean(sessionStorage.getItem("peanut_auth_is_err"));
+    sessionStorage.removeItem("peanut_auth_is_err");
+    return hasErr;
+  });
   const [showReset, setShowReset] = useState(false);
+  const [resetSuccessEmail, setResetSuccessEmail] = useState("");
+  const [resetSending, setResetSending] = useState(false);
+  const [accountDeletedNotice, setAccountDeletedNotice] = useState(false);
   const [busy, setBusy] = useState(false);
   const [feedbacks, setFeedbacks] = useState([]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("deleted") === "1" || params.get("reset") === "1") {
+      setAccountDeletedNotice(true);
+      setEmail("");
+      setPw("");
+      setTeacherCode("");
+      setMsg("");
+      setIsErr(false);
+      try {
+        sessionStorage.clear();
+        localStorage.clear();
+      } catch {}
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   useEffect(() => {
     const unsub = subscribePublicReviews((items) => {
@@ -186,9 +227,22 @@ export default function Login() {
     }
   }
 
+  function switchRole(role) {
+    setTargetRole(role);
+    sessionStorage.setItem("peanut_auth_target_role", role);
+    setMsg("");
+    setIsErr(false);
+    setShowReset(false);
+    setResetSuccessEmail("");
+    sessionStorage.removeItem("peanut_auth_error");
+    sessionStorage.removeItem("peanut_auth_is_err");
+  }
+
   const fail = (e) => {
     setIsErr(true);
-    setMsg(e.customMessage || ERR[e.code] || "Có lỗi xảy ra: " + (e.message || e.code));
+    setResetSuccessEmail("");
+    const errorMessage = e.customMessage || ERR[e.code] || "Có lỗi xảy ra: " + (e.message || e.code);
+    setMsg(errorMessage);
     if (RESET_ON.includes(e.code)) setShowReset(true);
   };
 
@@ -197,7 +251,6 @@ export default function Login() {
     try {
       const snap = await getDoc(doc(db, "users", user.uid));
       if (snap.exists() && snap.data().role === "teacher") {
-        sessionStorage.removeItem("peanut_auth_target_role");
         throw Object.assign(new Error("teacher_account"), {
           customMessage: "Tài khoản này là tài khoản Giáo viên, không thể đăng nhập ở cổng Học sinh. Vui lòng chuyển sang tab 'Giáo viên / Admin' để đăng nhập.",
         });
@@ -214,7 +267,6 @@ export default function Login() {
     try {
       snap = await getDoc(doc(db, "users", user.uid));
       if (snap.exists() && snap.data().role === "teacher") {
-        sessionStorage.removeItem("peanut_auth_target_role");
         return false;
       }
     } catch { /* chưa đọc được hồ sơ: coi như chưa phải giáo viên */ }
@@ -222,48 +274,45 @@ export default function Login() {
     // Nếu tài khoản đã tồn tại trong database với tư cách Học sinh (không phải role teacher)
     // thì KHÔNG ĐƯỢC PHÉP chuyển đổi sang Giáo viên!
     if (snap?.exists() && snap.data().role !== "teacher" && (snap.data().createdAt || snap.data().firstLoginAt || snap.data().province || snap.data().school)) {
-      sessionStorage.removeItem("peanut_auth_target_role");
       throw Object.assign(new Error("student_account"), {
         customMessage: "Tài khoản này đã được đăng ký với tư cách Học sinh và không thể chuyển đổi sang Giáo viên. Vui lòng đăng nhập ở tab 'Học sinh HSG', hoặc sử dụng email khác cho Giáo viên.",
       });
     }
 
     if (!teacherCode.trim()) {
-      sessionStorage.removeItem("peanut_auth_target_role");
       throw Object.assign(new Error("no code"), {
-        customMessage: "Tài khoản này chưa có quyền Giáo viên. Vui lòng nhập Mã bảo mật Giáo viên để kích hoạt, hoặc đăng nhập ở tab Học sinh.",
+        customMessage: "Tài khoản này chưa được kích hoạt quyền Giáo viên. Hãy chọn \"Đăng ký quyền Giáo viên\" bên dưới và nhập Mã bảo mật Giáo viên (chỉ cần một lần), hoặc đăng nhập ở tab Học sinh.",
       });
     }
 
     try {
       await claimTeacherRole(user, teacherCode);
     } catch (e) {
-      sessionStorage.removeItem("peanut_auth_target_role");
       throw Object.assign(new Error(e.message), {
-        customMessage: e.message || "Mã bảo mật giáo viên không chính xác.",
+        customMessage: e.message || "Mã bảo mật giáo viên không chính xác. Vui lòng kiểm tra lại.",
       });
     }
 
-    sessionStorage.removeItem("peanut_auth_target_role");
     return true;
   }
 
   async function submit(ev) {
     ev.preventDefault();
-    setBusy(true); setMsg(""); setShowReset(false); setIsErr(false);
+    setBusy(true); setMsg(""); setShowReset(false); setIsErr(false); setResetSuccessEmail("");
 
     if (targetRole === "teacher") {
       sessionStorage.setItem("peanut_auth_target_role", "teacher");
       if (mode === "register") {
         if (!teacherCode.trim()) {
-          sessionStorage.removeItem("peanut_auth_target_role");
           fail({ customMessage: "Vui lòng nhập Mã bảo mật Giáo viên để kích hoạt quyền Giáo viên." });
           setBusy(false);
           return;
         }
-        if (!verifyTeacherCode(teacherCode)) {
-          sessionStorage.removeItem("peanut_auth_target_role");
-          fail({ customMessage: "Mã bảo mật Giáo viên không hợp lệ. Vui lòng kiểm tra lại hoặc liên hệ Quản trị viên." });
+        // Kiểm tra mã ở server TRƯỚC khi tạo tài khoản: mã sai thì không tạo gì cả.
+        try {
+          await verifyTeacherCodeRemote(teacherCode);
+        } catch (e) {
+          fail({ customMessage: e.message || "Mã bảo mật Giáo viên không chính xác. Vui lòng kiểm tra lại hoặc liên hệ Quản trị viên." });
           setBusy(false);
           return;
         }
@@ -274,55 +323,113 @@ export default function Login() {
 
     try {
       if (mode === "register") {
-        const cred = await createUserWithEmailAndPassword(auth, email, pw);
+        let cred;
+        let isNewAccount = true;
+        try {
+          cred = await createUserWithEmailAndPassword(auth, email, pw);
+        } catch (e) {
+          // Email còn sót từ lần đăng ký giáo viên bị lỗi trước đó: nếu đúng mật khẩu thì dùng lại tài khoản đó.
+          if (targetRole === "teacher" && e?.code === "auth/email-already-in-use") {
+            try {
+              cred = await signInWithEmailAndPassword(auth, email, pw);
+              isNewAccount = false;
+            } catch {
+              throw e;
+            }
+          } else {
+            throw e;
+          }
+        }
         if (targetRole === "teacher") {
           try {
             await claimTeacherRole(cred.user, teacherCode);
           } catch (e) {
-            // Mã sai: xoá tài khoản vừa tạo để không bị rơi thành tài khoản học sinh.
-            await cred.user.delete().catch(() => signOut(auth));
-            sessionStorage.removeItem("peanut_auth_target_role");
-            throw Object.assign(new Error(e.message), { customMessage: e.message });
+            // Chỉ xoá tài khoản vừa tạo; tài khoản đã có từ trước thì chỉ đăng xuất.
+            if (isNewAccount) await cred.user.delete().catch(() => signOut(auth));
+            else await signOut(auth);
+            throw Object.assign(new Error(e.message), { customMessage: e.message || "Mã bảo mật giáo viên không chính xác." });
           }
+        }
+        sessionStorage.removeItem("peanut_auth_email");
+        sessionStorage.removeItem("peanut_auth_teacher_code");
+        if (targetRole === "teacher") {
+          await sendVerificationEmail(cred.user).catch(() => {});
+          await signOut(auth);
+          sessionStorage.setItem("peanut_auth_target_role", "teacher");
+          setMode("login");
+          setPw("");
+          setTeacherCode("");
+          setIsErr(false);
+          setMsg("");
+          setRegisterDone(true);
+          setBusy(false);
+          return;
         }
         sessionStorage.removeItem("peanut_auth_target_role");
         await sendVerificationEmail(cred.user);
       } else {
         const cred = await signInWithEmailAndPassword(auth, email, pw);
         if (targetRole === "teacher") {
+          if (!cred.user.emailVerified) {
+            // Đúng mật khẩu nhưng chưa bấm link xác minh: báo rõ, gửi lại thư rồi đăng xuất.
+            const mail = cred.user.email;
+            await sendVerificationEmail(cred.user).catch(() => {});
+            await signOut(auth).catch(() => {});
+            throw Object.assign(new Error("email_unverified"), {
+              customMessage: `Email ${mail} chưa được xác minh. Chúng tôi vừa gửi lại thư xác minh, hãy bấm link trong thư (xem cả mục Spam) rồi đăng nhập lại.`,
+            });
+          }
           let claimed = false;
           try {
             claimed = await ensureTeacher(cred.user);
           } catch (e) {
+            const errorMsg = e.customMessage || e.message || "Mã bảo mật giáo viên không chính xác.";
+            sessionStorage.setItem("peanut_auth_target_role", "teacher");
+            sessionStorage.setItem("peanut_auth_error", errorMsg);
+            sessionStorage.setItem("peanut_auth_is_err", "true");
+            sessionStorage.setItem("peanut_auth_email", email);
+            sessionStorage.setItem("peanut_auth_teacher_code", teacherCode);
             await signOut(auth);
-            sessionStorage.removeItem("peanut_auth_target_role");
-            throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
+            throw Object.assign(new Error(e.message), { customMessage: errorMsg });
           }
           sessionStorage.removeItem("peanut_auth_target_role");
+          sessionStorage.removeItem("peanut_auth_email");
+          sessionStorage.removeItem("peanut_auth_teacher_code");
           if (claimed) { window.location.reload(); return; }
         } else {
           try {
             await ensureStudent(cred.user);
           } catch (e) {
+            const errorMsg = e.customMessage || e.message;
+            sessionStorage.setItem("peanut_auth_target_role", "student");
+            sessionStorage.setItem("peanut_auth_error", errorMsg);
+            sessionStorage.setItem("peanut_auth_is_err", "true");
+            sessionStorage.setItem("peanut_auth_email", email);
             await signOut(auth);
-            sessionStorage.removeItem("peanut_auth_target_role");
-            throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
+            throw Object.assign(new Error(e.message), { customMessage: errorMsg });
           }
           sessionStorage.removeItem("peanut_auth_target_role");
+          sessionStorage.removeItem("peanut_auth_email");
         }
       }
     } catch (e) {
-      sessionStorage.removeItem("peanut_auth_target_role");
+      if (targetRole === "teacher") {
+        sessionStorage.setItem("peanut_auth_target_role", "teacher");
+      }
       fail(e);
     }
     setBusy(false);
   }
 
   async function google() {
-    setMsg(""); setIsErr(false);
-    if (targetRole === "teacher" && mode === "register" && !verifyTeacherCode(teacherCode)) {
-      fail({ customMessage: "Vui lòng nhập Mã bảo mật Giáo viên trước khi đăng ký bằng Google." });
-      return;
+    setMsg(""); setIsErr(false); setResetSuccessEmail("");
+    if (targetRole === "teacher" && mode === "register") {
+      try {
+        await verifyTeacherCodeRemote(teacherCode);
+      } catch (e) {
+        fail({ customMessage: e.message || "Vui lòng nhập đúng Mã bảo mật Giáo viên trước khi đăng ký bằng Google." });
+        return;
+      }
     }
     if (targetRole === "teacher") {
       sessionStorage.setItem("peanut_auth_target_role", "teacher");
@@ -336,36 +443,68 @@ export default function Login() {
         try {
           claimed = await ensureTeacher(res.user);
         } catch (e) {
-          await signOut(auth);
-          sessionStorage.removeItem("peanut_auth_target_role");
-          throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
+          const errorMsg = e.customMessage || e.message || "Mã bảo mật giáo viên không chính xác.";
+          sessionStorage.setItem("peanut_auth_target_role", "teacher");
+          sessionStorage.setItem("peanut_auth_error", errorMsg);
+          sessionStorage.setItem("peanut_auth_is_err", "true");
+          sessionStorage.setItem("peanut_auth_teacher_code", teacherCode);
+          const isNew = res.user.metadata?.creationTime === res.user.metadata?.lastSignInTime;
+          if (isNew) await res.user.delete().catch(() => {});
+          await signOut(auth).catch(() => {});
+          throw Object.assign(new Error(e.message), { customMessage: errorMsg });
         }
         sessionStorage.removeItem("peanut_auth_target_role");
+        sessionStorage.removeItem("peanut_auth_teacher_code");
         if (claimed) { window.location.reload(); return; }
       } else {
         try {
           await ensureStudent(res.user);
         } catch (e) {
+          const errorMsg = e.customMessage || e.message;
+          sessionStorage.setItem("peanut_auth_target_role", "student");
+          sessionStorage.setItem("peanut_auth_error", errorMsg);
+          sessionStorage.setItem("peanut_auth_is_err", "true");
           await signOut(auth);
-          sessionStorage.removeItem("peanut_auth_target_role");
-          throw Object.assign(new Error(e.message), { customMessage: e.customMessage || e.message });
+          throw Object.assign(new Error(e.message), { customMessage: errorMsg });
         }
         sessionStorage.removeItem("peanut_auth_target_role");
       }
     }
     catch (e) {
-      sessionStorage.removeItem("peanut_auth_target_role");
+      if (targetRole === "teacher") {
+        sessionStorage.setItem("peanut_auth_target_role", "teacher");
+      }
       fail(e);
     }
   }
 
   async function reset() {
-    if (!email) { setIsErr(true); setMsg("Hãy nhập email ở trên trước."); return; }
+    const cleanEmail = email.trim();
+    if (!cleanEmail) {
+      setIsErr(true);
+      setMsg("Vui lòng nhập địa chỉ email của bạn ở ô trên để nhận liên kết đặt lại mật khẩu.");
+      setResetSuccessEmail("");
+      const emailInput = document.getElementById("email") || document.querySelector("input[type=email]");
+      if (emailInput) {
+        emailInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        emailInput.focus();
+      }
+      return;
+    }
+
+    setResetSending(true);
+    setIsErr(false);
+    setMsg("");
     try {
-      await sendResetPassword(email);
-      setIsErr(false);
-      setMsg("Nếu email này đã đăng ký, bạn sẽ nhận được thư đặt lại mật khẩu từ PeanutCode. Kiểm tra cả mục Spam.");
-    } catch (e) { fail(e); }
+      await sendResetPassword(cleanEmail);
+      setResetSuccessEmail(cleanEmail);
+      setShowReset(false);
+    } catch (e) {
+      setResetSuccessEmail("");
+      fail(e);
+    } finally {
+      setResetSending(false);
+    }
   }
 
   return (
@@ -452,7 +591,7 @@ export default function Login() {
               <button
                 type="button"
                 className={`login-role-tab ${targetRole === "student" ? "active" : ""}`}
-                onClick={() => { setTargetRole("student"); setMsg(""); setIsErr(false); sessionStorage.removeItem("peanut_auth_target_role"); }}
+                onClick={() => switchRole("student")}
                 role="tab"
                 aria-selected={targetRole === "student"}
               >
@@ -461,7 +600,7 @@ export default function Login() {
               <button
                 type="button"
                 className={`login-role-tab ${targetRole === "teacher" ? "active" : ""}`}
-                onClick={() => { setTargetRole("teacher"); setMsg(""); setIsErr(false); sessionStorage.setItem("peanut_auth_target_role", "teacher"); }}
+                onClick={() => switchRole("teacher")}
                 role="tab"
                 aria-selected={targetRole === "teacher"}
               >
@@ -491,6 +630,31 @@ export default function Login() {
               </div>
             </div>
 
+            {accountDeletedNotice && (
+              <div className="login-reset-success-box" role="alert" style={{ margin: "0 0 16px" }}>
+                <div className="login-reset-icon-wrap">
+                  <Icon name="check" />
+                </div>
+                <div className="login-reset-content">
+                  <div className="login-reset-title">
+                    Đã xoá tài khoản thành công!
+                  </div>
+                  <p className="login-reset-desc" style={{ margin: 0 }}>
+                    Email, mật khẩu và toàn bộ dữ liệu tài khoản đã được xoá sạch hoàn toàn. Bạn có thể tạo tài khoản mới bất cứ lúc nào.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="login-reset-close"
+                  onClick={() => setAccountDeletedNotice(false)}
+                  aria-label="Đóng thông báo"
+                  title="Đóng"
+                >
+                  <Icon name="x" />
+                </button>
+              </div>
+            )}
+
             {targetRole === "teacher" && (
               <div className="login-teacher-notice">
                 <span>Cổng thông tin dành cho Giáo viên</span>
@@ -498,16 +662,19 @@ export default function Login() {
               </div>
             )}
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} autoComplete="off">
               <label htmlFor="email">Email</label>
               <input
-                id="email" name="email" type="email" placeholder="ban@example.com"
-                autoComplete="email" value={email}
-                onChange={(e) => setEmail(e.target.value)} required
+                id="email" name="user_email" type="email" placeholder="ban@example.com"
+                autoComplete="off" value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (isErr) { setMsg(""); setIsErr(false); }
+                }} required
               />
 
               {targetRole === "teacher" && mode === "register" && (
-                <div style={{ marginTop: 14 }}>
+                <div className="field-group">
                   <label htmlFor="teacherCode">
                     Mã bảo mật Giáo viên <em>*</em>
                   </label>
@@ -517,7 +684,10 @@ export default function Login() {
                     type="text"
                     placeholder="Nhập mã bảo mật giáo viên"
                     value={teacherCode}
-                    onChange={(e) => setTeacherCode(e.target.value)}
+                    onChange={(e) => {
+                      setTeacherCode(e.target.value);
+                      if (isErr) { setMsg(""); setIsErr(false); }
+                    }}
                     autoComplete="off"
                     required
                   />
@@ -530,15 +700,27 @@ export default function Login() {
               <div className="password-label">
                 <label htmlFor="password">Mật khẩu</label>
                 {mode === "login" && (
-                  <a href="#forgot" onClick={(e) => { e.preventDefault(); reset(); }}>Quên mật khẩu?</a>
+                  <a
+                    href="#forgot"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (!resetSending) reset();
+                    }}
+                    style={{ pointerEvents: resetSending ? "none" : "auto", opacity: resetSending ? 0.6 : 1 }}
+                  >
+                    {resetSending ? "Đang gửi..." : "Quên mật khẩu?"}
+                  </a>
                 )}
               </div>
               <div className="password-field">
                 <input
-                  id="password" name="password" type={showPassword ? "text" : "password"}
+                  id="password" name="user_password" type={showPassword ? "text" : "password"}
                   placeholder="Từ 6 ký tự" value={pw}
-                  autoComplete={mode === "login" ? "current-password" : "new-password"}
-                  onChange={(e) => setPw(e.target.value)} required
+                  autoComplete="new-password"
+                  onChange={(e) => {
+                    setPw(e.target.value);
+                    if (isErr) { setMsg(""); setIsErr(false); }
+                  }} required
                 />
                 <button
                   type="button"
@@ -549,43 +731,82 @@ export default function Login() {
                 </button>
               </div>
 
-              {targetRole === "teacher" && mode === "login" && (
-                <div style={{ marginTop: 14 }}>
-                  <label htmlFor="teacherCodeLogin">
-                    Mã kích hoạt Giáo viên <span style={{ fontWeight: 400, color: "#94a3b8", fontSize: "0.85em" }}>(chỉ cần nhập khi kích hoạt lần đầu)</span>
-                  </label>
-                  <input
-                    id="teacherCodeLogin"
-                    name="teacherCode"
-                    type="text"
-                    placeholder="Nhập mã bảo mật giáo viên (nếu chưa kích hoạt)"
-                    value={teacherCode}
-                    onChange={(e) => setTeacherCode(e.target.value)}
-                    className="teacher-claim-input"
-                    autoComplete="off"
-                  />
-                  <span className="field-hint">
-                    Tài khoản đã kích hoạt giáo viên ở những lần trước chỉ cần nhập Email và Mật khẩu để vào.
-                  </span>
-                </div>
-              )}
-
               <button className="submit-button" type="submit" disabled={busy}>
                 {targetRole === "teacher"
                   ? mode === "login" ? "Đăng nhập Giáo viên" : "Đăng ký Giáo viên"
                   : mode === "login" ? "Đăng nhập Học sinh" : "Tạo tài khoản Học sinh"}
                 <ArrowIcon />
               </button>
-              {msg && (
-                <p className={isErr ? "form-error" : "success-message"} role="status">
-                  {msg}
-                </p>
+
+              {resetSuccessEmail && (
+                <div className="login-reset-success-box" role="alert">
+                  <div className="login-reset-icon-wrap">
+                    <Icon name="check" />
+                  </div>
+                  <div className="login-reset-content">
+                    <div className="login-reset-title">
+                      Đã gửi email xác nhận đặt lại mật khẩu!
+                    </div>
+                    <p className="login-reset-desc">
+                      Đường dẫn khôi phục mật khẩu đã được gửi đến:
+                      <span className="login-reset-email-tag">✉️ {resetSuccessEmail}</span>
+                    </p>
+                    <div className="login-reset-note">
+                      💡 Vui lòng kiểm tra hộp thư đến (và mục Spam / Thư rác) để hoàn tất đổi mật khẩu mới.
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="login-reset-close"
+                    onClick={() => setResetSuccessEmail("")}
+                    aria-label="Đóng thông báo"
+                    title="Đóng"
+                  >
+                    <Icon name="x" />
+                  </button>
+                </div>
               )}
-              {showReset && (
-                <p className="form-error">
-                  Quên hoặc nhập sai mật khẩu?{" "}
-                  <a href="#forgot" onClick={(e) => { e.preventDefault(); reset(); }}>
-                    Gửi thư đặt lại mật khẩu
+
+              {registerDone && (
+                <div role="dialog" aria-modal="true" aria-labelledby="register-done-title" style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(20,41,77,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+                  <div className="email-verify-card" style={{ textAlign: "center" }}>
+                    <div style={{ width: 52, height: 52, margin: "0 auto 12px", borderRadius: "50%", background: "#dcfce7", color: "#15803d", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: 800 }} aria-hidden="true">✓</div>
+                    <h2 id="register-done-title" className="email-verify-title">Đăng ký thành công</h2>
+                    <p className="email-verify-desc" style={{ marginTop: 10 }}>
+                      Vui lòng kiểm tra email để xác minh, sau đó quay lại trang đăng nhập để sử dụng tài khoản Giáo viên.
+                    </p>
+                    <button type="button" className="email-verify-btn-primary" onClick={() => { setRegisterDone(false); setMode("login"); setTargetRole("teacher"); }}>
+                      Quay lại đăng nhập
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {msg && isErr && (
+                <div className="login-alert-error" role="alert">
+                  <span className="login-alert-icon">⚠️</span>
+                  <div className="login-alert-text">{msg}</div>
+                </div>
+              )}
+
+              {msg && !isErr && !resetSuccessEmail && (
+                <div className="login-alert-success" role="status">
+                  <span className="login-alert-icon">✓</span>
+                  <div className="login-alert-text">{msg}</div>
+                </div>
+              )}
+
+              {showReset && !resetSuccessEmail && (
+                <p className="login-reset-prompt">
+                  Quên hoặc không nhớ mật khẩu?{" "}
+                  <a
+                    href="#forgot"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (!resetSending) reset();
+                    }}
+                  >
+                    {resetSending ? "Đang gửi..." : "Gửi thư đặt lại mật khẩu"}
                   </a>
                 </p>
               )}

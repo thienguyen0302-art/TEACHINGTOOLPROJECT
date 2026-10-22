@@ -43,10 +43,17 @@ export default function Practice() {
   const [topic, setTopic] = useState("");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("default");
+  const [showAllTopics, setShowAllTopics] = useState(false);
   const bank=useContestData(listPracticeProblems,{poll:15000});
   const additional=bank.value??[];
   const allProblems = listProblems({additional});
   const topics = [...new Set(allProblems.flatMap((problem) => problem.tags))].sort();
+  const TOPICS_COLLAPSED = 8;
+  // Thu gọn: chỉ hiện vài chủ đề đầu, nhưng luôn giữ chủ đề đang chọn hiển thị.
+  const visibleTopics = showAllTopics || topics.length <= TOPICS_COLLAPSED
+    ? topics
+    : [...topics.slice(0, TOPICS_COLLAPSED), ...(topic && !topics.slice(0, TOPICS_COLLAPSED).includes(topic) ? [topic] : [])];
+  const hiddenTopicCount = topics.length - visibleTopics.length;
   const problems = listProblems({ difficulty, chapterId, topic, query, sort, additional });
   const hasFilters = Boolean(difficulty || chapterId || topic || query || sort !== "default");
   const emptyChapter = chapterId && listProblems({ chapterId, additional }).length === 0;
@@ -155,7 +162,7 @@ export default function Practice() {
           >
             Tất cả chủ đề
           </button>
-          {topics.map((tag) => {
+          {visibleTopics.map((tag) => {
             const isSelected = topic === tag;
             return (
               <button
@@ -169,6 +176,16 @@ export default function Practice() {
               </button>
             );
           })}
+          {topics.length > TOPICS_COLLAPSED && (
+            <button
+              type="button"
+              className="practice-topic-chip practice-topic-toggle"
+              aria-expanded={showAllTopics}
+              onClick={() => setShowAllTopics((v) => !v)}
+            >
+              {showAllTopics ? "Thu gọn" : `+${hiddenTopicCount} chủ đề`}
+            </button>
+          )}
         </div>
 
         <div className="practice-results-bar">

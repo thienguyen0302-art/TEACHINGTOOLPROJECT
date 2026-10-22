@@ -37,7 +37,7 @@ export async function verifyIdToken(token, { projectId, getKeys = fetchGoogleKey
 }
 
 // required=false (dev): bỏ qua xác thực. required=true (production): bắt buộc Bearer token hợp lệ + email đã xác minh.
-export function createAuthGuard({ projectId, required, verify = verifyIdToken, getKeys } = {}) {
+export function createAuthGuard({ projectId, required, requireVerified = true, verify = verifyIdToken, getKeys } = {}) {
   return async function guard(req) {
     if (!required) return { ok: true, uid: null };
     if (!projectId) return { ok: false, status: 503, error: 'Backend chưa cấu hình FIREBASE_PROJECT_ID.' };
@@ -45,7 +45,7 @@ export function createAuthGuard({ projectId, required, verify = verifyIdToken, g
     if (!match) return { ok: false, status: 401, error: 'Cần đăng nhập để dùng chức năng này.' };
     try {
       const user = await verify(match[1], { projectId, ...(getKeys ? { getKeys } : {}) });
-      if (!user.emailVerified) return { ok: false, status: 403, error: 'Hãy xác minh email trước.' };
+      if (requireVerified && !user.emailVerified) return { ok: false, status: 403, error: 'Hãy xác minh email trước.' };
       return { ok: true, uid: user.uid };
     } catch {
       return { ok: false, status: 401, error: 'Phiên đăng nhập không hợp lệ. Hãy đăng nhập lại.' };

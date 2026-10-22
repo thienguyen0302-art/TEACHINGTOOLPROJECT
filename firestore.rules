@@ -13,26 +13,29 @@ service cloud.firestore {
     }
     function validScore(v) { return v is number && v >= 0 && v <= 100; }
 
-    // Hồ sơ: chủ sở hữu đọc/ghi, nhưng KHÔNG được tự đặt hay đổi `role`.
+    // Hồ sơ: chủ sở hữu đọc/ghi/xoá, nhưng KHÔNG được tự đặt hay đổi `role`.
     match /users/{uid} {
       allow read: if isOwner(uid) || isTeacher();
       allow create: if isOwner(uid) && !('role' in request.resource.data);
       allow update: if isOwner(uid) &&
         !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']);
+      allow delete: if isOwner(uid);
 
       match /progress/{id} {
         allow read: if isOwner(uid) || isTeacher();
         allow create, update: if isOwner(uid) && validScore(request.resource.data.quizScore);
+        allow delete: if isOwner(uid);
       }
 
       match /submissions/{id} {
         allow read: if isOwner(uid) || isTeacher();
         allow create, update: if isOwner(uid) && validScore(request.resource.data.bestScore);
+        allow delete: if isOwner(uid);
       }
 
       match /daily/{day} {
         allow read: if isOwner(uid) || isTeacher();
-        allow create, update: if isOwner(uid);
+        allow create, update, delete: if isOwner(uid);
       }
 
       match /goals/{id} {

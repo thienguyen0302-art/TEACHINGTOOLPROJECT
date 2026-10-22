@@ -27,7 +27,11 @@ export async function saveProgress(uid, chapterId, progressData) {
     quizScore,
     correct: progressData.correct ?? prev.correct ?? 0,
     total: progressData.total ?? prev.total ?? 0,
-    bestScore: Math.max(prev.bestScore ?? 0, quizScore),
+    // Điểm chương = quiz + bài code bắt buộc (xem chapterScore); fallback về quizScore cho dữ liệu cũ.
+    chapterScore: Number(progressData.chapterScore ?? prev.chapterScore ?? quizScore),
+    codeSolved: progressData.codeSolved ?? prev.codeSolved ?? 0,
+    codeTotal: progressData.codeTotal ?? prev.codeTotal ?? 0,
+    bestScore: Math.max(prev.bestScore ?? 0, quizScore, Number(progressData.chapterScore ?? 0)),
     attempts: (prev.attempts ?? 0) + (progressData.isQuizSubmit ? 1 : 0),
     completed: isCompleted,
     progressPercent,

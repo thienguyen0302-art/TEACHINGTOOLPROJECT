@@ -130,3 +130,17 @@ test('createAuthGuard: dev bỏ qua, production bắt buộc token + email đã 
   assert.equal(unverified.status, 403);
   assert.equal((await createAuthGuard({ required: true })({ headers: {} })).status, 503);
 });
+
+test('buildClassOverview: tiến độ X/14 và % từng chương theo progressPercent', () => {
+  const users = [{ uid: 'a', displayName: 'An', language: 'cpp' }];
+  const rows = [
+    { uid: 'a', language: 'cpp', chapterId: 'ch01', bestScore: 90, completed: true, progressPercent: 100 },
+    { uid: 'a', language: 'cpp', chapterId: 'ch02', bestScore: 0, completed: false, progressPercent: 50 },
+    { uid: 'a', language: 'python', chapterId: 'ch03', bestScore: 80, completed: true, progressPercent: 100 }, // ngôn ngữ khác, không tính
+  ];
+  const s = buildClassOverview(users, rows).students[0];
+  assert.equal(s.chaptersTotal, 14);
+  assert.equal(s.chaptersCompleted, 1);
+  assert.equal(s.chapterProgress.length, 14);
+  assert.deepEqual(s.chapterProgress.slice(0, 3).map((c) => c.percent), [100, 50, 0]);
+});

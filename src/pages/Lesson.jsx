@@ -15,7 +15,7 @@ import {
   saveLocalChapterState,
   clearLocalChapterState,
 } from "../services/progressService";
-import { calculateScore, countAnswered } from "../utils/grading";
+import { calculateScore, countAnswered, chapterScore } from "../utils/grading";
 import "./Lesson.css";
 
 const TABS = [
@@ -159,9 +159,19 @@ function LessonContent({ lang, id }) {
         tab: currentTabVal,
       });
 
+      const solvedIds = solvedKey ? solvedKey.split(",") : [];
+      const cs = chapterScore(chapter, {
+        quizPercent: calculateScore(chapter?.quiz ?? [], currentAnswers).percentage,
+        quizSubmitted: currentQuizSubmitted,
+        solvedIds,
+      });
+
       const payload = {
         language: lang,
         chapterId: id,
+        chapterScore: cs.score,
+        codeSolved: cs.solved,
+        codeTotal: cs.exercises,
         lastTab: currentTabVal,
         lastPracticeMode: currentPracticeMode,
         overviewRead: currentOverviewRead,
@@ -193,6 +203,15 @@ function LessonContent({ lang, id }) {
       if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     };
   }, []);
+
+  // Khi có thêm bài bắt buộc Accepted thì lưu lại điểm chương (không chờ nộp quiz).
+  const solvedCountRef = useRef(null);
+  const solvedCount = solvedKey ? solvedKey.split(",").length : 0;
+  useEffect(() => {
+    if (!chapter) return;
+    if (solvedCountRef.current !== null && solvedCount > solvedCountRef.current) persistState();
+    solvedCountRef.current = solvedCount;
+  }, [solvedCount, chapter, persistState]);
 
   if (chapter === undefined) return <p>Đang tải bài học...</p>;
   if (chapter === null) return <p>Không tìm thấy chương này.</p>;
@@ -276,6 +295,14 @@ function LessonContent({ lang, id }) {
       language: lang,
       chapterId: id,
       quizScore: currentScore.percentage,
+      ...(() => {
+        const cs = chapterScore(chapter, {
+          quizPercent: currentScore.percentage,
+          quizSubmitted: true,
+          solvedIds: solvedKey ? solvedKey.split(",") : [],
+        });
+        return { chapterScore: cs.score, codeSolved: cs.solved, codeTotal: cs.exercises };
+      })(),
       correct: currentScore.correct,
       total: currentScore.total,
       isQuizSubmit: true,

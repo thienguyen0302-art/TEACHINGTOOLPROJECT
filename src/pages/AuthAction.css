@@ -1,0 +1,15 @@
+.auth-action-logo { width: 56px; height: 56px; margin: 0 auto 14px; }
+.auth-action-logo svg { width: 100%; height: 100%; }
+.auth-action-center { text-align: center; }
+.auth-action-badge {
+  width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800;
+}
+.auth-action-badge.is-ok { background: #dcfce7; color: #15803d; }
+.auth-action-badge.is-err { background: #fee2e2; color: #b91c1c; }
+.auth-action-label { font-size: 13px; font-weight: 700; color: #14294D; margin-bottom: -6px; }
+.auth-action-input {
+  width: 100%; height: 48px; padding: 0 14px; border: 1px solid #DCE3F6; border-radius: 12px;
+  background: #FFFFFF; color: #14294D; font-family: inherit; font-size: 15px; box-sizing: border-box;
+}
+.auth-action-input:focus { outline: none; border-color: #2859B8; box-shadow: 0 0 0 3px rgba(40, 89, 184, 0.15); }
