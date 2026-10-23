@@ -86,27 +86,92 @@ function providerError(status) {
   return `Gemini provider không khả dụng (HTTP ${status}). Hãy thử lại.`;
 }
 
+// Convert the shared Gemini-shaped PDF schemas to strict OpenAI JSON Schema.
+export function openaiSchema(schema) {
+  return {
+    ...schema,
+    type: schema.type.toLowerCase(),
+    ...(schema.properties ? {
+      properties: Object.fromEntries(Object.entries(schema.properties).map(([key, value]) => [key, openaiSchema(value)])),
+      additionalProperties: false,
+    } : {}),
+    ...(schema.items ? { items: openaiSchema(schema.items) } : {}),
+  };
+}
+
+export function openaiRequest({ url, model, system, context, action, document, responseSchema }) {
+  if (!Object.hasOwn(outputTokenLimits, action)) throw new TutorError(400, 'AI action không hợp lệ.');
+  const pdf = ['pdf_contest', 'pdf_test_plan'].includes(action);
+  return {
+    url: `${url.replace(/\/+$/, '')}/chat/completions`,
+    body: {
+      model,
+      store: false,
+      messages: [
+        { role: 'system', content: `${system || ''}\nReturn only a JSON object.` },
+        { role: 'user', content: [
+          ...(document ? [{ type: 'file', file: { filename: 'contest.pdf', file_data: `data:application/pdf;base64,${document}` } }] : []),
+          { type: 'text', text: JSON.stringify(context) },
+        ] },
+      ],
+      max_completion_tokens: outputTokenLimits[action],
+      ...(/^gpt-5\.4-(mini|nano)(?:-|$)/.test(model) ? { reasoning_effort: pdf ? 'low' : 'none' } : {}),
+      response_format: responseSchema
+        ? { type: 'json_schema', json_schema: { name: action, strict: true, schema: openaiSchema(responseSchema) } }
+        : { type: 'json_object' },
+    },
+  };
+}
+
+export function openaiText(payload) {
+  const choice = payload?.choices?.[0];
+  if (choice?.message?.refusal || choice?.finish_reason === 'content_filter')
+    throw new TutorError(502, 'OpenAI không thể đáp ứng yêu cầu này. Hãy thử một hành động khác.');
+  if (choice?.finish_reason === 'length')
+    throw new TutorError(502, 'OpenAI đã đạt giới hạn token trước khi hoàn tất phản hồi. Hãy thử lại với một hành động ngắn hơn.');
+  if (choice?.finish_reason !== 'stop')
+    throw new TutorError(502, 'OpenAI không thể hoàn tất phản hồi. Hãy thử lại.');
+  return choice?.message?.content;
+}
+
+function openaiError(status) {
+  if (status === 401 || status === 403) return 'OpenAI API key không hợp lệ hoặc chưa có quyền truy cập model. Kiểm tra OPENAI_API_KEY.';
+  if (status === 404) return 'Không tìm thấy OpenAI model/endpoint. Kiểm tra AI_API_URL và AI_MODEL.';
+  if (status === 429) return 'OpenAI đã đạt quota hoặc rate limit. Kiểm tra số dư API và thử lại sau.';
+  if (status === 400) return 'OpenAI request/model/config không hợp lệ. Kiểm tra AI_API_URL và AI_MODEL.';
+  return `OpenAI provider không khả dụng (HTTP ${status}). Hãy thử lại.`;
+}
+
 let activeProviderRequests = 0;
 
 // One-shot compatible adapter. Provider transport stays out of UI.
 export async function requestProvider({ system, context, action, signal, env = process.env, fetchImpl = fetch, document, responseSchema }) {
-  if (!env.AI_API_KEY?.trim()) throw new TutorError(503, 'AI Tutor chưa được cấu hình.');
+  const provider = (env.AI_PROVIDER || 'openai').trim();
+  if (!['openai', 'gemini'].includes(provider)) throw new TutorError(503, 'AI_PROVIDER phải là openai hoặc gemini.');
+  const isOpenai = provider === 'openai';
+  const apiKey = (isOpenai ? env.OPENAI_API_KEY : env.AI_API_KEY)?.trim();
+  if (!apiKey) throw new TutorError(503, isOpenai ? 'AI Tutor chưa được cấu hình. Hãy thêm OPENAI_API_KEY ở backend.' : 'AI Tutor chưa được cấu hình.');
   if (activeProviderRequests >= 2) throw new TutorError(429, 'Peanut AI đang bận. Hãy thử lại.');
   activeProviderRequests++;
   try {
-    if ((env.AI_PROVIDER || 'gemini').trim() !== 'gemini') throw new TutorError(503, 'AI_PROVIDER phải là gemini.');
-    const request = providerRequest({ url: (env.AI_API_URL || 'https://generativelanguage.googleapis.com/v1beta').trim(), model: (['pdf_contest','pdf_test_plan'].includes(action) ? (env.AI_PDF_MODEL || 'gemini-3.5-flash') : (env.AI_MODEL || 'gemini-3.5-flash-lite')).trim(), system, context, action, document, responseSchema });
+    const request = (isOpenai ? openaiRequest : providerRequest)({
+      url: (env.AI_API_URL || (isOpenai ? 'https://api.openai.com/v1' : 'https://generativelanguage.googleapis.com/v1beta')).trim(),
+      model: (['pdf_contest','pdf_test_plan'].includes(action)
+        ? (env.AI_PDF_MODEL || (isOpenai ? env.AI_MODEL || 'gpt-5.4-mini' : 'gemini-3.5-flash'))
+        : (env.AI_MODEL || (isOpenai ? 'gpt-5.4-mini' : 'gemini-3.5-flash-lite'))).trim(),
+      system, context, action, document, responseSchema,
+    });
     const response = await fetchImpl(request.url, { method: 'POST', signal,
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.AI_API_KEY.trim() },
+      headers: { 'Content-Type': 'application/json', ...(isOpenai ? { Authorization: `Bearer ${apiKey}` } : { 'x-goog-api-key': apiKey }) },
       body: JSON.stringify(request.body),
     });
     let payload;
     try { payload = await response.json(); } catch {
-      if (!response.ok) throw new TutorError(502, providerError(response.status));
+      if (!response.ok) throw new TutorError(502, (isOpenai ? openaiError : providerError)(response.status));
       throw new TutorError(502, 'AI provider trả về JSON không hợp lệ. Hãy thử lại.');
     }
-    if (!response.ok) throw new TutorError(502, providerError(response.status, payload));
-    const content = providerText(payload);
+    if (!response.ok) throw new TutorError(502, (isOpenai ? openaiError : providerError)(response.status));
+    const content = (isOpenai ? openaiText : providerText)(payload);
     if (typeof content !== 'string' || !content.trim()) throw new TutorError(502, 'AI provider trả về phản hồi không hợp lệ. Hãy thử lại.');
     const feedback = ['pdf_contest', 'pdf_test_plan'].includes(action)
       ? parseProviderJson(content)
@@ -116,7 +181,7 @@ export async function requestProvider({ system, context, action, signal, env = p
       ? normalizeSelfCheckFeedback(content)
       : normalizeFeedback(content, action, { source: context?.student?.source, samples: context?.problem?.samples });
     // Redact credentials from all nested strings, including visualization cells.
-    const secrets = [env.AI_API_KEY, env.JUDGE0_API_KEY, env.JUDGE0_AUTH_TOKEN].filter(Boolean);
+    const secrets = [apiKey, env.OPENAI_API_KEY, env.AI_API_KEY, env.JUDGE0_API_KEY, env.JUDGE0_AUTH_TOKEN].filter(Boolean);
     function redact(value) {
       if (typeof value === 'string') return secrets.reduce((current, secret) => current.replaceAll(secret, '[redacted]'), value);
       if (Array.isArray(value)) return value.map(redact);

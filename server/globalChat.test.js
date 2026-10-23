@@ -38,7 +38,7 @@ test('client payload strips private fields, sends only eight history messages', 
 test('Gemini global request uses 700 tokens, server prompt and output redaction', async () => {
   const request=providerRequest({url:'https://example.test',model:'m',system:GLOBAL_SYSTEM,context:buildGlobalContext(body),action:'global_chat'});
   assert.equal(request.body.generationConfig.maxOutputTokens,700);
-  const result=await requestProvider({action:'global_chat',system:GLOBAL_SYSTEM,context:buildGlobalContext(body),env:{AI_API_KEY:'private-key'},fetchImpl:async()=>({ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{"message":"private-key","hiddenTests":"secret"}'}]}}]})})});
+  const result=await requestProvider({action:'global_chat',system:GLOBAL_SYSTEM,context:buildGlobalContext(body),env:{AI_PROVIDER:'gemini',AI_API_KEY:'private-key'},fetchImpl:async()=>({ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{"message":"private-key","hiddenTests":"secret"}'}]}}]})})});
   assert.deepEqual(result,{message:'[redacted]',suggestedActions:[]});
 });
 test('handler requires Firebase auth before provider, even in development', async () => {
@@ -72,7 +72,7 @@ test('disconnect cancels generation; concurrency limit rejects third request', a
 test('shared Gemini transport caps requests across global chat and existing Tutor actions',async()=>{
  const pending=[];
  const fetchImpl=()=>new Promise(resolve=>pending.push(resolve));
- const args={system:GLOBAL_SYSTEM,context:{},env:{AI_API_KEY:'test-key'},fetchImpl};
+ const args={system:GLOBAL_SYSTEM,context:{},env:{AI_PROVIDER:'gemini',AI_API_KEY:'test-key'},fetchImpl};
  const a=requestProvider({...args,action:'global_chat'}),b=requestProvider({...args,action:'hint'});
  await assert.rejects(requestProvider({...args,action:'self_check'}),error=>error.status===429);
  const payload={ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{"message":"OK"}'}]}}]})};

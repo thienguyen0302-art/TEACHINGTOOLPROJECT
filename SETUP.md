@@ -77,15 +77,20 @@ AI Tutor xuất hiện cạnh JudgeResults trong Problem Bank và Lesson Practic
 Cấu hình **server-only** trong `.env.local`:
 
 ```env
-AI_PROVIDER=gemini
-AI_API_URL=https://generativelanguage.googleapis.com/v1beta
-AI_API_KEY=
-AI_MODEL=gemini-3.5-flash-lite
+AI_PROVIDER=openai
+AI_API_URL=https://api.openai.com/v1
+OPENAI_API_KEY=
+AI_MODEL=gpt-5.4-mini
+AI_PDF_MODEL=gpt-5.4-mini
 ```
 
-Điền Gemini Developer API key trong `.env.local`, không điền key thật vào `.env.example`. Provider mặc định là Gemini native REST: backend gọi `${AI_API_URL}/models/${AI_MODEL}:generateContent` với header `x-goog-api-key`; URL cấu hình là base URL, không phải endpoint OpenAI. Adapter này không hỗ trợ OpenAI runtime.
+Điền OpenAI API key trong `.env.local` vào `OPENAI_API_KEY`, không đặt key trong chat hoặc biến `VITE_*`. API cần số dư/thanh toán riêng. Backend gọi `${AI_API_URL}/chat/completions` với `Authorization: Bearer ...`. Key Gemini cũ trong `AI_API_KEY` không được dùng cho OpenAI.
 
-Dùng `thinkingLevel: minimal`, JSON MIME và output caps: hint 350; explain_error, explain_failure, complexity 450; visualize 1200 token. Không bật Search, code execution, URL context hoặc tools. Xem [Gemini thinking](https://ai.google.dev/gemini-api/docs/generate-content/thinking) và [structured output](https://ai.google.dev/gemini-api/docs/structured-output). Quota free tier phụ thuộc tài khoản/model; 429 báo rõ quota/rate limit, không tự retry gây tốn thêm requests. Phản hồi bị safety block, hết token hoặc không có text được báo lỗi an toàn; JSON nội dung hỏng vẫn có fallback.
+Mặc định dùng `gpt-5.4-mini` cho gia sư, Self-Check, chat và PDF: cân bằng chi phí với khả năng giải thích code/đọc đề. Chat dùng `reasoning_effort: none`; PDF và tạo test dùng `low`. Giữ output caps: hint 350; explain_error/explain_failure/complexity 450; chat 600; global chat 700; visualize 1200; Self-Check 550; PDF/tạo test 24576 (bao gồm reasoning tokens). PDF dùng schema JSON nghiêm ngặt, các phản hồi khác dùng JSON object và bộ chuẩn hóa hiện có. Không tự retry hoặc bật tools tính phí. PDF có thể tốn thêm token hình ảnh và thực hiện nhiều lượt phân tích/kiểm tra.
+
+Theo [OpenAI Docs](https://developers.openai.com/api/docs/models/gpt-5.4-mini), giá niêm yết $0.75/triệu input tokens và $4.50/triệu output tokens. Ví dụ 1000 lượt × (2000 input + 500 output) ≈ $3.75, chưa tính PDF/reasoning. Caps/concurrency không phải giới hạn chi tiêu tháng; theo dõi Usage và cấu hình ngân sách trong tài khoản API. Chất lượng cần được kiểm tra với đề thực tế.
+
+Adapter Gemini cũ vẫn dùng được nếu đặt `AI_PROVIDER=gemini`, URL/models Gemini và `AI_API_KEY`. Không trộn URL/model/key của hai nhà cung cấp.
 
 Chạy lại `npm run dev` sau cấu hình. Không đặt các biến này dưới prefix `VITE_`; `.env.local`/`.env` không được commit. Chưa cấu hình AI trả HTTP 503 với thông báo rõ, Judge vẫn hoạt động. AI và Judge có bộ đếm concurrency độc lập; AI giới hạn 2 request, timeout 30 giây, body 100 KB và source 50 KB.
 
