@@ -24,7 +24,10 @@
 .profile-chevron { display: grid; padding: 3px; place-items: center; color: #a0aabc; }
 .profile-chevron svg { width: 15px; height: 15px; }
 
-.side-nav { margin-top: 28px; }
+.side-nav { margin-top: 28px; flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 4px; margin-right: -4px; scrollbar-width: thin; scrollbar-color: #d3dbe8 transparent; }
+.side-nav::-webkit-scrollbar { width: 6px; }
+.side-nav::-webkit-scrollbar-thumb { border-radius: 6px; background: #d3dbe8; }
+.brand-row, .profile-card, .sidebar-bottom { flex-shrink: 0; }
 .side-nav > p { margin: 0 12px 12px; color: #abb4c4; font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .side-nav button, .sidebar-bottom button { display: flex; width: 100%; align-items: center; gap: 13px; padding: 12px 13px; border: 0; border-radius: 11px; background: transparent; color: #657189; font-size: 12px; font-weight: 600; text-align: left; transition: 180ms ease; }
 .side-nav button + button { margin-top: 3px; }
