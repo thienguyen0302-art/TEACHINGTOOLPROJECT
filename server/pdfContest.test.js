@@ -22,7 +22,7 @@ test('multimodal Gemini request sends actual PDF plus strict schema and large ou
  assert.deepEqual(request.body.contents[0].parts[0],{inline_data:{mime_type:'application/pdf',data:'JVBERi0='}});assert.equal(request.body.generationConfig.responseSchema,PDF_IMPORT_SCHEMA);assert.ok(request.body.generationConfig.maxOutputTokens>20000);assert.equal(request.body.generationConfig.thinkingConfig.thinkingLevel,'medium');
 });
 test('structured provider output is preserved, secrets are redacted and truncation is rejected',async()=>{
- const env={AI_API_KEY:'SECRET_KEY',AI_MODEL:'m'};
+ const env={AI_PROVIDER:'gemini',AI_API_KEY:'SECRET_KEY',AI_MODEL:'m'};
  const args={action:'pdf_contest',system:'s',context:{},env};
  const response=await requestProvider({...args,fetchImpl:async()=>({ok:true,json:async()=>({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({...rawAnalysis(),description:'SECRET_KEY'})}]}}]})})});
  assert.equal(response.problems.length,1);assert.equal(response.description,'[redacted]');

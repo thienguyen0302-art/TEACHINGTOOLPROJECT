@@ -15,7 +15,7 @@
     "judge:dev": "node --watch --env-file-if-exists=.env.local server/index.js",
     "test:judge": "node --test server/judge.test.js",
     "dev:web": "vite",
-    "test:ai": "node --test server/aiTutor.test.js",
+    "test:ai": "node --test server/aiTutor.test.js server/openaiProvider.test.js",
     "test:progress": "node --test server/submissionProgress.test.js",
     "test:platform": "node --test server/platform.test.js",
     "test:lesson": "node --test server/lessonSelfCheck.test.js server/lessonCompletion.test.js",

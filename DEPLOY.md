@@ -20,12 +20,12 @@ Chạy ở thư mục gốc project (dùng `Dockerfile`). Thay `<PROJECT_ID>` v�
 ```bash
 gcloud run deploy peanutcode-api \
   --source . --region asia-southeast1 --allow-unauthenticated \
-  --set-env-vars "FIREBASE_PROJECT_ID=<PROJECT_ID>,APP_ORIGIN=https://<PROJECT_ID>.web.app,JUDGE0_URL=https://judge0-extra-ce.p.rapidapi.com,JUDGE0_API_HOST=judge0-extra-ce.p.rapidapi.com,AI_PROVIDER=gemini,AI_MODEL=gemini-3.5-flash-lite" \
-  --set-secrets "JUDGE0_API_KEY=judge0-key:latest,AI_API_KEY=gemini-key:latest"
+  --set-env-vars "FIREBASE_PROJECT_ID=<PROJECT_ID>,APP_ORIGIN=https://<PROJECT_ID>.web.app,JUDGE0_URL=https://judge0-extra-ce.p.rapidapi.com,JUDGE0_API_HOST=judge0-extra-ce.p.rapidapi.com,AI_PROVIDER=openai,AI_API_URL=https://api.openai.com/v1,AI_MODEL=gpt-5.4-mini,AI_PDF_MODEL=gpt-5.4-mini" \
+  --set-secrets "JUDGE0_API_KEY=judge0-key:latest,OPENAI_API_KEY=openai-key:latest"
 ```
 
 - `--allow-unauthenticated` vì Hosting gọi công khai; bảo vệ nằm ở `REQUIRE_AUTH=true` (đã đặt sẵn trong Dockerfile) — backend tự kiểm tra Firebase ID token.
-- Key bí mật tạo bằng Secret Manager: `printf '<key>' | gcloud secrets create judge0-key --data-file=-` (tương tự `gemini-key`).
+- Key bí mật tạo bằng Secret Manager: `printf '<key>' | gcloud secrets create judge0-key --data-file=-` (tương tự `openai-key`).
 - Nếu `APP_ORIGIN` chưa khớp URL Hosting thật, backend trả 403 "Origin không được phép".
 
 ## 2. Deploy Firestore rules + frontend
