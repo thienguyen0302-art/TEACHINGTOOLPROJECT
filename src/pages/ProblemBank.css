@@ -156,8 +156,11 @@
 .bank-execution h2 { margin: 0; font-size: 12px; font-weight: 600; }
 .bank-ui .problem-editor__note { color: #969da7; font-size: 11px; margin: 8px 0 14px; }
 .bank-ui .problem-editor__actions { justify-content: flex-end; gap: 8px; }
-.bank-ui .problem-editor__actions button { border: 1px solid #e0e4e9; padding: 8px 14px; color: #68727e; border-radius: 6px; background: #f3f4f6; font-size: 12px; cursor: not-allowed; }
+.bank-ui .problem-editor__actions button { border: 1px solid #e0e4e9; padding: 8px 14px; color: #3f4a57; border-radius: 6px; background: #f3f4f6; font-size: 12px; cursor: pointer; }
+.bank-ui .problem-editor__actions button:hover:not(:disabled) { background: #e8ebef; }
 .bank-ui .problem-editor__actions .bank-submit { color: #fff; border-color: #739e8f; background: #739e8f; }
+.bank-ui .problem-editor__actions .bank-submit:hover:not(:disabled) { background: #628a7c; }
+.bank-ui .problem-editor__actions button:disabled { opacity: .55; cursor: not-allowed; }
 @media (max-width: 1100px) {
   .layout:has(.bank-ui) { grid-template-columns: 175px minmax(0, 1fr); gap: 14px; }
   .bank-level { padding: 15px 12px; gap: 8px; }

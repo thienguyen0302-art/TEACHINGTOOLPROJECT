@@ -1,57 +1,73 @@
+import { useEffect, useState } from "react";
 import {
   HonorBanner,
   HonorPodium,
   HonorCard,
   HonorFooter,
+  TableCard,
 } from "../components/hsg-admin/HsgAdminUI";
+import { subscribeContestLeaderboard } from "../services/contestRankingService";
 import "../components/hsg-admin/HsgAdmin.css";
 
 /**
- * Trang "Bảng vàng contest HSG toàn trường"
- * Bám sát tuyệt đối thiết kế Framer:
- * - Banner chuyển sắc navy -> blue
- * - Ba thẻ vinh danh: Hạng 2 (trái), Hạng 1 (giữa, cao hơn), Hạng 3 (phải)
- * - Trạng thái rỗng: "Chờ vinh danh", "Chưa có kết quả"
- * - Thông điệp và ghi chú bản xem trước
+ * Bảng vàng Contest HSG: lấy dữ liệu thật từ scoreboard của các contest
+ * (xem contestRankingService.subscribeContestLeaderboard), làm mới mỗi 60 giây.
  */
-export default function Ranking() {
+function cardProps(entry) {
+  if (!entry) return { title: "Chờ vinh danh", subtitle: "Chưa có kết quả" };
+  const parts = [`${entry.totalContestScore} điểm`, `${entry.contestsCount} kỳ thi`];
+  return { title: entry.displayName, subtitle: parts.join(" · ") };
+}
+
+export default function Ranking({ uid }) {
+  const [state, setState] = useState({ entries: [], loading: true, error: "" });
+
+  useEffect(() => subscribeContestLeaderboard(setState), []);
+
+  const { entries, loading, error } = state;
+  const [first, second, third] = entries;
+  const hasResults = entries.length > 0;
+
   return (
     <div className="content hsg-page">
       <div className="hsg-frame-inner">
-        {/* Banner ngang bo góc */}
-      <HonorBanner
-        badge="BẢNG VÀNG CONTEST HSG TOÀN TRƯỜNG"
-        title="Mỗi kỳ thi, một bước tiến gần bục vinh quang."
-        description="Thứ hạng được cập nhật từ tổng điểm thi Contest HSG của mỗi học sinh."
-      />
+        <HonorBanner
+          badge="BẢNG VÀNG CONTEST HSG TOÀN TRƯỜNG"
+          title="Mỗi kỳ thi, một bước tiến gần bục vinh quang."
+          description="Thứ hạng được cập nhật từ tổng điểm thi Contest HSG của mỗi học sinh."
+        />
 
-      {/* Ba thẻ vinh danh: Hạng 2, Hạng 1, Hạng 3 */}
-      <HonorPodium>
-        <HonorCard
-          rank={2}
-          rankLabel="Hạng 2"
-          title="Chờ vinh danh"
-          subtitle="Chưa có kết quả"
-        />
-        <HonorCard
-          rank={1}
-          rankLabel="Hạng 1"
-          title="Chờ vinh danh"
-          subtitle="Chưa có kết quả"
-        />
-        <HonorCard
-          rank={3}
-          rankLabel="Hạng 3"
-          title="Chờ vinh danh"
-          subtitle="Chưa có kết quả"
-        />
-      </HonorPodium>
+        <HonorPodium>
+          <HonorCard rank={2} rankLabel="Hạng 2" {...cardProps(second)} />
+          <HonorCard rank={1} rankLabel="Hạng 1" {...cardProps(first)} />
+          <HonorCard rank={3} rankLabel="Hạng 3" {...cardProps(third)} />
+        </HonorPodium>
 
-      {/* Thông điệp và ghi chú cuối trang */}
-      <HonorFooter
-        mainText="Chưa có kết quả xếp hạng. Ba vị trí vinh danh sẽ được cập nhật khi có bài thi hợp lệ."
-        noteText="BẢN XEM TRƯỚC · Chưa kết nối dữ liệu thi thực tế."
-      />
+        {hasResults && (
+          <TableCard headers={["Hạng", "Học sinh", "Lớp", "Số kỳ thi", "Bài đạt tối đa", "Tổng điểm"]}>
+            {entries.map((entry) => (
+              <tr key={entry.uid} className={entry.uid === uid ? "contest-current-user" : ""}>
+                <td>{entry.rank}</td>
+                <td>{entry.displayName}{entry.uid === uid ? " (bạn)" : ""}</td>
+                <td>{entry.className || "—"}</td>
+                <td>{entry.contestsCount}</td>
+                <td>{entry.totalAcProblems}</td>
+                <td><b>{entry.totalContestScore}</b></td>
+              </tr>
+            ))}
+          </TableCard>
+        )}
+
+        <HonorFooter
+          mainText={
+            hasResults
+              ? "Xếp hạng theo tổng điểm các kỳ thi; bằng điểm thì ai nộp bài sớm hơn đứng trước."
+              : loading
+                ? "Đang tải bảng xếp hạng…"
+                : "Chưa có kết quả xếp hạng. Ba vị trí vinh danh sẽ được cập nhật khi có bài thi hợp lệ."
+          }
+          noteText={error || (hasResults ? "Tự động cập nhật mỗi 60 giây." : "")}
+        />
       </div>
     </div>
   );
