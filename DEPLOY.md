@@ -68,3 +68,15 @@ Run (no score), repeated WA/partial/AC Submit, leaderboard, private history, and
 student DevTools/rules denials. The cloud task could not download the Firestore
 Emulator (HTTP 403), so it does not claim that additional suite passed. Publishing
 Git commits does not deploy Cloud Run, Hosting or Firestore rules.
+
+
+## Khóa OpenAI: lưu ở Secret Manager, không ghi vào file
+
+```bash
+bash scripts/setup-openai-secret.sh   # 1 lần: dán khóa khi được hỏi (không hiện khi gõ)
+bash scripts/deploy-cloudrun.sh       # deploy; Cloud Run đọc khóa từ secret `openai-key`
+```
+
+- Không đặt khóa vào script, README, `.env.example` hay tin nhắn chat. File thật chỉ để ở `.env.local` (đã nằm trong `.gitignore`).
+- `npm run check:secrets` (tự chạy trước `npm run build`) báo lỗi nếu phát hiện khóa trong mã nguồn.
+- Lỗi trả về trình duyệt chỉ là thông báo cố định theo mã HTTP; nội dung phản hồi của OpenAI không được chuyển tiếp.

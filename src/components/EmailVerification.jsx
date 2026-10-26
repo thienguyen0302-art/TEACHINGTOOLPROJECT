@@ -28,7 +28,7 @@ export default function EmailVerification({ user, onVerified, onLogout }) {
   useEffect(() => {
     if (countdown <= 0) {
       if (timerRef.current) clearInterval(timerRef.current);
-      try { localStorage.removeItem(COUNTDOWN_STORAGE_KEY); } catch {}
+      try { localStorage.removeItem(COUNTDOWN_STORAGE_KEY); } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
       return;
     }
 
@@ -36,7 +36,7 @@ export default function EmailVerification({ user, onVerified, onLogout }) {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timerRef.current);
-          try { localStorage.removeItem(COUNTDOWN_STORAGE_KEY); } catch {}
+          try { localStorage.removeItem(COUNTDOWN_STORAGE_KEY); } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
           return 0;
         }
         return prev - 1;
@@ -109,7 +109,7 @@ export default function EmailVerification({ user, onVerified, onLogout }) {
       setCountdown(seconds);
       try {
         localStorage.setItem(COUNTDOWN_STORAGE_KEY, String(Date.now() + seconds * 1000));
-      } catch {}
+      } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
 
       setFeedback({
         type: "success",

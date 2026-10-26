@@ -3,7 +3,7 @@ import Contest from "./pages/Contest";
 import ContestProblem from "./pages/ContestProblem";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signOut, sendEmailVerification } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./services/firebase";
 import Login from "./pages/Login";
@@ -27,7 +27,6 @@ import { setSubmissionPersistenceAdapter } from "./services/submissionProgressSe
 import { persistSubmission } from "./services/submissionPersistence";
 import { saveProfile } from "./services/progressService";
 import { isProfileComplete } from "./utils/profile";
-import { weekSummary } from "./utils/activity";
 import { isTeacherUser } from "./services/authSecurityService";
 import { setStudentFirstLoginAt } from "./services/announcementService";
 
@@ -36,6 +35,7 @@ const TeacherProblemEditor = lazy(() => import("./pages/TeacherProblems").then((
 const TeacherContests = lazy(() => import("./pages/TeacherContests"));
 const TeacherContestEditor = lazy(() => import("./pages/TeacherContests").then((module) => ({ default: module.TeacherContestEditor })));
 const TeacherContestHistory = lazy(() => import("./pages/TeacherContestHistory"));
+const TeacherSubmissionHistory = lazy(() => import("./pages/TeacherSubmissionHistory"));
 const TeacherReviews = lazy(() => import("./pages/TeacherReviews"));
 const Lesson = lazy(() => import("./pages/Lesson"));
 const Practice = lazy(() => import("./pages/Practice"));
@@ -49,7 +49,6 @@ function Learning({ user, lang, onChangeLang }) {
   const inContest = pathname.startsWith("/contest") || pathname.startsWith("/teacher");
   const data = useLearningData(user.uid, lang, !inContest);
   const isTeacher = isTeacherUser(user, data.profile);
-  const week = weekSummary(data.daily);
   const teacherOnly = (element) => data.loading ? <div className="content">Đang tải...</div> : isTeacher ? element : <Navigate to="/" replace />;
   // Tên hiển thị ưu tiên hồ sơ học viên đã nhập, sau đó mới tới tên tài khoản.
   const viewUser = { displayName: data.profile.displayName || user.displayName, email: user.email, uid: user.uid };
@@ -70,7 +69,7 @@ function Learning({ user, lang, onChangeLang }) {
   }, []);
 
   return (
-    <AppShell key={user.uid} user={viewUser} isTeacher={isTeacher} weekActive={week.activeCount} onLogout={() => signOut(auth)}>
+    <AppShell key={user.uid} user={viewUser} isTeacher={isTeacher} onLogout={() => signOut(auth)}>
       {data.error && (
         <div className="content"><p className="err">{data.error}</p></div>
       )}
@@ -127,6 +126,12 @@ function Learning({ user, lang, onChangeLang }) {
             : isTeacher ? <TeacherStudents /> : <Navigate to="/" replace />}
         />
         <Route
+          path="/teacher/submissions"
+          element={data.loading
+            ? <div className="content">Đang tải...</div>
+            : isTeacher ? <TeacherSubmissionHistory /> : <Navigate to="/" replace />}
+        />
+        <Route
           path="/teacher/contest-history"
           element={data.loading
             ? <div className="content">Đang tải...</div>
@@ -150,7 +155,6 @@ export default function App() {
   const [lang, setLang] = useState(null);
   const [picking, setPicking] = useState(false); // đang mở hộp chọn ngôn ngữ để đổi
   const [ready, setReady] = useState(false);
-  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     return onAuthStateChanged(auth, async (u) => {

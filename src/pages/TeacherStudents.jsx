@@ -4,21 +4,13 @@ import { getClassOverview, subscribeClassOverview } from "../services/teacherSer
 import { createAnnouncement } from "../services/announcementService";
 import { fmtTime, LANG_LABEL, initials } from "../utils/format";
 import Icon from "../components/Icon";
-import StudentChapterProgress from "../components/StudentChapterProgress";
+import StudentDetailModal from "../components/StudentDetailModal";
+import { chapterName, lastSeenText, filterStudents, studentCounts, downloadStudentsCsv } from "../utils/studentRoster";
 import CreateAnnouncementModal from "../components/CreateAnnouncementModal";
 import { auth } from "../services/firebase";
 import "../styles/pages-shared.css";
 import "./Teacher.css";
 
-const chapterName = (c) => `${LANG_LABEL[c.language] ?? c.language} · Ch.${Number(c.chapterId.slice(2))}`;
-
-function lastSeenText(ms) {
-  if (!ms) return { text: "Chưa vào học", isRecent: false, days: 999 };
-  const days = Math.floor((Date.now() - ms) / 86400000);
-  if (days <= 0) return { text: "Hôm nay", isRecent: true, days: 0 };
-  if (days === 1) return { text: "Hôm qua", isRecent: true, days: 1 };
-  return { text: `${days} ngày trước`, isRecent: false, days };
-}
 
 export default function TeacherStudents() {
   const navigate = useNavigate();
@@ -119,28 +111,7 @@ export default function TeacherStudents() {
 
   function handleExportCSV(students) {
     if (!students || students.length === 0) return;
-    const header = ["STT", "Học sinh", "Lớp", "Trường", "Ngôn ngữ", "Chương hoàn thành", "Điểm TB (%)", "Thời gian học (phút)", "Hoạt động", "Chuyên đề yếu"];
-    const rows = students.map((s, idx) => [
-      idx + 1,
-      `"${s.name.replaceAll('"', '""')}"`,
-      `"${(s.className || "").replaceAll('"', '""')}"`,
-      `"${(s.school || "").replaceAll('"', '""')}"`,
-      LANG_LABEL[s.language] || s.language || "Chưa chọn",
-      `"${s.chaptersCompleted}/${s.chaptersTotal}"`,
-      s.avgScore,
-      Math.round((s.studySeconds || 0) / 60),
-      lastSeenText(s.lastActive).text,
-      `"${s.weakChapters.map((c) => chapterName(c)).join("; ")}"`,
-    ]);
-    const csvContent = "\uFEFF" + [header.join(","), ...rows.map((r) => r.join(","))].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `Bao_cao_doi_tuyen_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    downloadStudentsCsv(students);
     showNotice("Đã xuất danh sách lớp ra file CSV thành công!");
   }
 
@@ -149,24 +120,11 @@ export default function TeacherStudents() {
 
   const studentsList = o?.students ?? [];
 
-  const filteredStudents = studentsList.filter((s) => {
-    const matchSearch =
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      (s.className && s.className.toLowerCase().includes(search.toLowerCase())) ||
-      (s.school && s.school.toLowerCase().includes(search.toLowerCase()));
-    const matchLang = filterLang === "all" || s.language === filterLang;
-    const seen = lastSeenText(s.lastActive);
-    let matchStatus = true;
-    if (statusFilter === "good")     matchStatus = s.avgScore >= 75 && s.weakChapters.length === 0;
-    if (statusFilter === "warning")  matchStatus = s.weakChapters.length > 0 || (s.chaptersTried > 0 && s.avgScore < 70);
-    if (statusFilter === "inactive") matchStatus = !s.lastActive || seen.days > 7;
-    return matchSearch && matchLang && matchStatus;
-  });
+  const filteredStudents = filterStudents(studentsList, { search, lang: filterLang, status: statusFilter });
+
 
   /* Tab counts */
-  const countGood     = studentsList.filter(s => s.avgScore >= 75 && s.weakChapters.length === 0).length;
-  const countWarning  = studentsList.filter(s => s.weakChapters.length > 0 || (s.chaptersTried > 0 && s.avgScore < 70)).length;
-  const countInactive = studentsList.filter(s => !s.lastActive || lastSeenText(s.lastActive).days > 7).length;
+  const { good: countGood, warning: countWarning, inactive: countInactive } = studentCounts(studentsList);
 
   return (
     <div className="content ps-page">
@@ -269,7 +227,7 @@ export default function TeacherStudents() {
                 <th>Lớp / Trường</th>
                 <th>Ngôn ngữ</th>
                 <th>Tiến độ</th>
-                <th>Điểm TB</th>
+                <th>Điểm bài tập</th>
                 <th>Thời gian</th>
                 <th>Hoạt động</th>
                 <th>Chuyên đề cần kèm</th>
@@ -367,93 +325,16 @@ export default function TeacherStudents() {
       </div>
 
       {/* ── Modal chi tiết học sinh ── */}
-      {selectedStudent && (
-        <div className="teacher-modal-backdrop" onClick={() => setSelectedStudent(null)}>
-          <div className="teacher-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="teacher-modal-header">
-              <div>
-                <span className="teacher-kicker">HỒ SƠ HỌC SINH</span>
-                <h3>{selectedStudent.name}</h3>
-                <span style={{ fontSize: "13px", color: "#64748b" }}>
-                  {selectedStudent.className ? `Lớp ${selectedStudent.className}` : ""}
-                  {selectedStudent.school ? ` · ${selectedStudent.school}` : ""}
-                </span>
-              </div>
-              <button
-                type="button"
-                className="teacher-modal-close"
-                onClick={() => setSelectedStudent(null)}
-                aria-label="Đóng"
-              >✕</button>
-            </div>
-
-            <div className="teacher-modal-grid">
-              <div className="teacher-modal-box">
-                <span>Ngôn ngữ ôn luyện</span>
-                <strong>{LANG_LABEL[selectedStudent.language] || "Chưa chọn"}</strong>
-              </div>
-              <div className="teacher-modal-box">
-                <span>Điểm Quiz trung bình</span>
-                <strong style={{ color: selectedStudent.avgScore >= 70 ? "#16a34a" : "#dc2626" }}>
-                  {selectedStudent.avgScore}%
-                </strong>
-              </div>
-              <div className="teacher-modal-box">
-                <span>Tổng thời gian ôn luyện</span>
-                <strong>{fmtTime(selectedStudent.studySeconds)}</strong>
-              </div>
-              <div className="teacher-modal-box">
-                <span>Lần học gần nhất</span>
-                <strong>{lastSeenText(selectedStudent.lastActive).text}</strong>
-              </div>
-            </div>
-
-            <div style={{ marginBottom: "1.25rem" }}>
-              <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "13px", fontWeight: 700, color: "#334155" }}>
-                Tiến độ từng chương ({selectedStudent.chaptersCompleted}/{selectedStudent.chaptersTotal} chương hoàn thành):
-              </h4>
-              <StudentChapterProgress chapters={selectedStudent.chapterProgress} />
-            </div>
-
-            <div style={{ marginBottom: "1.25rem" }}>
-              <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "13px", fontWeight: 700, color: "#334155" }}>
-                Các chuyên đề đang cần hỗ trợ:
-              </h4>
-              {selectedStudent.weakChapters.length === 0 ? (
-                <p style={{ color: "#16a34a", fontSize: "13px", margin: 0 }}>✓ Học sinh nắm vững tất cả các chương đã học.</p>
-              ) : (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                  {selectedStudent.weakChapters.map((c) => (
-                    <span className="ps-weak-chip" key={c.language + c.chapterId}>{chapterName(c)} — {c.bestScore}%</span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="teacher-note-area">
-              <label htmlFor="teacher-note-input">Ghi chú &amp; Kế hoạch bồi dưỡng của giáo viên:</label>
-              <textarea
-                id="teacher-note-input"
-                placeholder="Ví dụ: Cần nhắc học sinh làm thêm bài tập mảng 2 chiều và đệ quy trước kỳ thi..."
-                value={studentNote}
-                onChange={(e) => setStudentNote(e.target.value)}
-              />
-            </div>
-
-            <div className="teacher-modal-actions">
-              <button
-                type="button"
-                className="teacher-btn-secondary"
-                onClick={() => navigate(`/teacher/contest-history?studentId=${selectedStudent.uid}&tab=submissions`)}
-              >
-                <Icon name="trophy" /> Xem lịch sử Contest HSG
-              </button>
-              <button type="button" className="teacher-btn-secondary" onClick={handleSendReminder}>Gửi nhắc nhở học tập</button>
-              <button type="button" className="teacher-btn-primary" onClick={handleSaveNote}>Lưu ghi chú</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <StudentDetailModal
+        student={selectedStudent}
+        note={studentNote}
+        onNoteChange={setStudentNote}
+        onClose={() => setSelectedStudent(null)}
+        onSaveNote={handleSaveNote}
+        onSendReminder={handleSendReminder}
+        onOpenSubmissionHistory={() => navigate(`/teacher/submissions?studentId=${selectedStudent.uid}`)}
+        onOpenContestHistory={() => navigate(`/teacher/contest-history?studentId=${selectedStudent.uid}&tab=submissions`)}
+      />
 
       <CreateAnnouncementModal
         isOpen={isCreateNotifOpen}

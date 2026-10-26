@@ -89,8 +89,8 @@ export function subscribeClassOverview(onUpdate, onError) {
 
   return () => {
     isCancelled = true;
-    try { unsubUsers(); } catch {}
-    try { unsubProgress(); } catch {}
+    try { unsubUsers(); } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
+    try { unsubProgress(); } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
   };
 }
 

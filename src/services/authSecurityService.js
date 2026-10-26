@@ -185,10 +185,10 @@ export async function updateUserAccountPassword(oldPassword, newPassword) {
       err.code === "auth/invalid-credential" ||
       err.code === "auth/invalid-login-credentials"
     ) {
-      throw new Error("Mật khẩu cũ không chính xác. Vui lòng kiểm tra lại.");
+      throw new Error("Mật khẩu cũ không chính xác. Vui lòng kiểm tra lại.", { cause: err });
     }
     if (err.code === "auth/too-many-requests") {
-      throw new Error("Bạn đã nhập sai mật khẩu quá nhiều lần. Vui lòng thử lại sau vài phút.");
+      throw new Error("Bạn đã nhập sai mật khẩu quá nhiều lần. Vui lòng thử lại sau vài phút.", { cause: err });
     }
     throw err;
   }
@@ -280,7 +280,7 @@ export async function purgeUserDataFromFirestore(uid) {
         studySeconds: 0,
         deletedAt: new Date().toISOString(),
       });
-    } catch {}
+    } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
   }
 }
 
@@ -316,10 +316,10 @@ export async function deleteUserAccount({ password = "" } = {}) {
         err.code === "auth/invalid-credential" ||
         err.code === "auth/invalid-login-credentials"
       ) {
-        throw new Error("Mật khẩu xác nhận không chính xác. Vui lòng kiểm tra lại.");
+        throw new Error("Mật khẩu xác nhận không chính xác. Vui lòng kiểm tra lại.", { cause: err });
       }
       if (err.code === "auth/too-many-requests") {
-        throw new Error("Bạn đã thử sai quá nhiều lần. Vui lòng thử lại sau vài phút.");
+        throw new Error("Bạn đã thử sai quá nhiều lần. Vui lòng thử lại sau vài phút.", { cause: err });
       }
       throw err;
     }
@@ -335,7 +335,7 @@ export async function deleteUserAccount({ password = "" } = {}) {
       method: "POST",
       headers: { "Content-Type": "application/json", ...headers },
     }).catch(() => {});
-  } catch {}
+  } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
 
   // 4. Dọn dẹp toàn bộ dữ liệu người dùng trên LocalStorage và SessionStorage
   purgeUserLocalData(uid);
@@ -351,7 +351,7 @@ export async function deleteUserAccount({ password = "" } = {}) {
         await reauthenticateWithPopup(user, provider);
         await deleteUser(user);
       } else {
-        throw new Error("Vì lý do bảo mật, phiên đăng nhập đã quá hạn. Vui lòng đăng nhập lại rồi thực hiện xoá tài khoản.");
+        throw new Error("Vì lý do bảo mật, phiên đăng nhập đã quá hạn. Vui lòng đăng nhập lại rồi thực hiện xoá tài khoản.", { cause: err });
       }
     } else if (err.code !== "auth/user-not-found") {
       throw err;
@@ -361,7 +361,7 @@ export async function deleteUserAccount({ password = "" } = {}) {
   // 6. Đăng xuất an toàn khỏi ứng dụng
   try {
     await signOut(auth);
-  } catch {}
+  } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
 
   return { ok: true };
 }

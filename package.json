@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev.js",
-    "prebuild": "npm run validate:content",
+    "prebuild": "npm run check:secrets && npm run validate:content",
     "build": "vite build",
     "lint": "eslint .",
     "validate:content": "python3 scripts/validate_content.py",
@@ -18,11 +18,13 @@
     "test:ai": "node --test server/aiTutor.test.js server/openaiProvider.test.js",
     "test:progress": "node --test server/submissionProgress.test.js",
     "test:platform": "node --test server/platform.test.js",
-    "test:lesson": "node --test server/lessonSelfCheck.test.js server/lessonCompletion.test.js",
+    "test:lesson": "node --test server/lessonSelfCheck.test.js server/lessonCompletion.test.js server/chapterProgress.test.js",
     "test:contest": "node --test server/contest.test.js",
     "test:authoring": "node --test server/problemAuthoring.test.js",
     "test:rules": "node --test server/contestRules.test.js",
     "import:kiengiang": "node --env-file-if-exists=.env.local scripts/import-kien-giang-hsg.mjs",
+    "deploy:backend": "bash scripts/deploy-cloudrun.sh",
+    "update:cloudrun": "bash scripts/update-cloudrun-env.sh",
     "test:series": "node --test scripts/import-kien-giang-hsg.test.mjs",
     "test:global-ai": "node --test server/globalChat.test.js",
     "test:global-ai:browser": "node scripts/global-chat-browser/browser.mjs",
@@ -35,7 +37,8 @@
     "test:practice": "node --test server/practice.test.js",
     "test:practice:browser": "node scripts/teacher-authoring-browser/practice.mjs",
     "test:practice:student": "node scripts/student-bank-browser/browser.mjs",
-    "test:history:browser": "node scripts/student-history-browser/browser.mjs"
+    "test:history:browser": "node scripts/student-history-browser/browser.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

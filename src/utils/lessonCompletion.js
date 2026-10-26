@@ -1,3 +1,5 @@
+import { countAnswered } from "./grading.js";
+
 export function lessonCompletion(chapter, { overviewRead, reflections = {}, quizSubmitted, solvedIds = [], isCompleted = false, currentTab } = {}) {
   const checks = (chapter?.theory ?? []).filter((item) => item.selfCheck);
   const answered = checks.filter((item) => reflections[item.id]?.trim()).length;
@@ -32,6 +34,21 @@ export function lessonCompletion(chapter, { overviewRead, reflections = {}, quiz
   };
 }
 
+// ─────────────────────────────────────────────────────────────
+// CÔNG THỨC % HOÀN THÀNH CHƯƠNG (làm đến đâu tính đến đó, tối đa 100)
+//   Tổng quan  10%  = đã đọc hết tổng quan
+//   Lý thuyết  20%  = 20 × (số câu Self-Check đã trả lời / tổng Self-Check)
+//   Quiz       30%  = 30 × (số câu quiz đã chọn / tổng câu quiz); nộp quiz = đủ 30
+//   Bài code   30%  = 30 × (số bài code bắt buộc Accepted / tổng bài code bắt buộc)
+//   Tổng kết   10%  = đã vào tab Tổng kết (hoặc bấm Đánh dấu hoàn thành)
+// Chương "hoàn thành" khi đạt đúng 100%, không phụ thuộc điểm quiz.
+// ─────────────────────────────────────────────────────────────
+export const PROGRESS_WEIGHTS = { overview: 10, theory: 20, quiz: 30, practice: 30, summary: 10 };
+
+export function runnableExercises(chapter) {
+  return (chapter?.practice ?? []).filter((item) => item.runnable);
+}
+
 export function computeLessonProgress({
   chapter,
   overviewRead = false,
@@ -39,54 +56,37 @@ export function computeLessonProgress({
   answers = {},
   quizSubmitted = false,
   solvedIds = [],
-  isCompleted = false,
+  summaryVisited = false,
   tab = "overview",
 }) {
-  if (isCompleted) return 100;
+  const W = PROGRESS_WEIGHTS;
+  const beyondOverview = tab !== "overview";
+  const solvedSet = new Set((solvedIds || []).filter(Boolean));
 
-  let percent = 0;
+  const overview = overviewRead || beyondOverview ? W.overview : 0;
 
-  // 1. Overview: 15%
-  if (overviewRead || tab !== "overview") {
-    percent += 15;
-  } else {
-    percent += 5;
-  }
-
-  // 2. Theory: 25%
   const checks = (chapter?.theory ?? []).filter((item) => item.selfCheck);
+  let theory = 0;
   if (checks.length > 0) {
-    const answeredCount = checks.filter((item) => reflections[item.id]?.trim()).length;
-    percent += Math.round((answeredCount / checks.length) * 25);
-  } else if (overviewRead || tab === "theory" || tab === "practice" || tab === "summary") {
-    percent += 25;
+    const answered = checks.filter((item) => reflections?.[item.id]?.trim()).length;
+    theory = W.theory * (answered / checks.length);
+  } else if (overviewRead || beyondOverview) {
+    theory = W.theory;
   }
 
-  // 3. Quiz: 35%
   const questions = chapter?.quiz ?? [];
-  const answeredQuizCount = Object.keys(answers || {}).filter((k) => answers[k] !== undefined && answers[k] !== null).length;
-  if (quizSubmitted) {
-    percent += 35;
-  } else if (questions.length > 0) {
-    percent += Math.round((Math.min(answeredQuizCount, questions.length) / questions.length) * 35);
-  } else {
-    percent += 35;
-  }
+  let quiz;
+  if (questions.length === 0 || quizSubmitted) quiz = W.quiz;
+  else quiz = W.quiz * (countAnswered(questions, answers || {}) / questions.length);
 
-  // 4. Runnable exercises: 15%
-  const exercises = (chapter?.practice ?? []).filter((item) => item.runnable);
-  if (exercises.length > 0) {
-    const solvedCount = exercises.filter((item) => (solvedIds || []).includes(item.id)).length;
-    percent += Math.round((solvedCount / exercises.length) * 15);
-  } else {
-    percent += 15;
-  }
+  const exercises = runnableExercises(chapter);
+  const practice = exercises.length === 0
+    ? W.practice
+    : W.practice * (exercises.filter((item) => solvedSet.has(item.id)).length / exercises.length);
 
-  // 5. Summary tab visited: 10%
-  if (tab === "summary") {
-    percent += 10;
-  }
+  const summary = summaryVisited || tab === "summary" ? W.summary : 0;
 
-  return Math.min(95, Math.max(0, percent));
+  const total = overview + theory + quiz + practice + summary;
+  // Chỉ chạm 100 khi mọi phần đủ (tránh làm tròn 99.6 thành 100).
+  return total >= 100 - 1e-9 ? 100 : Math.min(99, Math.floor(total + 1e-9));
 }
-

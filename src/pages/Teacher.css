@@ -1018,3 +1018,10 @@
 .scp-item.done .scp-value { color: #16a34a; }
 .scp-empty { margin: 0; font-size: 13px; color: #64748b; }
 @media (max-width: 560px) { .scp-list { grid-template-columns: 1fr; } }
+
+/* Popup Quản lý: thêm cột Điểm bài tập cho từng chương */
+.scp-item { grid-template-columns: 68px 1fr 44px 72px; }
+.scp-track span { transition: width .2s; }
+.scp-item.done .scp-track span { background: #16a34a; }
+.scp-score { font-size: 12px; font-weight: 700; color: #16a34a; text-align: right; white-space: nowrap; }
+.scp-score[data-low="true"] { color: #ea580c; }

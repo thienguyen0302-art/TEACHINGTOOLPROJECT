@@ -3,6 +3,7 @@ import Icon from "../components/Icon";
 import { useNotice } from "../hooks/useNotice";
 import { curriculum, LANG_BY_KEY } from "../data/curriculum";
 import { getLocalChapterState } from "../services/progressService";
+import { resolveChapterProgress } from "../utils/chapterProgress";
 
 // Danh sách 14 chương theo nội dung trong src/content. Chương nào đã có file JSON (cùng số thứ tự) thì mở được và lấy tiến độ thật.
 export default function Curriculum({ lang, data, onChangeLang }) {
@@ -16,15 +17,12 @@ export default function Curriculum({ lang, data, onChangeLang }) {
 
   const items = list.map((chapter, index) => {
     const id = contentByOrder[index + 1];
-    let p = id ? progressById[id] : undefined;
-    if (id && (!p || !p.completed)) {
-      const local = getLocalChapterState(data?.profile?.uid, lang, id);
-      if (local && (!p || (local.progressPercent ?? 0) > (p.progressPercent ?? 0) || local.completed)) {
-        p = { ...p, ...local };
-      }
-    }
-    const progress = p?.completed ? 100 : p ? Math.max(0, Math.min(99, Math.round(p.progressPercent ?? p.bestScore ?? 0))) : 0;
-    return { ...chapter, index, id, progress, started: !!p && (progress > 0 || p.completed) };
+    const r = resolveChapterProgress(
+      id ? progressById[id] : undefined,
+      id ? getLocalChapterState(data?.profile?.uid, lang, id) : null
+    );
+    const progress = r.progress;
+    return { ...chapter, index, id, progress, started: r.started };
   });
   // chương "đang học" = chương đầu tiên có tiến độ nhưng chưa xong, nếu không có thì chương đầu chưa học
   const current = items.find((c) => c.started && c.progress < 100) || items.find((c) => c.progress === 0);

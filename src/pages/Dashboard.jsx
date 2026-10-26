@@ -5,6 +5,7 @@ import { curriculum, LANG_BY_KEY } from "../data/curriculum";
 import { firstName, greeting, todayText } from "../utils/format";
 import { calcStreak, weekSummary } from "../utils/activity";
 import { getLocalChapterState } from "../services/progressService";
+import { resolveChapterProgress, averageChapterScore } from "../utils/chapterProgress";
 
 const TONES = ["blue", "purple", "cyan", "orange"];
 const ICONS = ["code", "check", "clock", "grid"];
@@ -21,14 +22,11 @@ export default function Dashboard({ user, lang, data }) {
 
   const all = list.map((c, i) => {
     const id = contentByOrder[i + 1];
-    let p = id ? progressById[id] : undefined;
-    if (id && (!p || !p.completed)) {
-      const local = getLocalChapterState(data?.profile?.uid, lang, id);
-      if (local && (!p || (local.progressPercent ?? 0) > (p.progressPercent ?? 0) || local.completed)) {
-        p = { ...p, ...local };
-      }
-    }
-    const progress = p?.completed ? 100 : p ? Math.max(0, Math.min(99, Math.round(p.progressPercent ?? p.bestScore ?? 0))) : 0;
+    const r = resolveChapterProgress(
+      id ? progressById[id] : undefined,
+      id ? getLocalChapterState(data?.profile?.uid, lang, id) : null
+    );
+    const progress = r.progress;
     return { ...c, n: i + 1, id, progress };
   });
   // Hiển thị 4 chương bắt đầu từ chương chưa hoàn thành đầu tiên (không cố định 4 chương đầu).
@@ -40,9 +38,7 @@ export default function Dashboard({ user, lang, data }) {
   const maxSeconds = Math.max(...week.days.map((d) => d.seconds), 1);
 
   const hours = ((data.profile.studySeconds || 0) / 3600).toFixed(1);
-  const avg = data.rows.length
-    ? Math.round(data.rows.reduce((s, r) => s + (r.bestScore || 0), 0) / data.rows.length)
-    : 0;
+  const avg = averageChapterScore(data.rows);
 
   const open = (c) => (c.id ? nav(`/lesson/${c.id}`) : notice(`Chương ${c.n} đang được biên soạn`));
 

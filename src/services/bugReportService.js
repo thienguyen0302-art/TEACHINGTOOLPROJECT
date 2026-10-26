@@ -97,7 +97,7 @@ export async function submitBugReport({
       throw new Error(data.error || "Máy chủ không thể gửi email đến Người phát hành lúc này.");
     }
   } catch (err) {
-    throw new Error(err.message || "Không thể kết nối đến máy chủ gửi email.");
+    throw new Error(err.message || "Không thể kết nối đến máy chủ gửi email.", { cause: err });
   }
 
   // 2. Lưu vào Firestore collection "bugReports"
@@ -119,7 +119,7 @@ export async function submitBugReport({
       },
       createdAt: now,
     });
-  } catch (err) {
+  } catch {
     // Không chặn luồng
   }
 

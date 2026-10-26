@@ -25,6 +25,7 @@ import { fetchRecentActivities } from "../services/activityService";
 import { getProblemCount, listProblems, difficultyLabels } from "../services/problemService";
 import { listContests } from "../services/contestService";
 import { getLocalChapterState } from "../services/progressService";
+import { resolveChapterProgress } from "../utils/chapterProgress";
 import { getCodeSubmissionHistory } from "../services/submissionPersistence";
 import { generateSmartRecommendation, fetchLiveAiAdvice } from "../services/aiRecommendationService";
 
@@ -122,6 +123,8 @@ export default function Overview({ user, lang, data, onChangeLang }) {
     if (user?.uid) {
       loadActivities();
     } else {
+      // Không có người dùng: xóa danh sách hoạt động cũ.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActivities([]);
       setLoadingActivities(false);
     }
@@ -182,7 +185,12 @@ export default function Overview({ user, lang, data, onChangeLang }) {
     0
   );
 
-  const now = Date.now();
+  // "Bây giờ" cập nhật mỗi phút để nhận ra cuộc thi bắt đầu/kết thúc mà không cần tải lại trang.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 60000);
+    return () => clearInterval(t);
+  }, []);
   const runningContest = useMemo(() => {
     return publishedContests.find((c) => {
       const start = c.startAt || 0;
@@ -209,15 +217,12 @@ export default function Overview({ user, lang, data, onChangeLang }) {
   const chaptersProgress = useMemo(() => {
     return curriculumList.map((c, i) => {
       const id = contentByOrder[i + 1];
-      let p = id ? progressById[id] : undefined;
-      if (id && (!p || !p.completed)) {
-        const local = getLocalChapterState(user?.uid, lang, id);
-        if (local && (!p || (local.progressPercent ?? 0) > (p.progressPercent ?? 0) || local.completed)) {
-          p = { ...p, ...local };
-        }
-      }
-      const progress = p?.completed ? 100 : p ? Math.max(0, Math.min(99, Math.round(p.progressPercent ?? p.bestScore ?? 0))) : 0;
-      return { ...c, n: i + 1, id, progress, completed: p?.completed || progress === 100 };
+      const r = resolveChapterProgress(
+        id ? progressById[id] : undefined,
+        id ? getLocalChapterState(user?.uid, lang, id) : null
+      );
+      const progress = r.progress;
+      return { ...c, n: i + 1, id, progress, completed: r.completed };
     });
   }, [curriculumList, contentByOrder, progressById, user?.uid, lang]);
 

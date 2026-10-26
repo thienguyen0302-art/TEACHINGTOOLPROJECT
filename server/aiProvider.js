@@ -102,6 +102,9 @@ export function openaiSchema(schema) {
 export function openaiRequest({ url, model, system, context, action, document, responseSchema }) {
   if (!Object.hasOwn(outputTokenLimits, action)) throw new TutorError(400, 'AI action không hợp lệ.');
   const pdf = ['pdf_contest', 'pdf_test_plan'].includes(action);
+  const maxTokens = (/^gpt-5/.test(model))
+    ? outputTokenLimits[action]
+    : Math.min(outputTokenLimits[action], 16384);
   return {
     url: `${url.replace(/\/+$/, '')}/chat/completions`,
     body: {
@@ -114,7 +117,7 @@ export function openaiRequest({ url, model, system, context, action, document, r
           { type: 'text', text: JSON.stringify(context) },
         ] },
       ],
-      max_completion_tokens: outputTokenLimits[action],
+      max_completion_tokens: maxTokens,
       ...(/^gpt-5\.4-(mini|nano)(?:-|$)/.test(model) ? { reasoning_effort: pdf ? 'low' : 'none' } : {}),
       response_format: responseSchema
         ? { type: 'json_schema', json_schema: { name: action, strict: true, schema: openaiSchema(responseSchema) } }
@@ -134,11 +137,13 @@ export function openaiText(payload) {
   return choice?.message?.content;
 }
 
+// Chỉ trả thông báo cố định theo mã HTTP. KHÔNG ghép nội dung phản hồi của nhà cung cấp vào lỗi gửi cho
+// trình duyệt: nội dung đó có thể chứa một phần khóa API hoặc cấu hình nội bộ.
 function openaiError(status) {
   if (status === 401 || status === 403) return 'OpenAI API key không hợp lệ hoặc chưa có quyền truy cập model. Kiểm tra OPENAI_API_KEY.';
   if (status === 404) return 'Không tìm thấy OpenAI model/endpoint. Kiểm tra AI_API_URL và AI_MODEL.';
   if (status === 429) return 'OpenAI đã đạt quota hoặc rate limit. Kiểm tra số dư API và thử lại sau.';
-  if (status === 400) return 'OpenAI request/model/config không hợp lệ. Kiểm tra AI_API_URL và AI_MODEL.';
+  if (status === 400) return 'OpenAI request/model/config không hợp lệ. Kiểm tra AI_MODEL và cấu hình backend.';
   return `OpenAI provider không khả dụng (HTTP ${status}). Hãy thử lại.`;
 }
 
@@ -167,10 +172,15 @@ export async function requestProvider({ system, context, action, signal, env = p
     });
     let payload;
     try { payload = await response.json(); } catch {
-      if (!response.ok) throw new TutorError(502, (isOpenai ? openaiError : providerError)(response.status));
+      console.error('[AI Provider Error] Non-JSON response:', response.status, response.statusText);
+      if (!response.ok) throw new TutorError(502, (isOpenai ? openaiError(response.status) : providerError(response.status)));
       throw new TutorError(502, 'AI provider trả về JSON không hợp lệ. Hãy thử lại.');
     }
-    if (!response.ok) throw new TutorError(502, (isOpenai ? openaiError : providerError)(response.status));
+    if (!response.ok) {
+      // Log gọn (chỉ mã/loại lỗi), không in cả payload để khóa không lọt vào Cloud Logging.
+      console.error('[AI Provider Error]', response.status, payload?.error?.type ?? '', payload?.error?.code ?? '');
+      throw new TutorError(502, (isOpenai ? openaiError(response.status) : providerError(response.status)));
+    }
     const content = (isOpenai ? openaiText : providerText)(payload);
     if (typeof content !== 'string' || !content.trim()) throw new TutorError(502, 'AI provider trả về phản hồi không hợp lệ. Hãy thử lại.');
     const feedback = ['pdf_contest', 'pdf_test_plan'].includes(action)

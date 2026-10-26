@@ -101,7 +101,7 @@ export function createContestRepository(db) {
       });
       return ref.id;
     },
-    async deleteContest(id, uid) {
+    async deleteContest(id) {
       const ref = collection('contests').doc(id);
       await db.runTransaction(async (tx) => {
         const snap = await tx.get(ref);

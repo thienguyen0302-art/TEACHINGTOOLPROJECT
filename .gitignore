@@ -35,3 +35,10 @@ service-account*.json
 /Đề Thi HSG tin học/
 .firebase/
 .DS_Store
+
+# Khóa/bí mật: không bao giờ commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key

@@ -38,7 +38,7 @@ export function formatActivityTime(ts) {
 }
 
 // Tổng hợp lịch sử hoạt động học tập thực tế của cá nhân học viên
-export async function fetchRecentActivities(uid, { lang, chapters = [], rows = [], goals = [] } = {}) {
+export async function fetchRecentActivities(uid, { chapters = [], rows = [], goals = [] } = {}) {
   if (!uid) return [];
 
   const codeSubs = await getCodeSubmissionHistory(uid).catch(() => []);

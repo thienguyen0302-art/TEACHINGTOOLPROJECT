@@ -38,6 +38,7 @@ const TEACHER_NAV = [
   { label: "Kho bài tập học sinh", icon: "book", path: "/practice" },
   { label: "Quản trị lớp học", icon: "chart", path: "/teacher" },
   { label: "Quản lý học sinh", icon: "user", path: "/teacher/students" },
+  { label: "Lịch sử nộp bài HS", icon: "check", path: "/teacher/submissions" },
   { label: "Tổng hợp Contest", icon: "trophy", path: "/teacher/contest-history" },
   { label: "Tổ chức Contest", icon: "trophy", path: "/teacher/contests" },
   { label: "Bài tập tự soạn", icon: "code", path: "/teacher/problems" },
@@ -55,7 +56,7 @@ function isActive(item, pathname) {
   return pathname.startsWith(item.path);
 }
 
-export default function AppShell({ user, isTeacher = false, weekActive = 0, onLogout, children }) {
+export default function AppShell({ user, isTeacher = false, onLogout, children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [peanutOpen, setPeanutOpen] = useState(false);
   const peanutTriggerRef = useRef(null);

@@ -11,7 +11,6 @@ import Logo from "../components/Logo";
 import Icon from "../components/Icon";
 import { subscribePublicReviews } from "../services/reviewService";
 import {
-  verifyTeacherCode,
   verifyTeacherCodeRemote,
   claimTeacherRole,
   sendResetPassword,
@@ -172,7 +171,6 @@ export default function Login() {
   const [teacherCode, setTeacherCode] = useState(() => {
     return sessionStorage.getItem("peanut_auth_teacher_code") || "";
   });
-  const [showTeacherClaim, setShowTeacherClaim] = useState(false);
   const [registerDone, setRegisterDone] = useState(false);
   const [msg, setMsg] = useState(() => {
     const pending = sessionStorage.getItem("peanut_auth_error");
@@ -197,16 +195,19 @@ export default function Login() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("deleted") === "1" || params.get("reset") === "1") {
+      // Đồng bộ trạng thái từ tham số URL một lần khi vào trang (nguồn ngoài React).
+      /* eslint-disable react-hooks/set-state-in-effect */
       setAccountDeletedNotice(true);
       setEmail("");
       setPw("");
       setTeacherCode("");
       setMsg("");
       setIsErr(false);
+      /* eslint-enable react-hooks/set-state-in-effect */
       try {
         sessionStorage.clear();
         localStorage.clear();
-      } catch {}
+      } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);

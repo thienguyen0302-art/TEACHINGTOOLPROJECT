@@ -44,7 +44,8 @@ function ContestForm({initial,problems,contestId,selectedIds=[]}) {
   function update(index,key,value){change('problems',form.problems.map((p,i)=>i===index?{...p,[key]:value}:p));}
   function move(index,offset){const next=[...form.problems];[next[index],next[index+offset]]=[next[index+offset],next[index]];change('problems',next);}
 
-  const minEndMs = (form.startAt ? new Date(form.startAt).getTime() : Date.now()) + (Number(form.durationMinutes) || 0) * 60000;
+  const [openedAtMs] = useState(() => Date.now());
+  const minEndMs = (form.startAt ? new Date(form.startAt).getTime() : openedAtMs) + (Number(form.durationMinutes) || 0) * 60000;
 
   function addMinutesToEnd(mins) {
     const currentMs = form.endAt ? new Date(form.endAt).getTime() : (initial?.endAt || minEndMs);

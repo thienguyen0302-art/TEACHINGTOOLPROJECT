@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { averageChapterScore } from "../utils/chapterProgress";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Icon from "../components/Icon";
 import Logo from "../components/Logo";
@@ -289,7 +290,7 @@ export default function Profile({ user, uid, lang, data }) {
       try {
         sessionStorage.clear();
         localStorage.clear();
-      } catch {}
+      } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
       notice("Đã xoá tài khoản và toàn bộ dữ liệu thành công.");
       window.location.href = "/login?deleted=1";
     } catch (err) {
@@ -361,9 +362,8 @@ export default function Profile({ user, uid, lang, data }) {
 
   const month = monthGrid(data.daily);
   const streak = calcStreak(data.daily);
-  const done = data.rows.filter((r) => r.completed).length;
-  const scores = data.rows.map((r) => r.bestScore || 0);
-  const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const done = data.rows.filter((r) => r.completed === true).length;
+  const avg = averageChapterScore(data.rows);
 
   async function handleSave(form) {
     await saveProfile(uid, form, isTeacher);

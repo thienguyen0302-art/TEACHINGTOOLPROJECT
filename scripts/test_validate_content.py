@@ -165,7 +165,7 @@ class ProblemBankValidationTests(unittest.TestCase):
 
     def test_npm_build_runs_validation_first(self):
         scripts = json.loads((ROOT.parents[1] / "package.json").read_text())["scripts"]
-        self.assertEqual(scripts["prebuild"], "npm run validate:content")
+        self.assertIn("npm run validate:content", scripts["prebuild"])
         self.assertEqual(scripts["validate:content"], "python3 scripts/validate_content.py")
         self.assertEqual(scripts["test:content"],
                          "python3 -m unittest discover -s scripts -p 'test_*.py'")

@@ -32,8 +32,11 @@ beforeEach(async()=>{
     ]);
   });
 });
-const student=()=>env.authenticatedContext('student').firestore();
-const teacher=()=>env.authenticatedContext('teacher').firestore();
+// Rules yêu cầu email đã xác thực (token thật của Firebase Auth luôn có claim này).
+const verified={email_verified:true};
+const student=()=>env.authenticatedContext('student',verified).firestore();
+const teacher=()=>env.authenticatedContext('teacher',verified).firestore();
+const unverified=()=>env.authenticatedContext('student',{email_verified:false}).firestore();
 test('student reads published public docs and scoreboard, never private tests/drafts',async()=>{
   const db=student();
   await assertSucceeds(getDoc(doc(db,'problems/p1')));await assertSucceeds(getDoc(doc(db,'contests/c1')));await assertSucceeds(getDocs(collection(db,'contests/c1/scoreboard')));
@@ -69,6 +72,11 @@ test('student cannot promote role or write authoring data, anonymous denied',asy
   const db=student();await assertFails(updateDoc(doc(db,'users/student'),{role:'teacher'}));
   await assertFails(updateDoc(doc(db,'problemSecrets/p1'),{hiddenTests:[]}));await assertFails(updateDoc(doc(db,'problems/p1'),{title:'attack'}));
   await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(),'contests/c1')));
+});
+test('unverified email or token without the claim is denied everywhere',async()=>{
+  await assertFails(getDoc(doc(unverified(),'contests/c1')));
+  await assertFails(getDoc(doc(unverified(),'users/student')));
+  await assertFails(getDoc(doc(env.authenticatedContext('student').firestore(),'contests/c1')));
 });
 test('actual Admin SDK transactions preserve attempts and scores under concurrent writes',async()=>{
   await Promise.all(Array.from({length:8},(_,i)=>repository.recordSubmission('c1',{uid:'student',problemId:'p1',language:'cpp',score:i===0?100:50,earnedPoints:i===0?200:100,passed:i===0?2:1,total:2,status:i===0?'Accepted':'Wrong Answer',source:'review source',submittedAt:Date.now()+i},'An')));

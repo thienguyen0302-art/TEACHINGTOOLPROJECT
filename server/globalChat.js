@@ -21,7 +21,7 @@ export function buildGlobalContext(body) {
   const page = body.pageContext;
   if (!page || typeof page !== 'object' || Array.isArray(page) || Object.keys(page).some(k => k !== 'pathname') || typeof page.pathname !== 'string' || page.pathname.length > 300 || !/^\/[a-zA-Z0-9/_-]*$/.test(page.pathname)) throw new TutorError(400, 'Trang không hợp lệ.');
   if (contestChatBlocked(page.pathname)) throw new TutorError(403, 'Peanut AI tạm khóa trong Contest.');
-  // Only a public area label reaches Gemini, never IDs, teacher form values or private documents.
+  // Only a public area label reaches OpenAI, never IDs, teacher form values or private documents.
   const area = page.pathname.split('/')[1];
   const publicArea = ['curriculum', 'lesson', 'practice', 'practice-bank', 'progress', 'calendar', 'ranking', 'teacher'].includes(area) ? area : 'dashboard';
   return { conversation, language: body.language, pageContext: { area: publicArea } };
@@ -39,22 +39,20 @@ export function createGlobalChatHandler({ provider = requestProvider, env = proc
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     const close = () => controller.abort();
     res.on('close', close);
-    let validated = false;
     try {
       const chunks = []; let size = 0;
       for await (const chunk of req) { size += chunk.length; if (size > 100000) throw new TutorError(413, 'AI request vượt giới hạn 100 KB.'); chunks.push(chunk); }
       let body;
       try { body = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new TutorError(400, 'JSON không hợp lệ.'); }
       const context = buildGlobalContext(body);
-      validated = true;
       if (controller.signal.aborted) throw new TutorError(504, 'Peanut AI hết thời gian chờ. Hãy thử lại.');
       const abort = new Promise((_, reject) => controller.signal.addEventListener('abort', () => reject(new TutorError(504, 'Peanut AI hết thời gian chờ. Hãy thử lại.')), { once: true }));
       const feedback = await Promise.race([provider({ system: GLOBAL_SYSTEM, context, action: 'global_chat', signal: controller.signal, env }), abort]);
       return reply(200, { message: feedback.message, suggestedActions: [] });
     } catch (error) {
-      // Provider error text is never returned here, even for injected/custom adapters.
-      const status = error instanceof TutorError && (!validated || [429, 503, 504].includes(error.status)) ? error.status : 502;
-      const message = status === 400 || status === 403 || status === 413 ? error.message : status === 504 ? 'Peanut AI hết thời gian chờ. Hãy thử lại.' : 'Peanut AI tạm thời không khả dụng. Hãy thử lại.';
+      console.error('[globalChat handler catch]', error);
+      const status = error instanceof TutorError ? error.status : 502;
+      const message = error instanceof TutorError ? error.message : 'Peanut AI tạm thời không khả dụng. Hãy thử lại.';
       return reply(status, { error: message });
     } finally { clearTimeout(timer); res.removeListener('close', close); active--; }
   };

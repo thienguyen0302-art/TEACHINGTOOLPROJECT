@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { submissionProgressStore } from "../services/submissionProgressService";
-import { lessonCompletion, computeLessonProgress } from "../utils/lessonCompletion";
+import { lessonCompletion, computeLessonProgress, runnableExercises } from "../utils/lessonCompletion";
 import LessonPractice from "../components/LessonPractice";
 import LessonSummary from "../components/LessonSummary";
 import LessonTheory from "../components/LessonTheory";
@@ -11,6 +11,7 @@ import { loadChapter, listChapters } from "../services/contentService";
 import {
   saveProgress,
   getChapterProgress,
+  getSolvedExerciseIds,
   getLocalChapterState,
   saveLocalChapterState,
   clearLocalChapterState,
@@ -67,6 +68,10 @@ function LessonContent({ lang, id }) {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [summaryVisited, setSummaryVisited] = useState(false);
+  const [persistedSolved, setPersistedSolved] = useState([]); // bài code đã Accepted (lưu trên Firestore)
+  const [hydrated, setHydrated] = useState(false);
+  const [completeMsg, setCompleteMsg] = useState("");
 
   // Resume modal state
   const [showResumeModal, setShowResumeModal] = useState(false);
@@ -79,11 +84,15 @@ function LessonContent({ lang, id }) {
     submissionProgressStore.subscribe,
     () =>
       (chapter?.practice ?? [])
-        .filter((item) => submissionProgressStore.get({ slug: `lesson/${lang}/${id}/practice/${item.id}`, language: lang }, uid)?.stats.solved)
+        .filter((item) => item.runnable && submissionProgressStore.get({ slug: `lesson/${lang}/${id}/practice/${item.id}`, language: lang }, uid)?.stats.solved)
         .map((item) => item.id)
         .join(","),
     () => ""
   );
+
+  // Hợp nhất bài đã giải trong phiên này + bài đã lưu trên Firestore (tải lại trang / đổi thiết bị không mất).
+  const solvedIds = [...new Set([...solvedKey.split(",").filter(Boolean), ...persistedSolved])];
+  const solvedIdsKey = [...solvedIds].sort().join(",");
 
   useEffect(() => {
     if (!changedTabRef.current) return;
@@ -106,20 +115,31 @@ function LessonContent({ lang, id }) {
     promptedRef.current = true;
 
     async function checkSaved() {
+      if (!uid) setHydrated(true);
       const local = getLocalChapterState(uid, lang, id);
       let remote = null;
       if (uid) {
         try {
           remote = await getChapterProgress(uid, lang, id);
-        } catch {}
+        } catch { /* offline: dùng bản lưu cục bộ */ }
       }
+
+      let solvedRemote = [];
+      if (uid) {
+        try {
+          solvedRemote = await getSolvedExerciseIds(uid, lang, id);
+        } catch { /* offline: dùng bài đã giải trong phiên */ }
+      }
+      setPersistedSolved([...new Set([...(remote?.solvedIds ?? []), ...solvedRemote])]);
+      setSummaryVisited(Boolean(remote?.summaryVisited || remote?.completed));
+      setHydrated(true);
 
       const combined =
         local && (local.progressPercent ?? 0) >= (remote?.progressPercent ?? 0)
           ? { ...remote, ...local }
           : { ...local, ...remote };
 
-      if (!combined) return;
+      if (!local && !remote) return;
 
       const hasProgress =
         Boolean(combined.completed) ||
@@ -146,20 +166,22 @@ function LessonContent({ lang, id }) {
       const currentReflections = overrides.reflections ?? reflections;
       const currentOverviewRead = overrides.overviewRead ?? overviewRead;
       const currentQuizSubmitted = overrides.quizSubmitted ?? quizSubmitted;
-      const currentIsCompleted = overrides.isCompleted ?? isCompleted;
+      const currentSummary = (overrides.summaryVisited ?? summaryVisited) || currentTabVal === "summary";
+      const legacyDone = overrides.isCompleted ?? isCompleted;
 
-      const percent = computeLessonProgress({
+      const computed = computeLessonProgress({
         chapter,
         overviewRead: currentOverviewRead,
         reflections: currentReflections,
         answers: currentAnswers,
         quizSubmitted: currentQuizSubmitted,
-        solvedIds: solvedKey.split(","),
-        isCompleted: currentIsCompleted,
+        solvedIds,
+        summaryVisited: currentSummary,
         tab: currentTabVal,
       });
+      const currentIsCompleted = legacyDone || computed >= 100;
+      const percent = currentIsCompleted ? 100 : computed;
 
-      const solvedIds = solvedKey ? solvedKey.split(",") : [];
       const cs = chapterScore(chapter, {
         quizPercent: calculateScore(chapter?.quiz ?? [], currentAnswers).percentage,
         quizSubmitted: currentQuizSubmitted,
@@ -180,6 +202,9 @@ function LessonContent({ lang, id }) {
         quizSubmitted: currentQuizSubmitted,
         completed: currentIsCompleted,
         progressPercent: percent,
+        solvedIds,
+        summaryVisited: currentSummary,
+        ...(overrides.reset ? { reset: true } : {}),
       };
 
       // 1. Lưu ngay vào localStorage
@@ -195,7 +220,8 @@ function LessonContent({ lang, id }) {
         }, 800);
       }
     },
-    [tab, practiceMode, answers, reflections, overviewRead, quizSubmitted, isCompleted, chapter, solvedKey, lang, id, uid]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tab, practiceMode, answers, reflections, overviewRead, quizSubmitted, isCompleted, summaryVisited, chapter, solvedIdsKey, lang, id, uid]
   );
 
   useEffect(() => {
@@ -204,14 +230,15 @@ function LessonContent({ lang, id }) {
     };
   }, []);
 
-  // Khi có thêm bài bắt buộc Accepted thì lưu lại điểm chương (không chờ nộp quiz).
-  const solvedCountRef = useRef(null);
-  const solvedCount = solvedKey ? solvedKey.split(",").length : 0;
+  // Giải xong bài code (hoặc nạp xong danh sách bài đã giải) -> ghi % + điểm ngay, không chờ thao tác khác.
+  const persistRef = useRef(persistState);
   useEffect(() => {
-    if (!chapter) return;
-    if (solvedCountRef.current !== null && solvedCount > solvedCountRef.current) persistState();
-    solvedCountRef.current = solvedCount;
-  }, [solvedCount, chapter, persistState]);
+    persistRef.current = persistState;
+  });
+  useEffect(() => {
+    if (!chapter || !hydrated || !uid) return;
+    persistRef.current();
+  }, [solvedIdsKey, hydrated, chapter, uid]);
 
   if (chapter === undefined) return <p>Đang tải bài học...</p>;
   if (chapter === null) return <p>Không tìm thấy chương này.</p>;
@@ -221,24 +248,26 @@ function LessonContent({ lang, id }) {
   const score = calculateScore(questions, answers);
   const canSubmit = score.total > 0 && answeredCount === score.total;
 
-  const completion = lessonCompletion(chapter, {
-    overviewRead,
-    reflections: completedReflections,
-    quizSubmitted,
-    solvedIds: solvedKey.split(","),
-    isCompleted,
-    currentTab: tab,
-  });
-
-  const currentPercent = computeLessonProgress({
+  const baseProgress = computeLessonProgress({
     chapter,
     overviewRead,
     reflections,
     answers,
     quizSubmitted,
-    solvedIds: solvedKey.split(","),
-    isCompleted,
+    solvedIds,
+    summaryVisited: summaryVisited || tab === "summary",
     tab,
+  });
+  const done = isCompleted || baseProgress >= 100;
+  const currentPercent = done ? 100 : baseProgress;
+
+  const completion = lessonCompletion(chapter, {
+    overviewRead,
+    reflections: completedReflections,
+    quizSubmitted,
+    solvedIds,
+    isCompleted: done,
+    currentTab: tab,
   });
 
   const next = TABS[TABS.findIndex(([key]) => key === tab) + 1];
@@ -247,10 +276,11 @@ function LessonContent({ lang, id }) {
   const nextChapter = allChapters.find((c) => c.order === chapter.order + 1);
 
   function changeTab(key) {
-    if (!completion.unlocked[key] && !isCompleted) return;
+    if (!completion.unlocked[key] && !done) return;
     changedTabRef.current = true;
     setTab(key);
-    persistState({ tab: key });
+    if (key === "summary") setSummaryVisited(true);
+    persistState({ tab: key, ...(key === "summary" ? { summaryVisited: true } : {}) });
   }
 
   function handleOverviewRead(isRead) {
@@ -281,14 +311,7 @@ function LessonContent({ lang, id }) {
     setSaveStatus("saving");
 
     const newPercent = computeLessonProgress({
-      chapter,
-      overviewRead,
-      reflections,
-      answers,
-      quizSubmitted: true,
-      solvedIds: solvedKey.split(","),
-      isCompleted,
-      tab: "practice",
+      chapter, overviewRead, reflections, answers, quizSubmitted: true, solvedIds, summaryVisited, tab: "practice",
     });
 
     const payload = {
@@ -299,7 +322,7 @@ function LessonContent({ lang, id }) {
         const cs = chapterScore(chapter, {
           quizPercent: currentScore.percentage,
           quizSubmitted: true,
-          solvedIds: solvedKey ? solvedKey.split(",") : [],
+          solvedIds,
         });
         return { chapterScore: cs.score, codeSolved: cs.solved, codeTotal: cs.exercises };
       })(),
@@ -313,7 +336,9 @@ function LessonContent({ lang, id }) {
       reflections,
       answers,
       quizSubmitted: true,
-      completed: isCompleted,
+      solvedIds,
+      summaryVisited,
+      completed: done || newPercent >= 100,
     };
 
     saveLocalChapterState(uidCurrent, lang, id, payload);
@@ -332,15 +357,40 @@ function LessonContent({ lang, id }) {
   }
 
   async function handleCompleteChapter() {
-    setIsCompleted(true);
+    // Nút này chỉ ghi nhận đã xem Tổng kết. Chương chỉ 100% khi các phần còn lại cũng đã xong.
+    setSummaryVisited(true);
+    const percent = computeLessonProgress({
+      chapter, overviewRead: true, reflections, answers, quizSubmitted, solvedIds, summaryVisited: true, tab: "summary",
+    });
+
+    if (percent < 100) {
+      const missing = [];
+      if (completion.checks > 0 && completion.answered < completion.checks) missing.push(`Self-Check ${completion.answered}/${completion.checks}`);
+      if ((chapter.quiz?.length ?? 0) > 0 && !quizSubmitted) missing.push("nộp Quiz");
+      const total = runnableExercises(chapter).length;
+      if (total > 0 && completion.solved < total) missing.push(`bài code Accepted ${completion.solved}/${total}`);
+      setCompleteMsg(`Chương mới đạt ${percent}%. Còn thiếu: ${missing.join(", ") || "một số phần"}.`);
+    } else {
+      setCompleteMsg("");
+    }
+
     setIsSaving(true);
     const uidCurrent = auth.currentUser?.uid;
-
+    const cs = chapterScore(chapter, {
+      quizPercent: calculateScore(chapter?.quiz ?? [], answers).percentage,
+      quizSubmitted,
+      solvedIds,
+    });
     const payload = {
       language: lang,
       chapterId: id,
-      completed: true,
-      progressPercent: 100,
+      completed: percent >= 100,
+      progressPercent: percent,
+      chapterScore: cs.score,
+      codeSolved: cs.solved,
+      codeTotal: cs.exercises,
+      solvedIds,
+      summaryVisited: true,
       lastTab: "summary",
       lastPracticeMode: practiceMode,
       overviewRead: true,
@@ -356,12 +406,9 @@ function LessonContent({ lang, id }) {
         await saveProgress(uidCurrent, id, payload);
       } catch (e) {
         console.error("Lỗi đánh dấu hoàn thành:", e);
-      } finally {
-        setIsSaving(false);
       }
-    } else {
-      setIsSaving(false);
     }
+    setIsSaving(false);
   }
 
   // Handler khi chọn "Tiếp tục học" từ Resume Modal
@@ -378,6 +425,7 @@ function LessonContent({ lang, id }) {
     const targetQuizSubmitted = Boolean(savedData.quizSubmitted);
     const targetCompleted = Boolean(savedData.completed);
 
+    setSummaryVisited(Boolean(savedData.summaryVisited || targetCompleted));
     setTab(targetTab);
     setPracticeMode(targetMode);
     setAnswers(targetAnswers);
@@ -408,8 +456,12 @@ function LessonContent({ lang, id }) {
     setQuizSubmitted(false);
     setOverviewRead(false);
     setIsCompleted(false);
+    setSummaryVisited(false);
+    setCompleteMsg("");
     setShowResumeModal(false);
     persistState({
+      reset: true,
+      summaryVisited: false,
       tab: "overview",
       practiceMode: "quiz",
       answers: {},
@@ -429,10 +481,10 @@ function LessonContent({ lang, id }) {
           </p>
           <div className="lesson-progress-badge">
             <span>
-              Tiến độ: <strong>{isCompleted ? 100 : currentPercent}%</strong>
+              Tiến độ: <strong>{currentPercent}%</strong>
             </span>
             <div className="lesson-progress-bar">
-              <span style={{ width: `${isCompleted ? 100 : currentPercent}%` }} />
+              <span style={{ width: `${currentPercent}%` }} />
             </div>
           </div>
         </div>
@@ -444,12 +496,12 @@ function LessonContent({ lang, id }) {
           <button
             type="button"
             key={key}
-            disabled={!completion.unlocked[key] && !isCompleted}
+            disabled={!completion.unlocked[key] && !done}
             className={tab === key ? "on" : ""}
             aria-current={tab === key ? "page" : undefined}
             onClick={() => changeTab(key)}
           >
-            {!completion.unlocked[key] && !isCompleted && (
+            {!completion.unlocked[key] && !done && (
               <span aria-hidden="true">🔒 </span>
             )}
             {label}
@@ -504,7 +556,7 @@ function LessonContent({ lang, id }) {
       {tab === "summary" && (
         <LessonSummary
           chapter={chapter}
-          isCompleted={isCompleted}
+          isCompleted={done}
           onCompleteChapter={handleCompleteChapter}
           isSaving={isSaving}
           onRestartChapter={handleResumeRestart}
@@ -538,15 +590,15 @@ function LessonContent({ lang, id }) {
         )}
         {tab === "summary" && (
           <p>
-            {isCompleted
+            {done
               ? "✓ Đã hoàn thành chương học (100%)."
-              : "Xem tổng kết và bấm nút Đánh dấu hoàn thành chương bên trên."}
+              : completeMsg || `Tiến độ chương: ${currentPercent}%. Hoàn thành đủ Self-Check, Quiz và bài code để đạt 100%.`}
           </p>
         )}
         {next && (
           <button
             type="button"
-            disabled={!completion.unlocked[next[0]] && !isCompleted}
+            disabled={!completion.unlocked[next[0]] && !done}
             onClick={() => changeTab(next[0])}
           >
             Tiếp tục: {next[1]} →
@@ -566,7 +618,7 @@ function LessonContent({ lang, id }) {
         totalQuizQuestions={questions.length || 10}
         onContinue={handleResumeContinue}
         onRestart={handleResumeRestart}
-        onClose={() => setShowResumeModal(false)}
+        onClose={handleResumeContinue}
       />
     </div>
   );

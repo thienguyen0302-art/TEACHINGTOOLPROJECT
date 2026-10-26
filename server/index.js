@@ -1,3 +1,4 @@
+// Server entry point - watching for changes with OpenAI (gpt-4o-mini)
 import { createPdfContestHandler } from './pdfContest.js';
 import { createGlobalChatHandler } from './globalChat.js';
 import { createTutorHandler } from './aiTutor.js';

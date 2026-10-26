@@ -6,35 +6,44 @@ import { auth, db } from "./firebase";
 import { dateKey } from "../utils/activity";
 import { normalizeProfile } from "../utils/profile";
 
-const PASS_SCORE = 70; // điểm tối thiểu để tính là hoàn thành chương
+export const PROGRESS_SCHEMA = 2;
 
-// Hợp đồng với Người 2: saveProgress(uid, chapterId, progressData)
-// progressData = { language, chapterId, quizScore, correct, total }
+// saveProgress(uid, chapterId, progressData)
+// progressData = { language, progressPercent, completed, chapterScore, codeSolved, codeTotal,
+//   quizScore, correct, total, solvedIds, summaryVisited, ... }
+// - Chương chỉ "completed" khi người gọi (đã tính bằng computeLessonProgress) báo đủ 100%;
+//   điểm quiz cao KHÔNG còn tự đánh dấu hoàn thành chương.
+// - % không bao giờ tụt, trừ khi reset:true (nút "Học lại từ đầu").
 export async function saveProgress(uid, chapterId, progressData) {
   const language = progressData.language;
   const ref = doc(db, "users", uid, "progress", `${language}_${chapterId}`);
   const old = await getDoc(ref);
   const prev = old.exists() ? old.data() : {};
-  const quizScore = Number(progressData.quizScore ?? prev.quizScore ?? 0);
-  const isCompleted = prev.completed === true || progressData.completed === true || quizScore >= PASS_SCORE;
-  const progressPercent = isCompleted
-    ? 100
-    : Math.max(prev.progressPercent ?? 0, progressData.progressPercent ?? 0);
+  const reset = progressData.reset === true;
+
+  const quizScore = Number(progressData.quizScore ?? (reset ? 0 : prev.quizScore) ?? 0);
+  const isCompleted = reset ? progressData.completed === true : (prev.completed === true || progressData.completed === true);
+  const incoming = Number(progressData.progressPercent ?? 0);
+  const progressPercent = isCompleted ? 100 : reset ? incoming : Math.max(prev.progressPercent ?? 0, incoming);
+  const chapterScore = Number(progressData.chapterScore ?? (reset ? 0 : prev.chapterScore) ?? quizScore);
 
   await setDoc(ref, {
+    schemaVersion: PROGRESS_SCHEMA,
     language,
     chapterId,
     quizScore,
-    correct: progressData.correct ?? prev.correct ?? 0,
+    correct: progressData.correct ?? (reset ? 0 : prev.correct) ?? 0,
     total: progressData.total ?? prev.total ?? 0,
-    // Điểm chương = quiz + bài code bắt buộc (xem chapterScore); fallback về quizScore cho dữ liệu cũ.
-    chapterScore: Number(progressData.chapterScore ?? prev.chapterScore ?? quizScore),
-    codeSolved: progressData.codeSolved ?? prev.codeSolved ?? 0,
+    // Điểm chương = trung bình quiz và bài code bắt buộc (xem chapterScore trong utils/grading).
+    chapterScore,
+    codeSolved: progressData.codeSolved ?? (reset ? 0 : prev.codeSolved) ?? 0,
     codeTotal: progressData.codeTotal ?? prev.codeTotal ?? 0,
-    bestScore: Math.max(prev.bestScore ?? 0, quizScore, Number(progressData.chapterScore ?? 0)),
+    bestScore: reset ? Math.max(quizScore, chapterScore) : Math.max(prev.bestScore ?? 0, quizScore, chapterScore),
     attempts: (prev.attempts ?? 0) + (progressData.isQuizSubmit ? 1 : 0),
     completed: isCompleted,
     progressPercent,
+    solvedIds: progressData.solvedIds ?? (reset ? [] : prev.solvedIds) ?? [],
+    summaryVisited: progressData.summaryVisited ?? (reset ? false : prev.summaryVisited) ?? false,
     lastTab: progressData.lastTab ?? prev.lastTab ?? "overview",
     lastPracticeMode: progressData.lastPracticeMode ?? prev.lastPracticeMode ?? "quiz",
     overviewRead: progressData.overviewRead ?? prev.overviewRead ?? false,
@@ -43,6 +52,20 @@ export async function saveProgress(uid, chapterId, progressData) {
     quizSubmitted: progressData.quizSubmitted ?? prev.quizSubmitted ?? false,
     updatedAt: serverTimestamp(),
   }, { merge: true });
+
+  // Cập nhật lastActive để giáo viên thấy học sinh đang hoạt động.
+  setDoc(doc(db, "users", uid), { lastActive: serverTimestamp() }, { merge: true }).catch(() => {});
+}
+
+// Các bài code Accepted của 1 chương (đọc từ users/{uid}/submissions) -> mảng id bài.
+export async function getSolvedExerciseIds(uid, language, chapterId) {
+  if (!uid) return [];
+  const prefix = `lesson/${language}/${chapterId}/practice/`;
+  const snap = await getDocs(collection(db, "users", uid, "submissions"));
+  return snap.docs
+    .map((d) => d.data())
+    .filter((d) => d.solved === true && typeof d.slug === "string" && d.slug.startsWith(prefix))
+    .map((d) => d.slug.slice(prefix.length));
 }
 
 export async function getChapterProgress(uid, language, chapterId) {
@@ -67,13 +90,13 @@ export function saveLocalChapterState(uid, language, chapterId, state) {
       `lesson_state_${uid || "guest"}_${language}_${chapterId}`,
       JSON.stringify({ ...state, updatedAt: Date.now() })
     );
-  } catch {}
+  } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
 }
 
 export function clearLocalChapterState(uid, language, chapterId) {
   try {
     localStorage.removeItem(`lesson_state_${uid || "guest"}_${language}_${chapterId}`);
-  } catch {}
+  } catch { /* bỏ qua: lỗi không ảnh hưởng luồng chính */ }
 }
 
 export async function getAllProgress(uid) {
